@@ -1,0 +1,170 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.chequer.axboot.admin.domain.program.menu.MenuMapper">
+
+    <resultMap id="menuAuthorizationMap" type="menuAuthorization">
+        <result property="searchAuth" column="SCH_AH"/>
+        <result property="saveAuth" column="SAV_AH"/>
+        <result property="excelAuth" column="EXL_AH"/>
+        <result property="className" column="CLASS_NM"/>
+        <result property="function1Auth" column="FN1_AH"/>
+        <result property="function2Auth" column="FN2_AH"/>
+        <result property="function3Auth" column="FN3_AH"/>
+        <result property="function4Auth" column="FN4_AH"/>
+        <result property="function5Auth" column="FN5_AH"/>
+        <result property="menuCode" column="MNU_CD"/>
+        <result property="menuName" column="MNU_NM"/>
+        <result property="menuLevel" column="MNU_LV"/>
+        <result property="menuIndex" column="MNU_IX"/>
+        <result property="parentMenuCode" column="MNU_UP_CD"/>
+        <result property="icon" column="ICON"/>
+        <result property="programPath" column="PROG_PH"/>
+        <result property="programName" column="PROG_NM"/>
+        <result property="target" column="TARGET"/>
+        <result property="icon" column="ICON"/>
+        <result property="remark" column="REMARK"/>
+    </resultMap>
+
+    <resultMap id="menuResultMap" type="menu">
+        <result property="mnuCd" column="MNU_CD"/>
+        <result property="mnuNm" column="MNU_NM"/>
+        <result property="icon" column="ICON"/>
+        <result property="mnuLv" column="MNU_LV"/>
+        <result property="mnuIx" column="MNU_IX"/>
+        <result property="mnuUpCd" column="MNU_UP_CD"/>
+        <result property="remark" column="REMARK"/>
+        <result property="useYn" column="USE_YN"/>
+        <result property="program.progCd" column="PROG_CD"/>
+        <result property="program.progNm" column="PROG_NM"/>
+        <result property="createdAt" column="INS_DT"/>
+        <result property="createdBy" column="INS_USER"/>
+        <result property="modifiedAt" column="UPT_DT"/>
+        <result property="modifiedBy" column="UPT_USER"/>
+    </resultMap>
+
+    <select id="getAuthorizationMenus" resultMap="menuAuthorizationMap" statementType="PREPARED">
+        SELECT
+            A.SCH_AH,
+            A.SAV_AH,
+            A.EXL_AH,
+            A.FN1_AH,
+            A.FN2_AH,
+            A.FN3_AH,
+            A.FN4_AH,
+            A.FN5_AH,
+            A.MNU_CD,
+            A.GRP_AUTH_CD,
+            C.MNU_NM,
+            C.MNU_LV,
+            C.MNU_IX,
+            C.MNU_UP_CD,
+            C.ICON,
+            D.PROG_PH,
+            D.PROG_NM,
+            D.TARGET,
+            D.REMARK
+        FROM
+            GRP_AUTH_M A,
+            USER_AUTH_M B,
+            MNU_M C
+        LEFT OUTER JOIN PROG_M D
+        ON C.PROG_CD = D.PROG_CD
+
+        WHERE
+            A.GRP_AUTH_CD = B.GRP_AUTH_CD AND
+            A.MNU_CD = C.MNU_CD AND
+            C.USE_YN = 'Y' AND
+            B.USER_CD = #{param1}
+
+        <if test="param2 != null">
+            AND C.MNU_CD = #{param2}
+        </if>
+
+        ORDER BY MNU_LV, MNU_IX
+    </select>
+
+    <select id="activeMenus" resultMap="menuResultMap" statementType="PREPARED">
+        SELECT * FROM (
+            SELECT
+                A.MNU_CD,
+                A.MNU_NM,
+                A.ICON,
+                A.MNU_LV,
+                A.MNU_IX,
+                A.MNU_UP_CD,
+                A.REMARK,
+                A.USE_YN,
+                B.PROG_CD,
+                B.PROG_NM,
+                A.INS_DT,
+                A.INS_USER,
+                A.UPT_DT,
+                A.UPT_USER
+            FROM MNU_M A
+            LEFT OUTER JOIN PROG_M B
+            ON A.PROG_CD = B.PROG_CD
+
+            WHERE
+              A.USE_YN = 'Y' AND
+              A.MNU_LV = '1'
+
+            UNION ALL
+
+            SELECT
+                A.MNU_CD,
+                A.MNU_NM,
+                A.ICON,
+                A.MNU_LV,
+                A.MNU_IX,
+                A.MNU_UP_CD,
+                A.REMARK,
+                A.USE_YN,
+                B.PROG_CD,
+                B.PROG_NM,
+                A.INS_DT,
+                A.INS_USER,
+                A.UPT_DT,
+                A.UPT_USER
+            FROM MNU_M A
+
+            LEFT OUTER JOIN PROG_M B
+            ON A.PROG_CD = B.PROG_CD
+
+            WHERE
+              A.MNU_LV = '2' AND
+              A.USE_YN = 'Y' AND
+              A.MNU_UP_CD IN (SELECT MNU_CD FROM MNU_M WHERE USE_YN = 'Y' AND MNU_LV = '1')
+
+            UNION ALL
+
+            SELECT
+                A.MNU_CD,
+                A.MNU_NM,
+                A.ICON,
+                A.MNU_LV,
+                A.MNU_IX,
+                A.MNU_UP_CD,
+                A.REMARK,
+                A.USE_YN,
+                B.PROG_CD,
+                B.PROG_NM,
+                A.INS_DT,
+                A.INS_USER,
+                A.UPT_DT,
+                A.UPT_USER
+            FROM MNU_M A
+            LEFT OUTER JOIN PROG_M B
+            ON A.PROG_CD = B.PROG_CD
+
+            WHERE
+              A.MNU_LV = '3' AND
+              A.USE_YN = 'Y' AND
+              A.MNU_UP_CD IN (SELECT MNU_CD FROM MNU_M WHERE USE_YN = 'Y' AND MNU_LV = '2')
+        ) X
+        ORDER BY X.MNU_LV, X.MNU_IX
+
+    </select>
+</mapper>

@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.chequer.axboot.admin.domain.user.UserMapper">
+
+    <select id="findAll" resultType="user" parameterType="user" statementType="PREPARED">
+        SELECT
+            USER_CD AS userCd,
+            USER_NM AS userNm,
+            USER_PS AS userPs,
+            USER_TYPE AS userType,
+            EMAIL AS email,
+            HP_NO AS hpNo,
+            LAST_LOGIN_AT AS lastLoginAt,
+            PASSWORD_UPDATED_AT AS passwordUpdatedAt,
+            USE_YN AS useYn,
+            REMARK AS remark,
+            INS_DT AS insDt,
+            INS_USER_CD AS insUserCd,
+            UPT_DT AS uptDt,
+            UPT_USER_CD AS uptUserCd
+        FROM
+            USER_M
+    </select>
+
+    <select id="findOne" resultType="user" parameterType="user" statementType="PREPARED">
+        SELECT
+            USER_CD AS userCd,
+            USER_NM AS userNm,
+            USER_PS AS userPs,
+            USER_TYPE AS userType,
+            EMAIL AS email,
+            HP_NO AS hpNo,
+            LAST_LOGIN_AT AS lastLoginAt,
+            PASSWORD_UPDATED_AT AS passwordUpdatedAt,
+            USE_YN AS useYn,
+            REMARK AS remark,
+            INS_DT AS insDt,
+            INS_USER_CD AS insUserCd,
+            UPT_DT AS uptDt,
+            UPT_USER_CD AS uptUserCd
+        FROM
+            USER_M
+        WHERE
+            USER_CD = #{userCd}
+    </select>
+
+   <update id="delete" parameterType="user" statementType="PREPARED">
+        DELETE FROM
+            USER_M
+        WHERE
+            USER_CD = #{userCd}
+    </update>
+
+   <update id="update" parameterType="user" statementType="PREPARED">
+        UPDATE USER_M
+        SET
+            USER_NM = #{userNm},
+            USER_PS = #{userPs},
+            USER_TYPE = #{userType},
+            EMAIL = #{email},
+            HP_NO = #{hpNo},
+            LAST_LOGIN_AT = #{lastLoginAt},
+            PASSWORD_UPDATED_AT = #{passwordUpdatedAt},
+            USE_YN = #{useYn},
+            REMARK = #{remark},
+            INS_DT = #{insDt},
+            INS_USER_CD = #{insUserCd},
+            UPT_DT = #{uptDt},
+            UPT_USER_CD = #{uptUserCd}
+        WHERE
+            USER_CD = #{userCd}
+    </update>
+
+   <update id="insert" parameterType="user" statementType="PREPARED">
+        INSERT INTO USER_M (
+            USER_CD,
+            USER_NM,
+            USER_PS,
+            USER_TYPE,
+            EMAIL,
+            HP_NO,
+            LAST_LOGIN_AT,
+            PASSWORD_UPDATED_AT,
+            USE_YN,
+            REMARK,
+            INS_DT,
+            INS_USER_CD,
+            UPT_DT,
+            UPT_USER_CD
+        ) VALUES (
+            #{userCd},
+            #{userNm},
+            #{userPs},
+            #{userType},
+            #{email},
+            #{hpNo},
+            #{lastLoginAt},
+            #{passwordUpdatedAt},
+            #{useYn},
+            #{remark},
+            #{insDt},
+            #{insUserCd},
+            #{uptDt},
+            #{uptUserCd}
+        )
+    </update>
+
+</mapper>

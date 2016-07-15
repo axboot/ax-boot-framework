@@ -1,0 +1,21 @@
+{
+    "name": "webfont-nanum",
+    "version": "1.0.0",
+    "homepage": "https://github.com/thomasJang/webfont-nanum",
+    "authors": [
+        "tom@axisj.com thomasJ and team axisj"
+    ],
+    "description": "Nanum webfont repository",
+    "main": "",
+    "keywords": [
+        "webfont",
+        "Nanum"
+    ],
+    "license": "",
+    "ignore": [
+        "**/.*",
+        "node_modules",
+        "bower_components",
+        "*.iml"
+    ]
+}

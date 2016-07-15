@@ -1,0 +1,8 @@
+# Created by .ignore support plugin (hsz.mobi)
+node_modules
+*.marko.js
+*.html.js
+.idea
+*.iml
+.DS_Store
+**/test/bower_components

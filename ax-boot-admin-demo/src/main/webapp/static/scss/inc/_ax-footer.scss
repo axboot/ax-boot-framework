@@ -1,0 +1,28 @@
+.ax-footer {
+	position: fixed;
+	z-index: 200;
+	height: $foot-height;
+	line-height: $foot-height;
+
+	width: 100%;
+	bottom: 0px;
+
+	border-top: $foot-border;
+	background: $foot-background;
+
+	.ax-version {
+		color: $foot-font-color;
+		font-family: $foot-font-family;
+		font-size: $foot-font-size;
+		text-shadow: 0px -1px 0px lighten($foot-background, 10%);
+
+		list-style: none;
+		margin: 0px;
+		padding: 0px;
+
+		li {
+			float: left;
+			margin-right: 16px;
+		}
+	}
+}

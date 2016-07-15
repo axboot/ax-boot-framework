@@ -1,0 +1,180 @@
+// modal page
+.ax-modal-header{
+	height: 40px;overflow: hidden;
+	padding:10px;
+	h1{
+		display:block;height: 24px;line-height:40px;float: none;
+		font-size: $body-title-font-size;
+		font-weight: bold;
+		color: $body-title-font-color;
+		text-align: center;
+		margin:0px; padding:0px;
+		i.axi {
+			line-height: 40px;
+			margin-right: 5px;
+		}
+	}
+	.desc{
+		display: none;
+		display:block;height: 16px;line-height:16px;float: none;
+		text-align: center; margin:0px 0px 0px 0px; padding:0px;
+	}
+}
+.ax-modal-sub-header{
+	padding:10px;
+	h1, h2, h3{
+		display:block;height: 18px;line-height:18px;float: none;
+		font-size:16px; font-weight: normal; text-align: left;
+		margin:0px; padding:0px;
+	}
+	.desc{
+		display:block;height: 16px;line-height:16px;float: none;
+		text-align: center; margin:0px 0px 0px 0px; padding:0px;
+	}
+}
+.ax-modal-body{
+	margin: 0px 0px;
+	min-height:50px;
+
+	H3{
+		color:#616161;
+		margin:10px 10px;
+	}
+
+	.tree-in-form{
+		height:400px;
+		border: $modal-box-border;
+		border-radius:4px;
+	}
+	.form-in-form{
+		border:$modal-box-border;
+		border-radius:4px;
+	}
+	.buttons-in-form{
+		padding:5px;
+	}
+
+	.ax-box{
+		width:100%;
+		background: $modal-box-background;
+		border: $modal-box-border;
+
+		h1 {
+			position: relative;
+			display: block;
+			font-size: 20px;
+			color: $gray-dark;
+			font-weight: bold;
+			margin: 10px 0px;
+			padding: 0px 0px;
+			.more {
+				font-size: 14px;
+				float: right;
+			}
+			i.axi {
+				display: block;
+				float: left;
+				height: 20px;
+				line-height: 20px;
+				margin-right: 5px;
+			}
+		}
+		h2 {
+			font-size: 16px;
+			color: $gray-dark;
+			font-weight: bold;
+			margin: 5px 5px 5px 5px;
+			padding: 0px 0px;
+			height: 37px;
+			line-height: 37px;
+			.more {
+				font-size: 14px;
+				float: right;
+			}
+			&:first-child {
+				margin: 0px 10px;
+			}
+			i.axi {
+				display: block;
+				float: left;
+				height: 37px;
+				line-height: 37px;
+				margin-right: 5px;
+			}
+		}
+		h3 {
+			font-size: 14px;
+			color: $gray-dark;
+			font-weight: bold;
+			margin: 15px 10px 10px 10px;
+			padding: 0px 0px;
+			.more {
+				font-size: 14px;
+				float: right;
+			}
+		}
+
+		p {
+			font-size: 12px;
+			line-height: 1.6em;
+			color: $gray-dark;
+			font-weight: normal;
+			margin: 10px 0px;
+			padding: 0px;
+		}
+
+		.ax-box-wrap{
+			margin:10px;
+		}
+
+		.ax-tab{
+			margin: 10px 0px;
+		}
+
+		/* 페이지 검색바 */
+		.ax-search{
+			border-top:1px solid #959595;
+			margin: 5px 0px;
+			&:first-child {
+				margin-top: 0px;
+			}
+		}
+		/* 페이지 버튼그룹 */
+		.ax-button-group{
+			margin: 5px 0px;
+			line-height: 37px;
+			h1,h2,h3{margin:0px 10px 0px 10px;line-height: inherit;}
+			.left{float: left;white-space: nowrap;}
+			.right{float: right;white-space: nowrap;}
+			&:first-child{
+				margin: 0px 0px;
+			}
+		}
+		/* 페이지 그리드 */
+		.ax-grid, .ax-tree, .ax-form, .ax-section{
+			margin: 5px 0px;padding:0px;
+			&:last-child{
+				margin-bottom:0px;
+			}
+		}
+	}
+}
+
+.ax-modal-footer{
+	padding:10px 0px 20px 0px;
+	.ax-unit.left{
+
+	}
+	.ax-unit.center{
+		text-align: center;
+	}
+	.ax-unit.right{
+		text-align: right;
+	}
+	.left{
+		float:left;
+	}
+	.right{
+		float:right;
+	}
+}

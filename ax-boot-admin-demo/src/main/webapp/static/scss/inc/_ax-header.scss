@@ -1,0 +1,174 @@
+.ax-header {
+    position: fixed;
+    z-index: 300;
+    box-sizing: content-box;
+    padding-bottom: 3px;
+
+    height: $header-height;
+    width: 100%;
+    background: $header-background;
+    opacity: 0.95;
+
+    .ax-logo {
+        z-index: 1;
+        position: absolute;
+        left: 10px;
+        margin-top: 0px;
+        z-index: 1;
+        display: block;
+
+        a {
+            display: block;
+            width: $header-logo-width;
+            height: $header-logo-height;
+            padding: $header-logo-padding;
+            overflow: hidden;
+        }
+    }
+
+    .ax-top-menu {
+        z-index: 2;
+        position: absolute;
+        left: $header-menu-left;
+        top: 0;
+        width: $header-menu-width;
+        height: $header-height;
+
+        @import "ax-header-menu";
+    }
+
+    .ax-loginfo {
+        z-index: 3;
+        height: $header-height;
+        line-height: $header-height;
+
+        list-style: none;
+        margin: 0px;
+        padding: 0px;
+        position: absolute;
+        right: 10px;
+        top: 0px;
+        white-space: nowrap;
+        font-weight: 800;
+        a {
+            color: #fff;
+        }
+        li {
+            display: inline;
+            vertical-align: middle;
+            &.profile {
+                .photo {
+                    display: block;
+                    float: left;
+                    width: 34px;
+                    height: 34px;
+                    background-size: cover;
+                    border: 3px solid;
+                    border-color: $border-color-light;
+                    border-radius: 50%;
+                    margin-top: 9px;
+                }
+            }
+            &.account {
+                color: darken(#ccc, 20%);
+                font-weight: bold;
+                padding: 0px 10px;
+            }
+            &.lang {
+                padding: 0px 0px;
+            }
+            &.btns {
+                a {
+                    color: #fff;
+                    height: 30px;
+                    line-height: 30px;
+                }
+            }
+        }
+    }
+
+    .ax-heder-bottom-line {
+        position: absolute;
+        bottom: 0px;
+        left: 0px;
+        height: 3px;
+        width: 100%;
+        background: $header-border-color;
+    }
+}
+
+.ax-header-tab {
+    min-width: $frame-min-width;
+    box-sizing: border-box;
+    z-index: 299;
+    position: absolute;
+    width: 100%;
+    height: 30px;
+    left: 0px;
+    top: 63px;
+    background: #f7f7f7;
+    border-bottom: 1px solid #e5e5e5;
+    overflow: hidden;
+
+    .tab-container {
+        position: absolute;
+        bottom: 0px;
+        left: 0px;
+        padding: 0 0px;
+        height: 29px;
+        //width: 500%;
+        white-space: nowrap;
+
+        .tab-item {
+            cursor: pointer;
+            position: relative;
+            box-sizing: content-box;
+            display: inline-block;
+            //float:left;
+            box-sizing: border-box;
+            height: 29px;
+            line-height: 29px;
+            min-width: 120px;
+            //max-width: 300px;
+            padding: 0 10px;
+            padding-right: 22px;
+            border-right: 1px solid #e5e5e5;
+            color: #727375;
+            font-size: 12px;
+            margin: 0 0px;
+            @include ax-background(top, #f5f8fd, #f5f8fd);
+            white-space: nowrap;
+            text-overflow: ellipsis;
+            overflow: hidden;
+
+            i[data-tab-close] {
+                position: absolute;
+                right: 0px;
+                top: 0px;
+                height: 29px;
+                line-height: 29px;
+                width: 25px;
+                text-align: center;
+                //display: none;
+            }
+
+            &.on {
+                color: #fff;
+                font-weight: bold;
+                @include ax-background(top, #4488d3, #4079c0);
+                i[data-tab-close] {
+                    //display: block;
+                }
+            }
+        }
+    }
+}
+
+.ax-header-height {
+    height: $header-height + 4;
+}
+/*
+.ax-header-height {
+    height: $header-height;
+}
+*/

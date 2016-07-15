@@ -1,0 +1,11 @@
+{
+	"name": "AXBOOT",
+	"dependencies": {
+		"jquery": "^1.11.0",
+		"axisj": ">=1.0.23",
+		"mustache": "https://github.com/thomasJang/mustache.js.git#4fcf40c",
+		"AXBinder":">=0.0.1",
+		"jquery.easy-pie-chart":"",
+		"axboot.js":">=0.0.1"
+	}
+}

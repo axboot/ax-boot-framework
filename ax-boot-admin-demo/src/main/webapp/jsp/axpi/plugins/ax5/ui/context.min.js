@@ -1,0 +1,1 @@
+!function(root,ax_super){var U=ax5.util,ax_class=(ax5.dom,function(){ax_super&&ax_super.call(this),this.config={}});U.is_function(ax_super)&&(ax_class.prototype=new ax_super),root.context=ax_class,"function"==typeof define&&define.amd&&define("_ax5_ui_context",[],function(){return ax_class})}(ax5.ui,ax5.ui.root);

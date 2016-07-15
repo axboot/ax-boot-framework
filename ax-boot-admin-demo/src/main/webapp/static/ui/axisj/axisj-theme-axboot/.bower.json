@@ -1,0 +1,14 @@
+{
+  "name": "axisj-theme-axboot",
+  "version": "1.0.0",
+  "homepage": "axisj.com",
+  "_release": "1.0.0",
+  "_resolution": {
+    "type": "version",
+    "tag": "1.0.0",
+    "commit": "ec322858cd9973009fd2ecb9bd1b60b434572b9c"
+  },
+  "_source": "git://github.com/axisj/axisj-theme-axboot.git",
+  "_target": "*",
+  "_originalSource": "axisj-theme-axboot"
+}

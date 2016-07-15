@@ -1,0 +1,6 @@
+{
+	"name": "axisj-theme",
+	"dependencies": {
+		"axisj-theme-axboot": ""
+	}
+}

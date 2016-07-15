@@ -1,0 +1,19 @@
+{
+	"name": "AXBinder",
+	"version": "0.9.1",
+	"authors": [
+		"ThomasJ <tom@axisj.com>"
+	],
+	"description": "Simple two way binding javascript, jQuery plugin",
+	"main": "dist/AXBinder.min.js",
+	"keywords": [
+		"jquery",
+		"plugin"
+	],
+	"dependencies": {
+		"jquery": "^1.11.0",
+		"mustache": "https://github.com/thomasJang/mustache.js.git#4fcf40c"
+	},
+	"license": "MIT",
+	"homepage": "axisj.com"
+}

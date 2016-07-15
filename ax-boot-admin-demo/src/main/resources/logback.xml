@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+    <include resource="logback-common.xml"/>
+    <include resource="logback-${spring.profiles.active:-local}.xml"/>
+</configuration>

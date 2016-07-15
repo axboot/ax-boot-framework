@@ -1,0 +1,248 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+[AXU4J](https://github.com/axisj-com/axu4j)
+
+AXU(https://github.com/axisj-com/axu) for java
+
+악수(AXU)는 액시스제이에서 제공하는 '반응형 웹 애플리케이션 템플릿 패키지' 입니다.
+AXU4J는 악수를 좀 더 쉽게 사용할 수 있게 해주는 layout/tag engine 입니다.
+layout 엔진은 반복되는 레이아웃을 간단하게 정리하고 적용 가능하게 해줍니다.
+또한 악수의 그리드시스템과 폼을 tag로 만들어 사용함으로서 좀 더 적고 간결한 소스 작성이 가능하며
+기존 순수 HTML 작성보다 재사용과 유지보수에 편리합니다.
+
+xml 컨텐츠 내에서 사용하는 문법은 mustache 문법을 적용(http://mustache.github.io/)하였습니다.
+
+AXU4J를 사용하기 위해서는 JSP 상단에 아래 선언을 추가해야 합니다.
+<%@ taglib prefix="ax" uri="http://axisj.com/axu4j" %>
+
+[※ dynamic attributes 사용가능] 표시가 있는 태그는 아래와 같이 사용할 수 있습니다.
+axu4j.xml 설정
+```xml
+<row>
+    <wrap>
+<![CDATA[
+<div id="{{id}}" class="ax-layer {{css}}" style="{{style}}" data-dynaattr="{{dynaattr}}">
+	{{{doBody}}}
+</div>
+]]>
+    </wrap>
+</row>
+```
+
+JSP 사용법
+```jsp
+<ax:row dynaattr="foo">
+    row tag contents
+</ax:row>
+```
+
+output HTML
+```html
+<div id="row-1" class="ax-layer " style="" data-dynaattr="foo">
+	row tag contents
+</div>
+``
+
+-->
+<axu4j xmlns="http://axisj.com/axu4j">
+    <config>
+        <!-- 개발모드: DEV(AXU4J를 사용할 때 마다 설정파일을 다시 로드합니다.), 운영모드: RUN(설정파일을 최초 한 번만 로드합니다.) -->
+        <mode>RUN</mode>
+    </config>
+    <layout>
+        <!-- prefix: layout 파일의 경로를 지정합니다. 현재 JSP, HTML 두 가지 모두 지원하고 있으나 JSP 사용을 권장합니다. -->
+        <prefix>/layouts/</prefix>
+        <!-- encoding: layout 파일의 인코딩을 지정합니다. 이 설정은 layout 파일이 HTML인 경우만 적용됩니다. -->
+        <encoding>UTF-8</encoding>
+    </layout>
+
+    <!--
+    row: 악수 그리드 시스템(https://www.axisj.com/ko/axu/docs#axu-3)을 사용하기 위한 row tag입니다.
+    ※ dynamic attributes 사용가능
+    -->
+    <row>
+        <wrap>
+            <![CDATA[
+<div id="{{id}}" class="ax-layer {{css}}" style="{{style}}">
+	{{{doBody}}}
+	<div class="ax-clear"></div>
+</div>
+]]>
+        </wrap>
+    </row>
+
+    <!--
+    col: 악수 그리드 시스템(https://www.axisj.com/ko/axu/docs#axu-3)을 사용하기 위한 col tag입니다.
+    하나의 row tag 안에 col tag size의 합은 12가 되어야 합니다.
+    ※ dynamic attributes 사용가능
+    -->
+    <col>
+        <wrap>
+            <![CDATA[
+<div id="{{id}}" class="ax-col-{{size}}">
+	<div class="ax-unit">
+		<div class="ax-box {{css}}" style="{{style}}">
+            {{#wrap}}<div class="ax-box-wrap">{{/wrap}}
+                {{{doBody}}}
+			{{#wrap}}</div>{{/wrap}}
+		</div>
+		<div class="ax-clear"></div>
+		<div class="H10 DX-H10"></div>
+	</div>
+</div>
+]]>
+        </wrap>
+    </col>
+
+    <!--
+    form: HTML form과 동일하며 form외에 레이아웃과 스타일적 요소를 추가적으로 가지고 있습니다.
+    ※ dynamic attributes 사용가능
+    -->
+    <form>
+        <wrap>
+            <![CDATA[
+<form id="{{id}}" name="{{name}}" method="{{method}}" class="ax-rwd-form {{css}}" style="{{style}}" onsubmit="{{^onsubmit}}return false;{{/onsubmit}}{{onsubmit}}">
+	<div class="ax-rwd-table">
+		{{{doBody}}}
+	</div>
+</form>
+]]>
+        </wrap>
+    </form>
+
+    <!--
+    fields: form tag 내부에서 row의 역할을 하는 tag 입니다.
+    ※ dynamic attributes 사용가능
+    -->
+    <fields>
+        <wrap>
+            <![CDATA[
+<div id="{{id}}" class="item-group {{class}}" style="{{style}}">
+	{{{doBody}}}
+	<div class="group-clear"></div>
+</div>
+]]>
+        </wrap>
+    </fields>
+
+    <!--
+    field: fields tag 내부에서 컬럼처럼 사용되는 tag입니다.
+    ※ dynamic attributes 사용가능
+    -->
+    <field>
+        <wrap>
+            <![CDATA[
+
+    <div id="{{id}}" class="item {{class}}">
+        <div class="item-lable">
+{{#labelwidth}}
+            <span class="th" style="width:{{labelwidth}};min-width:{{labelwidth}}"><span class="nowrap">{{{label}}}</span></span>
+{{/labelwidth}}
+{{^labelwidth}}
+            <span class="th">{{{label}}}</span>
+{{/labelwidth}}
+{{#width}}
+            <span class="td inputText {{css}}" style="min-width:{{width}};{{style}}" title="{{title}}">
+{{/width}}
+{{^width}}
+            <span class="td inputText {{css}}" style="{{style}}" title="{{title}}">
+{{/width}}
+                {{{doBody}}}
+            </span>
+        </div>
+    </div>
+    <div class="item-clear"></div>
+]]>
+        </wrap>
+    </field>
+
+    <!--
+    custom: 사용자 정의 Tag 사용자 정의 태그를 정의하고 JSP에서 이를 쉽게 사용할 수 있습니다.
+    자세한 사용법은 https://github.com/axisj-com/axu4j/wiki/Manual(ver-0.4.0)#custom 여기를 참고하세요.
+    ※ dynamic attributes 사용가능
+    -->
+    <customs>
+        <custom id="select">
+            <![CDATA[
+<select name="{{name}}" id="{{id}}" title="{{title}}" data-ax-path="{{data-ax-path}}" class="{{class}}" style="{{style}}">
+{{#emptyName}}
+	<option value="">{{emptyName}}</option>
+{{/emptyName}}
+{{{doBody}}}
+{{#options}}
+	<option value="{{code}}">{{name}}</option>
+{{/options}}
+</select>
+]]>
+        </custom>
+        <custom id="form">
+            <![CDATA[
+<form name={{name}} action="{{action}}" method="{{method}}">
+	{{doBody}}
+</form>
+]]>
+        </custom>
+        <custom id="form-file">
+            <![CDATA[
+<form name={{name}} action="{{action}}" method="{{method}}" enctype="multipart/form-data">
+	{{{doBody}}}
+</form>
+]]>
+        </custom>
+        <custom id="table">
+            <![CDATA[
+<table class="ax-tbl-layout">
+	{{{doBody}}}
+</table>
+]]>
+        </custom>
+        <custom id="tr">
+            <![CDATA[
+<tr class="{{class}}">
+	{{{doBody}}}
+</tr>
+]]>
+        </custom>
+        <custom id="td">
+            <![CDATA[
+<td class="td-layout" style="{{style}}" rowspan="{{rowspan}}" colspan="{{colspan}}">
+	{{{doBody}}}
+</td>
+]]>
+        </custom>
+        <custom id="page-button">
+            <![CDATA[
+<div class="ax-button-group cx-common-btns">
+    <div class="right">
+{{#session.SEARCH_AUTH}}
+        <button type="button" class="AXButton Blue" id="ax-page-btn-search"><i class="axi axi-ion-android-search"></i> 조회</button>
+{{/session.SEARCH_AUTH}}
+{{#session.SAVE_AUTH}}
+        <button type="button" class="AXButton Blue" id="ax-page-btn-save"><i class="axi axi-save"></i> 저장</button>
+{{/session.SAVE_AUTH}}
+{{#session.EXCEL_AUTH}}
+        <button type="button" class="AXButton Blue" id="ax-page-btn-excel"><i class="axi axi-file-excel-o"></i> 엑셀</button>
+{{/session.EXCEL_AUTH}}
+{{#session.FUNCTION_1_AUTH}}
+        <button type="button" class="AXButton Blue" id="ax-page-btn-fn1"><i class="axi axi-minus-circle"></i> 삭제</button>
+{{/session.FUNCTION_1_AUTH}}
+{{#session.FUNCTION_2_AUTH}}
+        <button type="button" class="AXButton Blue" id="ax-page-btn-fn2"><i class="axi axi-plus-circle"></i> 등록</button>
+{{/session.FUNCTION_2_AUTH}}
+{{#session.FUNCTION_3_AUTH}}
+        <button type="button" class="AXButton Blue" id="ax-page-btn-fn3">{{{function3Label}}}</button>
+{{/session.FUNCTION_3_AUTH}}
+{{#session.FUNCTION_4_AUTH}}
+        <button type="button" class="AXButton Blue" id="ax-page-btn-fn4">{{{function4Label}}}</button>
+{{/session.FUNCTION_4_AUTH}}
+{{#session.FUNCTION_5_AUTH}}
+        <button type="button" class="AXButton Blue" id="ax-page-btn-fn5">{{{function5Label}}}</button>
+{{/session.FUNCTION_5_AUTH}}
+        {{{doBody}}}
+    </div>
+    <div class="ax-clear"></div>
+</div>
+]]>
+        </custom>
+    </customs>
+</axu4j>

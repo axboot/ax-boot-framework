@@ -1,0 +1,223 @@
+.ax-body {
+	z-index: 100;
+	padding-bottom: 0px;
+
+	.ax-title {
+		height: 30px;
+		overflow: hidden;
+		padding: 20px;
+		h1 {
+			display: block;
+			height: 30px;
+			line-height: 30px;
+			float: left;
+			font-size: $body-title-font-size;
+			font-weight: bold;
+			color: $body-title-font-color;
+			text-align: center;
+			margin: 0px;
+			padding: 0px;
+			i.axi {
+				line-height: 30px;
+				margin-right: 5px;
+			}
+		}
+		.desc {
+			display: block;
+			height: 30px;
+			line-height: 30px;
+			float: left;
+			text-align: center;
+			margin: 0px 0px 0px 10px;
+			padding: 0px;
+		}
+		.expand {
+			h1 {
+				//margin-left: 40px;
+			}
+		}
+	}
+
+	.ax-box {
+		position: relative;
+		width: 100%;
+		background: $body-box-background;
+		border: $body-box-border;
+
+		@include ax-border-radius($body-box-border-radius);
+
+		h1 {
+			position: relative;
+			display: block;
+			font-size: 20px;
+			color: $gray-dark;
+			font-weight: bold;
+			margin: 10px 0px;
+			padding: 0px 0px;
+			.more {
+				font-size: 14px;
+				float: right;
+			}
+			i.axi {
+				display: block;
+				float: left;
+				height: 20px;
+				line-height: 20px;
+				margin-right: 5px;
+			}
+		}
+		h2 {
+			font-size: 16px;
+			color: $gray-dark;
+			font-weight: bold;
+			margin: 5px 5px 5px 5px;
+			padding: 0px 0px;
+			height: 37px;
+			line-height: 37px;
+			.more {
+				font-size: 14px;
+				float: right;
+			}
+			&:first-child {
+				margin: 0px 10px;
+			}
+			i.axi {
+				display: block;
+				float: left;
+				height: 37px;
+				line-height: 37px;
+				margin-right: 5px;
+			}
+		}
+		h3 {
+			font-size: 14px;
+			color: $gray-dark;
+			font-weight: bold;
+			margin: 15px 10px 10px 10px;
+			padding: 0px 0px;
+			.more {
+				font-size: 14px;
+				float: right;
+			}
+		}
+
+		p {
+			font-size: 12px;
+			line-height: 1.6em;
+			color: $gray-dark;
+			font-weight: normal;
+			margin: 10px 0px;
+			padding: 0px;
+		}
+
+		.ax-box-wrap {
+			margin: 10px;
+		}
+
+		.ax-tab {
+			margin: 10px 0px;
+		}
+
+		/* 페이지 검색바 */
+		.ax-search {
+			border-top: 1px solid #959595;
+			margin: 5px 0px;
+			&:first-child {
+				margin-top: 0px;
+			}
+		}
+		/* 페이지 버튼그룹 */
+		.ax-button-group {
+			margin: 5px 0px;
+			min-height: 37px;
+			line-height: 37px;
+
+			h1, h2, h3 {
+				margin: 0px 5px;
+			}
+			h2 {
+
+			}
+			.left {
+				float: left;
+				white-space: nowrap;
+			}
+			.right {
+				float: right;
+				white-space: nowrap;
+			}
+			&:first-child {
+				margin: 0px 0px;
+			}
+		}
+		/* 페이지 그리드 */
+		.ax-grid, .ax-tree, .ax-form, .ax-section {
+			margin: 5px 0px;
+			padding: 0px;
+			&:last-child {
+				margin-bottom: 0px;
+			}
+		}
+
+	}
+
+	/* 페이지 본문 패딩 조절용 */
+	.ax-content {
+		float: none;
+		width: auto;
+		padding-left: 250px;
+		&.expand {
+			padding-left: 0px;
+		}
+		&.expandAll {
+			padding-left: 0px;
+		}
+	}
+
+	.cx-common-btns {
+		position: absolute;
+		right: 10px;
+		top: -50px;
+		min-height: 20px !important;
+		line-height: 20px !important;
+
+		&.on {
+			position: fixed;
+			right: 5px;
+			top: 5px;
+			padding: 7px 7px;
+			z-index: 1000;
+			border: 5px solid $header-border-color;
+			background: $header-background;
+			opacity: 0.95;
+			border-radius: 10px;
+
+			box-shadow: 0px 0px 3px #888;
+
+		}
+		.AXButton {
+			//display: none;
+		}
+	}
+}
+
+.frame-container {
+	min-width:$frame-min-width;
+	position: relative;
+	overflow: hidden;
+	.frame-item {
+
+		position: absolute;
+		left: 0px;
+		top: 0px;
+		width: 100%;
+		height: 100%;
+		border: 0px none;
+		display: none;
+		margin: 0;
+		padding: 0;
+		&.on {
+			display: block;
+		}
+	}
+}
