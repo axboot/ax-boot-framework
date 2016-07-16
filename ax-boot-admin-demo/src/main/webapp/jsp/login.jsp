@@ -33,12 +33,12 @@
                     <div class="H10"></div>
                     <form name="login-form" method="post" action="/api/login" onsubmit="return fnObj.login();">
                         <div class="ax-input">
-                            <input type="text" name="userCd" id="userCd" value="${loginUserName}"
+                            <input type="text" name="userCd" id="userCd" value="admin"
                                    class="AXInput ime-false"
                                    placeholder="e-mail">
                         </div>
                         <div class="ax-input">
-                            <input type="password" name="password" id="password" value="${loginUserPassword}"
+                            <input type="password" name="password" id="password" value="1234"
                                    class="AXInput"
                                    placeholder="password">
                         </div>
