@@ -3,7 +3,6 @@
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 
-    <groupId>com.chequer.axboot</groupId>
     <artifactId>ax-boot-core</artifactId>
     <name>AX Boot Core</name>
     <description>AX Boot Core</description>
@@ -13,9 +12,9 @@
     <modelVersion>4.0.0</modelVersion>
 
     <parent>
-        <groupId>org.springframework.boot</groupId>
-        <artifactId>spring-boot-parent</artifactId>
-        <version>1.3.5.RELEASE</version>
+        <groupId>com.chequer.axboot</groupId>
+        <artifactId>ax-boot-parent</artifactId>
+        <version>1.0.0</version>
     </parent>
 
     <ciManagement>
