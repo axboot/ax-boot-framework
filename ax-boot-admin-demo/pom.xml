@@ -9,51 +9,6 @@
     <name>AX-Boot Admin Demo</name>
     <description>AX-Boot Admin Demo Application</description>
 
-    <developers>
-        <developer>
-            <id>brant</id>
-            <name>Brant InSeo Hwang</name>
-            <email>dlstj3039@gmail.com</email>
-            <organization>Chequer</organization>
-            <organizationUrl>http://www.chequer.io</organizationUrl>
-            <roles>
-                <role>Project Lead</role>
-            </roles>
-        </developer>
-        <developer>
-            <id>tom</id>
-            <name>Thomas Jang</name>
-            <email>tom@axisj.com</email>
-            <organization>AXISJ</organization>
-            <organizationUrl>http://www.axisj.com</organizationUrl>
-            <roles>
-                <role>Project Lead</role>
-            </roles>
-        </developer>
-    </developers>
-
-    <repositories>
-        <repository>
-            <id>axboot-release</id>
-            <name>AXBoot-Release</name>
-            <url>http://nexus.axboot.com/content/repositories/releases</url>
-        </repository>
-        <repository>
-            <id>spring-milestones</id>
-            <name>Spring Milestones</name>
-            <url>http://repo.spring.io/milestone</url>
-            <snapshots>
-                <enabled>false</enabled>
-            </snapshots>
-        </repository>
-    </repositories>
-
-    <properties>
-        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <java.version>1.8</java.version>
-        <maven.test.skip>true</maven.test.skip>
-    </properties>
-
     <parent>
         <groupId>com.chequer.axboot</groupId>
         <artifactId>ax-boot-parent</artifactId>
@@ -135,7 +90,6 @@
         <dependency>
             <groupId>com.chequer.axboot</groupId>
             <artifactId>ax-boot-core</artifactId>
-            <version>1.0.15</version>
         </dependency>
 
         <dependency>
@@ -147,27 +101,6 @@
 
     <build>
         <finalName>axboot-admin</finalName>
-        <resources>
-            <resource>
-                <directory>src/main/resources</directory>
-            </resource>
-            <resource>
-                <directory>src/main/java</directory>
-            </resource>
-        </resources>
-
-        <testResources>
-            <testResource>
-                <directory>src/test/resources</directory>
-            </testResource>
-        </testResources>
-
-        <plugins>
-            <plugin>
-                <groupId>org.springframework.boot</groupId>
-                <artifactId>spring-boot-maven-plugin</artifactId>
-            </plugin>
-        </plugins>
     </build>
 
 </project>
