@@ -90,6 +90,7 @@
         <dependency>
             <groupId>com.chequer.axboot</groupId>
             <artifactId>ax-boot-core</artifactId>
+            <version>1.0.15</version>
         </dependency>
 
         <dependency>
