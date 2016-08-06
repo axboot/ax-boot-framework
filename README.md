@@ -20,10 +20,10 @@
 - Tomcat 7.x+
 
 ## How to Start
-1) Setup Database (default provided Embedded H2)
-2) Startup Tomcat with WAR
-3) Access to http://localhost:[PORT]/setup and execute default schema generator.
-4) then, you can login with ID(admin) / Password(1234) on the http://localhost:[PORT]/jsp/login.jsp
+- 1) Setup Database (default provided Embedded H2)
+- 2) Startup Tomcat with WAR
+- 3) Access to http://localhost:[PORT]/setup and execute default schema generator.
+- 4) then, you can login with ID(admin) / Password(1234) on the http://localhost:[PORT]/jsp/login.jsp
 
 ## Ref
 - Official Site : http://www.axboot.com
