@@ -415,7 +415,7 @@
 
 
     <modules>
-        <module>ax-boot-admin-demo</module>
+        <module>ax-boot-admin</module>
         <module>ax-boot-core</module>
     </modules>
 

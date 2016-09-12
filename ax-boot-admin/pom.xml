@@ -3,11 +3,11 @@
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
-    <artifactId>ax-boot-admin-demo</artifactId>
+    <artifactId>ax-boot-admin</artifactId>
     <version>1.0.0</version>
     <packaging>war</packaging>
-    <name>AX-Boot Admin Demo</name>
-    <description>AX-Boot Admin Demo Application</description>
+    <name>AX-Boot Admin</name>
+    <description>AX-Boot Admin Application</description>
 
     <parent>
         <groupId>com.chequer.axboot</groupId>
