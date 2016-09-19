@@ -74,12 +74,12 @@
 
                         <div class="form-group">
                             <label for="userCd"><i class="cqc-new-message"></i> ID</label>
-                            <input type="text" name="userCd" id="userCd" value="" class="form-control ime-false" placeholder="" />
+                            <input type="text" name="userCd" id="userCd" value="system" class="form-control ime-false" placeholder="" />
                         </div>
 
                         <div class="form-group">
                             <label for="password"><i class="cqc-key"></i> Password</label>
-                            <input type="password" name="userPs" id="userPs" value="" class="form-control ime-false" placeholder="" />
+                            <input type="password" name="userPs" id="userPs" value="1234" class="form-control ime-false" placeholder="" />
                         </div>
 
                         <input type="hidden"
