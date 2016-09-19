@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<!--
+  ~ Copyright (c) 2016. tom@axisj.com
+  ~ - github.com/thomasjang
+  ~ - www.axisj.com
+  -->
+
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <script src="bower_components/jquery/dist/jquery.min.js"></script>
+    <script src="../dist/ax5core.js"></script>
+</head>
+<body style="padding: 50px;">
+
+
+<script>
+    (function () {
+        var UI = ax5.ui;
+        var U = ax5.util;
+
+        UI.addClass({
+            className: "testClass",
+            version: "0.0.1"
+        }, (function () {
+
+            var testClass = function () {
+
+                var self = this,
+                        cfg;
+
+                this.config = {};
+                cfg = this.config;
+
+                this.sampleMethod = function () {
+
+                };
+
+                // 클래스 생성자
+                // 클래스 생성자
+                this.main = (function () {
+                    if (arguments && U.isObject(arguments[0])) {
+                        this.setConfig(arguments[0]);
+                    }
+                }).apply(this, arguments);
+
+            };
+            return testClass;
+
+        })());
+    })();
+
+    var myUI = new ax5.ui.testClass();
+    console.log(myUI);
+
+</script>
+
+</body>
+</html>

@@ -1,6 +1,6 @@
 <%@ page contentType="text/html; charset=UTF-8" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
-<%@ taglib prefix="ax" uri="http://axisj.com/axu4j" %>
+<%@ taglib prefix="ax" tagdir="/WEB-INF/tags" %>
 
 <ax:layout name="base.jsp">
     <ax:set name="title" value="${PAGE_NAME}"/>
@@ -9,20 +9,22 @@
     <ax:div name="contents">
         <ax:row>
             <ax:col size="12">
-                <ax:custom customid="page-button" pageId="${PAGE_ID}" searchAuth="${SEARCH_AUTH}" saveAuth="${SAVE_AUTH}" excelAuth="${EXCEL_AUTH}" function1Auth="${FUNCTION_1_AUTH}"
+                <ax:custom customId="page-button" pageId="${PAGE_ID}" searchAuth="${SEARCH_AUTH}" saveAuth="${SAVE_AUTH}" excelAuth="${EXCEL_AUTH}" function1Auth="${FUNCTION_1_AUTH}"
                            function2Auth="${FUNCTION_2_AUTH}" function3Auth="${FUNCTION_3_AUTH}" function4Auth="${FUNCTION_4_AUTH}" function5Auth="${FUNCTION_5_AUTH}">
                     <button type="button" class="AXButton Blue" id="ax-grid-btn-del"><i class="axi axi-minus-circle"></i> 삭제</button>
                 </ax:custom>
+
                 <div class="ax-search" id="page-search-box"></div>
 
-                <ax:custom customid="table">
-                    <ax:custom customid="tr">
-                        <ax:custom customid="td" style="width:30%;">
+                <ax:custom customId="table">
+
+                    <ax:custom customId="tr">
+                        <ax:custom customId="td" style="width:30%;">
                             <h2><i class="axi axi-list-alt"></i> 권한그룹</h2>
                             <div class="ax-grid" id="page-grid-box" style="min-height:300px;"></div>
 
                         </ax:custom>
-                        <ax:custom customid="td">
+                        <ax:custom customId="td">
                             <div class="ax-button-group">
                                 <div class="left">
                                     <h2><i class="axi axi-table"></i> 권한그룹 정보</h2>
@@ -113,7 +115,7 @@
 
                         app.modal.open({
                             url: "/jsp/system/system-menu-search-modal-01.jsp",
-                            pars: "callBack=fnObj.grid2.setMnuCd", // callBack 말고
+                            pars: "callBack=fnObj.grid2.setMnuCd&grpAuthCd=" + $("#grpAuthCd").val(), // callBack 말고
                             width: 500 // 모달창의 너비 - 필수값이 아닙니다. 없으면 900
                             //top:100 // 모달창의 top 포지션 - 필수값이 아닙니다. 없으면 axdom(window).scrollTop() + 30
                         });
@@ -135,7 +137,9 @@
 
                 search: {
                     target: new AXSearch(),
-                    get: function () { return this.target },
+                    get: function () {
+                        return this.target
+                    },
                     bind: function () {
                         var _this = this;
                         this.target.setConfig({
@@ -181,10 +185,10 @@
                             theme: "AXGrid",
                             colHeadAlign: "center",
                             /*
-                            mediaQuery: {
-                                mx:{min:0, max:767}, dx:{min:767}
-                            },
-                            */
+                             mediaQuery: {
+                             mx:{min:0, max:767}, dx:{min:767}
+                             },
+                             */
                             colGroup: [
                                 {key: "grpAuthCd", label: "그룹코드", width: "70", align: "center"},
                                 {key: "grpAuthNm", label: "그룹명", width: "140"},
@@ -241,10 +245,10 @@
                             theme: "AXGrid",
                             colHeadAlign: "center",
                             /*
-                            mediaQuery: {
-                                mx:{min:0, max:767}, dx:{min:767}
-                            },
-                            */
+                             mediaQuery: {
+                             mx:{min:0, max:767}, dx:{min:767}
+                             },
+                             */
                             colGroup: [
                                 {key: "index", label: "구분", width: "40", align: "center", formatter: "checkbox"},
                                 {

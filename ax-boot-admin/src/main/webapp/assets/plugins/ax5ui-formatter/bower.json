@@ -1,0 +1,26 @@
+{
+	"name": "ax5ui-formatter",
+	"version": "0.6.1",
+	"description": "A formatter plugin that works with Bootstrap & jQuery",
+	"authors": [
+		"ThomasJ <tom@axisj.com>"
+	],
+	"main": "dist/ax5formatter.js",
+	"keywords": [
+		"bootstrap",
+		"jquery",
+		"ax5ui",
+		"plugin",
+		"bootstrap jQuery plugins",
+		"formatter",
+		"ax5ui-formatter",
+		"javascript ui"
+	],
+	"dependencies": {
+		"jquery": "^1.11.0",
+		"ax5core": ">=1.0.9",
+		"bootstrap": "^3.3.6"
+	},
+	"license": "LGPLv3",
+	"homepage": "ax5.io"
+}

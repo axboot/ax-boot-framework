@@ -33,7 +33,7 @@ import java.sql.Time;
 import java.time.LocalTime;
 
 /**
- * Converts {@link LocalTime} to {@link java.sql.Time} and back
+ * Converts {@link LocalTime} to {@link Time} and back
  * in support of JPA persistence.
  * <p>
  * The existence of this class in the classpath and it being known by the persistence unit
@@ -44,7 +44,7 @@ import java.time.LocalTime;
  * Important: the setting of <code>@Converter(autoApply = true)</code>
  * in this class will make this conversion
  * effective for all Entities that have one or more
- * persistent {@link java.time.LocalTime} properties.
+ * persistent {@link LocalTime} properties.
  * <p>
  * The persistence provider must minimally support
  * <a href="https://jcp.org/aboutJava/communityprocess/final/jsr338/index.html">JPA 2.1</a>

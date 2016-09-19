@@ -5,9 +5,11 @@ import com.chequer.axboot.core.domain.log.ErrorLogService;
 import com.chequer.axboot.core.logback.AXBootLogbackAppender;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.InitializingBean;
+import org.springframework.stereotype.Component;
 
 import javax.inject.Inject;
 
+@Component
 public class AXBootLoggingConfig implements InitializingBean {
 
     @Inject

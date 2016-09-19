@@ -1,0 +1,27 @@
+{
+	"name": "ax5ui-toast",
+	"version": "0.3.1",
+	"description": "A toast plugin that works with Bootstrap & jQuery",
+	"license": "LGPLv3",
+	"repository": {
+		"type": "git",
+		"url": "git+https://github.com/ax5ui/ax5ui-toast"
+	},
+	"author": {
+		"name": "Thomas Jang",
+		"email": "tom@axisj.com",
+		"url": "ax5.io"
+	},
+	"keywords": [
+		"bootstrap",
+		"jquery",
+		"ax5ui",
+		"plugin",
+		"bootstrap jQuery plugins",
+		"dialog",
+		"ax5ui-dialog",
+		"javascript ui"
+	],
+	"dependencies": {
+	}
+}

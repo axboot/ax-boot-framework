@@ -54,15 +54,8 @@ public class JdbcMetadataService {
         try {
             connection = getConnection();
             String[] types = {"TABLE"};
-            String schema = null;
 
-            try {
-                schema = connection.getSchema();
-            } catch (Throwable e) {
-                // ignore
-            }
-
-            ResultSet resultSet = connection.getMetaData().getTables(connection.getCatalog(), schema, "%", types);
+            ResultSet resultSet = connection.getMetaData().getTables(connection.getCatalog(), connection.getSchema(), "%", types);
             tables.addAll(new ColumnToBeanPropertyRowMapper<>(Table.class).mapRows(resultSet));
 
             for (Table table : tables) {

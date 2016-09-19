@@ -11,7 +11,7 @@ import java.util.List;
 @Data
 public class Column {
 
-    public static final List<String> AUDIT_COLUMNS = Arrays.asList("INS_DT", "INS_USER_CD", "UPT_DT", "UPT_USER_CD");
+    public static final List<String> AUDIT_COLUMNS = Arrays.asList("CREATED_AT", "CREATED_BY", "UPDATED_AT", "UPDATED_BY");
 
     private boolean key;
 

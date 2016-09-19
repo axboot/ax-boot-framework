@@ -1,7 +1,7 @@
-<%@ page import="com.chequer.axboot.admin.utils.SessionUtils" %>
+<%@ page import="com.chequer.axboot.core.utils.SessionUtils" %>
 <%@ page language="java" contentType="text/html; charset=utf-8" pageEncoding="utf-8" %>
-<%@ taglib prefix="ax" uri="http://axisj.com/axu4j" %>
-<%@ include file="./common/incImport.jspf" %>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="ax" tagdir="/WEB-INF/tags" %>
 <%
     String lastNavigatedPage = null;
 
@@ -11,124 +11,105 @@
 
     request.setAttribute("redirect", lastNavigatedPage);
 %>
-<ax:layout name="empty.jsp">
-    <ax:set name="axpage_class" value="login"/>
-    <c:if test="${redirect!=null}">
-        <c:redirect url="${redirect}"/>
-    </c:if>
-    <ax:div name="header">
+<c:if test="${redirect!=null}">
+    <c:redirect url="${redirect}"/>
+</c:if>
 
-    </ax:div>
+<ax:set key="axbody_class" value="login"/>
 
-    <ax:div name="contents">
-        <ax:row>
-            <ax:col size="12" wrap="false">
+<ax:layout name="empty">
+    <jsp:attribute name="css">
+    </jsp:attribute>
 
-                <div class="login-visual"></div>
-                <div class="login-vline"></div>
-                <div class="login-form">
-                    <h1>로그인
-                        <small>로그인 해주세요.</small>
-                    </h1>
-                    <div class="H10"></div>
-                    <form name="login-form" method="post" action="/api/login" onsubmit="return fnObj.login();">
-                        <div class="ax-input">
-                            <input type="text" name="userCd" id="userCd" value="admin"
-                                   class="AXInput ime-false"
-                                   placeholder="e-mail">
-                        </div>
-                        <div class="ax-input">
-                            <input type="password" name="password" id="password" value="1234"
-                                   class="AXInput"
-                                   placeholder="password">
-                        </div>
+    <jsp:attribute name="js">
+        <script type="text/javascript" src="<c:url value='/assets/js/axboot/dist/good-words.js' />"></script>
+    </jsp:attribute>
 
-                        <div class="ax-clear"></div>
-                        <div class="H10"></div>
-                        <input type="hidden"
-                               name="${_csrf.parameterName}" value="${_csrf.token}"/>
-
-                        <div class="ax-funcs">
-                            <button type="submit" class="AXButtonLarge Red">&nbsp;&nbsp;로그인&nbsp;&nbsp;</button>
-                        </div>
-                    </form>
-                </div>
-                <div class="ax-clear"></div>
-                <div class="ax-box-underline"></div>
-            </ax:col>
-        </ax:row>
-
-        <div id="row-30" class="ax-layer " style="">
-            <div id="col-30" class="ax-col-12">
-                <div class="ax-unit">
-                    <div style="width:800px;margin:10px auto;font-size:13px;line-height: 1.8em;text-align: center;"
-                         id="good_words">
-
-                    </div>
-                </div>
-            </div>
-            <div class="ax-clear"></div>
-        </div>
-
-    </ax:div>
-    <ax:div name="scripts">
+    <jsp:attribute name="script">
         <script type="text/javascript">
             var fnObj = {
                 pageStart: function () {
-                    var word = good_words[(Math.random() * good_words.length).floor()];
-                    var sidx = -1;
-                    var si1 = word.indexOf("(");
-                    var si2 = word.indexOf("<");
-                    if (si1 > -1 && si2 > -1) {
-                        sidx = Math.min(word.indexOf("("), word.indexOf("<"));
-                    }
-                    else if (si1 > -1) {
-                        sidx = si1;
-                    }
-                    else if (si2 > -1) {
-                        sidx = si2;
-                    }
-
-                    if (sidx != -1) {
-                        word = word.substr(0, sidx) + "<br/><b>" + word.substr(sidx).replace("<", "&lt;") + "</b>";
-                    }
-                    else {
-                        word = word.replace("<", "&lt;");
-                    }
-                    $("#good_words").html(word);
+                    $("#good_words").html(goodWords.get());
                 },
                 login: function () {
+                    axboot.ajax({
+                                method: "POST",
+                                url: "/api/login",
+                                data: JSON.stringify({
+                                    "userCd": $("#userCd").val(),
+                                    "userPs": $("#userPs").val()
+                                })
+                            }, function (res) {
+                                if (res && res.error) {
+                                    if (res.error.message == "Unauthorized") {
+                                        alert("로그인에 실패 하였습니다. 계정정보를 확인하세요");
+                                    }
+                                    else {
+                                        alert(res.error.message);
+                                    }
+                                    return;
+                                }
+                                else {
 
-                    app.ajax({
-                        method: "POST",
-                        url: "/api/login",
-                        data: Object.toJSON({
-                            "userCd": $("#userCd").val(),
-                            "password": $("#password").val()
-                        })
-                    }, function (res) {
-                        if (res && res.error) {
-                            if (res.error.message == "Unauthorized") {
-                                alert("로그인에 실패 하였습니다. 계정정보를 확인하세요");
-                            }
-                            else {
-                                alert(res.error.message);
-                            }
-                            return;
-                        }
-                        else {
-                            location.reload();
-                        }
-                    }, false, "islogin");
+                                    location.reload();
+                                }
+                            },
+                            {nomask: false, apiType: "login"});
                     return false;
                 }
             };
         </script>
-    </ax:div>
-    <ax:div name="css">
+    </jsp:attribute>
 
-    </ax:div>
-    <ax:div name="js">
-        <script type="text/javascript" src="<c:url value='/static/js/data/words.js' />"></script>
-    </ax:div>
+    <jsp:body>
+        <ax:flex-layout valign="middle" align="center" style="width:100%;height:100%;">
+            <div>
+                <img src="/assets/images/login-logo.png" class="img-logo">
+            </div>
+
+            <div class="panel">
+                <div class="panel-heading">아이디와 패스워드를 입력해주세요.</div>
+                <div class="panel-body">
+                    <form name="login-form" class="" method="post" action="/api/login" onsubmit="return fnObj.login();" autocomplete="off">
+
+                        <div class="form-group">
+                            <label for="userCd"><i class="cqc-new-message"></i> ID</label>
+                            <input type="text" name="userCd" id="userCd" value="" class="form-control ime-false" placeholder="" />
+                        </div>
+
+                        <div class="form-group">
+                            <label for="password"><i class="cqc-key"></i> Password</label>
+                            <input type="password" name="userPs" id="userPs" value="" class="form-control ime-false" placeholder="" />
+                        </div>
+
+                        <input type="hidden"
+                               name="${_csrf.parameterName}" value="${_csrf.token}"/>
+
+                        <div class="ax-padding-box" style="text-align: right;">
+                            <button type="submit" class="btn">&nbsp;&nbsp;로그인&nbsp;&nbsp;</button>
+                        </div>
+
+                    </form>
+                </div>
+                <ul class="list-group">
+                    <li class="list-group-item">
+                        <a href="#">아이디 찾기</a>
+                        &nbsp;
+                        &nbsp;
+                        <a href="#">비밀번호 찾기</a>
+                    </li>
+
+                </ul>
+            </div>
+
+            <div class="txt-copyrights">
+                AXBOOT 2.0 - Full Stack Web Application Framework © 2010-2016
+            </div>
+
+            <div class="txt-good-words" id="good_words">
+
+            </div>
+        </ax:flex-layout>
+    </jsp:body>
+
 </ax:layout>

@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<!--
+  ~ Copyright (c) 2016. tom@axisj.com
+  ~ - github.com/thomasjang
+  ~ - www.axisj.com
+  -->
+
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <link rel="stylesheet" type="text/css" href="bower_components/bootstrap/dist/css/bootstrap.min.css"/>
+    <link rel="stylesheet" href="bower_components/font-awesome/css/font-awesome.min.css">
+    <link rel="stylesheet" type="text/css" href="../dist/ax5select.css"/>
+
+    <script src="bower_components/jquery/dist/jquery.min.js"></script>
+    <script src="bower_components/ax5core/dist/ax5core.js"></script>
+    <script src="../dist/ax5select.js"></script>
+</head>
+<body style="padding: 10px;">
+<div class="container">
+    <form name="forms">
+        <h1>sarch</h1>
+
+        <div class="row">
+            <div class="col-sm-4">
+                <div class="form-group">
+                    <div data-ax5select="select1" data-ax5select-config='{
+                    size: "",
+                    multiple: false,
+                    reset:"<i class=\"fa fa-trash\"></i>"
+                }'></div>
+                </div>
+            </div>
+            <div class="col-sm-4">
+                <div class="form-group">
+                    <div data-ax5select="select2" data-ax5select-config='{
+                    size: "",
+                    multiple: false,
+                    reset:"<i class=\"fa fa-trash\"></i>"
+                }'></div>
+                </div>
+            </div>
+        </div>
+    </form>
+
+    <button type="button" class="btn" data-btn="getValue">getValue</button>
+</div>
+<script>
+    var options = [
+        {value: "문자열 Mother 123 !@#$%", text: "문자열 Mother 123 !@#$%"},
+        {value: "누리봄 Passion 678 !@#$%", text: "누리봄 Passion 678 !@#$%"},
+        {value: "꽃초롱 Smile 90 !@#$%", text: "꽃초롱 Smile 90 !@#$%"},
+        {value: "늘예솔 Love 555 !@#$%", text: "늘예솔 Love 555 !@#$%"},
+        {value: "두메꽃 Eternity 666 !@#$%", text: "두메꽃 Eternity 666 !@#$%"},
+        {value: "든해솔 Fantastic 777 !@#$%", text: "든해솔 Fantastic 777 !@#$%"},
+        {value: "물보라 Destiny 888 !@#$%", text: "물보라 Destiny 888 !@#$%"},
+        {value: "미리별 Freedom 999 !@#$%", text: "미리별 Freedom 999 !@#$%"},
+        {value: "밝음이 Liberty 111 !@#$%", text: "밝음이 Liberty 111 !@#$%"},
+        {value: "보라나 Tranquility 222 !@#$%", text: "보라나 Tranquility 222 !@#$%"},
+        {value: "보미나 Peace 333 !@#$%", text: "보미나 Peace 333 !@#$%"},
+        {value: "비사벌 Blossom 444 !@#$%", text: "비사벌 Blossom 444 !@#$%"},
+        {value: "빛초롱 Sunshine 555 !@#$%", text: "빛초롱 Sunshine 555 !@#$%"},
+        {value: "솔빛길 Sweetheart 666 !@#$%", text: "솔빛길 Sweetheart 666 !@#$%"},
+        {value: "아롱별 String 8888 !@#$%", text: "아롱별 String 8888 !@#$%"}
+    ];
+
+
+    $(document.body).ready(function () {
+
+        $('[data-btn]').click(function () {
+            var act = this.getAttribute("data-btn");
+            switch (act) {
+                case "setValue":
+
+                    break;
+                case "getValue":
+                    console.log($('[data-ax5select="select1"]').ax5select("getValue"));
+                    break;
+                case "setValueSelect":
+
+                    break;
+                case "update":
+
+                    break;
+            }
+        });
+
+        $('[data-ax5select]').ax5select({
+            lang: {
+                loading: '<i class="fa fa-spinner fa-pulse"></i>'
+            },
+            options: options,
+            onChange: function () {
+                //console.log(this);
+            }
+        });
+
+    });
+</script>
+
+</body>
+</html>

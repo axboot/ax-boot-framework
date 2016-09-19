@@ -1,0 +1,301 @@
+@mixin ax-modal() {
+    box-sizing: $ax5modal-box-model;
+    background-color: $ax5modal-bg;
+    border: $ax5modal-border;
+
+    @include ax-border-radius($ax5modal-border-radius);
+    @include box-shadow($ax5modal-box-shadow);
+
+    z-index: $ax5modal-z-index;
+    position: fixed;
+    left: 0px;
+    top: 0px;
+    overflow: hidden;
+    box-sizing: content-box;
+}
+
+@mixin ax-modal-section() {
+    .ax-modal-header {
+        @include user-select(none);
+        //font-size: 1em;
+        font-weight: 600;
+        padding: $ax5modal-header-padding;
+        border-bottom: 1px solid transparent;
+        cursor: move;
+        .ax-modal-header-addon{
+            position: absolute;
+            right: 0px;
+            top: 0px;
+            padding: $ax5modal-header-addon-padding;
+            a{
+                padding: $ax5modal-header-addon-btn-padding;
+                background: transparent;
+                display: inline-block;
+                text-align: center;
+                cursor: pointer;
+            }
+        }
+    }
+    .ax-modal-body {
+        padding: $ax5modal-body-padding;
+        text-align: center;
+        @include flex(1);
+        position: relative;
+        iframe {
+            border: 0 none;
+        }
+
+        .fadeIn{
+            @include animation(ax-modal-fade-in $ax5modal-easing-time-open $ease-out-back forwards);
+        }
+        .fadeOut{
+            @include animation(ax-modal-fade-out $ax5modal-easing-time-open $ease-out-back forwards);
+        }
+    }
+}
+
+@mixin modal-variant($text-color, $border, $header-bg-color) {
+    .ax-modal-header {
+        color: $text-color;
+        background: $header-bg-color;
+        .ax-modal-header-addon{
+            a{
+                color: $text-color;
+            }
+        }
+    }
+    .ax-modal-body {
+
+    }
+}
+
+@include keyframes(ax-modal) {
+    0% {
+        opacity: 0.0;
+        //@include transform(translateY(20%));
+        @include transform(scale(0.8));
+    }
+    100% {
+        opacity: 1.0;
+        @include transform(scale(1.0));
+    }
+    /*
+    0% {
+        opacity: 0.0;
+        -webkit-transform: matrix3d(1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1);
+        transform: matrix3d(1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1);
+    }
+    0.1% {
+        opacity: 1.0;
+        -webkit-transform: matrix3d(0.5, 0, 0, 0, 0, 0.5, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1);
+        transform: matrix3d(0.5, 0, 0, 0, 0, 0.5, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1);
+    }
+    5.9% {
+        -webkit-transform: matrix3d(0.711, 0, 0, 0, 0, 0.742, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1);
+        transform: matrix3d(0.711, 0, 0, 0, 0, 0.742, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1);
+    }
+    7.7% {
+        -webkit-transform: matrix3d(0.768, 0, 0, 0, 0, 0.812, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1);
+        transform: matrix3d(0.768, 0, 0, 0, 0, 0.812, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1);
+    }
+    11.5% {
+        -webkit-transform: matrix3d(0.869, 0, 0, 0, 0, 0.935, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1);
+        transform: matrix3d(0.869, 0, 0, 0, 0, 0.935, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1);
+    }
+    11.7% {
+        -webkit-transform: matrix3d(0.873, 0, 0, 0, 0, 0.94, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1);
+        transform: matrix3d(0.873, 0, 0, 0, 0, 0.94, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1);
+    }
+    15.2% {
+        -webkit-transform: matrix3d(0.941, 0, 0, 0, 0, 1.014, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1);
+        transform: matrix3d(0.941, 0, 0, 0, 0, 1.014, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1);
+    }
+    17.5% {
+        -webkit-transform: matrix3d(0.973, 0, 0, 0, 0, 1.045, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1);
+        transform: matrix3d(0.973, 0, 0, 0, 0, 1.045, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1);
+    }
+    19% {
+        -webkit-transform: matrix3d(0.99, 0, 0, 0, 0, 1.058, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1);
+        transform: matrix3d(0.99, 0, 0, 0, 0, 1.058, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1);
+    }
+    22.8% {
+        -webkit-transform: matrix3d(1.019, 0, 0, 0, 0, 1.071, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1);
+        transform: matrix3d(1.019, 0, 0, 0, 0, 1.071, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1);
+    }
+    23.2% {
+        -webkit-transform: matrix3d(1.021, 0, 0, 0, 0, 1.071, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1);
+        transform: matrix3d(1.021, 0, 0, 0, 0, 1.071, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1);
+    }
+    30.3% {
+        -webkit-transform: matrix3d(1.036, 0, 0, 0, 0, 1.049, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1);
+        transform: matrix3d(1.036, 0, 0, 0, 0, 1.049, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1);
+    }
+    30.4% {
+        -webkit-transform: matrix3d(1.036, 0, 0, 0, 0, 1.049, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1);
+        transform: matrix3d(1.036, 0, 0, 0, 0, 1.049, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1);
+    }
+    37.5% {
+        -webkit-transform: matrix3d(1.028, 0, 0, 0, 0, 1.016, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1);
+        transform: matrix3d(1.028, 0, 0, 0, 0, 1.016, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1);
+    }
+    44.6% {
+        -webkit-transform: matrix3d(1.016, 0, 0, 0, 0, 0.997, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1);
+        transform: matrix3d(1.016, 0, 0, 0, 0, 0.997, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1);
+    }
+    50.3% {
+        -webkit-transform: matrix3d(1.008, 0, 0, 0, 0, 0.992, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1);
+        transform: matrix3d(1.008, 0, 0, 0, 0, 0.992, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1);
+    }
+    51.7% {
+        -webkit-transform: matrix3d(1.006, 0, 0, 0, 0, 0.992, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1);
+        transform: matrix3d(1.006, 0, 0, 0, 0, 0.992, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1);
+    }
+    70.3% {
+        -webkit-transform: matrix3d(0.998, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1);
+        transform: matrix3d(0.998, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1);
+    }
+    80.3% {
+        -webkit-transform: matrix3d(0.999, 0, 0, 0, 0, 1.001, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1);
+        transform: matrix3d(0.999, 0, 0, 0, 0, 1.001, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1);
+    }
+    100% {
+        -webkit-transform: matrix3d(1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1);
+        transform: matrix3d(1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1);
+    }
+    */
+}
+
+@include keyframes(ax-modal-destroy) {
+    /*
+    from {
+        @include transform(scale(1));
+        opacity: 1.0;
+    }
+    to {
+        @include transform(scale(0.5));
+        opacity: 0.0;
+    }
+    */
+    100% {
+        opacity: 0.0;
+        @include transform(translateY(20%));
+    }
+    0% {
+        opacity: 1.0;
+        @include transform(translateY(0));
+    }
+
+}
+
+@include keyframes(ax-modal-fullscreen) {
+    0% {
+        @include transform(translateY(20%));
+    }
+    100% {
+        @include transform(translateY(0));
+    }
+}
+
+@include keyframes(ax-modal-fullscreen-destroy) {
+    0% {
+        @include transform(translateY(0));
+    }
+    100% {
+        @include transform(translateY(100%));
+    }
+}
+
+@include keyframes(ax-modal-fade-in){
+    0% {
+        opacity: 0.0;
+    }
+    100% {
+        opacity: 1.0;
+    }
+}
+
+@include keyframes(ax-modal-fade-out){
+    0% {
+        opacity: 1.0;
+    }
+    100% {
+        opacity: 0.0;
+    }
+}
+
+// mixins --------------------------------------------- end
+
+.ax5modal {
+    @include animation(ax-modal $ax5modal-easing-time-open $ease-out-back forwards);
+    @include transform(translateZ(0px));
+    //@include transition(all $ax5modal-easing-time-open linear);
+
+    @include ax-modal();
+    @include ax-modal-section();
+    @include modal-variant($ax5modal-default-text, $ax5modal-default-border, $ax5modal-default-header-bg);
+
+    &.primary {
+        @include modal-variant($ax5modal-primary-text, $ax5modal-primary-border, $ax5modal-primary-header-bg);
+    }
+    &.success {
+        @include modal-variant($ax5modal-success-text, $ax5modal-success-border, $ax5modal-success-header-bg);
+    }
+    &.info {
+        @include modal-variant($ax5modal-info-text, $ax5modal-info-border, $ax5modal-info-header-bg);
+    }
+    &.warning {
+        @include modal-variant($ax5modal-warning-text, $ax5modal-warning-border, $ax5modal-warning-header-bg);
+    }
+    &.danger {
+        @include modal-variant($ax5modal-danger-text, $ax5modal-danger-border, $ax5modal-danger-header-bg);
+    }
+
+    &.destroy {
+        @include animation(ax-modal-destroy $ax5modal-easing-time-close $ease-out-back forwards);
+    }
+
+    &.fullscreen {
+        border: 0px none;
+        @include ax-border-radius(0px);
+        @include box-shadow(none);
+        @include animation(ax-modal-fullscreen $ax5modal-easing-time-open $ease-out-back forwards);
+
+        &.destroy {
+            @include animation(ax-modal-fullscreen-destroy $ax5modal-easing-time-close $ease-out-expo forwards);
+        }
+    }
+
+    &.draged{
+        .ax-modal-header {
+            opacity: 0.5;
+        }
+        .ax-modal-body {
+            opacity: 0.5;
+        }
+    }
+}
+
+.ax5modal-resizer-background{
+    position: fixed;
+    left: 0px;
+    top: 0px;
+    width: 100%;
+    height: 100%;
+    background: transparent;
+}
+.ax5modal-resizer{
+    position: absolute;
+    left: 0px;
+    top: 0px;
+
+    z-index: $ax5modal-z-index + 1;
+    cursor: move;
+
+    box-sizing: $ax5modal-box-model;
+    background-color: $ax5modal-resizer-bg;
+    border: $ax5modal-resizer-border;
+    opacity: $ax5modal-resizer-opacity;
+
+    @include ax-border-radius($ax5modal-border-radius);
+    @include box-shadow($ax5modal-box-shadow);
+}

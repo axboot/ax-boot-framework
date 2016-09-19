@@ -23,6 +23,12 @@ public class ApiException extends RuntimeException {
         this.code = status.getCode();
     }
 
+
+    public ApiException(String message) {
+        super(message);
+        this.code = ApiStatus.SUCCESS.getCode();
+    }
+
     public ApiException(ApiStatus code, String message, boolean isAlert) {
         super(message);
         this.code = code.getCode();
@@ -32,8 +38,5 @@ public class ApiException extends RuntimeException {
     public int getCode() {
         return this.code;
     }
-
-    public boolean isAlert() {
-        return isAlert;
-    }
+    public boolean isAlert() { return isAlert; }
 }

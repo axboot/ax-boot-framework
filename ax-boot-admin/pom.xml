@@ -4,31 +4,27 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <artifactId>ax-boot-admin</artifactId>
-    <version>1.0.0</version>
+    <version>1.0</version>
     <packaging>war</packaging>
     <name>AX-Boot Admin</name>
     <description>AX-Boot Admin Application</description>
 
     <parent>
         <groupId>com.chequer.axboot</groupId>
-        <artifactId>ax-boot-parent</artifactId>
+        <artifactId>ax-boot-framework</artifactId>
         <version>1.0.0</version>
     </parent>
 
     <dependencies>
         <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-data-jpa</artifactId>
+            <groupId>com.chequer.axboot</groupId>
+            <artifactId>ax-boot-core</artifactId>
+            <version>1.0</version>
         </dependency>
 
         <dependency>
             <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-jdbc</artifactId>
-        </dependency>
-
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-jooq</artifactId>
+            <artifactId>spring-boot-starter-web</artifactId>
         </dependency>
 
         <dependency>
@@ -36,10 +32,13 @@
             <artifactId>spring-boot-starter-security</artifactId>
         </dependency>
 
+        <!--
         <dependency>
             <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-web</artifactId>
+            <artifactId>spring-boot-devtools</artifactId>
+            <version>1.4.0.RELEASE</version>
         </dependency>
+        -->
 
         <dependency>
             <groupId>org.springframework.boot</groupId>
@@ -54,31 +53,8 @@
         </dependency>
 
         <dependency>
-            <groupId>mysql</groupId>
-            <artifactId>mysql-connector-java</artifactId>
-        </dependency>
-
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-test</artifactId>
-            <scope>test</scope>
-        </dependency>
-
-        <dependency>
             <groupId>javax.servlet</groupId>
             <artifactId>javax.servlet-api</artifactId>
-            <scope>provided</scope>
-        </dependency>
-
-        <dependency>
-            <groupId>org.apache.tomcat.embed</groupId>
-            <artifactId>tomcat-embed-jasper</artifactId>
-            <scope>provided</scope>
-        </dependency>
-
-        <dependency>
-            <groupId>org.glassfish</groupId>
-            <artifactId>javax.el</artifactId>
             <scope>provided</scope>
         </dependency>
 
@@ -88,15 +64,9 @@
         </dependency>
 
         <dependency>
-            <groupId>com.chequer.axboot</groupId>
-            <artifactId>ax-boot-core</artifactId>
-            <version>1.0.15</version>
-        </dependency>
-
-        <dependency>
-            <groupId>com.axisj</groupId>
-            <artifactId>axu4j</artifactId>
-            <version>1.0.0-RELEASE</version>
+            <groupId>org.apache.tomcat.embed</groupId>
+            <artifactId>tomcat-embed-jasper</artifactId>
+            <scope>provided</scope>
         </dependency>
     </dependencies>
 

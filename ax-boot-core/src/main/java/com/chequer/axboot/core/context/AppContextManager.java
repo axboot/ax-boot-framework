@@ -14,8 +14,12 @@ public class AppContextManager implements ApplicationContextAware {
 		applicationContext = _applicationContext;
 	}
 
-	public static org.springframework.context.ApplicationContext getAppContext() {
+	public static ApplicationContext getAppContext() {
 		return applicationContext;
+	}
+
+	public static Object getBean(String beanName) {
+		return applicationContext.getBean(beanName);
 	}
 
 	public static <T> T getBean(Class<T> requiredType) {
@@ -24,5 +28,10 @@ public class AppContextManager implements ApplicationContextAware {
 
 	public static <T> T getBean(String beanName, Class<T> requiredType) {
 		return applicationContext.getBean(beanName, requiredType);
+	}
+
+	public static Object getServiceBean(String targetClassName) {
+		String serviceBeanName = Character.toLowerCase(targetClassName.charAt(0)) + targetClassName.substring(1) + "Service";
+		return getBean(serviceBeanName);
 	}
 }

@@ -1,8 +1,8 @@
 package com.chequer.axboot.admin.security;
 
-import com.chequer.axboot.admin.AdminSecurityConfig;
-import com.chequer.axboot.admin.code.Cs;
+import com.chequer.axboot.admin.AXBootAdminSecurityConfig;
 import com.chequer.axboot.core.api.response.ApiResponse;
+import com.chequer.axboot.core.code.GlobalConstants;
 import com.chequer.axboot.core.utils.ContextUtil;
 import com.chequer.axboot.core.utils.CookieUtils;
 import com.chequer.axboot.core.utils.HttpUtils;
@@ -20,12 +20,12 @@ public class AdminAuthenticationEntryPoint extends BasicAuthenticationEntryPoint
 
     @Override
     public void commence(HttpServletRequest request, HttpServletResponse response, AuthenticationException authException) throws IOException, ServletException {
-        CookieUtils.deleteCookie(request, response, Cs.AUTH_TOKEN_KEY);
+        CookieUtils.deleteCookie(request, response, GlobalConstants.ADMIN_AUTH_TOKEN_KEY);
 
         if (request.getMethod().equals(RequestMethod.GET.toString()) && !request.getRequestURI().startsWith(ContextUtil.getBaseApiPath())) {
             redirectToLoginPage(request, response);
         } else {
-            jsonExceptionResponse(request, response, ApiResponse.redirect(ContextUtil.getPagePath(AdminSecurityConfig.LOGIN_PAGE)));
+            jsonExceptionResponse(request, response, ApiResponse.redirect(ContextUtil.getPagePath(AXBootAdminSecurityConfig.LOGIN_PAGE)));
         }
     }
 
@@ -36,7 +36,7 @@ public class AdminAuthenticationEntryPoint extends BasicAuthenticationEntryPoint
     }
 
     public static void redirectToLoginPage(HttpServletRequest request, HttpServletResponse response) throws IOException {
-        response.sendRedirect(ContextUtil.getPagePath(AdminSecurityConfig.LOGIN_PAGE));
+        response.sendRedirect(ContextUtil.getPagePath(AXBootAdminSecurityConfig.LOGIN_PAGE));
     }
 }
 

@@ -4,6 +4,7 @@ import com.chequer.axboot.core.model.extract.metadata.Column;
 import com.chequer.axboot.core.model.extract.metadata.HibernateField;
 import com.chequer.axboot.core.model.extract.metadata.Table;
 import com.chequer.axboot.core.model.extract.template.fields.EntityFields;
+import com.chequer.axboot.core.model.extract.template.fields.GoEntityFields;
 import com.chequer.axboot.core.model.extract.template.fields.KeyFields;
 import com.chequer.axboot.core.model.extract.template.fields.VOFields;
 import com.chequer.axboot.core.utils.ArrayUtils;
@@ -76,6 +77,30 @@ public class TemplateBuilder {
             } else {
                 entityFields.setAnnotations("");
             }
+
+            return entityFields;
+        }
+    }
+
+    public static class GoEntityTemplateBuilder {
+
+        public static GoEntityFields build(Table table) {
+            GoEntityFields entityFields = new GoEntityFields();
+
+            StringBuilder code = new StringBuilder();
+
+            table.getColumns().stream().filter(field -> !field.skip()).forEach(column -> {
+                HibernateField hibernateField = column.hibernateField();
+
+                String columnName = hibernateField.getColumnName();
+                String fieldName = Character.toUpperCase(hibernateField.getFieldName().charAt(0)) + hibernateField.getFieldName().substring(1);
+                String jsonFieldName = hibernateField.getFieldName();
+
+                code.append(NEW_LINE);
+                code.append(TAB + String.format("%s %s  `gorm:\"%s\" json:\"%s\"`", fieldName, hibernateField.getGoType(), columnName, jsonFieldName));
+            });
+
+            entityFields.setCode(code.toString());
 
             return entityFields;
         }

@@ -14,6 +14,8 @@ public class HibernateField {
 
     private String javaType;
 
+    private String goType;
+
     private List<String> entityClassImportList = new ArrayList<>();
 
     private List<String> entityClassAnnotationList = new ArrayList<>();
@@ -44,6 +46,7 @@ public class HibernateField {
             case Types.NVARCHAR:
             case Types.LONGNVARCHAR:
             case Types.LONGVARCHAR:
+                this.goType = "string";
                 this.javaType = "String";
                 this.humanReadableDataType = String.format("%s(%s)", column.getTypeName(), column.getColumnSize());
                 //columnDefinition = String.format("length = %d, columnDefinition = \"%s\"", column.getColumnSize(), column.getTypeName());
@@ -54,6 +57,7 @@ public class HibernateField {
             case Types.NCLOB:
                 annotation.append("\n\t@Lob @Basic(fetch = FetchType.LAZY)");
                 this.javaType = "String";
+                this.goType = "string";
                 this.humanReadableDataType = String.format("%s(%s)", column.getTypeName(), column.getColumnSize());
                 columnDefinition = String.format("columnDefinition = \"%s\"", column.getTypeName());
                 break;
@@ -65,10 +69,12 @@ public class HibernateField {
                 annotation.append("\n\t@Lob @Basic(fetch = FetchType.LAZY)");
                 columnDefinition = String.format("columnDefinition = \"%s\"", column.getTypeName());
                 this.javaType = "byte[]";
+                this.goType = "[]byte";
                 break;
 
             case Types.BOOLEAN:
             case Types.BIT:
+                this.goType = "bool";
                 this.javaType = "Boolean";
                 this.humanReadableDataType = String.format("%s(%d)", column.getTypeName(), column.getColumnSize());
                 columnDefinition = String.format("length = %d, columnDefinition = \"BIT(1)\"", 1);
@@ -76,6 +82,7 @@ public class HibernateField {
 
             case Types.FLOAT:
             case Types.REAL:
+                this.goType = "float32";
                 this.javaType = "Float";
                 this.humanReadableDataType = String.format("%s(%d,%d)", column.getTypeName(), column.getColumnSize(), getInt(column.getDecimalDigits()));
                 //columnDefinition = String.format("precision = %d, scale = %d, columnDefinition = \"%s\"", column.getColumnSize(), getInt(column.getDecimalDigits()), column.getTypeName());
@@ -83,6 +90,7 @@ public class HibernateField {
                 break;
 
             case Types.DOUBLE:
+                this.goType = "float64";
                 this.javaType = "Double";
                 this.humanReadableDataType = String.format("%s(%d,%d)", column.getTypeName(), column.getColumnSize(), getInt(column.getDecimalDigits()));
                 //columnDefinition = String.format("precision = %d, scale = %d, columnDefinition = \"%s\"", column.getColumnSize(), getInt(column.getDecimalDigits()), column.getTypeName());
@@ -91,6 +99,7 @@ public class HibernateField {
 
             case Types.DECIMAL:
             case Types.NUMERIC:
+                this.goType = "int";
                 this.javaType = "BigDecimal";
                 this.entityClassImportList.add("java.math.BigDecimal");
                 this.humanReadableDataType = String.format("%s(%d,%d)", column.getTypeName(), column.getColumnSize(), getInt(column.getDecimalDigits()));
@@ -101,6 +110,7 @@ public class HibernateField {
             case Types.INTEGER:
             case Types.TINYINT:
             case Types.SMALLINT:
+                this.goType = "int";
                 this.javaType = "Integer";
                 this.humanReadableDataType = String.format("%s(%d)", column.getTypeName(), column.getColumnSize());
                 //columnDefinition = String.format("precision = %d, columnDefinition = \"%s\"", column.getColumnSize(), column.getTypeName());
@@ -108,12 +118,14 @@ public class HibernateField {
                 break;
 
             case Types.BIGINT:
+                this.goType = "int64";
                 this.javaType = "Long";
                 this.humanReadableDataType = String.format("%s(%d)", column.getTypeName(), column.getColumnSize());
                 columnDefinition = String.format("precision = %d", column.getColumnSize());
                 break;
 
             case Types.DATE:
+                this.goType = "time";
                 this.javaType = "LocalDate";
                 this.entityClassImportList.add("java.time.LocalDate");
                 this.humanReadableDataType = String.format("%s", column.getTypeName());
@@ -121,6 +133,7 @@ public class HibernateField {
                 break;
 
             case Types.TIME:
+                this.goType = "time";
                 this.javaType = "LocalTime";
                 this.entityClassImportList.add("java.time.LocalTime");
                 this.humanReadableDataType = String.format("%s", column.getTypeName());
@@ -128,6 +141,7 @@ public class HibernateField {
                 break;
 
             case Types.TIMESTAMP:
+                this.goType = "time";
                 this.javaType = "Timestamp";
                 this.entityClassImportList.add("java.sql.Timestamp");
                 this.humanReadableDataType = String.format("%s", column.getTypeName());
@@ -155,6 +169,7 @@ public class HibernateField {
 
         if ("DATETIME".equals(column.getTypeName())) {
             this.javaType = "LocalDateTime";
+            this.goType = "time";
             this.entityClassImportList.add("java.time.LocalDateTime");
         }
 
@@ -167,7 +182,7 @@ public class HibernateField {
 
         this.fieldAnnotation = annotation.toString();
 
-        if(StringUtils.isNotEmpty(columnDefinition)) {
+        if (StringUtils.isNotEmpty(columnDefinition)) {
             this.fieldAnnotation = this.fieldAnnotation.replace("${columnDefinition}", ", " + columnDefinition);
         } else {
             this.fieldAnnotation = this.fieldAnnotation.replace("${columnDefinition}", "");

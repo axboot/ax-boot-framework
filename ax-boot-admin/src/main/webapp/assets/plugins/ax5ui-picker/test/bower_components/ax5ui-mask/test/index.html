@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <script src="bower_components/jquery/dist/jquery.min.js"></script>
+    <script src="bower_components/ax5core/dist/ax5core.js"></script>
+
+    <script src="../dist/ax5mask.js"></script>
+    <link rel="stylesheet" type="text/css" href="../dist/ax5mask.css" />
+</head>
+<body>
+
+<div id="user-content" style="width:300px;height:300px;border: 1px solid #000;"></div>
+
+
+<button type="button" id="mask-open">mask-open</button>
+<button type="button" id="mask-close">mask-close</button>
+<script>
+    $(document.body).ready(function(){
+        window.mask = new ax5.ui.mask();
+        $("#mask-open").click(function(){
+            mask.open({
+                position: "fixed",
+                target: $("#user-content").get(0),
+                onClick: function(){
+                    console.log(this);
+                }
+            });
+        });
+        $("#mask-close").click(function(){
+            mask.close();
+        });
+    });
+</script>
+
+</body>
+</html>

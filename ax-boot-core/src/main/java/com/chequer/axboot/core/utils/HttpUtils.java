@@ -1,6 +1,7 @@
 package com.chequer.axboot.core.utils;
 
 import eu.bitwalker.useragentutils.Browser;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 
@@ -38,5 +39,23 @@ public class HttpUtils {
 
     public static boolean isMultipartFormData() {
         return isMultipartFormData(getCurrentRequest());
+    }
+
+    public static String getRemoteAddress() {
+        return getRemoteAddress(getCurrentRequest());
+    }
+
+    public static String getRemoteAddress(HttpServletRequest request) {
+        String clientIp = request.getHeader("HTTP_X_FORWARDED_FOR");
+
+        if (StringUtils.isEmpty(clientIp) || clientIp.toLowerCase().equals("unknown")) {
+            clientIp = request.getHeader("REMOTE_ADDR");
+        }
+
+        if (StringUtils.isEmpty(clientIp) || clientIp.toLowerCase().equals("unknown")) {
+            clientIp = request.getRemoteAddr();
+        }
+
+        return clientIp;
     }
 }

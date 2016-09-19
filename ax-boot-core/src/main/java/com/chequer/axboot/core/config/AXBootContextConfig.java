@@ -26,8 +26,6 @@ import java.util.Properties;
 @NoArgsConstructor
 public class AXBootContextConfig implements ApplicationContextAware {
 
-    public static final String CORE_PACKAGE_NAME = "com.chequer.axboot.core";
-
     private static AXBootContextConfig instance;
 
     private DataSourceConfig dataSource;
@@ -43,7 +41,7 @@ public class AXBootContextConfig implements ApplicationContextAware {
 
     private String packageName;
 
-    private ApplicationContext applicationContext;
+    private static ApplicationContext applicationContext;
 
     public static synchronized AXBootContextConfig getInstance() {
         if (instance == null) {
@@ -167,34 +165,7 @@ public class AXBootContextConfig implements ApplicationContextAware {
         @Getter(AccessLevel.NONE)
         private String validationQuery;
 
-        @Getter(AccessLevel.NONE)
         private HibernateConfig hibernate;
-
-        public String getDatabaseType() {
-            String _driverClassName = driverClassName.toLowerCase();
-
-            if (_driverClassName.contains("mysql") || _driverClassName.contains("mariadb")) {
-                return Types.DatabaseType.MYSQL;
-            }
-
-            if (_driverClassName.contains("oracle")) {
-                return Types.DatabaseType.ORACLE;
-            }
-
-            if (_driverClassName.contains("microsft") || _driverClassName.contains("sqlserver")) {
-                return Types.DatabaseType.MSSQL;
-            }
-
-            if (_driverClassName.contains("postgres") || _driverClassName.contains("pg")) {
-                return Types.DatabaseType.POSTGRESQL;
-            }
-
-            if (_driverClassName.contains("h2")) {
-                return Types.DatabaseType.H2;
-            }
-
-            return Types.DatabaseType.MYSQL;
-        }
 
         public String getValidationQuery() {
             String _driverClassName = driverClassName.toLowerCase();
@@ -223,7 +194,6 @@ public class AXBootContextConfig implements ApplicationContextAware {
         public HibernateConfig getHibernateConfig() {
             if (hibernate == null) {
                 hibernate = new HibernateConfig();
-                hibernate.setDatabaseType(getDatabaseType());
             }
             return hibernate;
         }
@@ -292,7 +262,7 @@ public class AXBootContextConfig implements ApplicationContextAware {
                         vendorAdapter.setDatabasePlatform(Class.forName("org.hibernate.dialect." + dialect).getName());
                     } catch (ClassNotFoundException e) {
                         try {
-                            vendorAdapter.setDatabasePlatform(Class.forName(String.format("%s.db.dialect.%s", "com.chequer.axboot.core", dialect)).getName());
+                            vendorAdapter.setDatabasePlatform(Class.forName(String.format("%s.db.dialect.%s", "com.chequer.pos.core", dialect)).getName());
                         } catch (ClassNotFoundException e1) {
                             e1.printStackTrace();
                         }

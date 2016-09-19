@@ -6,7 +6,6 @@ import com.chequer.axboot.core.db.QueryNormalizer;
 import com.chequer.axboot.core.db.SqlFormatter;
 import com.chequer.axboot.core.db.monitor.sql.SqlExecutionInfo;
 import com.chequer.axboot.core.db.monitor.sql.SqlTaskPool;
-import com.chequer.axboot.core.utils.DateTimeUtils;
 import org.aopalliance.intercept.MethodInterceptor;
 import org.aopalliance.intercept.MethodInvocation;
 import org.apache.commons.lang3.StringUtils;
@@ -18,6 +17,8 @@ import java.lang.reflect.Method;
 import java.net.SocketTimeoutException;
 import java.sql.PreparedStatement;
 import java.sql.Statement;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Map;
 
@@ -145,7 +146,7 @@ public class StatementMethodInterceptor implements MethodInterceptor {
                     }
                 } else if (logger.isInfoEnabled() && sqlOutput) {
                     String sqlLogging = getLoggingSql(statementExecutionInfo, sqlExecutionInfo, invocation);
-                    logger.info("\n[query] - {} - {}\n", DateTimeUtils.nowDateTimeString(), sqlLogging);
+                    logger.info("\n[query] - {} - {}\n", LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")), sqlLogging);
                 }
             } else {
                 returnValue = invocation.proceed();

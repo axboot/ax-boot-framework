@@ -1,16 +1,23 @@
 package com.chequer.axboot.admin.security;
 
-import com.chequer.axboot.admin.domain.user.LoginUser;
-import com.chequer.axboot.admin.domain.user.User;
-import com.chequer.axboot.admin.domain.user.UserService;
-import com.chequer.axboot.core.code.Params;
+import com.chequer.axboot.core.code.Types;
+import com.chequer.axboot.core.domain.user.SessionUser;
+import com.chequer.axboot.core.domain.user.User;
+import com.chequer.axboot.core.domain.user.UserService;
+import com.chequer.axboot.core.domain.user.auth.UserAuth;
+import com.chequer.axboot.core.domain.user.auth.UserAuthService;
+import com.chequer.axboot.core.domain.user.role.UserRole;
+import com.chequer.axboot.core.domain.user.role.UserRoleService;
+import com.chequer.axboot.core.utils.DateTimeUtils;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import javax.inject.Inject;
-import java.time.LocalDateTime;
+import java.util.Calendar;
+import java.util.List;
+import java.util.Locale;
+import java.util.TimeZone;
 
 @Service
 public class AdminUserDetailsService implements UserDetailsService {
@@ -18,27 +25,53 @@ public class AdminUserDetailsService implements UserDetailsService {
     @Inject
     private UserService userService;
 
+    @Inject
+    private UserRoleService userRoleService;
+
+    @Inject
+    private UserAuthService userAuthService;
+
     @Override
-    @Transactional
-    public final LoginUser loadUserByUsername(String username) throws UsernameNotFoundException {
-        User user = userService.findByUserCd(username);
+    public final SessionUser loadUserByUsername(String userCd) throws UsernameNotFoundException {
+        User user = userService.findOne(userCd);
 
         if (user == null) {
             throw new UsernameNotFoundException("사용자 정보를 확인하세요.");
         }
 
-        if (user.getUseYn().equals(Params.N)) {
-            throw new UsernameNotFoundException("미사용 처리된 사용자 입니다.");
+        if (user.getUseYn() == Types.Used.NO) {
+            throw new UsernameNotFoundException("존재하지 않는 사용자 입니다.");
         }
 
-        LoginUser loginUser = new LoginUser();
-        loginUser.setUserCd(user.getUserCd());
-        loginUser.setUserNm(user.getUserNm());
-        loginUser.setPassword(user.getUserPs());
-        loginUser.setUserType(user.getUserType());
-        user.setLastLoginAt(LocalDateTime.now());
-        user.setUptUserCd(user.getUserCd());
+        if (user.getDelYn() == Types.Deleted.YES) {
+            throw new UsernameNotFoundException("존재하지 않는 사용자 입니다.");
+        }
 
-        return loginUser;
+        List<UserRole> userRoleList = userRoleService.findByUserCd(userCd);
+
+        List<UserAuth> userAuthList = userAuthService.findByUserCd(userCd);
+
+        SessionUser sessionUser = new SessionUser();
+        sessionUser.setUserCd(user.getUserCd());
+        sessionUser.setUserNm(user.getUserNm());
+        sessionUser.setUserPs(user.getUserPs());
+        sessionUser.setMenuGrpCd(user.getMenuGrpCd());
+
+        userRoleList.forEach(r -> sessionUser.addAuthority(r.getRoleCd()));
+        userAuthList.forEach(a -> sessionUser.addAuthGroup(a.getGrpAuthCd()));
+
+        String[] localeString = user.getLocale().split("_");
+
+        Locale locale = new Locale(localeString[0], localeString[1]);
+
+        final Calendar cal = Calendar.getInstance();
+        final TimeZone timeZone = cal.getTimeZone();
+
+        sessionUser.setTimeZone(timeZone.getID());
+        sessionUser.setDateFormat(DateTimeUtils.dateFormatFromLocale(locale));
+        sessionUser.setTimeFormat(DateTimeUtils.timeFormatFromLocale(locale));
+        sessionUser.setLocale(locale);
+
+        return sessionUser;
     }
 }

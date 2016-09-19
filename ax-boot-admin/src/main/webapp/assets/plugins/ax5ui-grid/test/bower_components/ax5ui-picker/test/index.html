@@ -1,0 +1,375 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+
+    <link rel="stylesheet" type="text/css" href="bower_components/bootstrap/dist/css/bootstrap.min.css"/>
+    <link rel="stylesheet" type="text/css" href="bower_components/ax5ui-mask/dist/ax5mask.css"/>
+    <link rel="stylesheet" type="text/css" href="bower_components/ax5ui-calendar/dist/ax5calendar.css"/>
+    <link rel="stylesheet" href="bower_components/font-awesome/css/font-awesome.min.css">
+    <link rel="stylesheet" type="text/css" href="../dist/ax5picker.css"/>
+
+    <script src="bower_components/jquery/dist/jquery.min.js"></script>
+    <script src="bower_components/ax5core/dist/ax5core.js"></script>
+    <script src="bower_components/ax5ui-mask/dist/ax5mask.min.js"></script>
+    <script src="bower_components/ax5ui-calendar/dist/ax5calendar.js"></script>
+    <script src="bower_components/ax5ui-formatter/dist/ax5formatter.js"></script>
+    <script src="../dist/ax5picker.js"></script>
+</head>
+<body style="padding: 0px;">
+
+<!--http://bootstrap-datepicker.readthedocs.org/en/latest/-->
+<!--http://www.sitepoint.com/pure-css3-speech-bubbles/-->
+<!--https://css-tricks.com/examples/ShapesOfCSS/-->
+<!--https://css-tricks.com/clipping-masking-css/-->
+
+<h1>Date</h1>
+
+<input type="text" class="form-control" data-picker-date="" placeholder="yyyy/mm/dd"/>
+
+<div class="form-group" data-ax5picker="date">
+    <div class="input-group">
+        <input type="text" class="form-control" placeholder="yyyy/mm/dd"/>
+        <span class="input-group-addon">~</span>
+        <input type="text" class="form-control" placeholder="yyyy/mm/dd"/>
+        <span class="input-group-addon"><i class="fa fa-calendar-o"></i></span>
+    </div>
+</div>
+
+<div class="form-group">
+    <div class="input-group" data-ax5picker="date">
+        <input type="text" class="form-control" placeholder="yyyy/mm/dd"/>
+        <span class="input-group-addon"><i class="fa fa-calendar-o"></i></span>
+    </div>
+</div>
+
+<h1>Secure-num</h1>
+<div class="form-group">
+    <input type="password" data-ax-path="secure-num" class="form-control" maxlength="4" placeholder="" readonly="readonly"/>
+</div>
+
+<h1>Keyboard</h1>
+<div class="form-group">
+    <input type="text" class="form-control" data-ax5picker="keyboard" placeholder="">
+
+</div>
+<div class="form-group">
+    <input type="text" data-ax-path="keyboard" class="form-control" placeholder="" readonly="readonly"/>
+</div>
+
+<h1>Numpad</h1>
+<div class="form-group">
+    <input type="text" data-ax-path="numpad" class="form-control" placeholder=""/>
+</div>
+
+<h1>Custom</h1>
+<div class="form-group">
+    <input type="text" data-ax5picker="custom" class="form-control" placeholder=""/>
+</div>
+
+<script>
+    // todo : picker align 기능 추가
+
+    ax5.def.picker.date_leftArrow = '<i class="fa fa-chevron-left"></i>';
+    ax5.def.picker.date_yearTmpl = '%s';
+    ax5.def.picker.date_monthTmpl = '%s';
+    ax5.def.picker.date_rightArrow = '<i class="fa fa-chevron-right"></i>';
+
+    $(document.body).ready(function () {
+        /*
+         $('[data-ax5picker="date"]').ax5picker({
+         direction: "top",
+         content: {
+         width: 270,
+         margin: 10,
+         type: 'date',
+         config: {
+         control: {
+         left: '<i class="fa fa-chevron-left"></i>',
+         yearTmpl: '%s',
+         monthTmpl: '%s',
+         right: '<i class="fa fa-chevron-right"></i>'
+         },
+         lang: {
+         yearTmpl: "%s년",
+         months: ['01', '02', '03', '04', '05', '06', '07', '08', '09', '10', '11', '12'],
+         dayTmpl: "%s"
+         }
+         },
+         formatter: {
+         pattern: 'date'
+         }
+         },
+         btns: {
+         today: {
+         label: "오늘", onClick: function () {
+         if (this.item.inputLength == 1) {
+         this.self.setContentValue(this.item.id, 0, ax5.util.date(new Date(), {"return": "yyyy-MM-dd"}));
+         }
+         else {
+         this.self.setContentValue(this.item.id, 0, ax5.util.date(new Date(), {"return": "yyyy-MM-dd"}));
+         this.self.setContentValue(this.item.id, 1, ax5.util.date(new Date(), {"return": "yyyy-MM-dd"}));
+         this.self.close();
+         }
+         }
+         },
+         thisMonth: {
+         label: "이번달 1일", onClick: function () {
+         var today = new Date();
+         if (this.item.inputLength == 1) {
+         this.self.setContentValue(this.item.id, 0, ax5.util.date(today, {"return": "yyyy-MM-01"}));
+         }
+         else {
+         this.self.setContentValue(this.item.id, 0, ax5.util.date(today, {"return": "yyyy-MM-01"}));
+         this.self.setContentValue(this.item.id, 1, ax5.util.date(today, {"return": "yyyy-MM"}) + '-' + ax5.util.daysOfMonth(today.getFullYear(), today.getMonth()));
+         this.self.close();
+         }
+         }
+         },
+         ok: {label: "확인", theme: "default"}
+         }
+         });
+
+         $('[data-ax5picker="custom"]').ax5picker({
+         direction: "top",
+         contentWidth: 200,
+         content: function (callBack) {
+         var html = ''
+         + '가나다라마바사'
+         + '<div style="padding: 10px;">'
+         + '<button class="btn btn-default">기능 1</button>'
+         + '</div>'
+         ;
+         callBack(html);
+         }
+         });
+
+         return;
+         */
+        var picker = new ax5.ui.picker({
+            onStateChanged: function () {
+                console.log(this);
+            }
+        });
+        /*
+         picker.onStateChanged = function(){
+         console.log(this);
+         };
+         */
+
+
+        picker.bind({
+            target: $('[data-picker-date]'),
+            direction: "auto",
+            content: {
+                type: 'date',
+                formatter: {
+                    pattern: 'date'
+                }
+            }
+        });
+
+        $('[data-ax5picker]').each(function (idx) {
+
+            if (this.getAttribute("data-ax5picker") == "date") {
+                picker.bind({
+                    id: "my-picker-" + idx,
+                    target: this,
+                    direction: "top",
+                    content: {
+                        width: 270,
+                        margin: 10,
+                        type: 'date',
+                        config: {
+                            control: {
+                                left: '<i class="fa fa-chevron-left"></i>',
+                                yearTmpl: '%s',
+                                monthTmpl: '%s',
+                                right: '<i class="fa fa-chevron-right"></i>'
+                            },
+                            lang: {
+                                yearTmpl: "%s년",
+                                months: ['01', '02', '03', '04', '05', '06', '07', '08', '09', '10', '11', '12'],
+                                dayTmpl: "%s"
+                            }
+                        },
+                        formatter: {
+                            pattern: 'date'
+                        }
+                    },
+                    btns: {
+                        today: {
+                            label: "오늘", onClick: function () {
+                                if (this.item.inputLength == 1) {
+                                    this.self.setContentValue(this.item.id, 0, ax5.util.date(new Date(), {"return": "yyyy-MM-dd"}));
+                                }
+                                else {
+                                    this.self.setContentValue(this.item.id, 0, ax5.util.date(new Date(), {"return": "yyyy-MM-dd"}));
+                                    this.self.setContentValue(this.item.id, 1, ax5.util.date(new Date(), {"return": "yyyy-MM-dd"}));
+                                    this.self.close();
+                                }
+                            }
+                        },
+                        thisMonth: {
+                            label: "이번달 1일", onClick: function () {
+                                var today = new Date();
+                                if (this.item.inputLength == 1) {
+                                    this.self.setContentValue(this.item.id, 0, ax5.util.date(today, {"return": "yyyy-MM-01"}));
+                                }
+                                else {
+                                    this.self.setContentValue(this.item.id, 0, ax5.util.date(today, {"return": "yyyy-MM-01"}));
+                                    this.self.setContentValue(this.item.id, 1, ax5.util.date(today, {"return": "yyyy-MM"}) + '-' + ax5.util.daysOfMonth(today.getFullYear(), today.getMonth()));
+                                    this.self.close();
+                                }
+                            }
+                        },
+                        ok: {label: "확인", theme: "default"}
+                    }
+                });
+            }
+            else if (this.getAttribute("data-ax5picker") == "custom") {
+                picker.bind({
+                    target: this,
+                    direction: "top",
+                    contentWidth: 200,
+                    content: function (callBack) {
+                        var html = ''
+                                        + '가나다라마바사'
+                                        + '<div style="padding: 10px;">'
+                                        + '<button class="btn btn-default">기능 1</button>'
+                                        + '</div>'
+                                ;
+                        callBack(html);
+                    }
+                });
+            }
+            else if (this.getAttribute("data-ax5picker") == "secure-num") {
+
+            }
+            else if (this.getAttribute("data-ax5picker") == "keyboard") {
+                picker.bind({
+                    target: this,
+                    direction: "auto",
+                    content: {
+                        width: 550,
+                        margin: 10,
+                        type: 'keyboard',
+                        config: {
+                            btnWrapStyle: "padding:2px;",
+                            btnStyle: "width: 35px;",
+                            btnTheme: "primary",
+                            specialBtnWrapStyle: "padding:2px;",
+                            specialBtnStyle: "",
+                            specialBtnTheme: " "
+                        }
+                    },
+                    onStateChanged: function () {
+                        //console.log(this);
+                        //if (this.value && this.value.length > 3) {
+                        //    picker.close();
+                        //}
+                    }
+                });
+            }
+
+        });
+
+
+        picker.bind({
+            target: $('[data-ax-path="secure-num"]'),
+            direction: "top",
+            content: {
+                width: 200,
+                margin: 10,
+                type: 'secure-num',
+                config: {
+                    btnWrapStyle: "padding:3px;width:25%;",
+                    btnStyle: "width:100%",
+                    btnTheme: "info btn-sm",
+                    specialBtnTheme: " btn-sm"
+                },
+                formatter: {
+                    pattern: 'number'
+                }
+            },
+            onStateChanged: function () {
+                console.log(this);
+                if (this.value && this.value.length > 3) {
+                    picker.close();
+                }
+            }
+        });
+
+        picker.bind({
+            target: $('[data-ax-path="keyboard"]'),
+            direction: "auto",
+            content: {
+                width: 550,
+                margin: 10,
+                type: 'keyboard',
+                config: {
+                    btnWrapStyle: "padding:2px;",
+                    btnStyle: "width: 35px;",
+                    btnTheme: "primary",
+                    specialBtnWrapStyle: "padding:2px;",
+                    specialBtnStyle: "",
+                    specialBtnTheme: " "
+                }
+            },
+            onStateChanged: function () {
+                //console.log(this);
+                //if (this.value && this.value.length > 3) {
+                //    picker.close();
+                //}
+            }
+        });
+
+        picker.bind({
+            target: $('[data-ax-path="numpad"]'),
+            direction: "auto",
+            content: {
+                width: 200,
+                margin: 10,
+                type: 'numpad',
+                config: {
+                    btnWrapStyle: "padding:3px;width:25%;",
+                    btnStyle: "width:100%",
+                    btnTheme: "primary",
+                    specialBtnWrapStyle: "padding:3px;width:25%;",
+                    specialBtnStyle: "width:100%;padding-left:0px;padding-right:0px;",
+                    specialBtnTheme: ""
+                    /*
+                     keyArray: [
+                     {value: "7"},
+                     {value: "8"},
+                     {value: "9"},
+                     {label: "BS", fn: "back"},
+                     {value: "4"},
+                     {value: "5"},
+                     {value: "6"},
+                     {value: "-"},
+                     {value: "1"},
+                     {value: "2"},
+                     {value: "3"},
+                     {value: ""},
+                     {value: "."},
+                     {value: "0"},
+                     {value: ""},
+                     {label: "OK", fn: "close"}
+                     ]
+                     */
+                },
+                formatter: {
+                    pattern: 'number'
+                }
+            },
+            onStateChanged: function () {
+                console.log(this);
+            }
+        });
+    });
+</script>
+
+</body>
+</html>

@@ -1,352 +1,187 @@
 <%@ page contentType="text/html; charset=UTF-8" %>
-<%@ taglib prefix="c"  uri="http://java.sun.com/jsp/jstl/core" %>
-<%@ taglib prefix="ax" uri="http://axisj.com/axu4j" %>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="ax" tagdir="/WEB-INF/tags" %>
 
-<ax:layout name="base.jsp">
-    <ax:set name="title" value="${PAGE_NAME}" />
-    <ax:set name="page_desc" value="${PAGE_REMARK}" />
+<ax:set key="title" value="${pageName}"/>
+<ax:set key="page_desc" value="${PAGE_REMARK}"/>
+<ax:set key="page_auto_height" value="true"/>
 
-	<ax:div name="contents">
-		<ax:row>
-			<ax:col size="12">
-                <ax:custom customid="page-button" pageId="${PAGE_ID}" searchAuth="${SEARCH_AUTH}" saveAuth="${SAVE_AUTH}" excelAuth="${EXCEL_AUTH}" function1Auth="${FUNCTION_1_AUTH}" function2Auth="${FUNCTION_2_AUTH}" function3Auth="${FUNCTION_3_AUTH}" function4Auth="${FUNCTION_4_AUTH}" function5Auth="${FUNCTION_5_AUTH}"></ax:custom>
-				<div class="ax-search" id="page-search-box"></div>
+<ax:layout name="base">
+    <jsp:attribute name="script">
+        <script type="text/javascript" src="<c:url value='/assets/js/view/system/system-auth-user.js' />"></script>
+    </jsp:attribute>
+    <jsp:body>
 
-                <ax:custom customid="table">
-                    <ax:custom customid="tr">
-                        <ax:custom customid="td" style="width:40%;">
-                            <h2><i class="axi axi-list-alt"></i> 사용자정보</h2>
-                            <div class="ax-grid" id="page-grid-box"></div>
+        <ax:page-buttons></ax:page-buttons>
 
-                        </ax:custom>
-                        <ax:custom customid="td">
-                            <div class="ax-button-group">
-                                <div class="left">
-                                    <h2><i class="axi axi-table"></i> 사용자등록</h2>
-                                </div>
-                                <div class="right">
-                                    <button type="button" class="AXButton" id="ax-form-btn-add"><i class="axi axi-plus-circle"></i> 신규</button>
-                                </div>
-                                <div class="ax-clear"></div>
-                            </div>
+        <!--
+        {
+            "userCd":"",
+            "menuGrpCd":"",
+            ....
 
-                            <ax:form name="table-form" id="table-form" method="post">
-                                <input type="hidden" name="act_tp" id="act_tp" value="" />
-                                <ax:fields>
-                                    <ax:field label="이름" width="220px">
-                                        <input type="text" name="userNm" id="userNm" maxlength="15" title="이름" class="av-required AXInput W120" value="" />
-                                    </ax:field>
-                                </ax:fields>
-                                <ax:fields>
-                                    <ax:field label="아이디" width="220px">
-                                        <input type="text" name="userCd" id="userCd" maxlength="10" title="아이디" class="av-required AXInput W150" value="" />
-                                    </ax:field>
-                                </ax:fields>
-                                <ax:fields>
-                                    <ax:field label="비밀번호 변경" width="220px">
-                                        <input type="text" id="password_change" name="password_change" class="AXInput W60" value="사용" />
-                                    </ax:field>
-                                </ax:fields>
-                                <ax:fields>
-                                    <ax:field label="비밀번호" width="220px">
-                                        <input type="password" name="userPs" id="userPs" maxlength="128" class="AXInput W120" value="" />
-                                    </ax:field>
-                                    <ax:field label="비밀번호 확인" width="220px">
-                                        <input type="password" name="userPs_chk" id="userPs_chk" maxlength="128" class="AXInput W120" value="" />
-                                    </ax:field>
-                                </ax:fields>
-                                <ax:fields>
-                                    <ax:field label="이메일" width="220px">
-                                        <input type="text" name="email" id="email" maxlength="50" title="이메일" placeholder="abc@abc.com" class="av-email AXInput W180" value="" />
-                                    </ax:field>
-                                </ax:fields>
-                                <ax:fields>
-                                    <ax:field label="핸드폰번호" width="220px">
-                                        <input type="text" name="hpNo" id="hpNo" maxlength="15" placeholder="" class="av-phone AXInput W120" value="" />
-                                    </ax:field>
-                                </ax:fields>
-
-                                <ax:fields>
-                                    <ax:field label="사용여부" width="220px">
-                                        <select name="useYn" id="useYn" class="AXSelect W100">
-                                            <option value="Y">사용</option>
-                                            <option value="N">사용안함</option>
-                                        </select>
-                                    </ax:field>
-                                </ax:fields>
-                                <ax:fields>
-                                    <ax:field label="비고" width="220px">
-                                        <input type="text" name="remark" id="remark" maxlength="100" class="AXInput W300" value="" />
-                                    </ax:field>
-                                </ax:fields>
-                            </ax:form>
-                        </ax:custom>
-                    </ax:custom>
-                </ax:custom>
-			</ax:col>
-		</ax:row>
-	</ax:div>
-	<ax:div name="scripts">
-	    <script type="text/javascript">
-        var RESIZE_ELEMENTS = [
-            {id:"page-grid-box", adjust:-80}
-        ];
-	    var fnObj = {
-	        pageStart: function(){
-	            this.search.bind();
-	            this.grid.bind();
-                this.form.bind();
-	            this.bindEvent();
-	        },
-	        bindEvent: function(){
-	            var _this = this;
-                $("#ax-page-btn-search").bind("click", function(){
-                    _this.search.submit();
-                });
-                $("#ax-page-btn-save").bind("click", function(){
-                    setTimeout(function() {
-                        _this.save();
-                    }, 500);
-                });
-                $("#ax-page-btn-excel").bind("click", function(){
-                    app.modal.excel({
-                        pars:"target=${className}"
-                    });
-                });
-
-                $("#ax-form-btn-add").bind("click", function(){
-                    _this.form.add();
-                });
-
-                $("#ax-stor-finder").bind("click", function(){
-                    app.modal.open({
-                        url:"/jsp/info/info-shop-search-modal-01.jsp",
-                        pars:"callBack=fnObj.setStoreCd",
-                        width: 600
-                    });
-                });
-	        },
-            setStoreCd: function(item){
-                $("#storCd").val(item.storCd);
-                $("#storNm").val(item.storNm);
-                app.modal.close();
-            },
-            save: function(){
-                fnObj.form.save();
-            },
-            excel: function(){
-
-            },
-	        search: {
-	            target: new AXSearch(),
-                bind: function(){
-                    var _this = this;
-                    this.target.setConfig({
-                        targetID:"page-search-box",
-                        theme : "AXSearch",
-                        /*
-                        mediaQuery: {
-                            mx:{min:"N", max:767}, dx:{min:767}
-                        },
-                        */
-                        onsubmit: function(){
-                            // 버튼이 선언되지 않았거나 submit 개체가 있는 경우 발동 합니다.
-                            fnObj.search.submit();
-                        },
-                        rows:[
-                            {display:true, addClass:"", style:"", list:[
-                                {label:"검색", labelWidth:"", type:"inputText", width:"150", key:"searchParams", addClass:"secondItem", valueBoxStyle:"", value:"",
-                                    onChange: function(changedValue){
-                                        //아래 2개의 값을 사용 하실 수 있습니다.
-                                        //toast.push(Object.toJSON(this));
-                                        //dialog.push(changedValue);
-                                    }
-                                }
-                            ]}
-                        ]
-                    });
-                },
-	            submit: function(){
-	                var pars = this.target.getParam();
-	                //toast.push("콘솔창에 파라미터 정보를 출력하였습니다.");
-                    fnObj.grid.setPage(fnObj.grid.pageNo, pars);
-                    fnObj.form.add();
-	            }
-	        },
-	        grid: {
-                pageNo: 0,
-                userYn: {Y:"사용", N:"사용안함"},
-	            target: new AXGrid(),
-	            bind: function(){
-                    var _this = this;
-                    _this.target.setConfig({
-	                    targetID : "page-grid-box",
-	                    theme : "AXGrid",
-                        colHeadAlign:"center",
-                        /*
-	                    mediaQuery: {
-	                        mx:{min:0, max:767}, dx:{min:767}
-	                    },
-	                    */
-	                    colGroup : [
-                            {key:"userCd", label:"아이디", width:"120"},
-	                        {key:"userNm", label:"이름", width:"120"},
-	                        {key:"email", label:"이메일", width:"170"},
-                            {key:"useYn", label:"사용여부", width:"80", formatter: function(){
-                                return fnObj.grid.userYn[this.value];
-                            }}
-	                    ],
-	                    body : {
-	                        onclick: function(){
-	                            //toast.push(Object.toJSON({index:this.index, item:this.item}));
-                                fnObj.form.edit(this.item);
-	                        }
-	                    },
-	                    page:{
-                            display:true,
-                            paging:false,
-                            onchange: function(pageNo){
-                                _this.setPage(pageNo);
-                            }
-	                    }
-	                });
-	            },
-                setPage: function(pageNo, searchParams) {
-                    var _this = this;
-                    _this.pageNo = pageNo;
-                    app.ajax({
-                        type: "GET",
-                        url: "/api/v1/users",
-                        data: "pageNumber=" + (pageNo) + "&pageSize=50&" + (searchParams||"")
-                    }, function(res){
-                        if(res.error){
-                            alert(res.error.message);
-                        }
-                        else
-                        {
-                            var gridData = {
-                                list: res.list,
-                                page:{
-                                    pageNo: res.page.currentPage.number()+1,
-                                    pageSize: res.page.pageSize,
-                                    pageCount: res.page.totalPages,
-                                    listCount: res.page.totalElements
-                                }
-                            };
-                            _this.target.setData(gridData);
-                        }
-                    });
+            "roleList": [
+                {
+                "userCd":"",
+                "roleCd":""
                 }
-	        },
-            form: {
-                target: $(document["table-form"]),
-                validate_target: new AXValidator(),
-                bind: function(){
-                    this.validate_target.setConfig({
-                        targetFormName : "table-form"
-                    });
+            ],
 
-                    $("#password_change").bindSwitch({on:"사용", off:"사용안함", onchange:function(){
-                        if(this.value == "사용안함"){
-                            $("#userPs").attr("disabled", "disabled");
-                            $("#userPs_chk").attr("disabled", "disabled");
-                        }else{
-                            $("#userPs").removeAttr("disabled");
-                            $("#userPs_chk").removeAttr("disabled");
-                        }
-                    }});
-                    $("#useYn").bindSelect();
-                    $("#userType").bindSelect({
-                        onchange: function(){
-                            //trace(this.value);
-                            if(this.value == "S"){
-                                $("#ax-stor-finder").removeAttr("disabled");
-                            }else{
-                                $("#ax-stor-finder").attr("disabled", "disabled");
-                            }
-                        }
-                    });
-                    $("#hpNo").bindPattern({
-                        pattern: "phone"
-                    });
-                },
-                init:function(){
-                    /*
-                    var collect = [];
-                    axf.each(fnObj.grid2.target.list, function(i, item){
-                        collect.push({ index: i, item: item });
-                    });
-                    if(collect.length >0 ) fnObj.grid2.target.removeListIndex(collect);
-                    */
-                },
-                add: function(){
-                    this.init();
-                    app.form.clearForm(this.target);
-                    $("#password_change").setValueInput("사용");
-                    $("#act_tp").val("C");
-                    $("#userCd").removeAttr("readonly");
-                },
-                edit: function(item){
-                    this.init();
-                    $("#act_tp").val("U");
-                    $("#userCd").attr("readonly", "readonly");
-                    item = $.extend({}, item);
-                    delete item.userPs;
-                    item.password_change = "사용안함";
-                    app.form.fillForm(this.target, item);
-                },
-                save: function(){
-
-                    var validateResult = this.validate_target.validate();
-                    if (!validateResult) {
-                        var msg = this.validate_target.getErrorMessage();
-                        AXUtil.alert(msg);
-                        this.validate_target.getErrorElement().focus();
-                        return false;
-                    }
-
-                    var item = app.form.serializeObjectWithIds(this.target);
-                    //console.log(item);
-
-                    if(item.act_tp == "C"){
-                        // 비밀번호가 필요 합니다.
-                        if(!item.userPs){
-                            alert("비밀번호를 입력해 주세요");
-                            return false;
-                        }
-                    }
-
-                    if(item.password_change == "사용"){
-                        if(!item.userPs){
-                            alert("비밀번호를 입력해 주세요");
-                            return false;
-                        }
-                    }
-
-                    if(item.userPs) {
-                        if(item.userPs != item.userPs_chk) {
-                            alert("비밀번호를 다시 입력해주세요. 확인 값과 일치하지 않습니다.");
-                            return false;
-                        }
-                    }
-
-                    app.ajax({
-                        type: "PUT",
-                        url: "/api/v1/users",
-                        data: Object.toJSON([item])
-                    }, function(res){
-                        if(res.error){
-                            alert(res.error.message);
-                        }
-                        else
-                        {
-                            // 그리드 새로고침
-                            fnObj.search.submit();
-                        }
-                    });
+            "authList": [
+                {
+                "userCd":"",
+                "authGrpCd":""
                 }
-            }
-	    };
-	    </script>
-	</ax:div>
+            ]
+        }
+        -->
+
+        <!-- 검색바 -->
+        <div role="page-header">
+            <ax:form name="searchView0">
+                <ax:tbl clazz="ax-search-tbl" minWidth="500px">
+                    <ax:tr>
+                        <ax:td label='<lang data-id="검색"></lang>' width="300px">
+                            <input type="text" name="filter" id="filter" class="form-control" value="" placeholder="검색어를 입력하세요."/>
+                        </ax:td>
+                    </ax:tr>
+                </ax:tbl>
+            </ax:form>
+            <div class="H10"></div>
+        </div>
+
+        <ax:split-layout name="ax1" oriental="horizontal">
+            <ax:split-panel width="40%" style="padding-right: 10px;">
+
+                <!-- 목록 -->
+                <div class="ax-button-group" data-fit-height-aside="grid-view-01">
+                    <div class="left">
+                        <h2><i class="cqc-list"></i>
+                            <lang data-id="사용자정보"></lang>
+                        </h2>
+                    </div>
+                    <div class="right"></div>
+                </div>
+                <div data-ax5grid="grid-view-01" data-fit-height-content="grid-view-01" style="height: 300px;"></div>
+
+            </ax:split-panel>
+            <ax:splitter></ax:splitter>
+            <ax:split-panel width="*" style="padding-left: 10px;" scroll="scroll">
+
+                <!-- 폼 -->
+                <div class="ax-button-group" role="panel-header">
+                    <div class="left">
+                        <h2><i class="cqc-news"></i>
+                            <lang data-id="사용자등록"></lang>
+                        </h2>
+                    </div>
+                    <div class="right">
+                        <button type="button" class="btn btn-default" data-form-view-01-btn="form-clear">
+                            <i class="cqc-erase"></i>
+                            <lang data-id="신규"></lang>
+                        </button>
+                    </div>
+                </div>
+
+                <ax:form name="formView01">
+                    <input type="hidden" name="act_tp" id="act_tp" value=""/>
+                    <ax:tbl clazz="ax-form-tbl" minWidth="500px">
+                        <ax:tr>
+                            <ax:td label="이름" width="300px">
+                                <input type="text" name="userNm" data-ax-path="userNm" maxlength="15" title="이름" class="av-required form-control W120" value=""/>
+                            </ax:td>
+                            <ax:td label="아이디" width="220px">
+                                <input type="text" name="userCd" data-ax-path="userCd" maxlength="100" title="아이디" class="av-required form-control W150" value=""/>
+                            </ax:td>
+                        </ax:tr>
+                        <ax:tr>
+                            <ax:td label="비밀번호" width="300px">
+                                <input type="password" name="userPs" data-ax-path="userPs" maxlength="128" class="form-control W120" value="" readonly="readonly"/>
+                            </ax:td>
+                            <ax:td label="비밀번호 확인" width="360px">
+                                <input type="password" name="userPs_chk" data-ax-path="userPs_chk" maxlength="128" class="form-control inline-block W120" value="" readonly="readonly"/>
+                                &nbsp;
+                                <label>
+                                    <input type="checkbox" data-ax-path="password_change" name="password_change" value="Y"/>
+                                    비밀번호 변경
+                                </label>
+                            </ax:td>
+                        </ax:tr>
+                        <ax:tr>
+                            <ax:td label="이메일" width="300px">
+                                <input type="text" name="email" data-ax-path="email" maxlength="50" title="이메일" placeholder="abc@abc.com" class="av-email form-control W180" value=""/>
+                            </ax:td>
+                            <ax:td label="핸드폰번호" width="220px">
+                                <input type="text" name="hpNo" data-ax-path="hpNo" maxlength="15" placeholder="" class="av-phone form-control W120" data-ax5formatter="phone" value=""/>
+                            </ax:td>
+                        </ax:tr>
+                        <ax:tr>
+                            <ax:td label="국가" width="300px">
+                                <select name="country" data-ax-path="country" class="form-control W100">
+                                    <option value="ko_KR">대한민국</option>
+                                    <option value="en_US">미국</option>
+                                </select>
+                            </ax:td>
+                        </ax:tr>
+                        <ax:tr>
+                            <ax:td label="사용여부" width="300px">
+                                <select name="useYn" data-ax-path="useYn" class="form-control W100">
+                                    <option value="Y">사용</option>
+                                    <option value="N">사용안함</option>
+                                </select>
+                            </ax:td>
+                            <ax:td label="계정상태" width="220px">
+                                <ax:common-code groupCd="USER_STATUS" dataPath="userStatus"/>
+                            </ax:td>
+                        </ax:tr>
+                        <ax:tr>
+                            <ax:td label="비고" width="100%">
+                                <input type="text" name="remark" data-ax-path="remark" maxlength="100" class="form-control" value=""/>
+                            </ax:td>
+                        </ax:tr>
+                    </ax:tbl>
+
+                    <div class="H5"></div>
+                    <div class="ax-button-group sm">
+                        <div class="left">
+                            <h3>메뉴그룹 선택</h3>
+                        </div>
+                    </div>
+                    <ax:tbl clazz="ax-form-tbl">
+                        <ax:tr>
+                            <ax:td label="메뉴그룹" width="250px">
+                                <ax:common-code groupCd="MENU_GROUP" dataPath="menuGrpCd"/>
+                            </ax:td>
+                        </ax:tr>
+                    </ax:tbl>
+
+                    <div class="H5"></div>
+                    <div class="ax-button-group sm">
+                        <div class="left">
+                            <h3>권한설정</h3>
+                        </div>
+                    </div>
+                    <ax:tbl clazz="ax-form-tbl">
+                        <ax:tr>
+                            <ax:td label="권한그룹" width="100%">
+                                <ax:common-code groupCd="AUTH_GROUP" dataPath="grpAuthCd" name="grpAuthCd" type="checkbox"/>
+                            </ax:td>
+                        </ax:tr>
+                    </ax:tbl>
+
+                    <div class="H5"></div>
+                    <div class="ax-button-group sm">
+                        <div class="left">
+                            <h3>롤 설정</h3>
+                        </div>
+                    </div>
+
+                    <div data-ax5grid="grid-view-02" style="height: 300px;"></div>
+
+                </ax:form>
+
+            </ax:split-panel>
+        </ax:split-layout>
+
+    </jsp:body>
 </ax:layout>

@@ -1,16 +1,14 @@
 <%@ page contentType="text/html; charset=UTF-8" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
-<%@ taglib prefix="ax" uri="http://axisj.com/axu4j" %>
+<%@ taglib prefix="ax" tagdir="/WEB-INF/tags" %>
 <ax:layout name="base.jsp">
-    <ax:set name="title" value="${PAGE_NAME}"/>
-    <ax:set name="page_desc" value="${PAGE_REMARK}"/>
 
     <ax:div name="css">
-        <link rel="stylesheet" type="text/css" href="<c:url value='/static/plugins/CodeMirror/lib/codemirror.css' />"/>
+        <link rel="stylesheet" type="text/css" href="<c:url value='/assets/plugins/CodeMirror/lib/codemirror.css' />"/>
         <link rel="stylesheet" type="text/css"
-              href="<c:url value='/static/plugins/CodeMirror/addon/fold/foldgutter.css' />"/>
-        <link rel="stylesheet" type="text/css" href="<c:url value='/static/plugins/CodeMirror/addon/lint/lint.css' />"/>
-        <link rel="stylesheet" type="text/css" href="<c:url value='/static/plugins/CodeMirror/theme/eclipse.css' />"/>
+              href="<c:url value='/assets/plugins/CodeMirror/addon/fold/foldgutter.css' />"/>
+        <link rel="stylesheet" type="text/css" href="<c:url value='/assets/plugins/CodeMirror/addon/lint/lint.css' />"/>
+        <link rel="stylesheet" type="text/css" href="<c:url value='/assets/plugins/CodeMirror/theme/eclipse.css' />"/>
 
         <style>
             .CodeMirror {
@@ -21,33 +19,33 @@
         </style>
     </ax:div>
     <ax:div name="js">
-        <script src="<c:url value='/static/plugins/CodeMirror/lib/codemirror.js' />"></script>
-        <script src="<c:url value='/static/plugins/CodeMirror/addon/mode/loadmode.js' />"></script>
-        <script src="<c:url value='/static/plugins/CodeMirror/lib/util/formatting.js' />"></script>
-        <script src="<c:url value='/static/plugins/CodeMirror/mode/javascript/javascript.js' />"></script>
-        <script src="<c:url value='/static/plugins/CodeMirror/mode/xml/xml.js' />"></script>
-        <script src="<c:url value='/static/plugins/CodeMirror/mode/htmlmixed/htmlmixed.js' />"></script>
-        <script src="<c:url value='/static/plugins/CodeMirror/mode/clike/clike.js' />"></script>
-        <script src="<c:url value='/static/plugins/CodeMirror/addon/fold/foldcode.js' />"></script>
-        <script src="<c:url value='/static/plugins/CodeMirror/addon/fold/foldgutter.js' />"></script>
-        <script src="<c:url value='/static/plugins/CodeMirror/addon/fold/brace-fold.js' />"></script>
-        <script src="<c:url value='/static/plugins/CodeMirror/addon/fold/xml-fold.js' />"></script>
-        <script src="<c:url value='/static/plugins/CodeMirror/addon/fold/markdown-fold.js' />"></script>
-        <script src="<c:url value='/static/plugins/CodeMirror/addon/fold/comment-fold.js' />"></script>
-        <script src="<c:url value='/static/plugins/CodeMirror/addon/selection/active-line.js' />"></script>
-        <script src="<c:url value='/static/plugins/CodeMirror/addon/edit/closebrackets.js' />"></script>
-        <script src="<c:url value='/static/plugins/CodeMirror/addon/edit/closetag.js' />"></script>
+        <script src="<c:url value='/assets/plugins/CodeMirror/lib/codemirror.js' />"></script>
+        <script src="<c:url value='/assets/plugins/CodeMirror/addon/mode/loadmode.js' />"></script>
+        <script src="<c:url value='/assets/plugins/CodeMirror/lib/util/formatting.js' />"></script>
+        <script src="<c:url value='/assets/plugins/CodeMirror/mode/javascript/javascript.js' />"></script>
+        <script src="<c:url value='/assets/plugins/CodeMirror/mode/xml/xml.js' />"></script>
+        <script src="<c:url value='/assets/plugins/CodeMirror/mode/htmlmixed/htmlmixed.js' />"></script>
+        <script src="<c:url value='/assets/plugins/CodeMirror/mode/clike/clike.js' />"></script>
+        <script src="<c:url value='/assets/plugins/CodeMirror/addon/fold/foldcode.js' />"></script>
+        <script src="<c:url value='/assets/plugins/CodeMirror/addon/fold/foldgutter.js' />"></script>
+        <script src="<c:url value='/assets/plugins/CodeMirror/addon/fold/brace-fold.js' />"></script>
+        <script src="<c:url value='/assets/plugins/CodeMirror/addon/fold/xml-fold.js' />"></script>
+        <script src="<c:url value='/assets/plugins/CodeMirror/addon/fold/markdown-fold.js' />"></script>
+        <script src="<c:url value='/assets/plugins/CodeMirror/addon/fold/comment-fold.js' />"></script>
+        <script src="<c:url value='/assets/plugins/CodeMirror/addon/selection/active-line.js' />"></script>
+        <script src="<c:url value='/assets/plugins/CodeMirror/addon/edit/closebrackets.js' />"></script>
+        <script src="<c:url value='/assets/plugins/CodeMirror/addon/edit/closetag.js' />"></script>
     </ax:div>
 
     <ax:div name="contents">
         <ax:row>
             <ax:col size="12">
-                <ax:custom customid="page-button"/>
+                <ax:custom customId="page-button"/>
                 <div class="ax-search" id="page-search-box"></div>
 
-                <ax:custom customid="table">
-                    <ax:custom customid="tr">
-                        <ax:custom customid="td">
+                <ax:custom customId="table">
+                    <ax:custom customId="tr">
+                        <ax:custom customId="td">
 
                             <div class="ax-button-group">
                                 <div class="left">
@@ -67,8 +65,8 @@
                             <div class="ax-grid" id="page-grid-box" style="min-height: 250px; max-height:250px;"></div>
                         </ax:custom>
                     </ax:custom>
-                    <ax:custom customid="tr">
-                        <ax:custom customid="td">
+                    <ax:custom customId="tr">
+                        <ax:custom customId="td">
 
                             <div class="ax-button-group">
                                 <div class="left">

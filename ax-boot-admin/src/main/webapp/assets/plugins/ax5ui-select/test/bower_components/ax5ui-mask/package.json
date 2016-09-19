@@ -1,0 +1,27 @@
+{
+	"name": "ax5ui-mask",
+	"version": "0.7.1",
+	"description": "A mask plugin that works with Bootstrap & jQuery",
+	"license": "LGPLv3",
+	"repository": {
+		"type": "git",
+		"url": "git+https://github.com/ax5ui/ax5ui-mask"
+	},
+	"author": {
+		"name": "Thomas Jang",
+		"email": "tom@axisj.com",
+		"url": "ax5.io"
+	},
+	"keywords": [
+		"bootstrap",
+		"jquery",
+		"ax5ui",
+		"plugin",
+		"bootstrap jQuery plugins",
+		"mask",
+		"ax5ui-mask"
+	],
+	"dependencies": {
+		"ax5core": ">=0.4.0"
+	}
+}

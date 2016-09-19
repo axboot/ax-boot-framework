@@ -1,6 +1,6 @@
 package com.chequer.axboot.core.db.dialect;
 
-import com.chequer.axboot.core.db.jsonb.types.MySQLJSONUserType;
+import com.chequer.axboot.core.db.type.MySQLJSONUserType;
 import org.hibernate.dialect.MySQL57InnoDBDialect;
 
 import java.sql.Types;

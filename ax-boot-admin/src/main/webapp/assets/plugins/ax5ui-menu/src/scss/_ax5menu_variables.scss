@@ -1,0 +1,79 @@
+$ax5menu-z-index: 2000 !default;
+$ax5menu-bg: #eee !default;
+$ax5menu-inner-border: 1px solid !default;
+$ax5menu-inner-border-color: #aaa !default;
+
+$ax5menu-box-shadow: 0px 0px 5px 0px rgba(0, 0, 0, 0.2) !default;
+$ax5menu-border-radius: 5px !default;
+
+$ax5menu-body-padding: 5px 0px !default;
+$ax5menu-heading-padding: $panel-heading-padding !default;
+$ax5menu-buttons-padding: 10px 0px 5px 0px !default;
+
+$ax5menu-content-border: 0px solid !default;
+$ax5menu-content-border-color: none !default;
+$ax5menu-content-border-radius: 0px !default;
+$ax5menu-content-padding: 0px !default;
+
+$ax5menu-easing-time-open: 0.3s !default;
+$ax5menu-easing-time-close: 0.2s !default;
+$ax5menu-arrow-size: 10px !default;
+$ax5menu-arrow-border-width: 1px !default;
+
+$ax5menu-item-padding: 4px 0px;
+$ax5menu-item-html-padding: 0px 5px;
+$ax5menu-item-font-size: 13px;
+$ax5menu-item-checkbox-width: 18px;
+$ax5menu-item-handle-width: 14px;
+
+$ax5menubar-item-padding: 0px 10px;
+
+//** Border color for elements within dialog
+$ax5menu-default-text: $panel-default-text !default;
+$ax5menu-default-border-color: $ax5menu-inner-border-color !default;
+$ax5menu-default-heading-bg: $panel-default-heading-bg !default;
+$ax5menu-default-item-bg: #eee;
+$ax5menu-default-item-text: #444;
+$ax5menu-default-item-hover-bg: #999;
+$ax5menu-default-item-hover-text: #fff;
+
+
+$ax5menu-primary-text: $panel-primary-text !default;
+$ax5menu-primary-border-color: $brand-primary !default;
+$ax5menu-primary-heading-bg: $panel-primary-heading-bg !default;
+$ax5menu-primary-item-bg: #eee;
+$ax5menu-primary-item-text: $brand-primary;
+$ax5menu-primary-item-hover-bg: $brand-primary;
+$ax5menu-primary-item-hover-text: #fff;
+
+$ax5menu-success-text: $panel-success-text !default;
+$ax5menu-success-border-color: $brand-success !default;
+$ax5menu-success-heading-bg: $panel-success-heading-bg !default;
+$ax5menu-success-item-bg: #eee;
+$ax5menu-success-item-text: $brand-success;
+$ax5menu-success-item-hover-bg: $brand-success;
+$ax5menu-success-item-hover-text: #fff;
+
+$ax5menu-info-text: $panel-info-text !default;
+$ax5menu-info-border-color: $brand-info !default;
+$ax5menu-info-heading-bg: $panel-info-heading-bg !default;
+$ax5menu-info-item-bg: #eee;
+$ax5menu-info-item-text: darken($brand-info, 10%);
+$ax5menu-info-item-hover-bg: $brand-info;
+$ax5menu-info-item-hover-text: #fff;
+
+$ax5menu-warning-text: $panel-warning-text !default;
+$ax5menu-warning-border-color: $brand-warning !default;
+$ax5menu-warning-heading-bg: $panel-warning-heading-bg !default;
+$ax5menu-warning-item-bg: #eee;
+$ax5menu-warning-item-text: darken($brand-warning, 20%);
+$ax5menu-warning-item-hover-bg: darken($brand-warning, 0%);
+$ax5menu-warning-item-hover-text: #fff;
+
+$ax5menu-danger-text: $panel-danger-text !default;
+$ax5menu-danger-border-color: $brand-danger !default;
+$ax5menu-danger-heading-bg: $panel-danger-heading-bg !default;
+$ax5menu-danger-item-bg: #eee;
+$ax5menu-danger-item-text: darken($brand-danger, 20%);
+$ax5menu-danger-item-hover-bg: darken($brand-danger, 0%);
+$ax5menu-danger-item-hover-text: #fff;

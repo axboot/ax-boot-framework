@@ -57,11 +57,11 @@ public class Api {
         return getObject(HttpMethod.DELETE, url, data, clazz);
     }
 
-    public <T> T get(String url, Class<T> clazz) {
+    public <T> T getString(String url, Class<T> clazz) {
         return getObject(HttpMethod.GET, url, clazz);
     }
 
-    public String get(String url) {
+    public String getString(String url) {
         try {
             return getObject(HttpMethod.GET, url, String.class);
         } catch (Exception e) {
@@ -71,18 +71,18 @@ public class Api {
         return "";
     }
 
-    public void getWithAutoSet(String url, String key) {
+    public void json(String url, String key) {
         try {
-            String json = get(url);
+            String json = getString(url);
             request.setAttribute(key, json);
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
-    public void getWithAutoSetByObject(String url, String key) {
+    public void object(String url, String key) {
         try {
-            String json = get(url);
+            String json = getString(url);
 
             if (json.startsWith("[") && json.endsWith("]")) {
                 List<Map<String, Object>> listMapType = JsonUtils.fromJsonToList(json);

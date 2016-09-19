@@ -1,0 +1,46 @@
+//== modal
+$ax5modal-z-index: 2000 !default;
+$ax5modal-box-model: border-box !default;
+$ax5modal-bg: $panel-bg !default;
+$ax5modal-border: 1px solid $panel-inner-border !default;
+$ax5modal-box-shadow: 0px 0px 5px 0px rgba(0, 0, 0, 0.60) !default;
+$ax5modal-body-padding: 0px !default;
+$ax5modal-header-padding: $panel-heading-padding !default;
+
+$ax5modal-header-addon-padding: 10px 10px !default;
+$ax5modal-header-addon-btn-padding: 0px 2px !default;
+
+$ax5modal-border-radius: $panel-border-radius !default;
+$ax5modal-easing-time-open: 0.3s !default;
+$ax5modal-easing-time-close: 0.3s !default;
+
+//== modal resizer
+$ax5modal-resizer-bg: #ccc !default;
+$ax5modal-resizer-border: 3px dotted #ff0000 !default;
+$ax5modal-resizer-box-shaodw: 0px 0px 5px 0px rgba(0, 0, 0, 0.60) !default;
+$ax5modal-resizer-opacity : 0.3 !default;
+
+//** Border color for elements within dialog
+$ax5modal-default-text: $panel-default-text !default;
+$ax5modal-default-border: 1px solid $panel-default-border !default;
+$ax5modal-default-header-bg: $panel-default-heading-bg !default;
+
+$ax5modal-primary-text: $panel-primary-text !default;
+$ax5modal-primary-border: 1px solid $panel-primary-border !default;
+$ax5modal-primary-header-bg: $panel-primary-heading-bg !default;
+
+$ax5modal-success-text: $panel-success-text !default;
+$ax5modal-success-border: 1px solid $panel-success-border !default;
+$ax5modal-success-header-bg: $panel-success-heading-bg !default;
+
+$ax5modal-info-text: $panel-info-text !default;
+$ax5modal-info-border: 1px solid $panel-info-border !default;
+$ax5modal-info-header-bg: $panel-info-heading-bg !default;
+
+$ax5modal-warning-text: $panel-warning-text !default;
+$ax5modal-warning-border: 1px solid $panel-warning-border !default;
+$ax5modal-warning-header-bg: $panel-warning-heading-bg !default;
+
+$ax5modal-danger-text: $panel-danger-text !default;
+$ax5modal-danger-border: 1px solid $panel-danger-border !default;
+$ax5modal-danger-header-bg: $panel-danger-heading-bg !default;

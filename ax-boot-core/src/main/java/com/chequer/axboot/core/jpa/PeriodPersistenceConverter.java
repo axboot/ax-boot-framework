@@ -38,7 +38,7 @@ import java.util.Objects;
  * <p>
  * The existence of this class in the classpath and it being known by the persistence unit
  * is sufficient
- * to allow you to use the as-of Java SE 8 {@link java.time.Period} class in
+ * to allow you to use the as-of Java SE 8 {@link Period} class in
  * an {@link javax.persistence.Entity} or in other persistable classes.
  * <p>
  * Important: the setting of <code>@Converter(autoApply = true)</code>

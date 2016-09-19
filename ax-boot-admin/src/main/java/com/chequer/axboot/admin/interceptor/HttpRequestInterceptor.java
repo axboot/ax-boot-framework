@@ -10,15 +10,11 @@ import javax.servlet.http.HttpServletResponse;
 
 public class HttpRequestInterceptor extends HandlerInterceptorAdapter {
 
-	public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
-		return true;
-	}
+    public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
+        return true;
+    }
 
-	public boolean responseError(HttpServletResponse response, String errorMessage) throws Exception {
-		return false;
-	}
-
-	public void postHandle(HttpServletRequest request, HttpServletResponse response, Object handler, ModelAndView modelAndView) throws Exception {
-		MDCUtil.clear();
-	}
+    public void postHandle(HttpServletRequest request, HttpServletResponse response, Object handler, ModelAndView modelAndView) throws Exception {
+        MDCUtil.clear();
+    }
 }

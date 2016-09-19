@@ -1,0 +1,25 @@
+{
+	"name": "ax5ui-layout",
+	"version": "0.2.10",
+	"description": "A mediaViewer plugin that works with Bootstrap & jQuery",
+	"authors": [
+		"ThomasJ <tom@axisj.com>"
+	],
+	"main": "dist/ax5layout.js",
+	"keywords": [
+		"bootstrap",
+		"jquery",
+		"ax5ui",
+		"plugin",
+		"bootstrap jQuery plugins",
+		"ax5ui-layout",
+		"javascript ui"
+	],
+	"dependencies": {
+		"jquery": "^1.11.0",
+		"ax5core": ">=1.0.9",
+		"bootstrap": "^3.3.6"
+	},
+	"license": "LGPLv3",
+	"homepage": "ax5.io"
+}

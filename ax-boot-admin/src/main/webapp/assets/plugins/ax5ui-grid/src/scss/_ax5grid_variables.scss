@@ -1,0 +1,85 @@
+//==
+$ax5grid-border: 1px solid #ccc !default;
+$ax5grid-bg: #fff !default;
+$ax5grid-font-size: 12px !default;
+$ax5grid-column-border: 1px solid #ccc !default;
+
+//== header
+$ax5grid-header-column-border: 1px solid #ccc !default;
+$ax5grid-header-column-box-shadow: inset 1px 1px 0px 0px #fff !default;
+$ax5grid-header-column-bg-colors: (#FFFFFF, #F0F0F0) !default;
+$ax5grid-header-column-hover-bg-colors: (#eee, #eee) !default;
+$ax5grid-header-column-resizer-color: #ff3300 !default;
+$ax5grid-header-column-resizer-size: 4px !default;
+$ax5grid-header-sorter-size: 10px !default;
+$ax5grid-header-sorter-color: #000 !default;
+
+//== aside
+$ax5grid-aside-border: 1px solid darken(#ccc, 0%) !default;
+$ax5grid-aside-bg: #f2f2f2 !default;
+$ax5grid-aside-column-shadow: inset 1px 1px 0px 0px #fff !default;
+
+$ax5grid-frozen-line-border: 1px solid darken(#ccc, 10%) !default;
+
+//== footsum
+$ax5grid-footsum-bg: #ffe7e2 !default;
+$ax5grid-footsum-line-border: 1px solid darken(#ccc, 10%) !default;
+
+//== page
+$ax5grid-page-border: 1px solid #ccc !default;
+$ax5grid-page-bg-colors: (#FFFFFF, #F0F0F0) !default;
+$ax5grid-page-navigation-padding: 5px !default;
+$ax5grid-page-navigation-font-size: 12px !default;
+$ax5grid-page-navigation-btn-min-width: 20px !default;
+$ax5grid-page-navigation-btn-border: 0px none !default;
+$ax5grid-page-navigation-btn-border-radius: 5px !default;
+$ax5grid-page-navigation-btn-bg: transparent !default;
+$ax5grid-page-navigation-btn-font-size: 11px !default;
+$ax5grid-page-navigation-btn-color: #222 !default;
+$ax5grid-page-navigation-btn-hover-bg: #888 !default;
+$ax5grid-page-navigation-btn-hover-color: #fff !default;
+
+$ax5grid-page-status-font-size: 12px !default;
+$ax5grid-page-status-padding: 10px !default;
+$ax5grid-page-status-color: #222 !default;
+
+//== scroll
+$ax5grid-scroll-track-border: 1px solid #ccc !default;
+$ax5grid-scroll-track-bg: #f3f3f3 !default;
+$ax5grid-scroll-corner-bg: #EAEDEF !default;
+
+$ax5grid-scroll-bar-border-radius: 10px !default;
+$ax5grid-scroll-bar-border: 0px solid #fff !default;
+$ax5grid-scroll-bar-bg: #ccc !default;
+$ax5grid-scroll-bar-hover-border: 0px solid #ccc !default;
+$ax5grid-scroll-bar-hover-bg: #bababa !default;
+
+//== body.row
+$ax5grid-row-bg-0: #f3f3f3 !default;
+$ax5grid-row-bg-1: #fff !default;
+$ax5grid-row-bg-2: #f3f3f3 !default;
+$ax5grid-row-bg-3: #fff !default;
+$ax5grid-row-hover-bg: lighten(#cce2f3, 5%) !default;
+$ax5grid-row-grouping-bg: #ffffe7 !default;
+$ax5grid-row-selected: lighten(#b1d7fe, 10%) !default;
+
+//== body.cell
+$ax5grid-cell-padding-row-selector: 5px !default;
+$ax5grid-cell-padding: 3px 5px !default;
+
+$ax5grid-cell-checkbox-border: 1px solid #ccc !default;
+$ax5grid-cell-checkbox-border-radius: 3px !default;
+$ax5grid-cell-checkbox-bg-colors: (#FFFFFF, #F0F0F0) !default;
+$ax5grid-cell-checkbox-arrow-color: #3372ff !default;
+
+$ax5grid-cell-focused-box-shadow: inset 0px 0px 1px 1px #0581f2 !default;
+$ax5grid-cell-focused-bg: lighten(#b1d7fe, 10%) !default;
+$ax5grid-cell-focused-color: #000 !default;
+
+$ax5grid-cell-selected-border-color: #ccc !default;
+$ax5grid-cell-selected-bg: #b1d7fe !default;
+$ax5grid-cell-selected-color: #000 !default;
+
+//== resizer
+$ax5grid-resizer-color: #ff3300 !default;
+$ax5grid-resizer-size: 2px !default;

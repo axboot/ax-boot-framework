@@ -1,6 +1,6 @@
 <%@ page contentType="text/html; charset=UTF-8" %>
 <%@ taglib prefix="c"  uri="http://java.sun.com/jsp/jstl/core" %>
-<%@ taglib prefix="ax" uri="http://axisj.com/axu4j" %>
+<%@ taglib prefix="ax" tagdir="/WEB-INF/tags" %>
 
 <ax:layout name="base.jsp">
     <ax:set name="title" value="${PAGE_NAME}" />
@@ -9,11 +9,11 @@
     <ax:div name="contents">
         <ax:row>
             <ax:col size="12">
-                <ax:custom customid="page-button" pageId="${PAGE_ID}" searchAuth="${SEARCH_AUTH}" saveAuth="${SAVE_AUTH}" excelAuth="${EXCEL_AUTH}" function1Auth="${FUNCTION_1_AUTH}" function2Auth="${FUNCTION_2_AUTH}" function3Auth="${FUNCTION_3_AUTH}" function4Auth="${FUNCTION_4_AUTH}" function5Auth="${FUNCTION_5_AUTH}"></ax:custom>
+                <ax:custom customId="page-button" pageId="${PAGE_ID}" searchAuth="${SEARCH_AUTH}" saveAuth="${SAVE_AUTH}" excelAuth="${EXCEL_AUTH}" function1Auth="${FUNCTION_1_AUTH}" function2Auth="${FUNCTION_2_AUTH}" function3Auth="${FUNCTION_3_AUTH}" function4Auth="${FUNCTION_4_AUTH}" function5Auth="${FUNCTION_5_AUTH}"></ax:custom>
 
-                <ax:custom customid="table">
-                    <ax:custom customid="tr">
-                        <ax:custom customid="td">
+                <ax:custom customId="table">
+                    <ax:custom customId="tr">
+                        <ax:custom customId="td">
                             <div class="ax-button-group">
                                 <div class="left">
                                     <h2><i class="axi axi-list-alt"></i> 권한그룹 목록</h2>
@@ -25,14 +25,14 @@
                             <div class="ax-grid" id="page-grid-box"></div>
 
                         </ax:custom>
-                        <ax:custom customid="td" style="width:30px;text-align:center;vertical-align:middle;">
+                        <ax:custom customId="td" style="width:30px;text-align:center;vertical-align:middle;">
                             <div>
                                 <div class="center"><button type="button" class="AXButton" id="ax-grid-btn-del" ><i class="axi axi-chevron-left2"></i> </button></div>
                                 <div class="H10"></div>
                                 <div class="center"><button type="button" class="AXButton" id="ax-grid-btn-add" ><i class="axi axi-chevron-right2"></i> </button></div>
                             </div>
                         </ax:custom>
-                        <ax:custom customid="td">
+                        <ax:custom customId="td">
                             <div class="ax-button-group">
                                 <div class="left">
                                     <h2><i class="axi axi-list-alt"></i> 사용자 목록</h2>

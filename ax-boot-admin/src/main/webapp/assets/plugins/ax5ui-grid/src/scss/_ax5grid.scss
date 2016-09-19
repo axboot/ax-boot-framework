@@ -1,0 +1,609 @@
+// mixins
+@mixin gridBoxModal() {
+    margin: 0;
+    padding: 0;
+}
+
+@mixin gridColumn($container) {
+
+    box-sizing: border-box;
+    overflow: hidden;
+    position: relative;
+    padding: 0;
+    font-size: $ax5grid-font-size;
+    border: 0 none;
+
+    &.hasBorder {
+        border-right: $ax5grid-column-border;
+        border-bottom: $ax5grid-column-border;
+    }
+    &.isLastColumn {
+
+    }
+    &.lineNumberColumn {
+
+    }
+
+    @if ($container == "header") {
+        cursor: pointer;
+        box-shadow: $ax5grid-header-column-box-shadow;
+        &:hover {
+            @include ax-background(top, $ax5grid-header-column-hover-bg-colors);
+        }
+        &[data-ax5grid-column-row="null"] {
+            box-shadow: none;
+        }
+    }
+
+    &[data-ax5grid-column-row="null"] {
+        border-right: 0 none;
+    }
+
+    &[data-ax5grid-column-selected] {
+        background: $ax5grid-cell-selected-bg;
+        border-color: $ax5grid-cell-selected-border-color;
+        color: $ax5grid-cell-selected-color;
+    }
+
+    &[data-ax5grid-column-focused] {
+        box-shadow: $ax5grid-cell-focused-box-shadow;
+        background: $ax5grid-cell-focused-bg;
+        color: $ax5grid-cell-focused-color;
+    }
+
+    &[data-ax5grid-column-attr="rowSelector"] {
+        cursor: pointer;
+        [data-ax5grid-cellHolder] {
+            padding: $ax5grid-cell-padding-row-selector;
+        }
+        //todo : checkBox CSS 구현
+        .checkBox {
+            display: block;
+            position: relative;
+            border: $ax5grid-cell-checkbox-border;
+            border-radius: $ax5grid-cell-checkbox-border-radius;
+            @include ax-background(top, $ax5grid-cell-checkbox-bg-colors);
+            height: 100%;
+            &:after {
+                content: '';
+                width: 60%;
+                height: 40%;
+                position: absolute;
+                top: 20%;
+                right: 20%;
+                border: 0.2em solid $ax5grid-cell-checkbox-arrow-color;
+                border-top: none;
+                border-right: none;
+                background: transparent;
+                opacity: 0.0;
+                @include transform(rotate(-50deg));
+            }
+        }
+    }
+
+    &[data-ax5grid-column-attr="lineNumber"] {
+    }
+
+    [data-ax5grid-cellHolder] {
+        // 그리드 셀표현 : 그리드의 컬럼텍스트가 여기에 출력됨
+        display: block;
+        box-sizing: border-box;
+        padding: $ax5grid-cell-padding;
+        font-size: $ax5grid-font-size;
+
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+
+        @if ($container == "header") {
+            //text-align: center;
+        }
+
+        &[data-ax5grid-text-align="left"] {
+            text-align: left;
+        }
+        &[data-ax5grid-text-align="center"] {
+            text-align: center;
+        }
+        &[data-ax5grid-text-align="right"] {
+            text-align: right;
+        }
+        &[data-ax5grid-cellHolder="multiLine"] {
+            white-space: normal;
+        }
+
+        input[data-ax5grid-editor] {
+            position: absolute;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            border: 0px none;
+            background: $ax5grid-bg;
+        }
+        select[data-ax5grid-editor] {
+            position: absolute;
+            display: block;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            border: 0px none;
+            background: $ax5grid-bg;
+        }
+        [data-ax5select]{
+            position: absolute;
+            display: block;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            border: 0px none;
+            background: $ax5grid-bg;
+            .ax5select-display{
+                height: 100%;
+                border-radius: 0;
+            }
+        }
+
+        [data-ax5grid-editor="checkbox"] {
+            display: inline-block;
+            position: relative;
+            border: $ax5grid-cell-checkbox-border;
+            border-radius: $ax5grid-cell-checkbox-border-radius;
+            @include ax-background(top, $ax5grid-cell-checkbox-bg-colors);
+            height: 100%;
+            &:after {
+                content: '';
+                width: 60%;
+                height: 40%;
+                position: absolute;
+                top: 20%;
+                right: 20%;
+                border: 0.2em solid $ax5grid-cell-checkbox-arrow-color;
+                border-top: none;
+                border-right: none;
+                background: transparent;
+                opacity: 0.0;
+                @include transform(rotate(-50deg));
+            }
+            &[data-ax5grid-checked="true"] {
+                &:after {
+                    opacity: 1.0;
+                }
+            }
+        }
+
+    }
+}
+
+@mixin gridRowBackground() {
+    &.tr-0 {
+        background: $ax5grid-row-bg-0;
+    }
+    &.tr-1 {
+        background: $ax5grid-row-bg-1;
+    }
+    &.tr-2 {
+        background: $ax5grid-row-bg-2;
+    }
+    &.tr-3 {
+        background: $ax5grid-row-bg-3;
+    }
+    &.hover {
+        background: $ax5grid-row-hover-bg;
+    }
+    &[data-ax5grid-grouping-tr="true"] {
+        background: $ax5grid-row-grouping-bg;
+    }
+    &[data-ax5grid-selected="true"] {
+        background: $ax5grid-row-selected;
+        td {
+            //color: #fff;
+            //box-shadow: inset 1px 1px 0px 0px #fff;
+            &[data-ax5grid-column-attr="rowSelector"],
+            &[data-ax5grid-column-attr="lineNumber"] {
+                box-shadow: none;
+            }
+            &[data-ax5grid-column-attr="rowSelector"] {
+                .checkBox {
+                    &:after {
+                        opacity: 1;
+                    }
+                }
+            }
+        }
+    }
+}
+
+@mixin gridPanel($container) {
+    [data-ax5grid-panel] {
+        @include gridBoxModal();
+        position: absolute;
+        overflow: hidden;
+
+        table {
+            table-layout: fixed;
+            border-collapse: separate;
+            border-spacing: 0;
+            border: 0 none;
+            width: 100%;
+            @if ($container == "header") {
+                height: 100%;
+            }
+            tr {
+                border-bottom: 0 none;
+                @include gridRowBackground();
+                td {
+                    @include gridColumn($container);
+                }
+            }
+        }
+
+        &[data-ax5grid-panel="aside-header"] {
+            border-right: $ax5grid-aside-border;
+            table {
+                tr {
+                    td {
+                        text-align: center;
+                    }
+                }
+            }
+        }
+        &[data-ax5grid-panel="top-aside-body"],
+        &[data-ax5grid-panel="aside-body"],
+        &[data-ax5grid-panel="bottom-aside-body"] {
+            border-right: $ax5grid-aside-border;
+            background: $ax5grid-aside-bg;
+            table {
+                tr {
+                    background: $ax5grid-aside-bg;
+                    td {
+                        text-align: center;
+                        box-shadow: $ax5grid-aside-column-shadow;
+                    }
+                }
+            }
+        }
+
+        &[data-ax5grid-panel="left-header"],
+        &[data-ax5grid-panel="top-left-body"],
+        &[data-ax5grid-panel="left-body"],
+        &[data-ax5grid-panel="bottom-left-body"] {
+            border-right: $ax5grid-frozen-line-border; /// frozen Line color
+        }
+
+        &[data-ax5grid-panel="top-aside-body"],
+        &[data-ax5grid-panel="top-left-body"],
+        &[data-ax5grid-panel="top-body"],
+        &[data-ax5grid-panel="top-right-body"] {
+            border-bottom: $ax5grid-frozen-line-border; /// frozen Line color
+        }
+
+        &[data-ax5grid-panel="bottom-aside-body"],
+        &[data-ax5grid-panel="bottom-left-body"],
+        &[data-ax5grid-panel="bottom-body"],
+        &[data-ax5grid-panel="bottom-right-body"] {
+            border-top: $ax5grid-footsum-line-border; /// footSum Line color
+        }
+
+        &[data-ax5grid-panel="bottom-aside-body"],
+        &[data-ax5grid-panel="bottom-left-body"],
+        &[data-ax5grid-panel="bottom-body"],
+        &[data-ax5grid-panel="bottom-right-body"] {
+            background: $ax5grid-footsum-bg;
+        }
+
+        [data-ax5grid-panel-scroll] {
+            position: absolute;
+            left: 0;
+            top: 0;
+        }
+    }
+}
+
+@mixin scrollBar($type) {
+    position: absolute;
+    top: 0;
+    left: 0;
+    @include border-top-radius($ax5grid-scroll-bar-border-radius);
+    @include border-bottom-radius($ax5grid-scroll-bar-border-radius);
+    box-sizing: border-box;
+    border: $ax5grid-scroll-bar-border;
+    background: $ax5grid-scroll-bar-bg;
+
+    @if ($type == "vertical-bar") {
+        cursor: ns-resize;
+    } @else {
+        cursor: ew-resize;
+    }
+
+    &:hover {
+        border: $ax5grid-scroll-bar-hover-border;
+        background: $ax5grid-scroll-bar-hover-bg;
+    }
+}
+
+@mixin resizer($type: "horizontal") {
+    display: none;
+    &.live {
+        display: block;
+        position: absolute;
+        top: 0;
+        left: 0;
+        background: $ax5grid-resizer-color;
+        opacity: 0.5;
+
+        @if ($type == "vertical") {
+            height: $ax5grid-resizer-size;
+            width: 100%;
+            cursor: row-resize;
+        } @else {
+            height: 100%;
+            width: $ax5grid-resizer-size;
+            cursor: col-resize;
+        }
+
+    }
+}
+
+// body
+[data-ax5grid] {
+    [data-ax5grid-container="root"] {
+        @include gridBoxModal();
+        position: relative;
+        background: $ax5grid-bg;
+        border: $ax5grid-border;
+        overflow: hidden;
+
+        [data-ax5grid-container="hidden"] {
+            @include gridBoxModal();
+            position: absolute;
+            //z-index: 100;
+            left: -100%;
+            top: -100%;
+            height: 100%;
+            width: 100%;
+        }
+
+        [data-ax5grid-container="header"] {
+            @include user-select(none);
+            @include gridBoxModal();
+            position: relative;
+            overflow: hidden;
+            @include ax-background(top, $ax5grid-header-column-bg-colors);
+            border: 0px none;
+            border-bottom: $ax5grid-header-column-border;
+            @include gridPanel("header");
+
+            [data-ax5grid-column-resizer] {
+                position: absolute;
+                right: 0;
+                top: 0;
+                width: $ax5grid-header-column-resizer-size;
+                height: 100%;
+                cursor: col-resize;
+                &:hover {
+                    background: $ax5grid-header-column-resizer-color;
+                    opacity: 0.5;
+                }
+            }
+            [data-ax5grid-column-sort] {
+                position: relative;
+                //right: 0;
+                //top: 2px;
+                width: 10px;
+                height: 10px;
+                display: inline-block;
+
+                @mixin sort-arrow($arrow-size, $ratio-0, $ratio-1, $arrow-color, $opacity, $direction) {
+                    position: absolute;
+                    content: ' ';
+                    width: 0;
+                    height: 0;
+                    display: inline-block;
+                    border-left: $arrow-size/$ratio-0 solid transparent;
+                    border-right: $arrow-size/$ratio-0 solid transparent;
+                    @if ($direction == "up") {
+                        border-bottom: ($arrow-size)/$ratio-1 solid $arrow-color;
+                    } @else {
+                        border-top: ($arrow-size)/$ratio-1 solid $arrow-color;
+                    }
+                    background: transparent;
+                    opacity: $opacity;
+                }
+
+                &:before {
+                    top: 0;
+                    left: 0;
+                    @include sort-arrow($ax5grid-header-sorter-size, 2.5, 2.2, $ax5grid-header-sorter-color, 0.3, "up");
+                }
+                &:after {
+                    bottom: 0;
+                    left: 0;
+                    @include sort-arrow($ax5grid-header-sorter-size, 2.5, 2.2, $ax5grid-header-sorter-color, 0.3, "down");
+                }
+
+                &[data-ax5grid-column-sort-order="asc"] {
+                    &:before {
+                        top: 2px;
+                        left: 0;
+                        @include sort-arrow($ax5grid-header-sorter-size + 2, 2.5, 2.0, $ax5grid-header-sorter-color, 0.8, "up");
+                    }
+                    &:after {
+                        display: none;
+                    }
+                }
+                &[data-ax5grid-column-sort-order="desc"] {
+                    &:before {
+                        display: none;
+                    }
+                    &:after {
+                        bottom: 2px;
+                        left: 0;
+                        @include sort-arrow($ax5grid-header-sorter-size + 2, 2.5, 2.0, $ax5grid-header-sorter-color, 0.8, "down");
+                    }
+                }
+
+            }
+            [data-ax5grid-column-filter] {
+                // 개발중..
+                $filter-size: 10px;
+
+                position: absolute;
+                left: 0;
+                top: 0;
+                width: 10px;
+                height: 10px;
+                cursor: pointer;
+
+                &:before {
+                    content: ' ';
+                    width: 0;
+                    height: 0;
+                    display: inline-block;
+                    border-left: $filter-size/2 solid transparent;
+                    border-right: $filter-size/2 solid transparent;
+                    border-top: ($filter-size) solid #000;
+                    background: transparent;
+                    opacity: 1;
+                }
+
+            }
+        }
+
+        [data-ax5grid-container="body"] {
+            @include gridBoxModal();
+            position: relative;
+            overflow: hidden;
+            @include gridPanel("body");
+        }
+
+        [data-ax5grid-container="page"] {
+            @include gridBoxModal();
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            overflow: hidden;
+            @include ax-background(top, $ax5grid-page-bg-colors);
+            border: 0px none;
+            border-top: $ax5grid-page-border;
+
+            [data-ax5grid-page="holder"] {
+                @include gridBoxModal();
+                display: table;
+                //table-layout: fixed;
+                width: 100%;
+                height: 100%;
+                [data-ax5grid-page="navigation"] {
+                    @include gridBoxModal();
+                    display: table-cell;
+                    vertical-align: middle;
+                    text-align: left;
+                    padding-left: $ax5grid-page-navigation-padding;
+                    font-size: $ax5grid-page-navigation-font-size;
+
+                    [data-ax5grid-page-navigation="holder"] {
+                        display: table;
+                        [data-ax5grid-page-navigation="cell"], [data-ax5grid-page-navigation="cell-paging"] {
+                            display: table-cell;
+                            vertical-align: middle;
+                        }
+                        [data-ax5grid-page-navigation="cell-paging"] {
+                            padding: 0 $ax5grid-page-navigation-padding;
+                        }
+
+                        [data-ax5grid-page-move] {
+                            box-sizing: border-box;
+                            min-width: $ax5grid-page-navigation-btn-min-width;
+                            border-radius: $ax5grid-page-navigation-btn-border-radius;
+                            padding: 1px;
+                            border: $ax5grid-page-navigation-btn-border;
+                            background: $ax5grid-page-navigation-btn-bg;
+                            font-size: $ax5grid-page-navigation-btn-font-size;
+                            color: $ax5grid-page-navigation-btn-color;
+                            outline: 0;
+
+                            &[data-ax5grid-page-selected="true"], &:active {
+                                background-color: $ax5grid-page-navigation-btn-hover-bg;
+                                color: $ax5grid-page-navigation-btn-hover-color;
+                            }
+                            &:hover {
+                                text-decoration: underline;
+                            }
+                        }
+                    }
+
+                }
+                [data-ax5grid-page="status"] {
+                    @include gridBoxModal();
+                    display: table-cell;
+                    text-align: right;
+                    vertical-align: middle;
+                    padding-right: $ax5grid-page-status-padding;
+                    font-size: $ax5grid-page-status-font-size;
+                    color: $ax5grid-page-status-color;
+                }
+            }
+        }
+
+        [data-ax5grid-container="scroller"] {
+            @include gridBoxModal();
+            position: absolute;
+            right: 0px;
+            bottom: 0px;
+
+            $scroller-size: 15px;
+            [data-ax5grid-scroller="vertical"] {
+                box-sizing: border-box;
+                position: absolute;
+                display: none;
+                right: 0;
+                bottom: 0;
+                width: $scroller-size;
+                height: 100%;
+                background: $ax5grid-scroll-track-bg;
+                border-left: $ax5grid-scroll-track-border;
+
+                [data-ax5grid-scroller="vertical-bar"] {
+                    @include scrollBar("vertical-bar");
+                }
+            }
+            [data-ax5grid-scroller="horizontal"] {
+                box-sizing: border-box;
+                position: absolute;
+                display: none;
+                right: 0;
+                bottom: 0;
+                height: $scroller-size;
+                width: 100%;
+                background: $ax5grid-scroll-track-bg;
+                border-top: $ax5grid-scroll-track-border;
+
+                [data-ax5grid-scroller="horizontal-bar"] {
+                    @include scrollBar("horizontal-bar");
+                }
+            }
+            [data-ax5grid-scroller="corner"] {
+                position: absolute;
+                display: none;
+                right: 0px;
+                bottom: 0px;
+                width: $scroller-size;
+                height: $scroller-size;
+
+                background: $ax5grid-scroll-corner-bg;
+                border-top: $ax5grid-scroll-track-border;
+                border-left: $ax5grid-scroll-track-border;
+            }
+        }
+
+        [data-ax5grid-resizer="horizontal"] {
+            @include resizer("horizontal");
+        }
+        [data-ax5grid-resizer="vertical"] {
+            @include resizer("vertical");
+        }
+    }
+}

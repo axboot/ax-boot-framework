@@ -1,0 +1,28 @@
+{
+	"name": "ax5ui-menu",
+	"version": "0.6.5",
+	"description": "A menu plugin that works with Bootstrap & jQuery",
+	"license": "LGPLv3",
+	"repository": {
+		"type": "git",
+		"url": "git+https://github.com/ax5ui/ax5ui-menu"
+	},
+	"author": {
+		"name": "Thomas Jang",
+		"email": "tom@axisj.com",
+		"url": "ax5.io"
+	},
+	"keywords": [
+		"bootstrap",
+		"jquery",
+		"ax5ui",
+		"plugin",
+		"bootstrap jQuery plugins",
+		"menu",
+		"ax5ui-menu",
+		"javascript ui"
+	],
+	"dependencies": {
+
+	}
+}

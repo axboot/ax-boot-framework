@@ -1,0 +1,43 @@
+#ax-base-root{
+    padding: 0 15px;
+    overflow: hidden;
+    height: 100%;
+
+    .ax-base-title{
+        display: table;
+        height: 60px;
+        .title{
+            display: table-cell;
+            font-size: 24px;
+            vertical-align: middle;
+        }
+        .desc{
+            display: table-cell;
+            vertical-align: middle;
+            padding-left: 10px;
+        }
+    }
+
+    h1,h2,h3,h4,h5,h6{
+        margin: 0;
+    }
+
+    h1{
+        font-size: 24px;
+    }
+    h2{
+        font-size: 18px;
+    }
+    h3{
+        font-size: 16px;
+    }
+
+    [data-page-buttons]{
+        position: absolute;
+        right: 15px;
+        top: 15px;
+        .btn{
+            padding: 5px 10px;
+        }
+    }
+}

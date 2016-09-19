@@ -84,12 +84,16 @@ public class RequestUtils {
         return getLong(key);
     }
 
-    public void setAttribute(String key, String value) {
+    public void setAttribute(String key, Object value) {
         request.setAttribute(key, value);
     }
 
     public String getStringAttribute(String key) {
         return getStringAttribute(key, "");
+    }
+
+    public Object getAttribute(String key) {
+        return request.getAttribute(key);
     }
 
     public String getStringAttribute(String key, String defaultValue) {
@@ -100,6 +104,15 @@ public class RequestUtils {
         }
 
         return value.toString();
+    }
+
+    public <T> T getAttributeObject(String key, Class<T> clazz) {
+        Object object = getAttribute(key);
+
+        if (object != null) {
+            return clazz.cast(object);
+        }
+        return null;
     }
 
     public void setSessionAttribute(String key, Object value) {
@@ -181,7 +194,7 @@ public class RequestUtils {
 
     public String getRequestBody() {
         try {
-            return IOUtils.toString(request.getInputStream());
+            return IOUtils.toString(request.getInputStream(), "UTF-8");
         } catch (IOException e) {
             // ignored
         }

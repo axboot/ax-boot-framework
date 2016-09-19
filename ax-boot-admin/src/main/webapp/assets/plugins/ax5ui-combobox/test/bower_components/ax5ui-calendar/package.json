@@ -1,0 +1,28 @@
+{
+	"name": "ax5ui-calendar",
+	"version": "0.7.9",
+	"description": "A calendar plugin that works with Bootstrap & jQuery",
+	"license": "LGPLv3",
+	"repository": {
+		"type": "git",
+		"url": "git+https://github.com/ax5ui/ax5ui-calendar"
+	},
+	"author": {
+		"name": "Thomas Jang",
+		"email": "tom@axisj.com",
+		"url": "ax5.io"
+	},
+	"keywords": [
+		"bootstrap",
+		"jquery",
+		"ax5ui",
+		"plugin",
+		"bootstrap jQuery plugins",
+		"calendar",
+		"ax5ui-calendar",
+		"javascript ui"
+	],
+	"dependencies": {
+		"ax5core": ">=0.4.0"
+	}
+}

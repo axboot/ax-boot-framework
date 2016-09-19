@@ -1,0 +1,38 @@
+$ax5dialog-z-index: 2000 !default;
+$ax5dialog-box-model: border-box !default;
+$ax5dialog-bg: $panel-bg !default;
+$ax5dialog-box-shaodw: 0px 0px 3px 0px rgba(0, 0, 0, 0.175) !default;
+$ax5dialog-body-padding: $panel-body-padding !default;
+$ax5dialog-header-padding: $panel-heading-padding !default;
+$ax5dialog-footer-padding: $panel-footer-padding !default;
+$ax5dialog-border-radius: $panel-border-radius !default;
+$ax5dialog-easing-time-open: 0.3s !default;
+$ax5dialog-easing-time-close: 0.2s !default;
+
+//** Border color for elements within dialog
+$ax5dialog-inner-border: 1px solid $panel-inner-border !default;
+$ax5dialog-footer-bg: $panel-footer-bg !default;
+
+$ax5dialog-default-text: $panel-default-text !default;
+$ax5dialog-default-border: 1px solid $panel-default-border !default;
+$ax5dialog-default-header-bg: $panel-default-heading-bg !default;
+
+$ax5dialog-primary-text: $panel-primary-text !default;
+$ax5dialog-primary-border: 1px solid $panel-primary-border !default;
+$ax5dialog-primary-header-bg: $panel-primary-heading-bg !default;
+
+$ax5dialog-success-text: $panel-success-text !default;
+$ax5dialog-success-border: 1px solid $panel-success-border !default;
+$ax5dialog-success-header-bg: $panel-success-heading-bg !default;
+
+$ax5dialog-info-text: $panel-info-text !default;
+$ax5dialog-info-border: 1px solid $panel-info-border !default;
+$ax5dialog-info-header-bg: $panel-info-heading-bg !default;
+
+$ax5dialog-warning-text: $panel-warning-text !default;
+$ax5dialog-warning-border: 1px solid $panel-warning-border !default;
+$ax5dialog-warning-header-bg: $panel-warning-heading-bg !default;
+
+$ax5dialog-danger-text: $panel-danger-text !default;
+$ax5dialog-danger-border: 1px solid $panel-danger-border !default;
+$ax5dialog-danger-header-bg: $panel-danger-heading-bg !default;

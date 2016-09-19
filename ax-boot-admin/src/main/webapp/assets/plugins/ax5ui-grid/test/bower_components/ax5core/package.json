@@ -1,0 +1,23 @@
+{
+	"name": "ax5core",
+	"version": "1.2.0",
+	"description": "`ax5core` is a collection of utility functions that have been designed for use in ax5ui",
+	"license": "LGPLv3",
+	"repository": {
+		"type": "git",
+		"url": "git+https://github.com/ax5ui/ax5core"
+	},
+	"author": {
+		"name": "Thomas Jang",
+		"email": "tom@axisj.com",
+		"url": "ax5.io"
+	},
+	"keywords": [
+		"bootstrap",
+		"jquery",
+		"ax5ui",
+		"plugin",
+		"bootstrap jQuery plugins",
+		"javascript ui"
+	]
+}

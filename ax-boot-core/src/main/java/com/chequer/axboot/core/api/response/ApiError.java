@@ -12,4 +12,7 @@ public class ApiError {
 	@JsonProperty("message")
 	@NonNull
 	private String message;
+
+	@JsonProperty("requiredKey")
+	private String requiredKey;
 }

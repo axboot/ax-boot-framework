@@ -5,17 +5,17 @@
 
     <modelVersion>4.0.0</modelVersion>
     <groupId>com.chequer.axboot</groupId>
-    <artifactId>ax-boot-parent</artifactId>
+    <artifactId>ax-boot-framework</artifactId>
     <version>1.0.0</version>
     <packaging>pom</packaging>
     <name>AX Boot Parent</name>
-    <description>AX Boot Parent</description>
+    <description>AX Boot Framework</description>
     <url>http://www.axboot.com</url>
 
     <parent>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-parent</artifactId>
-        <version>1.3.5.RELEASE</version>
+        <version>1.4.0.RELEASE</version>
     </parent>
 
     <ciManagement>
@@ -87,7 +87,6 @@
         </developer>
     </developers>
 
-
     <properties>
         <apache.commons.lang.version>3.4</apache.commons.lang.version>
         <apache.commons.collections.version>4.1</apache.commons.collections.version>
@@ -101,14 +100,16 @@
         <apache.commons.net.version>3.4</apache.commons.net.version>
         <apache.commons.beanutils.version>1.9.2</apache.commons.beanutils.version>
         <apache.poi.version>3.13</apache.poi.version>
-        <axu4j.version>1.0.0-RELEASE</axu4j.version>
+        <aspectjrt.version>1.8.9</aspectjrt.version>
 
         <barcode4j.version>2.1</barcode4j.version>
         <bitwalker.userAgentUtil.version>1.18</bitwalker.userAgentUtil.version>
 
         <excel.parser.version>1.0</excel.parser.version>
+        <embedded.redis.version>0.6</embedded.redis.version>
 
         <gm4java.version>1.1.0</gm4java.version>
+        <groovy.version>2.4.6</groovy.version>
         <guava.version>19.0</guava.version>
 
         <javax.inject.version>1</javax.inject.version>
@@ -119,15 +120,20 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
         <project.version>1.0</project.version>
+        <jsp.api.version>2.0</jsp.api.version>
         <java.version>1.8</java.version>
+        <javax.el.api.version>3.0.1-b04</javax.el.api.version>
         <jxls.core.version>2.2.9</jxls.core.version>
         <jxls.poi.version>1.0.8</jxls.poi.version>
         <jxls.jexcel.version>1.0.5</jxls.jexcel.version>
         <jxls.reader.version>2.0.2</jxls.reader.version>
 
+        <h2.version>1.4.192</h2.version>
+
         <lombok.version>1.16.8</lombok.version>
 
         <modelmapper.version>0.7.5</modelmapper.version>
+        <mustache.complier.version>0.9.3</mustache.complier.version>
         <mybatis.version>3.3.0</mybatis.version>
         <mybatis.spring.version>1.2.3</mybatis.spring.version>
         <mysql.connector.version>5.1.37</mysql.connector.version>
@@ -136,10 +142,14 @@
         <postgresql.jdbc.version>9.4-1206-jdbc42</postgresql.jdbc.version>
         <proguard.version>4.4</proguard.version>
         <qrgen.version>2.0</qrgen.version>
+        <querydsl.version>4.1.4</querydsl.version>
 
-        <spring.boot.version>1.3.5.RELEASE</spring.boot.version>
+        <spring.boot.version>1.4.0.RELEASE</spring.boot.version>
+        <simple.xml.version>2.7.1</simple.xml.version>
         <slack.webhook.version>1.1.1</slack.webhook.version>
         <swagger.version>1.0.2</swagger.version>
+
+        <taglibs.standard.version>1.2.5</taglibs.standard.version>
 
         <xml.apis.version>1.4.01</xml.apis.version>
 
@@ -147,7 +157,6 @@
         <disable.checks>true</disable.checks>
         <main.basedir>${basedir}</main.basedir>
     </properties>
-
 
     <dependencyManagement>
         <dependencies>
@@ -292,12 +301,6 @@
             </dependency>
 
             <dependency>
-                <groupId>com.axisj</groupId>
-                <artifactId>axu4j</artifactId>
-                <version>${axu4j.version}</version>
-            </dependency>
-
-            <dependency>
                 <groupId>xml-apis</groupId>
                 <artifactId>xml-apis</artifactId>
                 <version>${xml.apis.version}</version>
@@ -342,17 +345,11 @@
             </dependency>
 
             <dependency>
-                <groupId>org.postgresql</groupId>
-                <artifactId>postgresql</artifactId>
-                <version>${postgresql.jdbc.version}</version>
+                <groupId>com.h2database</groupId>
+                <artifactId>h2</artifactId>
+                <version>${h2.version}</version>
             </dependency>
 
-            <dependency>
-                <groupId>com.oracle</groupId>
-                <artifactId>ojdbc7</artifactId>
-                <version>${oracle.jdbc.version}</version>
-            </dependency>
-            <!-- DB -->
 
             <!-- JXLS -->
             <dependency>
@@ -401,39 +398,73 @@
             </dependency>
 
             <dependency>
-                <groupId>org.aspectj</groupId>
-                <artifactId>aspectjweaver</artifactId>
-                <version>1.8.9</version>
+                <groupId>org.simpleframework</groupId>
+                <artifactId>simple-xml</artifactId>
+                <version>${simple.xml.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>javax.servlet.jsp</groupId>
+                <artifactId>jsp-api</artifactId>
+                <version>${jsp.api.version}</version>
+                <scope>provided</scope>
+            </dependency>
+
+            <dependency>
+                <groupId>javax.el</groupId>
+                <artifactId>javax.el-api</artifactId>
+                <version>${javax.el.api.version}</version>
+                <scope>provided</scope>
+            </dependency>
+
+            <dependency>
+                <groupId>com.github.spullara.mustache.java</groupId>
+                <artifactId>compiler</artifactId>
+                <version>${mustache.complier.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.apache.taglibs</groupId>
+                <artifactId>taglibs-standard-impl</artifactId>
+                <version>${taglibs.standard.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.hibernate</groupId>
+                <artifactId>hibernate-java8</artifactId>
+                <version>${hibernate.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>com.querydsl</groupId>
+                <artifactId>querydsl-apt</artifactId>
+                <version>${querydsl.version}</version>
+                <scope>provided</scope>
+            </dependency>
+
+            <dependency>
+                <groupId>com.querydsl</groupId>
+                <artifactId>querydsl-sql</artifactId>
+                <version>${querydsl.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>com.querydsl</groupId>
+                <artifactId>querydsl-jpa</artifactId>
+                <version>${querydsl.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>com.github.kstyrc</groupId>
+                <artifactId>embedded-redis</artifactId>
+                <version>${embedded.redis.version}</version>
             </dependency>
 
         </dependencies>
     </dependencyManagement>
 
-
-
-
-
-
-    <modules>
-        <module>ax-boot-admin</module>
-        <module>ax-boot-core</module>
-    </modules>
-
-
     <build>
         <plugins>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-compiler-plugin</artifactId>
-                <version>3.1</version>
-                <configuration>
-                    <source>${java.version}</source>
-                    <target>${java.version}</target>
-                    <showWarnings>true</showWarnings>
-                    <showDeprecation>true</showDeprecation>
-                    <encoding>UTF-8</encoding>
-                </configuration>
-            </plugin>
             <plugin>
                 <groupId>org.codehaus.gmavenplus</groupId>
                 <artifactId>gmavenplus-plugin</artifactId>
@@ -463,27 +494,24 @@
             </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>3.1</version>
+                <configuration>
+                    <source>${java.version}</source>
+                    <target>${java.version}</target>
+                    <showWarnings>true</showWarnings>
+                    <showDeprecation>true</showDeprecation>
+                    <encoding>UTF-8</encoding>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-surefire-plugin</artifactId>
                 <version>2.16</version>
                 <configuration>
                     <argLine>
                         -Dfile.encoding=UTF-8
                     </argLine>
-                </configuration>
-            </plugin>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-deploy-plugin</artifactId>
-                <version>2.8.2</version>
-                <configuration>
-                </configuration>
-            </plugin>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-source-plugin</artifactId>
-                <version>2.2.1</version>
-                <configuration>
-                    <skipSource>true</skipSource>
                 </configuration>
             </plugin>
         </plugins>
@@ -503,5 +531,10 @@
             </testResource>
         </testResources>
     </build>
+
+    <modules>
+        <module>ax-boot-admin</module>
+        <module>ax-boot-core</module>
+    </modules>
 
 </project>

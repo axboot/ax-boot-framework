@@ -1,0 +1,10 @@
+{
+	"name": "ax5ui-dialog-tester",
+	"dependencies": {
+		"jquery": "^1.11.0",
+		"ax5core": "",
+		"ax5ui-mask": "",
+		"bootstrap": "^3.3.6",
+		"font-awesome": ""
+	}
+}

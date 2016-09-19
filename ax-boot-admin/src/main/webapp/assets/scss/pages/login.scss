@@ -1,0 +1,82 @@
+&.login {
+
+    background: url($asset-path + "/images/login-bg.jpg") center center;
+    background-size: cover;
+    color: #ccc;
+
+    .img-logo {
+        opacity: 0.0;
+        @include animation(0.3s SLIDE-UP 0.6s linear forwards);
+        width: 200px;
+        margin-bottom: 20px;
+    }
+
+    .panel {
+        $panel-border-color: #788694;
+        opacity: 0.0;
+        @include animation(SLIDE-DOWN 0.6s linear forwards);
+        border-color: $panel-border-color;
+        width: 320px;
+        box-shadow: 0 0 10px #000;
+        border-radius: 8px;
+        overflow: hidden;
+        background: rgba(0, 0, 0, 0.5);
+        .panel-heading {
+            color: #ccc;
+            border-bottom: 1px solid $panel-border-color;
+            font-size: 0.9em;
+            background: rgba(255, 255, 255, 0.1);
+        }
+        .panel-body {
+            padding: 20px 20px;
+            color: #eee;
+            text-align: left;
+            .form-control {
+                //border-radius: 20px;
+                text-align: center;
+                background: transparent;
+            }
+            .btn {
+                background: #000;
+                border-color: #ccc;
+                //border-radius: 20px;
+                padding: 10px;
+                &:hover, &:active, &:focus {
+                    color: #fff;
+                }
+            }
+        }
+        .list-group-item {
+            border-color: $panel-border-color;
+            background: rgba(255, 255, 255, 0.1);
+            font-size: 0.9em;
+            a {
+                color: #eee;
+            }
+        }
+    }
+
+    .txt-copyrights {
+        opacity: 0.0;
+        @include animation(1.3s SLIDE-UP 0.6s linear forwards);
+        position: fixed;
+        left: 0px;
+        bottom: 5px;
+        width: 100%;
+        text-align: center;
+        font-family: Consolas;
+        font-size: 0.8em;
+        color: #fff;
+    }
+    .txt-good-words {
+        //@include animation-delay(1s);
+        opacity: 0.0;
+        @include animation(0.3s SLIDE-DOWN 0.6s linear forwards);
+        max-width: 500px;
+        margin-top: 20px;
+        font-family: $font-family-monospace;
+        color: #ccc;
+        font-size: 0.9em;
+        line-height: 1.7em;
+    }
+}

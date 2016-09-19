@@ -14,10 +14,12 @@ public class HashUtils {
 		return bytesToString(bytes);
 	}
 
+	/*
 	public static String SHA512(String str) {
 		byte[] bytes = DigestUtils.sha512(str);
 		return bytesToString(bytes);
 	}
+	*/
 
 	public static String SHA1(String str) {
 		byte[] bytes = DigestUtils.sha1(str);

@@ -1,0 +1,24 @@
+{
+	"name": "bootstrap-ax5mask",
+	"version": "0.5.0",
+	"authors": [
+		"ThomasJ <tom@axisj.com>"
+	],
+	"description": "A mask jQuery plugin that works with Bootstrap",
+	"main": "dist/ax5mask.js",
+	"keywords": [
+		"bootstrap",
+		"jquery",
+		"ax5ui",
+		"plugin",
+		"bootstrap jQuery plugins",
+		"mask",
+		"bootstrap-ax5mask"
+	],
+	"dependencies": {
+		"jquery": "^1.11.0",
+		"ax5core": ""
+	},
+	"license": "LGPLv3",
+	"homepage": "ax5.io"
+}

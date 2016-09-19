@@ -1,0 +1,29 @@
+@import "fonts";
+//======= var
+@import "var";
+
+
+//~~~~~~~~~~~~~~~~~~~~~~~~ load plugins
+@import "../plugins/bootstrap-sass/assets/stylesheets/bootstrap";
+@import "../plugins/bourbon/app/assets/stylesheets/bourbon";
+
+@import "modules/ax5ui";
+@import "modules/bootstrap-custom";
+@import "modules/font-icon";
+@import "keyframe";
+@import "mixin";
+
+//== component
+@import "modules/ax-body";
+@import "modules/ax-layout";
+@import "modules/ax-form";
+@import "modules/ax-btns";
+@import "modules/ax-tabs";
+@import "modules/ztree";
+
+//== pages
+.ax-body {
+    @import "pages/login";
+    @import "pages/frame-set";
+    @import "pages/base";
+}

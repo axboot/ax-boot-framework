@@ -1,3 +1,4 @@
+
 package com.chequer.axboot.core.domain.log;
 
 import com.chequer.axboot.core.annotations.ColumnPosition;

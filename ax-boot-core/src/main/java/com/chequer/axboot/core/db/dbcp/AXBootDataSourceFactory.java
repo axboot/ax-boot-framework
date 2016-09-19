@@ -13,6 +13,7 @@ public class AXBootDataSourceFactory {
     public static AXBootDBCP2DataSource create(String dataSourceId, AXBootContextConfig.DataSourceConfig dataSourceConfig) throws Exception {
         try {
             AXBootDBCP2DataSource axBootDBCP2DataSource = new ModelMapper().map(dataSourceConfig, AXBootDBCP2DataSource.class);
+            axBootDBCP2DataSource.setDatabaseType(dataSourceConfig.getHibernateConfig().getDatabaseType());
             Connection conn = axBootDBCP2DataSource.getConnection();
             conn.close();
             logger.info("success to create DataSource('{}')", dataSourceId);

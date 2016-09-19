@@ -1,0 +1,242 @@
+/*!
+ * Copyright (c) 2016. tom@axisj.com
+ * - github.com/thomasjang
+ * - www.axisj.com
+ */
+
+@include keyframes(ax-layout) {
+    from {
+        @include transform(translateY(-10%) scaleY(0.0));
+        opacity: 0;
+    }
+    to {
+        @include transform(translateY(0%) scaleY(1.0));
+        opacity: 1;
+    }
+}
+
+@include keyframes(ax-layout-option-destroy) {
+    from {
+        @include transform(translateY(0%) scaleY(1.0));
+        opacity: 1;
+    }
+    to {
+        @include transform(translateY(-10%) scaleY(0.0));
+        opacity: 0;
+    }
+}
+
+@mixin ax5-ui-layout-theme($border-color, $font-color) {
+
+}
+
+/// layout-display
+[data-ax5layout] {
+    position: relative;
+    border: 0px none;
+    > [data-dock-panel] {
+        position: absolute;
+        border: 0px none;
+        z-index: 2;
+        overflow: hidden;
+
+        &.dock-panel-top {
+            left: 0px;
+            top: 0px;
+            width: 100%;
+        }
+        &.dock-panel-bottom {
+            left: 0px;
+            bottom: 0px;
+            width: 100%;
+        }
+        &.dock-panel-left {
+            left: 0px;
+            top: 0px;
+            height: 100%;
+        }
+        &.dock-panel-right {
+            right: 0px;
+            top: 0px;
+            height: 100%;
+        }
+        &.dock-panel-center {
+            left: 0px;
+            top: 0px;
+            width: 100%;
+            height: 100%;
+            z-index: 1;
+        }
+    }
+    > [data-split-panel] {
+        position: absolute;
+        border: 0px none;
+        z-index: 2;
+        overflow: hidden;
+        width: 100%;
+        height: 100%;
+
+        &.split-panel-vertical {
+            width: 100%;
+        }
+        &.split-panel-horizontal {
+            height: 100%;
+        }
+    }
+    > [data-splitter] {
+        // @include transition(all 0.3s, $ease-in-out-cubic);
+        position: absolute;
+        background: $ax5layout-splitter-background;
+        z-index: 3;
+
+        &.dock-panel-top {
+            top: 0px;
+            width: 100%;
+            cursor: ns-resize;
+        }
+        &.dock-panel-bottom {
+            bottom: 0px;
+            width: 100%;
+            cursor: ns-resize;
+        }
+        &.dock-panel-left {
+            left: 0px;
+            height: 100%;
+            cursor: ew-resize;
+        }
+        &.dock-panel-right {
+            right: 0px;
+            height: 100%;
+            cursor: ew-resize;
+        }
+        &.split-panel-vertical {
+            width: 100%;
+            cursor: ns-resize;
+        }
+        &.split-panel-horizontal {
+            height: 100%;
+            cursor: ew-resize;
+        }
+    }
+    > [data-tab-panel-label-holder] {
+        box-sizing: border-box;
+        position: absolute;
+        left: 0;
+        top: 0;
+        z-index: 3;
+        border-top: $ax5layout-tab-panel-label-border-top;
+        border-bottom: $ax5layout-tab-panel-label-border-bottom;
+        width: 100%;
+        padding-top: $ax5layout-tab-panel-label-padding-top;
+        height: $ax5layout-tab-panel-label-height;
+        @include ax-background(top, $ax5layout-tab-panel-label-bg-colors);
+
+        [data-tab-panel-label-border] {
+            box-sizing: border-box;
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: $ax5layout-tab-panel-label-height - $ax5layout-tab-panel-label-item-height - $ax5layout-tab-panel-label-padding-top - 1;
+            background: $ax5layout-tab-panel-label-border-bg;
+            border-top: $ax5layout-tab-panel-label-border-bottom;
+            z-index: 1;
+        }
+        [data-tab-panel-label-table] {
+            z-index: 2;
+            position: relative;
+            display: table;
+            //height: $ax5layout-tab-panel-label-height;
+
+            [data-tab-panel-label] {
+                display: table-cell;
+                cursor: pointer;
+                vertical-align: middle;
+
+                [data-tab-label] {
+                    box-sizing: border-box;
+                    //height: 100%;
+                    padding: 0px 15px;
+                    height: $ax5layout-tab-panel-label-item-height;
+                    line-height: $ax5layout-tab-panel-label-item-height;
+                    border-top: $ax5layout-tab-panel-label-item-border-top;
+                    border-right: $ax5layout-tab-panel-label-item-border-right;
+                    border-bottom: $ax5layout-tab-panel-label-item-border-bottom;
+                    @include ax-background(top, $ax5layout-tab-panel-label-item-bg-colors);
+                    &:hover {
+                        @include ax-background(top, $ax5layout-tab-panel-label-item-hover-bg-colors);
+                    }
+                }
+
+                &[data-tab-active="true"] {
+                    [data-tab-label] {
+                        @include ax-background(top, $ax5layout-tab-panel-label-item-active-bg-colors);
+                        border-bottom: 1px solid $ax5layout-tab-panel-label-border-bg;
+                    }
+                }
+            }
+            [data-tab-panel-aside="left"] {
+                display: table-cell;
+                width: 5px;
+                border-right: 1px solid #D4D4D4;
+            }
+            [data-tab-panel-aside="right"] {
+                display: table-cell;
+                //width: 5px;
+                //border-right: 1px solid #D4D4D4;
+            }
+        }
+    }
+    > [data-tab-panel] {
+        position: absolute;
+        border: 0px none;
+        z-index: 2;
+        overflow: hidden;
+        width: 100%;
+        height: 100%;
+        display: none;
+        padding-top: $ax5layout-tab-panel-label-height;
+        &[data-tab-active="true"] {
+            display: block;
+        }
+    }
+
+    [data-split-panel-wrap] {
+        position: relative;
+        width: 100%;
+        height: 100%;
+        &[data-split-panel-wrap="scroll"] {
+            overflow: auto;
+        }
+        &[data-split-panel-wrap="scroll-x"] {
+            overflow-x: auto;
+        }
+        &[data-split-panel-wrap="scroll-y"] {
+            overflow-y: auto;
+        }
+    }
+}
+
+.ax5layout-resizer {
+    position: absolute;
+    left: 0px;
+    top: 0px;
+    background: $ax5layout-splitter-background;
+    z-index: 10;
+    overflow: hidden;
+    padding: 0;
+    marign: 0;
+
+    &.panel-top {
+        cursor: ns-resize;
+    }
+    &.panel-bottom {
+        cursor: ns-resize;
+    }
+    &.panel-left {
+        cursor: ew-resize;
+    }
+    &.panel-right {
+        cursor: ew-resize;
+    }
+}

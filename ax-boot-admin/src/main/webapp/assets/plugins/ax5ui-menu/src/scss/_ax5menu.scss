@@ -1,0 +1,443 @@
+@mixin ax-menu() {
+    box-sizing: border-box;
+
+    z-index: $ax5menu-z-index;
+    position: fixed;
+    left: 0px;
+    top: 0px;
+    #{$hack_ie67}width: 100px;
+    //overflow: hidden;
+    opacity: 0.95;
+}
+
+@mixin menu-variant($text-color, $border-color, $heading-bg-color, $item-bg, $item-color, $item-hover-bg, $item-hover-color) {
+    @include ax-background($item-bg);
+    border: $ax5menu-inner-border;
+    border-color: $border-color;
+    border-radius: $ax5menu-border-radius;
+    box-shadow: $ax5menu-box-shadow;
+    color: $text-color;
+
+    .ax-menu-heading {
+        font-weight: 600;
+        padding: $ax5menu-heading-padding;
+        border-bottom: 1px solid transparent;
+        @include border-top-radius($ax5menu-border-radius - 1);
+
+        color: $text-color;
+        @include ax-background($heading-bg-color);
+        .badge {
+            font-size: 0.8em;
+            color: $heading-bg-color;
+            @include ax-background($text-color);
+        }
+    }
+    .ax-menu-body {
+        padding: $ax5menu-body-padding;
+        text-align: center;
+        position: relative;
+        overflow: hidden;
+
+        $ax-menu-item-height: $ax5menu-item-font-size + 5;
+        .ax-menu-item {
+            padding: $ax5menu-item-padding;
+            text-align: left;
+            background: $item-bg;
+            color: $item-color;
+            cursor: pointer;
+            font-size: $ax5menu-item-font-size;
+
+            display: table;
+            position: relative;
+            border-collapse: separate;
+            box-sizing: border-box;
+            overflow: hidden;
+            //table-layout: fixed;
+            width: 100%;
+            height: $ax-menu-item-height;
+
+            .ax-menu-item-cell {
+                box-sizing: border-box;
+                display: table-cell;
+                vertical-align: middle;
+                white-space: nowrap;
+                font-size: $ax5menu-item-font-size;
+                line-height: $ax-menu-item-height;
+                padding: 0px 0px 0px 0px;
+                @include user-select(none);
+
+                &.ax-menu-item-checkbox {
+                    overflow: hidden;
+                    width: $ax5menu-item-checkbox-width;
+                    text-align: center;
+                    .item-checkbox-wrap {
+                        position: relative;
+                        display: block;
+                        width: $ax5menu-item-checkbox-width;
+                        height: $ax-menu-item-height;
+
+                        &.useCheckBox {
+                            &:after {
+                                content: '';
+                                width: 10px;
+                                height: 5px;
+                                position: absolute;
+                                top: ($ax-menu-item-height - 10) / 2;
+                                left: ($ax-menu-item-height - 10) / 2;
+                                border: 2px solid $item-color;
+                                border-top: none;
+                                border-right: none;
+                                background: transparent;
+                                opacity: 0.1;
+                                @include transform(rotate(-50deg));
+                            }
+                            &[data-item-checked="true"] {
+                                &:after {
+                                    opacity: 1;
+                                }
+                            }
+                        }
+                    }
+                }
+                &.ax-menu-item-icon {
+                    text-align: left;
+                }
+                &.ax-menu-item-label {
+                    padding-right: 10px;
+                }
+                &.ax-menu-item-accelerator {
+                    text-align: right;
+                    padding: 0px 7px 0px 0px;
+                    .item-wrap {
+                        width: 100%;
+                        vertical-align: middle;
+                        @include ellipsis();
+                        display: block;
+                    }
+                }
+                &.ax-menu-item-handle {
+                    overflow: hidden;
+                    width: $ax5menu-item-handle-width;
+                    text-align: center;
+                }
+            }
+
+            &:hover, &.hover {
+                background: $item-hover-bg;
+                color: $item-hover-color;
+                .ax-menu-item-cell {
+                    &.ax-menu-item-checkbox {
+                        .item-checkbox-wrap {
+                            &:after {
+                                border-color: $item-hover-color;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        .ax-menu-item-divide {
+            border-top: $ax5menu-inner-border;
+            border-color: lighten($border-color, 0%);
+            margin: $ax5menu-body-padding;
+        }
+        .ax-menu-item-html {
+            padding: $ax5menu-item-html-padding;
+            text-align: left;
+        }
+        .ax-menu-buttons {
+            button {
+                &:not(:last-child) {
+                    margin-right: 3px;
+                }
+            }
+        }
+    }
+
+    &.direction-top {
+        @include ax-border-radius(0, "top");
+        @include ax-border-radius($ax5menu-border-radius, "bottom");
+
+        &.with-arrow {
+            .ax-menu-arrow {
+                @include menu-arrow($ax5menu-arrow-size, $ax5menu-arrow-border-width, $border-color, top);
+            }
+        }
+    }
+    &.direction-right {
+        @include ax-border-radius(0, "right");
+        @include ax-border-radius($ax5menu-border-radius, "left");
+
+        &.with-arrow {
+            .ax-menu-arrow {
+                @include menu-arrow($ax5menu-arrow-size, $ax5menu-arrow-border-width, $border-color, right);
+            }
+        }
+    }
+    &.direction-bottom {
+        @include ax-border-radius(0, "bottom");
+        @include ax-border-radius($ax5menu-border-radius, "top");
+
+        &.with-arrow {
+            .ax-menu-arrow {
+                @include menu-arrow($ax5menu-arrow-size, $ax5menu-arrow-border-width, $border-color, bottom);
+            }
+        }
+    }
+    &.direction-left {
+        @include ax-border-radius(0, "right");
+        @include ax-border-radius($ax5menu-border-radius, "right");
+
+        &.with-arrow {
+            .ax-menu-arrow {
+                @include menu-arrow($ax5menu-arrow-size, $ax5menu-arrow-border-width, $border-color, left);
+            }
+        }
+    }
+}
+
+@mixin menu-arrow($arrow-size, $arrow-border-width, $border-color, $arrow-direction) {
+
+    //@debug( nth($ax5menu-inner-border, 3) );
+    $arrow-bg: nth($ax5menu-bg, 1);
+    $arrow-border-color: $border-color;
+
+    position: absolute;
+    width: 0;
+    height: 0;
+
+    @if ($arrow-direction == top) {
+        left: 50%;
+        top: 0px;
+    } @else if ($arrow-direction == right) {
+        right: 0px;
+        top: 50%;
+    } @else if ($arrow-direction == bottom) {
+        left: 50%;
+        bottom: 0px;
+    } @else if ($arrow-direction == left) {
+        left: 0px;
+        top: 50%;
+    }
+
+    &:before {
+        content: ' ';
+        position: absolute;
+        width: 0;
+        height: 0;
+
+        @if ($arrow-direction == top) {
+            left: - ($arrow-size);
+            top: - ($arrow-size * 2);
+            border-left: $arrow-size solid transparent;
+            border-right: $arrow-size solid transparent;
+            border-bottom: ($arrow-size * 2) solid $arrow-border-color;
+        } @else if ($arrow-direction == right) {
+            right: - ($arrow-size * 2);
+            top: - ($arrow-size);
+            border-top: $arrow-size solid transparent;
+            border-bottom: $arrow-size solid transparent;
+            border-left: ($arrow-size * 2) solid $arrow-border-color;
+        } @else if ($arrow-direction == bottom) {
+            left: - ($arrow-size);
+            bottom: - ($arrow-size * 2);
+            border-left: $arrow-size solid transparent;
+            border-right: $arrow-size solid transparent;
+            border-top: ($arrow-size * 2) solid $arrow-border-color;
+        } @else if ($arrow-direction == left) {
+            left: - ($arrow-size * 2);
+            top: - ($arrow-size);
+            border-top: $arrow-size solid transparent;
+            border-bottom: $arrow-size solid transparent;
+            border-right: ($arrow-size * 2) solid $arrow-border-color;
+        }
+    }
+
+    &:after {
+        content: ' ';
+        position: absolute;
+        width: 0;
+        height: 0;
+
+        @if ($arrow-direction == top) {
+            left: - ($arrow-size);
+            top: - ($arrow-size * 2) + ($arrow-border-width * 2);
+            border-left: ($arrow-size) solid transparent;
+            border-right: ($arrow-size) solid transparent;
+            border-bottom: ($arrow-size * 2) solid $arrow-bg;
+        } @else if ($arrow-direction == right) {
+            right: - ($arrow-size * 2) + ($arrow-border-width * 2);
+            top: - ($arrow-size);
+            border-top: ($arrow-size) solid transparent;
+            border-bottom: ($arrow-size) solid transparent;
+            border-left: ($arrow-size * 2) solid $arrow-bg;
+        } @else if ($arrow-direction == bottom) {
+            left: - ($arrow-size);
+            bottom: - ($arrow-size * 2) + ($arrow-border-width * 2);
+            border-left: ($arrow-size) solid transparent;
+            border-right: ($arrow-size) solid transparent;
+            border-top: ($arrow-size * 2) solid $arrow-bg;
+        } @else if ($arrow-direction == left) {
+            left: - ($arrow-size * 2) + ($arrow-border-width * 2);
+            top: - ($arrow-size);
+            border-top: ($arrow-size) solid transparent;
+            border-bottom: ($arrow-size) solid transparent;
+            border-right: ($arrow-size * 2) solid $arrow-bg;
+        }
+    }
+}
+
+@mixin ax-menubar() {
+    box-sizing: border-box;
+    height: 100%;
+    position: relative;
+    .ax-menu-body {
+        display: table;
+        height: 100%;
+        border-collapse: separate;
+        box-sizing: border-box;
+
+        .ax-menu-item {
+            display: table-cell;
+            height: 100%;
+            vertical-align: middle;
+            white-space: nowrap;
+            box-sizing: border-box;
+            padding: $ax5menubar-item-padding;
+            cursor: pointer;
+            font-size: $ax5menu-item-font-size;
+
+            .ax-menu-item-cell {
+                white-space: nowrap;
+                @include user-select(none);
+            }
+        }
+    }
+}
+
+@mixin menubar-variant($text-color, $border-color, $heading-bg-color, $item-bg, $item-color, $item-hover-bg, $item-hover-color) {
+    .ax-menu-body {
+        .ax-menu-item {
+            color: $item-color;
+            .ax-menu-item-cell {
+
+            }
+            &:hover, &.hover {
+                background: $item-hover-bg;
+                color: $item-hover-color;
+            }
+        }
+    }
+}
+
+@include keyframes(ax-menu) {
+    0% {
+        opacity: 0.0;
+        //@include transform(scale(1));
+    }
+    1% {
+        opacity: 0.0;
+        //@include transform(scale(0.3));
+    }
+    100% {
+        opacity: 0.95;
+        //@include transform(scale(1));
+    }
+}
+
+@include keyframes(ax-menu-destroy) {
+    from {
+        @include transform(scale(1));
+        opacity: 1.0;
+    }
+    to {
+        @include transform(scale(0.5));
+        opacity: 0.0;
+    }
+}
+
+// mixins --------------------------------------------- end
+
+.ax5-ui-menu {
+    @include ax-menu();
+
+    @include perspective(1000px);
+    @include transform-style(preserve-3d);
+
+    @include animation(ax-menu $ax5menu-easing-time-open $ease-out-back);
+    @include transform(translateZ(0));
+    @include transform-origin(center top);
+    /* flip type
+    @include backface-visibility(visible);
+    @include transform(translateY(0%) rotateX(0deg));
+    */
+
+    @include menu-variant($ax5menu-default-text, $ax5menu-default-border-color, $ax5menu-default-heading-bg,
+            $ax5menu-default-item-bg, $ax5menu-default-item-text, $ax5menu-default-item-hover-bg, $ax5menu-default-item-hover-text);
+
+    &.primary {
+        @include menu-variant($ax5menu-primary-text, $ax5menu-primary-border-color, $ax5menu-primary-heading-bg,
+                $ax5menu-primary-item-bg, $ax5menu-primary-item-text, $ax5menu-primary-item-hover-bg, $ax5menu-primary-item-hover-text);
+    }
+    &.success {
+        @include menu-variant($ax5menu-success-text, $ax5menu-success-border-color, $ax5menu-success-heading-bg,
+                $ax5menu-success-item-bg, $ax5menu-success-item-text, $ax5menu-success-item-hover-bg, $ax5menu-success-item-hover-text);
+    }
+    &.info {
+        @include menu-variant($ax5menu-info-text, $ax5menu-info-border-color, $ax5menu-info-heading-bg,
+                $ax5menu-info-item-bg, $ax5menu-info-item-text, $ax5menu-info-item-hover-bg, $ax5menu-info-item-hover-text);
+    }
+    &.warning {
+        @include menu-variant($ax5menu-warning-text, $ax5menu-warning-border-color, $ax5menu-warning-heading-bg,
+                $ax5menu-warning-item-bg, $ax5menu-warning-item-text, $ax5menu-warning-item-hover-bg, $ax5menu-warning-item-hover-text);
+    }
+    &.danger {
+        @include menu-variant($ax5menu-danger-text, $ax5menu-danger-border-color, $ax5menu-danger-heading-bg,
+                $ax5menu-danger-item-bg, $ax5menu-danger-item-text, $ax5menu-danger-item-hover-bg, $ax5menu-danger-item-hover-text);
+    }
+
+    &.destroy {
+        @include animation(ax-menu-destroy $ax5menu-easing-time-close $ease-in-back forwards);
+    }
+
+    &.direction-top {
+        @include transform-origin(center top);
+    }
+    &.direction-right {
+        @include transform-origin(right center);
+    }
+    &.direction-bottom {
+        @include transform-origin(center bottom);
+
+    }
+    &.direction-left {
+        @include transform-origin(left center);
+    }
+}
+
+.ax5-ui-menubar {
+    @include ax-menubar();
+    @include menubar-variant($ax5menu-default-text, $ax5menu-default-border-color, $ax5menu-default-heading-bg,
+            $ax5menu-default-item-bg, $ax5menu-default-item-text, $ax5menu-default-item-hover-bg, $ax5menu-default-item-hover-text);
+
+    &.primary {
+        @include menubar-variant($ax5menu-primary-text, $ax5menu-primary-border-color, $ax5menu-primary-heading-bg,
+                $ax5menu-primary-item-bg, $ax5menu-primary-item-text, $ax5menu-primary-item-hover-bg, $ax5menu-primary-item-hover-text);
+    }
+    &.success {
+        @include menubar-variant($ax5menu-success-text, $ax5menu-success-border-color, $ax5menu-success-heading-bg,
+                $ax5menu-success-item-bg, $ax5menu-success-item-text, $ax5menu-success-item-hover-bg, $ax5menu-success-item-hover-text);
+    }
+    &.info {
+        @include menubar-variant($ax5menu-info-text, $ax5menu-info-border-color, $ax5menu-info-heading-bg,
+                $ax5menu-info-item-bg, $ax5menu-info-item-text, $ax5menu-info-item-hover-bg, $ax5menu-info-item-hover-text);
+    }
+    &.warning {
+        @include menubar-variant($ax5menu-warning-text, $ax5menu-warning-border-color, $ax5menu-warning-heading-bg,
+                $ax5menu-warning-item-bg, $ax5menu-warning-item-text, $ax5menu-warning-item-hover-bg, $ax5menu-warning-item-hover-text);
+    }
+    &.danger {
+        @include menubar-variant($ax5menu-danger-text, $ax5menu-danger-border-color, $ax5menu-danger-heading-bg,
+                $ax5menu-danger-item-bg, $ax5menu-danger-item-text, $ax5menu-danger-item-hover-bg, $ax5menu-danger-item-hover-text);
+    }
+}

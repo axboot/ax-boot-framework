@@ -32,7 +32,7 @@ import javax.persistence.Converter;
 import java.time.Month;
 
 /**
- * Converts {@link java.time.Month} to {@link String} and back
+ * Converts {@link Month} to {@link String} and back
  * in support of JPA persistence.
  * <p>
  * The existence of this class in the classpath and it being known by the persistence unit

@@ -1,0 +1,47 @@
+$ax5picker-z-index: 2000 !default;
+$ax5picker-box-model: border-box !default;
+$ax5picker-bg: $panel-bg !default;
+$ax5picker-inner-border: 1px solid !default;
+$ax5picker-inner-border-color: $panel-inner-border !default;
+
+$ax5picker-box-shadow: 0px 0px 3px 0px rgba(0, 0, 0, 0.175) !default;
+$ax5picker-border-radius: 5px !default;
+
+$ax5picker-body-padding: 5px !default;
+$ax5picker-heading-padding: $panel-heading-padding !default;
+$ax5picker-buttons-padding: 10px 0px 5px 0px !default;
+
+$ax5picker-content-border: 0px solid !default;
+$ax5picker-content-border-color: none !default;
+$ax5picker-content-border-radius: 0px !default;
+$ax5picker-content-padding: 0px !default;
+
+$ax5picker-easing-time-open: 0.1s !default;
+$ax5picker-easing-time-close: 0.1s !default;
+$ax5picker-arrow-size: 10px !default;
+$ax5picker-arrow-border-width: 1px !default;
+
+//** Border color for elements within dialog
+$ax5picker-default-text: $panel-default-text !default;
+$ax5picker-default-border-color: $panel-default-border !default;
+$ax5picker-default-heading-bg: $panel-default-heading-bg !default;
+
+$ax5picker-primary-text: $panel-primary-text !default;
+$ax5picker-primary-border-color: $panel-primary-border !default;
+$ax5picker-primary-heading-bg: $panel-primary-heading-bg !default;
+
+$ax5picker-success-text: $panel-success-text !default;
+$ax5picker-success-border-color: $panel-success-border !default;
+$ax5picker-success-heading-bg: $panel-success-heading-bg !default;
+
+$ax5picker-info-text: $panel-info-text !default;
+$ax5picker-info-border-color: $panel-info-border !default;
+$ax5picker-info-heading-bg: $panel-info-heading-bg !default;
+
+$ax5picker-warning-text: $panel-warning-text !default;
+$ax5picker-warning-border-color: $panel-warning-border !default;
+$ax5picker-warning-heading-bg: $panel-warning-heading-bg !default;
+
+$ax5picker-danger-text: $panel-danger-text !default;
+$ax5picker-danger-border-color: $panel-danger-border !default;
+$ax5picker-danger-heading-bg: $panel-danger-heading-bg !default;

@@ -33,6 +33,7 @@ public class PropertyUtils implements EnvironmentAware {
         return Integer.parseInt(value);
     }
 
+
     public static boolean exist(String key) {
         return environment.getProperty(key) != null;
     }

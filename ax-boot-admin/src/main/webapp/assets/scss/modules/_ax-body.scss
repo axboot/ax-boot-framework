@@ -1,0 +1,19 @@
+html, body {
+    margin: 0;
+    padding: 0;
+    height: 100%;
+}
+
+.ax-body {
+
+    // 일반 페이지
+    .ax-header{
+
+    }
+    .ax-contents{
+
+    }
+}
+
+@include W();
+@include H();
