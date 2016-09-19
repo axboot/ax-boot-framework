@@ -3,6 +3,7 @@ package com.chequer.axboot.core.session;
 import com.chequer.axboot.core.domain.user.SessionUser;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 
 import javax.crypto.Mac;
 import javax.crypto.spec.SecretKeySpec;
@@ -60,7 +61,9 @@ public final class JWTSessionHandler {
 
     private SessionUser fromJSON(final byte[] userBytes) {
         try {
-            return new ObjectMapper().readValue(new ByteArrayInputStream(userBytes), SessionUser.class);
+            ObjectMapper objectMapper = new ObjectMapper();
+            objectMapper.registerSubtypes(SimpleGrantedAuthority.class);
+            return objectMapper.readValue(new ByteArrayInputStream(userBytes), SessionUser.class);
         } catch (IOException e) {
             throw new IllegalStateException(e);
         }
@@ -68,7 +71,9 @@ public final class JWTSessionHandler {
 
     private byte[] toJSON(SessionUser user) {
         try {
-            return new ObjectMapper().writeValueAsBytes(user);
+            ObjectMapper objectMapper = new ObjectMapper();
+            objectMapper.registerSubtypes(SimpleGrantedAuthority.class);
+            return objectMapper.writeValueAsBytes(user);
         } catch (JsonProcessingException e) {
             throw new IllegalStateException(e);
         }

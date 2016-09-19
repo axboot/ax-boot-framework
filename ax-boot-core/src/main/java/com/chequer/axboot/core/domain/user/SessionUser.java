@@ -40,18 +40,20 @@ public class SessionUser implements UserDetails {
 
     private long expires;
 
-    private List<GrantedAuthority> authorityList = new ArrayList<>();
+    private List<String> authorityList = new ArrayList<>();
 
     private List<String> authGroupList = new ArrayList<>();
 
     @Override
     @JsonIgnore
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return authorityList;
+        List<SimpleGrantedAuthority> simpleGrantedAuthorities = new ArrayList<>();
+        authorityList.forEach(role -> simpleGrantedAuthorities.add(new SimpleGrantedAuthority(role)));
+        return simpleGrantedAuthorities;
     }
 
     public void addAuthority(String role) {
-        authorityList.add(new SimpleGrantedAuthority("ROLE_" + role));
+        authorityList.add("ROLE_" + role);
     }
 
     @Override

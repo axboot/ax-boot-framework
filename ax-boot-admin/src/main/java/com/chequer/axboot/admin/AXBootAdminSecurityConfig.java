@@ -4,7 +4,6 @@ import com.chequer.axboot.admin.filters.LogbackMdcFilter;
 import com.chequer.axboot.admin.security.*;
 import com.chequer.axboot.core.code.GlobalConstants;
 import com.chequer.axboot.core.domain.user.UserService;
-import com.chequer.axboot.core.session.RedisSessionHandler;
 import com.chequer.axboot.core.utils.CookieUtils;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -19,7 +18,6 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
-import org.springframework.security.web.authentication.logout.LogoutHandler;
 import org.springframework.security.web.authentication.logout.SimpleUrlLogoutSuccessHandler;
 
 import javax.inject.Inject;
@@ -49,9 +47,6 @@ public class AXBootAdminSecurityConfig extends WebSecurityConfigurerAdapter {
             "/h2-console/**",
             "/health"
     };
-
-    @Inject
-    private RedisSessionHandler redisSessionHandler;
 
     @Inject
     private AdminUserDetailsService userDetailsService;
@@ -88,7 +83,7 @@ public class AXBootAdminSecurityConfig extends WebSecurityConfigurerAdapter {
                 .formLogin().loginPage(LOGIN_PAGE).permitAll()
                 .and()
 
-                .logout().logoutUrl(LOGOUT_API).addLogoutHandler(new RedisLogoutHandler()).logoutSuccessHandler(new LogoutSuccessHandler(LOGIN_PAGE))
+                .logout().logoutUrl(LOGOUT_API).logoutSuccessHandler(new LogoutSuccessHandler(LOGIN_PAGE))
                 .and()
 
                 .exceptionHandling().authenticationEntryPoint(new AdminAuthenticationEntryPoint())
@@ -123,14 +118,6 @@ public class AXBootAdminSecurityConfig extends WebSecurityConfigurerAdapter {
     @Override
     protected AdminUserDetailsService userDetailsService() {
         return userDetailsService;
-    }
-
-    class RedisLogoutHandler implements LogoutHandler {
-        @Override
-        public void logout(HttpServletRequest request, HttpServletResponse response, Authentication authentication) {
-            String token = CookieUtils.getCookieValue(request, GlobalConstants.ADMIN_AUTH_TOKEN_KEY);
-            redisSessionHandler.logout(token);
-        }
     }
 
     class LogoutSuccessHandler extends SimpleUrlLogoutSuccessHandler {

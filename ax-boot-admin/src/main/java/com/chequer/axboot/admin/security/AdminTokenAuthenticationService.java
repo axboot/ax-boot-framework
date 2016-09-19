@@ -10,7 +10,6 @@ import com.chequer.axboot.core.domain.user.SessionUser;
 import com.chequer.axboot.core.domain.user.auth.menu.AuthGroupMenu;
 import com.chequer.axboot.core.domain.user.auth.menu.AuthGroupMenuService;
 import com.chequer.axboot.core.session.JWTSessionHandler;
-import com.chequer.axboot.core.session.RedisSessionHandler;
 import com.chequer.axboot.core.utils.*;
 import com.chequer.axboot.core.vo.ScriptSessionVO;
 import org.apache.commons.io.FilenameUtils;
@@ -29,9 +28,6 @@ import java.util.List;
 public class AdminTokenAuthenticationService {
 
     private final JWTSessionHandler jwtSessionHandler;
-
-    @Inject
-    private RedisSessionHandler redisSessionHandler;
 
     @Inject
     private ProgramService programService;
@@ -61,9 +57,8 @@ public class AdminTokenAuthenticationService {
     }
 
     public void setUserEnvironments(SessionUser user, HttpServletResponse response) throws IOException {
-        String token = HashUtils.MD5(user.getUserCd() + "." + System.currentTimeMillis());
+        String token = jwtSessionHandler.createTokenForUser(user);
         CookieUtils.addCookie(response, GlobalConstants.ADMIN_AUTH_TOKEN_KEY, token, tokenExpiry());
-        redisSessionHandler.set(token, user, tokenExpiry());
     }
 
     public Authentication getAuthentication(HttpServletRequest request, HttpServletResponse response) throws IOException {
@@ -77,7 +72,7 @@ public class AdminTokenAuthenticationService {
             return deleteCookieAndReturnNullAuthentication(request, response);
         }
 
-        SessionUser user = redisSessionHandler.get(token, SessionUser.class);
+        SessionUser user = jwtSessionHandler.parseUserFromToken(token);
 
         if (user == null) {
             return deleteCookieAndReturnNullAuthentication(request, response);

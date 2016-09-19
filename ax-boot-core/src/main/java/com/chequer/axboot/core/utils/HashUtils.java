@@ -24,7 +24,6 @@ public class HashUtils {
 	public static String SHA1(String str) {
 		byte[] bytes = DigestUtils.sha1(str);
 		return bytesToString(bytes);
-
 	}
 
 	public static String bytesToString(byte[] bytes) {
