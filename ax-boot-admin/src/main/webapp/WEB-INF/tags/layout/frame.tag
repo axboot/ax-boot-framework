@@ -17,7 +17,7 @@
     <meta name="viewport"
           content="width=device-width, user-scalable=no, initial-scale=1, maximum-scale=1, minimum-scale=1"/>
     <meta name="apple-mobile-web-app-capable" content="yes">
-    <title>AXBOOT :: Advanced POS Management System</title>
+    <title>AXBOOT :: Full Stack Web Development Framework</title>
 
     <link rel="shortcut icon" href="<c:url value='/assets/favicon.ico'/>" type="image/x-icon"/>
     <link rel="icon" href="<c:url value='/assets/favicon.ico'/>" type="image/x-icon"/>

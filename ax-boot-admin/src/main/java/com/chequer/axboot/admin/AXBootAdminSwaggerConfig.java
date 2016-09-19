@@ -1,5 +1,6 @@
 package com.chequer.axboot.admin;
 
+import com.chequer.axboot.core.parameter.RequestParams;
 import com.mangofactory.swagger.configuration.SpringSwaggerConfig;
 import com.mangofactory.swagger.models.dto.ApiInfo;
 import com.mangofactory.swagger.plugin.EnableSwagger;
@@ -20,8 +21,8 @@ public class AXBootAdminSwaggerConfig {
     @Bean
     public SwaggerSpringMvcPlugin customImplementation() {
         return new SwaggerSpringMvcPlugin(this.springSwaggerConfig)
-                .apiInfo(new ApiInfo("CHEQUER API", "CHEQUER API", "", "", "", ""))
+                .apiInfo(new ApiInfo("API", "API", "", "", "", ""))
                 .includePatterns("/api/v1.*")
-                .ignoredParameterTypes(AuthenticationPrincipal.class);
+                .ignoredParameterTypes(AuthenticationPrincipal.class, RequestParams.class);
     }
 }

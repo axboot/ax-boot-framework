@@ -42,8 +42,10 @@ public class AXBootAdminSecurityConfig extends WebSecurityConfigurerAdapter {
             "/assets/**",
             "/layouts/**",
             "/jsp/common/**",
+            "/jsp/setup/**",
             "/swagger/**",
             "/api-docs/**",
+            "/setup/**",
             "/h2-console/**",
             "/health"
     };
