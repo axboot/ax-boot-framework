@@ -11,6 +11,7 @@
 
     request.setAttribute("redirect", lastNavigatedPage);
 %>
+
 <c:if test="${redirect!=null}">
     <c:redirect url="${redirect}"/>
 </c:if>
