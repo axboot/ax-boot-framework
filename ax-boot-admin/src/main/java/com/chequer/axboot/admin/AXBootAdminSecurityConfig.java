@@ -83,7 +83,7 @@ public class AXBootAdminSecurityConfig extends WebSecurityConfigurerAdapter {
                 .formLogin().loginPage(LOGIN_PAGE).permitAll()
                 .and()
 
-                .logout().logoutUrl(LOGOUT_API).logoutSuccessHandler(new LogoutSuccessHandler(LOGIN_PAGE))
+                .logout().logoutUrl(LOGOUT_API).deleteCookies(GlobalConstants.ADMIN_AUTH_TOKEN_KEY, GlobalConstants.LAST_NAVIGATED_PAGE).logoutSuccessHandler(new LogoutSuccessHandler(LOGIN_PAGE))
                 .and()
 
                 .exceptionHandling().authenticationEntryPoint(new AdminAuthenticationEntryPoint())
