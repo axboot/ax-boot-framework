@@ -119,6 +119,7 @@ $ax5layout-tab-panel-label-item-active-bg-colors: (#fff, #fff);
 
 @import "../../plugins/ax5ui-layout/src/scss/ax5layout_variables";
 @import "../../plugins/ax5ui-layout/src/scss/ax5layout";
+
 [data-ax5layout] {
     > .split-panel-horizontal[data-splitter]{
         @include ax-background(left #eee #ccc);
