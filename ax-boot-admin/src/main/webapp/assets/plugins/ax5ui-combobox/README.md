@@ -40,7 +40,7 @@ If the inconvenience in the process that you want to copy the file and can be ea
 
 * * *
 
-## USE ax5slect
+## USE ax5combobox
 
 ### Insert the "ax5combobox" in the HTML HEAD.
 

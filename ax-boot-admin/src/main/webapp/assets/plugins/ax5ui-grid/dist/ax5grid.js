@@ -17,7 +17,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
 
     UI.addClass({
         className: "grid",
-        version: "0.2.17"
+        version: "0.2.18"
     }, function () {
         /**
          * @class ax5grid
@@ -585,7 +585,19 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
              * @param {Number} [_config.scroller.trackPadding=4]
              * @param {Object} [_config.columnKeys]
              * @param {String} [_config.columnKeys.selected="_SELECTED"]
-             * @param {Object} _config.columns
+             * @param {Object[]} _config.columns
+             * @param {String} _config.columns[].key
+             * @param {String} _config.columns[].label
+             * @param {Number} _config.columns[].width
+             * @param {(String|Function)} _config.columns[].styleClass
+             * @param {Boolean} _config.columns[].enableFilter
+             * @param {Boolean} _config.columns[].sortable
+             * @param {String} _config.columns[].align
+             * @param {(String|Function)} _config.columns[].formatter
+             * @param {Object} _config.columns[].editor
+             * @param {String} _config.columns[].editor.type - text,number,money,date
+             * @param {Object} _config.columns[].editor.config
+             * @param {Array} _config.columns[].editor.updateWith
              * @returns {ax5grid}
              * @example
              * ```
@@ -2071,12 +2083,28 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
     };
 
     var repaintCell = function repaintCell(_panelName, _dindex, _rowIndex, _colIndex, _newValue) {
+        var self = this;
         var cfg = this.config;
         var list = this.list;
 
         var updateCell = this.$["panel"][_panelName].find('[data-ax5grid-tr-data-index="' + _dindex + '"]').find('[data-ax5grid-column-rowindex="' + _rowIndex + '"][data-ax5grid-column-colindex="' + _colIndex + '"]').find('[data-ax5grid-cellholder]');
-        var col = this.colGroup[_colIndex];
+        var colGroup = this.colGroup;
+        var col = colGroup[_colIndex];
         updateCell.html(getFieldValue.call(this, list, list[_dindex], _dindex, col));
+
+        if (col.editor && col.editor.updateWith) {
+            col.editor.updateWith.forEach(function (updateColumnKey) {
+                colGroup.forEach(function (col) {
+                    if (col.key == updateColumnKey) {
+                        var rowIndex = col.rowIndex;
+                        var colIndex = col.colIndex;
+                        var panelName = GRID.util.findPanelByColumnIndex.call(self, _dindex, colIndex, rowIndex).panelName;
+                        var updateWithCell = self.$["panel"][panelName].find('[data-ax5grid-tr-data-index="' + _dindex + '"]').find('[data-ax5grid-column-rowindex="' + rowIndex + '"][data-ax5grid-column-colindex="' + colIndex + '"]').find('[data-ax5grid-cellholder]');
+                        updateWithCell.html(getFieldValue.call(self, list, list[_dindex], _dindex, col));
+                    }
+                });
+            });
+        }
 
         /// ~~~~~~
 

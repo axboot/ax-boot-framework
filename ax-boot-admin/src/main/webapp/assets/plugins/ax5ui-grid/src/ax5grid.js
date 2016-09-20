@@ -13,7 +13,7 @@
 
     UI.addClass({
         className: "grid",
-        version: "0.2.17"
+        version: "0.2.18"
     }, (function () {
         /**
          * @class ax5grid
@@ -600,7 +600,19 @@
              * @param {Number} [_config.scroller.trackPadding=4]
              * @param {Object} [_config.columnKeys]
              * @param {String} [_config.columnKeys.selected="_SELECTED"]
-             * @param {Object} _config.columns
+             * @param {Object[]} _config.columns
+             * @param {String} _config.columns[].key
+             * @param {String} _config.columns[].label
+             * @param {Number} _config.columns[].width
+             * @param {(String|Function)} _config.columns[].styleClass
+             * @param {Boolean} _config.columns[].enableFilter
+             * @param {Boolean} _config.columns[].sortable
+             * @param {String} _config.columns[].align
+             * @param {(String|Function)} _config.columns[].formatter
+             * @param {Object} _config.columns[].editor
+             * @param {String} _config.columns[].editor.type - text,number,money,date
+             * @param {Object} _config.columns[].editor.config
+             * @param {Array} _config.columns[].editor.updateWith
              * @returns {ax5grid}
              * @example
              * ```

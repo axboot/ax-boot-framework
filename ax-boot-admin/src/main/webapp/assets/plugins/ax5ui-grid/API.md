@@ -69,7 +69,19 @@ Preferences of grid UI
 | [_config.scroller.trackPadding] | <code>Number</code> | <code>4</code> |  |
 | [_config.columnKeys] | <code>Object</code> |  |  |
 | [_config.columnKeys.selected] | <code>String</code> | <code>&quot;_SELECTED&quot;</code> |  |
-| _config.columns | <code>Object</code> |  |  |
+| _config.columns | <code>Array.&lt;Object&gt;</code> |  |  |
+| _config.columns[].key | <code>String</code> |  |  |
+| _config.columns[].label | <code>String</code> |  |  |
+| _config.columns[].width | <code>Number</code> |  |  |
+| _config.columns[].styleClass | <code>String</code> &#124; <code>function</code> |  |  |
+| _config.columns[].enableFilter | <code>Boolean</code> |  |  |
+| _config.columns[].sortable | <code>Boolean</code> |  |  |
+| _config.columns[].align | <code>String</code> |  |  |
+| _config.columns[].formatter | <code>String</code> &#124; <code>function</code> |  |  |
+| _config.columns[].editor | <code>Object</code> |  |  |
+| _config.columns[].editor.type | <code>String</code> |  | text,number,money,date |
+| _config.columns[].editor.config | <code>Object</code> |  |  |
+| _config.columns[].editor.updateWith | <code>Array</code> |  |  |
 
 **Example**  
 ```

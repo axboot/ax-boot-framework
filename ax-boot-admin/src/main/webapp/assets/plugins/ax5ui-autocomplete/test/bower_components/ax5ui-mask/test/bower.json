@@ -1,0 +1,8 @@
+{
+	"name": "ax5ui-mask-tester",
+	"dependencies": {
+		"jquery": "^1.11.0",
+		"ax5core": "",
+		"font-awesome": ""
+	}
+}

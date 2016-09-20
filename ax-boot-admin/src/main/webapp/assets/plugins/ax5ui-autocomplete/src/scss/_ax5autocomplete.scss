@@ -1,0 +1,500 @@
+/*!
+ * Copyright (c) 2016. tom@axisj.com
+ * - github.com/thomasjang
+ * - www.axisj.com
+ */
+
+/// override bootstrap.form-control
+@mixin input-size($parent, $input-height) {
+    [data-ax5autocomplete] select[multiple]#{$parent} {
+        height: $input-height;
+    }
+}
+
+[data-ax5autocomplete] select[multiple].form-control {
+    height: $input-height-base;
+}
+
+@include input-size('.input-sm', $input-height-small);
+@include input-size('.input-lg', $input-height-large);
+
+.form-group-sm {
+    [data-ax5autocomplete] select[multiple].form-control {
+        height: $input-height-small;
+    }
+}
+
+.form-group-lg {
+    [data-ax5autocomplete] select[multiple].form-control {
+        height: $input-height-large;
+    }
+}
+
+.form-inline {
+    @media (min-width: $screen-sm-min) {
+        // Inline-block all the things for "inline"
+        [data-ax5autocomplete] {
+            display: inline-block;
+            .ax5autocomplete-display {
+                .ax5autocomplete-display-table {
+                    table-layout: auto;
+                }
+            }
+        }
+    }
+}
+
+// select group
+[data-ax5autocomplete] {
+    position: relative;
+    overflow: visible;
+    display: block;
+    margin: 0px;
+
+    select {
+        z-index: 1;
+        position: absolute;
+        opacity: 0;
+        @include user-select(none);
+    }
+}
+
+@include keyframes(ax-autocomplete-option-group) {
+    from {
+        @include transform(translateY(-10%));
+        opacity: 0;
+    }
+    to {
+        @include transform(translateY(0%));
+        opacity: 1;
+    }
+}
+
+@include keyframes(ax-autocomplete-option-group-destroy) {
+    from {
+        @include transform(translateY(0%) scaleY(1.0));
+        opacity: 1;
+    }
+    to {
+        @include transform(translateY(0%) scaleY(0.0));
+        opacity: 0;
+    }
+}
+
+@mixin ax5autocomplete-display-theme($base-color, $back-color, $theme-color) {
+
+    a {
+        color: $base-color;
+    }
+
+    &:hover, &:active, &:focus, &[data-select-option-group-opened] {
+        &:not([disabled]) {
+            border-color: $theme-color;
+            color: $base-color;
+            background: $back-color;
+            text-decoration: none;
+
+            .ax5autocomplete-display-table {
+                [data-ax5-select-display="label"] {
+
+                }
+                [data-ax5-select-display="addon"] {
+
+                }
+            }
+        }
+    }
+    [disabled] {
+        @include user-select(none);
+    }
+}
+
+@mixin ax5autocomplete-option-group-theme($base-color, $back-color, $theme-color, $hover-type) {
+    border-color: $theme-color;
+    color: $base-color;
+
+    .ax-autocomplete-body {
+
+        .ax-autocomplete-option-group-content {
+            .ax-autocomplete-option-item {
+                &:hover, &.hover {
+                    @if nth($hover-type, 1) == "lighten" {
+                        background: lighten($theme-color, 15%) !important;
+                        color: lighten($base-color, nth($hover-type, 2));
+                    } @else if nth($hover-type, 1) == "darken" {
+                        background: darken($theme-color, 15%) !important;
+                        color: darken($base-color, nth($hover-type, 2));
+                    }
+
+                    .ax-autocomplete-option-item-holder {
+                        .ax-autocomplete-option-item-cell {
+                            &.ax-autocomplete-option-item-checkbox {
+                                .item-checkbox-wrap {
+                                    &.useCheckBox {
+                                        &:after {
+                                            @if nth($hover-type, 1) == "lighten" {
+                                                border-color: lighten($base-color, nth($hover-type, 2)) !important;
+                                            } @else if nth($hover-type, 1) == "darken" {
+                                                border-color: darken($base-color, nth($hover-type, 2)) !important;
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                            &.ax-autocomplete-option-item-label {
+                            }
+                        }
+                    }
+                }
+                &[data-option-selected="true"] {
+                    @if nth($hover-type, 1) == "lighten" {
+                        background: $theme-color;
+                        color: lighten($base-color, nth($hover-type, 2));
+                    } @else if nth($hover-type, 1) == "darken" {
+                        background: $theme-color;
+                        color: darken($base-color, nth($hover-type, 2));
+                    }
+
+                    .ax-autocomplete-option-item-holder {
+                        .ax-autocomplete-option-item-cell {
+                            &.ax-autocomplete-option-item-checkbox {
+                                .item-checkbox-wrap {
+                                    &.useCheckBox {
+                                        &:after {
+                                            @if nth($hover-type, 1) == "lighten" {
+                                                border-color: lighten($base-color, nth($hover-type, 2)) !important;
+                                            } @else if nth($hover-type, 1) == "darken" {
+                                                border-color: darken($base-color, nth($hover-type, 2)) !important;
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                            &.ax-autocomplete-option-item-label {
+                            }
+                        }
+                    }
+                }
+            }
+            .ax-autocomplete-option-group {
+
+                .ax-autocomplete-option-item-holder {
+
+                    .ax-autocomplete-option-group-label {
+                        background: #eee;
+                    }
+                }
+            }
+        }
+
+        .ax-autocomplete-option-group-buttons {
+            border-top: 1px solid;
+            border-color: $theme-color;
+        }
+    }
+
+    &:hover {
+
+    }
+}
+
+@mixin ax5autocomplete-option-group-size($padding, $font-size) {
+    .ax-autocomplete-body {
+        padding: $ax5autocomplete-option-group-body-padding;
+        $ax5autocomplete-option-item-height: $font-size + 5;
+        $ax5autocomplete-option-item-checkbox-size: $font-size - 4;
+        .ax-autocomplete-option-group-content {
+            max-height: $ax5autocomplete-option-item-height * 10;
+            overflow-y: auto;
+            -webkit-overflow-scrolling: touch;
+            position: relative;
+            .ax-autocomplete-option-item {
+                padding: $padding;
+                text-align: left;
+                cursor: pointer;
+                font-size: $font-size;
+                position: relative;
+                box-sizing: border-box;
+                overflow: hidden;
+                //table-layout: fixed;
+
+                .ax-autocomplete-option-item-holder {
+                    display: table;
+                    position: relative;
+                    border-collapse: separate;
+                    overflow: hidden;
+                    //table-layout: fixed;
+                    width: 100%;
+                    height: $ax5autocomplete-option-item-height;
+
+                    .ax-autocomplete-option-item-cell {
+                        box-sizing: border-box;
+                        display: table-cell;
+                        vertical-align: middle;
+                        white-space: nowrap;
+                        font-size: $font-size;
+                        line-height: $ax5autocomplete-option-item-height;
+                        padding: 0px 0px 0px 0px;
+                        @include user-select(none);
+
+                        &.ax-autocomplete-option-item-checkbox {
+                            overflow: hidden;
+                            width: $font-size;
+                            text-align: center;
+                            .item-checkbox-wrap {
+                                position: relative;
+                                display: block;
+                                width: $font-size;
+                                height: $ax5autocomplete-option-item-height;
+
+                                &.useCheckBox {
+                                    &:after {
+                                        content: '';
+                                        width: $ax5autocomplete-option-item-checkbox-size;
+                                        height: $ax5autocomplete-option-item-checkbox-size / 2;
+                                        position: absolute;
+                                        top: ($ax5autocomplete-option-item-height) / 4;
+                                        right: 0px;
+                                        border: 2px solid #000;
+                                        border-top: none;
+                                        border-right: none;
+                                        background: transparent;
+                                        opacity: 0.1;
+                                        @include transform(rotate(-50deg));
+                                    }
+                                }
+                            }
+                        }
+                        &.ax-autocomplete-option-item-label {
+                            padding: $ax5autocomplete-label-padding;
+                            padding-right: $ax5autocomplete-option-item-checkbox-size;
+                        }
+                    }
+                }
+
+                &[data-option-selected="true"] {
+                    .ax-autocomplete-option-item-holder .ax-autocomplete-option-item-cell.ax-autocomplete-option-item-checkbox .item-checkbox-wrap.useCheckBox {
+                        &:after {
+                            opacity: 1;
+                        }
+                    }
+                }
+            }
+            .ax-autocomplete-option-group {
+
+                .ax-autocomplete-option-item-holder {
+                    display: table;
+                    position: relative;
+                    border-collapse: separate;
+                    overflow: hidden;
+                    //table-layout: fixed;
+                    width: 100%;
+                    height: $ax5autocomplete-option-item-height;
+
+                    .ax-autocomplete-option-group-label {
+                        box-sizing: border-box;
+                        display: table-cell;
+                        vertical-align: middle;
+                        white-space: nowrap;
+                        font-size: $font-size;
+                        line-height: $ax5autocomplete-option-item-height;
+
+                        padding: 5px 10px; // todo : theme 정리 나중에
+                        @include user-select(none);
+                    }
+                }
+            }
+        }
+        .ax-autocomplete-option-group-buttons {
+            text-align: center;
+            padding: $padding;
+        }
+    }
+}
+
+// themes
+$base-colors: (
+        default: $ax5autocomplete-default-base-color,
+        primary: $ax5autocomplete-primary-base-color,
+        success: $ax5autocomplete-success-base-color,
+        info: $ax5autocomplete-info-base-color,
+        warning: $ax5autocomplete-warning-base-color,
+        danger: $ax5autocomplete-danger-base-color
+);
+$theme-colors: (
+        default: $ax5autocomplete-default-theme-color,
+        primary: $ax5autocomplete-primary-theme-color,
+        success: $ax5autocomplete-success-theme-color,
+        info: $ax5autocomplete-info-theme-color,
+        warning: $ax5autocomplete-warning-theme-color,
+        danger: $ax5autocomplete-danger-theme-color
+);
+$hover-types: (
+        default: $ax5autocomplete-default-hover-type,
+        primary: $ax5autocomplete-primary-hover-type,
+        success: $ax5autocomplete-success-hover-type,
+        info: $ax5autocomplete-info-hover-type,
+        warning: $ax5autocomplete-warning-hover-type,
+        danger: $ax5autocomplete-danger-hover-type
+);
+
+/// select-display
+.ax5autocomplete-display {
+    position: relative;
+    z-index: 2;
+    padding: 0px;
+    display: block;
+
+    &:hover, &:focus {
+        text-decoration: none;
+    }
+
+    .ax5autocomplete-display-table {
+        width: 100%;
+        height: 100%;
+        display: table;
+        table-layout: fixed;
+        border-collapse: collapse;
+
+        [data-ax5autocomplete-display="label-holder"] {
+            display: table-cell;
+            vertical-align: middle;
+            padding: 0px 0px;
+        }
+        [data-ax5autocomplete-display="label"] {
+            display: block;
+            white-space: nowrap;
+            overflow: hidden;
+            padding: $ax5autocomplete-label-padding;
+            &:focus {
+                outline: none;
+            }
+            text-decoration: none;
+            &:hover {
+                text-decoration: none;
+            }
+            &:after {
+                content: ' ';
+                display: block;
+                clear: both;
+            }
+            div {
+                &[data-ax5autocomplete-selected-label] {
+                    position: relative;
+                    display: block;
+                    float: left;
+                    background: transparent;
+                    padding: 0px 3px;
+                    border: 1px solid transparent;
+                    border-radius: 0px;
+                    margin: 1px 0px 1px -0.5em;
+
+                    background: #eee;
+                    border: 1px solid #ccc;
+                    border-radius: 3px;
+                    margin-left: 0px;
+                    margin-right: 3px;
+
+                    &:first-child {
+                        margin-left: 0px;
+                    }
+
+                    [data-ax5autocomplete-remove] {
+                        width: 15px;
+                        position: absolute;
+                        right: 0;
+                        &:hover {
+                            color: $brand-danger;
+                        }
+                    }
+                    span {
+                        padding-right: 15px;
+                    }
+                }
+            }
+        }
+        [data-ax5autocomplete-display="addon"] {
+            display: table-cell;
+            vertical-align: middle;
+            width: $ax5autocomplete-addon-icon-height * 2 + $ax5autocomplete-addon-icon-padding-right;
+            text-align: center;
+
+            .addon-icon-reset {
+                display: none;
+            }
+        }
+    }
+
+    &[data-select-option-group-opened] {
+        @include box-shadow(inset 1px 1px 3px rgba(0, 0, 0, 0.2));
+        .ax5autocomplete-display-table [data-ax5autocomplete-display="addon"] {
+            .addon-icon-reset {
+                display: block;
+                position: absolute;
+                right: $ax5autocomplete-addon-icon-height * 2 + $ax5autocomplete-addon-icon-padding-right * 2;
+                top: 0px;
+                height: 100%;
+            }
+        }
+    }
+
+    @each $theme in $base-colors {
+        &.#{nth($theme, 1)} {
+            @include ax5autocomplete-display-theme(map_get($base-colors, nth($theme, 1)), $ax5autocomplete-option-group-bg, map_get($theme-colors, nth($theme, 1)));
+        }
+    }
+
+    &.input-xs {
+
+    }
+    &.input-sm {
+
+    }
+    &.input-lg {
+
+    }
+}
+
+/// select-option-group
+.ax5autocomplete-option-group {
+    box-sizing: border-box;
+    z-index: $ax5autocomplete-option-group-z-index;
+    position: absolute;
+    left: 0;
+    top: 0;
+    border-radius: $ax5autocomplete-option-group-border-radius;
+    box-shadow: $ax5autocomplete-option-group-box-shadow;
+    border: $ax5autocomplete-option-group-inner-border;
+    overflow: hidden;
+    @include ax-background($ax5autocomplete-option-group-bg);
+    @include animation(ax-autocomplete-option-group $ax5autocomplete-option-group-easing-time-open ease-out);
+    @include transform(translateZ(0));
+    @include transform-origin(center top);
+
+    &.destroy {
+        @include animation(ax-autocomplete-option-group-destroy $ax5autocomplete-option-group-easing-time-close $ease-in-back forwards);
+    }
+    &.direction-top {
+        @include transform-origin(center top);
+    }
+    &.direction-bottom {
+        @include transform-origin(center bottom);
+    }
+
+    @each $theme in $base-colors {
+        &.#{nth($theme, 1)} {
+            @include ax5autocomplete-option-group-theme(map_get($base-colors, nth($theme, 1)), $ax5autocomplete-option-group-bg, map_get($theme-colors, nth($theme, 1)), map_get($hover-types, nth($theme, 1)));
+        }
+    }
+
+    @include ax5autocomplete-option-group-size($ax5autocomplete-option-item-padding, $ax5autocomplete-option-item-font-size);
+    &.ax5autocomplete-option-group-lg {
+        @include ax5autocomplete-option-group-size($ax5autocomplete-option-item-padding-lg, $ax5autocomplete-option-item-font-size-lg);
+    }
+    &.ax5autocomplete-option-group-sm {
+        @include ax5autocomplete-option-group-size($ax5autocomplete-option-item-padding-sm, $ax5autocomplete-option-item-font-size-sm);
+    }
+    &.ax5autocomplete-option-group-xs {
+        @include ax5autocomplete-option-group-size($ax5autocomplete-option-item-padding-xs, $ax5autocomplete-option-item-font-size-xs);
+    }
+}

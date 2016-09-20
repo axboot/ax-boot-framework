@@ -966,6 +966,7 @@
     };
 
     var repaintCell = function (_panelName, _dindex, _rowIndex, _colIndex, _newValue) {
+        var self = this;
         var cfg = this.config;
         var list = this.list;
 
@@ -973,9 +974,26 @@
             .find('[data-ax5grid-tr-data-index="' + _dindex + '"]')
             .find('[data-ax5grid-column-rowindex="' + _rowIndex + '"][data-ax5grid-column-colindex="' + _colIndex + '"]')
             .find('[data-ax5grid-cellholder]');
-        var col = this.colGroup[_colIndex];
+        var colGroup = this.colGroup;
+        var col = colGroup[_colIndex];
         updateCell.html(getFieldValue.call(this, list, list[_dindex], _dindex, col));
 
+        if (col.editor && col.editor.updateWith) {
+            col.editor.updateWith.forEach(function(updateColumnKey){
+                colGroup.forEach(function(col){
+                    if(col.key == updateColumnKey){
+                        var rowIndex = col.rowIndex;
+                        var colIndex = col.colIndex;
+                        var panelName = GRID.util.findPanelByColumnIndex.call(self, _dindex, colIndex, rowIndex).panelName;
+                        var updateWithCell = self.$["panel"][panelName]
+                            .find('[data-ax5grid-tr-data-index="' + _dindex + '"]')
+                            .find('[data-ax5grid-column-rowindex="' + rowIndex + '"][data-ax5grid-column-colindex="' + colIndex + '"]')
+                            .find('[data-ax5grid-cellholder]');
+                        updateWithCell.html(getFieldValue.call(self, list, list[_dindex], _dindex, col));
+                    }
+                });
+            });
+        }
 
         /// ~~~~~~
 
@@ -1568,7 +1586,6 @@
                     }
                     return this;
                 }
-
 
 
                 if (this.list[dindex].__isGrouping) {

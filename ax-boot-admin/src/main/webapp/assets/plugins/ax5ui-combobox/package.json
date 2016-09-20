@@ -1,6 +1,6 @@
 {
 	"name": "ax5ui-combobox",
-	"version": "0.3.1",
+	"version": "0.3.6",
 	"description": "A combobox plugin that works with Bootstrap & jQuery",
 	"license": "LGPLv3",
 	"repository": {

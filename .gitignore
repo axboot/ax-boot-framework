@@ -33,5 +33,5 @@ overridedb.*
 *.jar
 .DS_Store
 .factorypath
-node_modules
+node_modules/
 rebel.xml

@@ -157,14 +157,14 @@
                     {
                         key: undefined,
                         label: "필드C", columns: [
-                        {key: "price", label: "단가", align: "right", formatter: "money", editor: {type: "money"}},
-                        {key: "amount", label: "수량", align: "right", formatter: "money", editor: {type: "number"}},
-                        {
-                            key: "cost", label: "금액", align: "right", formatter: function () {
-                            return ax5.util.number(this.item.price * this.item.amount, {"money": true});
-                        }
-                        }
-                    ]
+                            {key: "price", label: "단가", align: "right", formatter: "money", editor: {type: "money", updateWith: ['cost']}},
+                            {key: "amount", label: "수량", align: "right", formatter: "money", editor: {type: "number", updateWith: ['cost']}},
+                            {
+                                key: "cost", label: "금액", align: "right", formatter: function () {
+                                return ax5.util.number(this.item.price * this.item.amount, {"money": true});
+                            }
+                            }
+                        ]
                     },
                     {
                         key: "saleDt", label: "판매일자", align: "center", editor: {
@@ -275,7 +275,6 @@
         });
 
     });
-    //694470860800
 </script>
 
 </body>

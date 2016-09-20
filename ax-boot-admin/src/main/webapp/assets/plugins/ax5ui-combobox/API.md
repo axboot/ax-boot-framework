@@ -17,7 +17,6 @@
 
 ## ax5combobox
 **Kind**: global class  
-**Version**: 0.1.6  
 **Author:** tom@axisj.com  
 
 * [ax5combobox](#ax5combobox)
@@ -25,10 +24,13 @@
     * [.bind(item)](#ax5combobox.bind) ⇒ <code>[ax5combobox](#ax5combobox)</code>
     * [.open(boundID, [tryCount])](#ax5combobox.open) ⇒ <code>[ax5combobox](#ax5combobox)</code>
     * [.update(item)](#ax5combobox.update) ⇒ <code>[ax5combobox](#ax5combobox)</code>
-    * [.val(boundID, [value], [Selected])](#ax5combobox.val) ⇒ <code>[ax5combobox](#ax5combobox)</code>
+    * [.setValue(_boundID, _value, [_selected])](#ax5combobox.setValue) ⇒ <code>[ax5combobox](#ax5combobox)</code>
+    * [.setText(_boundID, _text, [_selected])](#ax5combobox.setText) ⇒ <code>[ax5combobox](#ax5combobox)</code>
+    * [.getSelectedOption(_boundID)](#ax5combobox.getSelectedOption) ⇒ <code>Array</code>
     * [.close()](#ax5combobox.close) ⇒ <code>[ax5combobox](#ax5combobox)</code>
-    * [.enable(boundID)](#ax5combobox.enable) ⇒ <code>[ax5combobox](#ax5combobox)</code>
-    * [.disable(boundID)](#ax5combobox.disable) ⇒ <code>[ax5combobox](#ax5combobox)</code>
+    * [.blur(_boundID)](#ax5combobox.blur) ⇒ <code>[ax5combobox](#ax5combobox)</code>
+    * [.enable(_boundID)](#ax5combobox.enable) ⇒ <code>[ax5combobox](#ax5combobox)</code>
+    * [.disable(_boundID)](#ax5combobox.disable) ⇒ <code>[ax5combobox](#ax5combobox)</code>
 
 <a name="ax5combobox.setConfig"></a>
 
@@ -81,38 +83,77 @@ open the optionBox of combobox
 | --- | --- |
 | item | <code>Object</code> &#124; <code>String</code> | 
 
-<a name="ax5combobox.val"></a>
+<a name="ax5combobox.setValue"></a>
 
-### ax5combobox.val(boundID, [value], [Selected]) ⇒ <code>[ax5combobox](#ax5combobox)</code>
+### ax5combobox.setValue(_boundID, _value, [_selected]) ⇒ <code>[ax5combobox](#ax5combobox)</code>
 **Kind**: static method of <code>[ax5combobox](#ax5combobox)</code>  
 
 | Param | Type |
 | --- | --- |
-| boundID | <code>String</code> &#124; <code>Number</code> &#124; <code>Element</code> | 
-| [value] | <code>String</code> &#124; <code>Object</code> &#124; <code>Array</code> | 
-| [Selected] | <code>Boolean</code> | 
+| _boundID | <code>jQueryObject</code> &#124; <code>Element</code> &#124; <code>Number</code> | 
+| _value | <code>String</code> &#124; <code>Array</code> | 
+| [_selected] | <code>Boolean</code> | 
+
+**Example**  
+```js
+myCombo.setValue($('[data-ax5combobox="combo1"]'), "1");
+myCombo.setValue($('[data-ax5combobox="combo1"]'), ["1", "2"]);
+```
+<a name="ax5combobox.setText"></a>
+
+### ax5combobox.setText(_boundID, _text, [_selected]) ⇒ <code>[ax5combobox](#ax5combobox)</code>
+**Kind**: static method of <code>[ax5combobox](#ax5combobox)</code>  
+
+| Param | Type |
+| --- | --- |
+| _boundID | <code>jQueryObject</code> &#124; <code>Element</code> &#124; <code>Number</code> | 
+| _text | <code>String</code> &#124; <code>Array</code> | 
+| [_selected] | <code>Boolean</code> | 
+
+**Example**  
+```js
+myCombo.setText($('[data-ax5combobox="combo1"]'), "string");
+myCombo.setText($('[data-ax5combobox="combo1"]'), ["substring", "search"]);
+```
+<a name="ax5combobox.getSelectedOption"></a>
+
+### ax5combobox.getSelectedOption(_boundID) ⇒ <code>Array</code>
+**Kind**: static method of <code>[ax5combobox](#ax5combobox)</code>  
+
+| Param | Type |
+| --- | --- |
+| _boundID | <code>jQueryObject</code> &#124; <code>Element</code> &#124; <code>Number</code> | 
 
 <a name="ax5combobox.close"></a>
 
 ### ax5combobox.close() ⇒ <code>[ax5combobox](#ax5combobox)</code>
 **Kind**: static method of <code>[ax5combobox](#ax5combobox)</code>  
-<a name="ax5combobox.enable"></a>
+<a name="ax5combobox.blur"></a>
 
-### ax5combobox.enable(boundID) ⇒ <code>[ax5combobox](#ax5combobox)</code>
+### ax5combobox.blur(_boundID) ⇒ <code>[ax5combobox](#ax5combobox)</code>
 **Kind**: static method of <code>[ax5combobox](#ax5combobox)</code>  
 
-| Param |
-| --- |
-| boundID | 
+| Param | Type |
+| --- | --- |
+| _boundID | <code>jQueryObject</code> &#124; <code>Element</code> &#124; <code>Number</code> | 
+
+<a name="ax5combobox.enable"></a>
+
+### ax5combobox.enable(_boundID) ⇒ <code>[ax5combobox](#ax5combobox)</code>
+**Kind**: static method of <code>[ax5combobox](#ax5combobox)</code>  
+
+| Param | Type |
+| --- | --- |
+| _boundID | <code>jQueryObject</code> &#124; <code>Element</code> &#124; <code>Number</code> | 
 
 <a name="ax5combobox.disable"></a>
 
-### ax5combobox.disable(boundID) ⇒ <code>[ax5combobox](#ax5combobox)</code>
+### ax5combobox.disable(_boundID) ⇒ <code>[ax5combobox](#ax5combobox)</code>
 **Kind**: static method of <code>[ax5combobox](#ax5combobox)</code>  
 
-| Param |
-| --- |
-| boundID | 
+| Param | Type |
+| --- | --- |
+| _boundID | <code>jQueryObject</code> &#124; <code>Element</code> &#124; <code>Number</code> | 
 
 <a name="jQueryExtends"></a>
 

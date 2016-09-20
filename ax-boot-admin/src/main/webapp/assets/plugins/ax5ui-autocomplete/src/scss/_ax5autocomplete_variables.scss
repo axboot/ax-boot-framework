@@ -1,0 +1,60 @@
+/*!
+ * Copyright (c) 2016. tom@axisj.com
+ * - github.com/thomasjang
+ * - www.axisj.com
+ */
+
+$ax5autocomplete-label-padding: 0px 7px !default;
+$ax5autocomplete-addon-icon-height: 4.5px !default;
+$ax5autocomplete-addon-icon-padding-right: 7px !default;
+
+///== option group
+$ax5autocomplete-option-group-z-index: 2000 !default;
+$ax5autocomplete-option-group-box-model: border-box !default;
+$ax5autocomplete-option-group-bg: lighten(#eee, 5%) !default;
+$ax5autocomplete-option-group-inner-border: 1px solid !default;
+$ax5autocomplete-option-group-box-shadow: 0px 0px 3px 0px rgba(0, 0, 0, 0.175) !default;
+$ax5autocomplete-option-group-border-radius: 5px !default;
+$ax5autocomplete-option-group-body-padding: 0px !default;
+
+$ax5autocomplete-option-group-easing-time-open: 0.1s !default;
+$ax5autocomplete-option-group-easing-time-close: 0.1s !default;
+$ax5autocomplete-option-group-arrow-size: 10px !default;
+$ax5autocomplete-option-group-arrow-border-width: 1px !default;
+
+$ax5autocomplete-option-item-padding: 3px 0px !default;
+$ax5autocomplete-option-item-font-size: 13px !default;
+
+$ax5autocomplete-option-item-padding-lg: 5px 0px !default;
+$ax5autocomplete-option-item-font-size-lg: $ax5autocomplete-option-item-font-size * 1.3 !default;
+
+$ax5autocomplete-option-item-padding-sm: 2px 0px !default;
+$ax5autocomplete-option-item-font-size-sm: $ax5autocomplete-option-item-font-size * 0.9 !default;
+
+$ax5autocomplete-option-item-padding-xs: 1px 0px !default;
+$ax5autocomplete-option-item-font-size-xs: $ax5autocomplete-option-item-font-size * 0.8 !default;
+
+///~~ theme
+$ax5autocomplete-default-base-color: $gray !default;
+$ax5autocomplete-default-theme-color: #ccc !default;
+$ax5autocomplete-default-hover-type: darken, 20% !default;
+
+$ax5autocomplete-primary-base-color: $gray !default;
+$ax5autocomplete-primary-theme-color: $brand-primary !default;
+$ax5autocomplete-primary-hover-type: lighten, 100% !default;
+
+$ax5autocomplete-success-base-color: $gray !default;
+$ax5autocomplete-success-theme-color: $brand-success !default;
+$ax5autocomplete-success-hover-type: darken, 20% !default;
+
+$ax5autocomplete-info-base-color: $gray !default;
+$ax5autocomplete-info-theme-color: $brand-info !default;
+$ax5autocomplete-info-hover-type: lighten, 100% !default;
+
+$ax5autocomplete-warning-base-color: $gray !default;
+$ax5autocomplete-warning-theme-color: $brand-warning !default;
+$ax5autocomplete-warning-hover-type: lighten, 100% !default;
+
+$ax5autocomplete-danger-base-color: $gray !default;
+$ax5autocomplete-danger-theme-color: $brand-danger !default;
+$ax5autocomplete-danger-hover-type: lighten, 100% !default;
