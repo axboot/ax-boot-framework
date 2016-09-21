@@ -1,8 +1,7 @@
-package com.chequer.axboot.admin.controllers;
+package com.chequer.axboot.core.controllers;
 
 import com.chequer.axboot.admin.parameter.PageableResponse;
 import com.chequer.axboot.core.api.response.ApiResponse;
-import com.chequer.axboot.core.controllers.BaseController;
 import com.chequer.axboot.core.domain.sample.child.ChildSample;
 import com.chequer.axboot.core.domain.sample.child.ChildSampleService;
 import com.chequer.axboot.core.domain.sample.child.ChildSampleVO;

@@ -1,8 +1,7 @@
-package com.chequer.axboot.admin.controllers;
+package com.chequer.axboot.core.controllers;
 
 import com.chequer.axboot.core.api.response.ApiResponse;
 import com.chequer.axboot.core.config.AXBootContextConfig;
-import com.chequer.axboot.core.controllers.BaseController;
 import com.chequer.axboot.core.db.schema.init.DatabaseInitService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;

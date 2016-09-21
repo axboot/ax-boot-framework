@@ -7,7 +7,6 @@ import com.chequer.axboot.core.domain.code.CommonCode;
 import com.chequer.axboot.core.domain.code.CommonCodeService;
 import com.chequer.axboot.core.parameter.RequestParams;
 import org.springframework.stereotype.Controller;
-import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -31,7 +30,7 @@ public class CommonCodeController extends BaseController {
     }
 
     @RequestMapping(method = {RequestMethod.PUT}, produces = APPLICATION_JSON)
-    public ApiResponse save(@Valid @NotNull @RequestBody List<CommonCode> basicCodes, BindingResult bindingResult) {
+    public ApiResponse save(@Valid @NotNull @RequestBody List<CommonCode> basicCodes) {
         basicCodeService.saveCommonCode(basicCodes);
         return ok();
     }
