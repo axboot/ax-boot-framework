@@ -96,6 +96,8 @@ public class DatabaseInitService {
             lines.add(line);
         }
 
+        lines.add("\n");
+
         for (Menu menu : menuService.findAll()) {
             String line = String.format("menuService.save(Menu.of(%dL,\"%s\",\"%s\",%dL, %d, %d, \"%s\"));",
                     menu.getId(),
@@ -109,6 +111,8 @@ public class DatabaseInitService {
             lines.add(line);
         }
 
+        lines.add("\n");
+
         for (CommonCode commonCode : commonCodeService.findAll()) {
             String line = String.format("commonCodeService.save(CommonCode.of(\"%s\",\"%s\",\"%s\",\"%s\",%d));",
                     commonCode.getGroupCd(),
@@ -119,6 +123,9 @@ public class DatabaseInitService {
 
             lines.add(line);
         }
+
+        lines.add("\n");
+
         for (AuthGroupMenu authGroupMenu : authGroupMenuService.findAll()) {
             String line = String.format("authGroupMenuService.save(AuthGroupMenu.of(\"%s\",%dL,\"%s\",\"%s\",\"%s\",\"%s\",\"%s\",\"%s\",\"%s\",\"%s\",\"%s\"));",
                     authGroupMenu.getGrpAuthCd(),
@@ -135,7 +142,9 @@ public class DatabaseInitService {
             lines.add(line);
         }
 
-        IOUtils.writeLines(lines, null, new FileOutputStream(new File("/Users/brant/Desktop/program.txt")), "UTF-8");
+        String code = System.getProperty("user.home") + "/Desktop/output/code.txt";
+
+        IOUtils.writeLines(lines, null, new FileOutputStream(new File(code)), "UTF-8");
     }
 
 
