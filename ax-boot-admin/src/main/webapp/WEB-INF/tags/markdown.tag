@@ -7,15 +7,14 @@
 <%@ tag language="java" pageEncoding="UTF-8" body-content="scriptless" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ attribute name="src" %>
-<jsp:doBody var="body" scope="request"/>
+<jsp:doBody var="body" scope="page"/>
 <%
     String html = "";
     String md = "";
 
-
     if (StringUtils.isEmpty(src)) {
         int baseIndent = 0;
-        md = (String) request.getAttribute("body");
+        md = (String) jspContext.getAttribute("body");
 
         String[] mdLines = md.split("\n");
 
