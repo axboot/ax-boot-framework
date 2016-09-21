@@ -99,16 +99,27 @@ public class DatabaseInitService {
         lines.add("\n");
 
         for (Menu menu : menuService.findAll()) {
-            String line = String.format("menuService.save(Menu.of(%dL,\"%s\",\"%s\",%dL, %d, %d, \"%s\"));",
-                    menu.getId(),
-                    menu.getMenuGrpCd(),
-                    menu.getMenuNm(),
-                    menu.getParentId(),
-                    menu.getLevel(),
-                    menu.getSort(),
-                    menu.getProgCd());
+            if (menu.getParentId() == null) {
+                String line = String.format("menuService.save(Menu.of(%dL,\"%s\",\"%s\",null, %d, %d, null));",
+                        menu.getId(),
+                        menu.getMenuGrpCd(),
+                        menu.getMenuNm(),
+                        menu.getLevel(),
+                        menu.getSort());
 
-            lines.add(line);
+                lines.add(line);
+            } else {
+                String line = String.format("menuService.save(Menu.of(%dL,\"%s\",\"%s\",%dL, %d, %d, \"%s\"));",
+                        menu.getId(),
+                        menu.getMenuGrpCd(),
+                        menu.getMenuNm(),
+                        menu.getParentId(),
+                        menu.getLevel(),
+                        menu.getSort(),
+                        menu.getProgCd());
+
+                lines.add(line);
+            }
         }
 
         lines.add("\n");
