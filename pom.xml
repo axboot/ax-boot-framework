@@ -105,6 +105,7 @@
         <barcode4j.version>2.1</barcode4j.version>
         <bitwalker.userAgentUtil.version>1.18</bitwalker.userAgentUtil.version>
 
+        <commonmark.version>0.6.0</commonmark.version>
         <excel.parser.version>1.0</excel.parser.version>
 
         <hibernate.version>5.2.2.Final</hibernate.version>
@@ -139,7 +140,10 @@
         <mybatis.spring.version>1.2.3</mybatis.spring.version>
         <mysql.connector.version>5.1.37</mysql.connector.version>
 
+        <reflections.version>0.9.10</reflections.version>
+
         <phantom.ghost.driver.version>1.1.0</phantom.ghost.driver.version>
+        <pegdown.version>1.6.0</pegdown.version>
         <postgresql.jdbc.version>9.4-1206-jdbc42</postgresql.jdbc.version>
         <proguard.version>4.4</proguard.version>
         <qrgen.version>2.0</qrgen.version>
@@ -459,6 +463,18 @@
                 <groupId>com.querydsl</groupId>
                 <artifactId>querydsl-jpa</artifactId>
                 <version>${querydsl.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.reflections</groupId>
+                <artifactId>reflections</artifactId>
+                <version>${reflections.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>com.atlassian.commonmark</groupId>
+                <artifactId>commonmark</artifactId>
+                <version>${commonmark.version}</version>
             </dependency>
         </dependencies>
     </dependencyManagement>

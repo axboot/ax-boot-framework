@@ -32,14 +32,6 @@
             <artifactId>spring-boot-starter-security</artifactId>
         </dependency>
 
-        <!--
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-devtools</artifactId>
-            <version>1.4.0.RELEASE</version>
-        </dependency>
-        -->
-
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-test</artifactId>
@@ -68,6 +60,12 @@
             <artifactId>tomcat-embed-jasper</artifactId>
             <scope>provided</scope>
         </dependency>
+
+        <dependency>
+            <groupId>org.pegdown</groupId>
+            <artifactId>pegdown</artifactId>
+        </dependency>
+
     </dependencies>
 
     <build>

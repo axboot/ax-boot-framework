@@ -17,11 +17,6 @@ import org.springframework.context.annotation.*;
 import org.springframework.context.support.PropertySourcesPlaceholderConfigurer;
 import org.springframework.dao.annotation.PersistenceExceptionTranslationPostProcessor;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
-import org.springframework.data.redis.connection.RedisConnectionFactory;
-import org.springframework.data.redis.core.RedisTemplate;
-import org.springframework.data.redis.serializer.JdkSerializationRedisSerializer;
-import org.springframework.data.redis.serializer.RedisSerializer;
-import org.springframework.data.redis.serializer.StringRedisSerializer;
 import org.springframework.orm.jpa.JpaTransactionManager;
 import org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -31,7 +26,6 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 import javax.inject.Named;
 import javax.persistence.EntityManagerFactory;
 import javax.sql.DataSource;
-import java.net.UnknownHostException;
 
 @Configuration
 @EnableTransactionManagement(proxyTargetClass = true, mode = AdviceMode.PROXY)
@@ -126,22 +120,5 @@ public class CoreApplicationContext {
     @Bean
     public SqlMonitoringService sqlMonitoringService(DataSource dataSource) throws Exception {
         return new SqlMonitoringService(dataSource);
-    }
-
-    @Bean
-    public RedisTemplate<Object, Object> redisTemplate(RedisConnectionFactory redisConnectionFactory) throws UnknownHostException {
-        RedisTemplate<Object, Object> redisTemplate = new RedisTemplate<>();
-        redisTemplate.setConnectionFactory(redisConnectionFactory);
-        redisTemplate.setHashValueSerializer(createRedisSerializer());
-        redisTemplate.setValueSerializer(createRedisSerializer());
-        redisTemplate.setKeySerializer(new StringRedisSerializer());
-        redisTemplate.setHashKeySerializer(new StringRedisSerializer());
-        redisTemplate.setStringSerializer(new StringRedisSerializer());
-        redisTemplate.afterPropertiesSet();
-        return redisTemplate;
-    }
-
-    private RedisSerializer createRedisSerializer() {
-        return new JdkSerializationRedisSerializer();
     }
 }
