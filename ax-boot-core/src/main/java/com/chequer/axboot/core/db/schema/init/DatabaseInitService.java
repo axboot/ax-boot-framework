@@ -184,7 +184,7 @@ public class DatabaseInitService {
         programService.save(Program.of("system-config-common-code","공통코드관리","/jsp/system/system-config-common-code.jsp","_self","Y","Y","Y","Y","N","N","N","N","N","N"));
         programService.save(Program.of("system-config-menu","메뉴관리","/jsp/system/system-config-menu.jsp","_self","Y","Y","Y","N","N","N","N","N","N","N"));
         programService.save(Program.of("system-config-program","프로그램관리","/jsp/system/system-config-program.jsp","_self","Y","Y","Y","N","N","N","N","N","N","N"));
-        programService.save(Program.of("system-config-user","사용자관리","/jsp/system/system-config-user.jsp","_self","Y","Y","Y","N","N","N","N","N","N","N"));
+        programService.save(Program.of("system-config-user","사용자관리","/jsp/system/system-auth-user.jsp","_self","Y","Y","Y","N","N","N","N","N","N","N"));
         programService.save(Program.of("system-operation-log","에러로그 조회","/jsp/system/system-operation-log.jsp","_self","Y","Y","N","N","N","Y","N","N","N","N"));
 
         menuService.save(Menu.of(1L,"SYSTEM_MANAGER","시스템관리",null, 0, 0, "null"));
