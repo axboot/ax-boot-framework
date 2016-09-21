@@ -142,7 +142,7 @@ public class DatabaseInitService {
             lines.add(line);
         }
 
-        String code = System.getProperty("user.home") + "/Desktop/output/code.txt";
+        String code = System.getProperty("user.home") + "/Desktop/code.txt";
 
         IOUtils.writeLines(lines, null, new FileOutputStream(new File(code)), "UTF-8");
     }
