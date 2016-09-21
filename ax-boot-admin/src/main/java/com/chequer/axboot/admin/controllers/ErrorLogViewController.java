@@ -1,7 +1,7 @@
 package com.chequer.axboot.admin.controllers;
 
-import com.chequer.axboot.admin.parameter.PageableResponse;
 import com.chequer.axboot.core.api.response.ApiResponse;
+import com.chequer.axboot.core.api.response.PageableResponse;
 import com.chequer.axboot.core.controllers.BaseController;
 import com.chequer.axboot.core.domain.log.ErrorLog;
 import com.chequer.axboot.core.domain.log.ErrorLogService;

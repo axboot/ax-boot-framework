@@ -1,7 +1,7 @@
 package com.chequer.axboot.admin.controllers;
 
-import com.chequer.axboot.admin.parameter.GeneralResponse;
 import com.chequer.axboot.core.api.response.ApiResponse;
+import com.chequer.axboot.core.api.response.GeneralResponse;
 import com.chequer.axboot.core.controllers.BaseController;
 import com.chequer.axboot.core.domain.program.Program;
 import com.chequer.axboot.core.domain.program.ProgramService;

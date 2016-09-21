@@ -44,11 +44,6 @@
                 </article>
 
                 <article class="content">
-                    <h3 data-menu-item="Modal">GoEntity / <a href="${downloadLink}=GoEntity">Download</a></h3>
-                    <pre class="prettyprint linenums">${jpaMvcModel.getGoEntity().code()}</pre>
-                </article>
-
-                <article class="content">
                     <h3>VO / <a href="${downloadLink}=VO">Download</a></h3>
                     <pre class="prettyprint linenums">${jpaMvcModel.getVo().code()}</pre>
                 </article>

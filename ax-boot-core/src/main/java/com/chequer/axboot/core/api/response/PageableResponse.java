@@ -1,4 +1,4 @@
-package com.chequer.axboot.admin.parameter;
+package com.chequer.axboot.core.api.response;
 
 import com.chequer.axboot.core.vo.PageableVO;
 import com.fasterxml.jackson.annotation.JsonProperty;
