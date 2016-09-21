@@ -143,7 +143,6 @@
         <reflections.version>0.9.10</reflections.version>
 
         <phantom.ghost.driver.version>1.1.0</phantom.ghost.driver.version>
-        <pegdown.version>1.6.0</pegdown.version>
         <postgresql.jdbc.version>9.4-1206-jdbc42</postgresql.jdbc.version>
         <proguard.version>4.4</proguard.version>
         <qrgen.version>2.0</qrgen.version>
