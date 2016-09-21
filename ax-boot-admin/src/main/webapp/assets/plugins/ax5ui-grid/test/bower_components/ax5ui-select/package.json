@@ -2,7 +2,7 @@
 	"name": "ax5ui-select",
 	"version": "0.4.4",
 	"description": "A select plugin that works with Bootstrap & jQuery",
-	"license": "LGPLv3",
+	"license": "LGPL-3.0",
 	"repository": {
 		"type": "git",
 		"url": "git+https://github.com/ax5ui/ax5ui-select"

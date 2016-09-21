@@ -2,8 +2,9 @@
     'use strict';
 
     // root of function
-    var root = this, win = window, doc = document, docElem = document.documentElement,
-        reIsJson = /^(["'](\\.|[^"\\\n\r])*?["']|[,:{}\[\]0-9.\-+Eaeflnr-u \n\r\t])+?$/,
+    var root = this, win = this;
+    var doc = (win) ? win.document : null, docElem = (win) ? win.document.documentElement : null;
+    var reIsJson = /^(["'](\\.|[^"\\\n\r])*?["']|[,:{}\[\]0-9.\-+Eaeflnr-u \n\r\t])+?$/,
         reMs = /^-ms-/,
         reSnakeCase = /[\-_]([\da-z])/gi,
         reCamelCase = /([A-Z])/g,
@@ -99,6 +100,8 @@
          * ```
          */
         var browser = (function (ua, mobile, browserName, match, browser, browserVersion) {
+            if (!win || !win.navigator) return {};
+
             ua = navigator.userAgent.toLowerCase(), mobile = (ua.search(/mobile/g) != -1), browserName, match, browser, browserVersion;
 
             if (ua.search(/iphone/g) != -1) {
@@ -136,7 +139,7 @@
          * 브라우저에 따른 마우스 휠 이벤트이름
          * @member {Object} ax5.info.wheelEnm
          */
-        var wheelEnm = ((/Firefox/i.test(navigator.userAgent)) ? "DOMMouseScroll" : "mousewheel");
+        var wheelEnm = (win && (/Firefox/i.test(navigator.userAgent)) ? "DOMMouseScroll" : "mousewheel");
 
         /**
          * 첫번째 자리수 동사 - (필요한것이 없을때 : 4, 실행오류 : 5)
@@ -217,7 +220,7 @@
             }
         }
 
-        var supportTouch = (('ontouchstart' in window) || (navigator.maxTouchPoints > 0) || (navigator.msMaxTouchPoints > 0));
+        var supportTouch = (win) ? (('ontouchstart' in win) || (navigator.maxTouchPoints > 0) || (navigator.msMaxTouchPoints > 0)) : false;
 
         return {
             errorMsg: errorMsg,
@@ -1758,7 +1761,7 @@
          * ax5.util.stopEvent(e);
          * ```
          */
-        function stopEvent(e) { 
+        function stopEvent(e) {
             // 이벤트 중지 구문
             if (!e) var e = window.event;
 
@@ -1901,7 +1904,7 @@
             var debounced = function () {
                 var args = toArray(arguments);
 
-                if(removeTimeout) clearTimeout(removeTimeout);
+                if (removeTimeout) clearTimeout(removeTimeout);
                 if (timeout) {
                     // 두번째 호출
                     if (timeout) clearTimeout(timeout);
@@ -1913,8 +1916,8 @@
                     timeout = setTimeout((function (args) {
                         func.apply(this, args);
                     }).bind(this, args), (immediately) ? 0 : wait);
-                } 
-                removeTimeout = setTimeout(function(){
+                }
+                removeTimeout = setTimeout(function () {
                     clearTimeout(timeout);
                     timeout = null;
                 }, wait);
@@ -2014,8 +2017,12 @@
         }
     })();
 
-    root.ax5 = (function () {
-        return ax5;
-    })(); // ax5.ui에 연결
+    if (typeof module === "object" && typeof module.exports === "object") {
+        module.exports = ax5;
+    }else{
+        root.ax5 = (function () {
+            return ax5;
+        })(); // ax5.ui에 연결
+    }
 
-}).call(window);
+}).call(typeof window !== "undefined" ? window : this);

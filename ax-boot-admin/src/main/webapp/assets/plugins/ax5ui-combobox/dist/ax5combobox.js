@@ -9,7 +9,7 @@
 
     UI.addClass({
         className: "combobox",
-        version: "0.3.6"
+        version: "0.3.7"
     }, function () {
         /**
          * @class ax5combobox
@@ -874,7 +874,7 @@
                         }
 
                         //블러 이벤트명 작성중인 텍스트를 제외
-                        setOptionSelect.call(this, item.id, values, undefined, "internal"); // set Value
+                        setOptionSelect.call(this, item.id, values, undefined, { noStateChange: true }); // set Value
                     };
 
                     var comboboxEvent = {

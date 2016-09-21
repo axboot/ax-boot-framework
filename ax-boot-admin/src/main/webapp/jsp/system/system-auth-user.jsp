@@ -14,28 +14,6 @@
 
         <ax:page-buttons></ax:page-buttons>
 
-        <!--
-        {
-            "userCd":"",
-            "menuGrpCd":"",
-            ....
-
-            "roleList": [
-                {
-                "userCd":"",
-                "roleCd":""
-                }
-            ],
-
-            "authList": [
-                {
-                "userCd":"",
-                "authGrpCd":""
-                }
-            ]
-        }
-        -->
-
         <!-- 검색바 -->
         <div role="page-header">
             <ax:form name="searchView0">

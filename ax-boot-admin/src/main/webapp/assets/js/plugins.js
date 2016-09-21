@@ -14664,10 +14664,10 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
     // root of function
 
     var root = this,
-        win = window,
-        doc = document,
-        docElem = document.documentElement,
-        reIsJson = /^(["'](\\.|[^"\\\n\r])*?["']|[,:{}\[\]0-9.\-+Eaeflnr-u \n\r\t])+?$/,
+        win = this;
+    var doc = win ? win.document : null,
+        docElem = win ? win.document.documentElement : null;
+    var reIsJson = /^(["'](\\.|[^"\\\n\r])*?["']|[,:{}\[\]0-9.\-+Eaeflnr-u \n\r\t])+?$/,
         reMs = /^-ms-/,
         reSnakeCase = /[\-_]([\da-z])/gi,
         reCamelCase = /([A-Z])/g,
@@ -14759,6 +14759,8 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
          * ```
          */
         var browser = function (ua, mobile, browserName, match, browser, browserVersion) {
+            if (!win || !win.navigator) return {};
+
             ua = navigator.userAgent.toLowerCase(), mobile = ua.search(/mobile/g) != -1, browserName, match, browser, browserVersion;
 
             if (ua.search(/iphone/g) != -1) {
@@ -14793,7 +14795,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
          * 브라우저에 따른 마우스 휠 이벤트이름
          * @member {Object} ax5.info.wheelEnm
          */
-        var wheelEnm = /Firefox/i.test(navigator.userAgent) ? "DOMMouseScroll" : "mousewheel";
+        var wheelEnm = win && /Firefox/i.test(navigator.userAgent) ? "DOMMouseScroll" : "mousewheel";
 
         /**
          * 첫번째 자리수 동사 - (필요한것이 없을때 : 4, 실행오류 : 5)
@@ -14873,7 +14875,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
             }
         }
 
-        var supportTouch = 'ontouchstart' in window || navigator.maxTouchPoints > 0 || navigator.msMaxTouchPoints > 0;
+        var supportTouch = win ? 'ontouchstart' in win || navigator.maxTouchPoints > 0 || navigator.msMaxTouchPoints > 0 : false;
 
         return {
             errorMsg: errorMsg,
@@ -16597,10 +16599,14 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
         };
     }();
 
-    root.ax5 = function () {
-        return ax5;
-    }(); // ax5.ui에 연결
-}).call(window);
+    if ((typeof module === 'undefined' ? 'undefined' : _typeof(module)) === "object" && _typeof(module.exports) === "object") {
+        module.exports = ax5;
+    } else {
+        root.ax5 = function () {
+            return ax5;
+        }(); // ax5.ui에 연결
+    }
+}).call(typeof window !== "undefined" ? window : undefined);
 ax5.def = {};
 ax5.info.errorMsg["ax5dialog"] = {
     "501": "Duplicate call error"
@@ -28167,7 +28173,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
 
     UI.addClass({
         className: "combobox",
-        version: "0.3.6"
+        version: "0.3.7"
     }, function () {
         /**
          * @class ax5combobox
@@ -29032,7 +29038,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
                         }
 
                         //블러 이벤트명 작성중인 텍스트를 제외
-                        setOptionSelect.call(this, item.id, values, undefined, "internal"); // set Value
+                        setOptionSelect.call(this, item.id, values, undefined, { noStateChange: true }); // set Value
                     };
 
                     var comboboxEvent = {

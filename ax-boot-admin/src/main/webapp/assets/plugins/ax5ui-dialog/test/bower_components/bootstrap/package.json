@@ -26,7 +26,7 @@
   "bugs": {
     "url": "https://github.com/twbs/bootstrap/issues"
   },
-  "license": "LGPLv3",
+  "license": "LGPL-3.0",
   "devDependencies": {
     "btoa": "~1.1.2",
     "glob": "~6.0.1",

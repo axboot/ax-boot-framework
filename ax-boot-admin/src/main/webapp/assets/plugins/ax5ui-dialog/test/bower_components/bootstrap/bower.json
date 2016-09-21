@@ -12,7 +12,7 @@
     "web"
   ],
   "homepage": "http://getbootstrap.com",
-  "license": "LGPLv3",
+  "license": "LGPL-3.0",
   "moduleType": "globals",
   "main": [
     "less/bootstrap.less",

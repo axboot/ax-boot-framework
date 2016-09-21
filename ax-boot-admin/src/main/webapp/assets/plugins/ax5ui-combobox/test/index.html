@@ -125,6 +125,9 @@
             //theme: "primary",
             target: $('[data-ax5combobox="combo1"]'),
             options: options,
+            onChange: function () {
+                console.log(this);
+            },
             onStateChanged: function () {
                 console.log(this);
             }
