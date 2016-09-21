@@ -77,6 +77,8 @@ public class ProgramService extends BaseService<Program, String> {
 
                     // 프로그램 코드가 변경되었을 경우
                     if (notEquals(existProgram.getProgPh(), program.getProgPh())) {
+                        program.setProgCd(FilenameUtils.getBaseName(program.getProgPh()));
+
                         delete(existProgram.getId());
 
                         // 메뉴에 메뉴코드 & 프로그램코드 변경
@@ -85,9 +87,7 @@ public class ProgramService extends BaseService<Program, String> {
                                 .where(qMenu.progCd.eq(existProgram.getProgCd()))
                                 .execute();
 
-                        program.setProgCd(FilenameUtils.getBaseName(program.getProgPh()));
                     }
-
                     save(program);
                 }
             }

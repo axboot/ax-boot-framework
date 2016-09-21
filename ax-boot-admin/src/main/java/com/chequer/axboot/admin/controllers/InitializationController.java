@@ -34,4 +34,10 @@ public class InitializationController extends BaseController {
         databaseInitService.init();
         return ok();
     }
+
+    @RequestMapping(value = "/createCode", method = RequestMethod.GET, produces = APPLICATION_JSON)
+    public ApiResponse createBaseCode() throws Exception {
+        databaseInitService.createBaseCode();
+        return ok();
+    }
 }
