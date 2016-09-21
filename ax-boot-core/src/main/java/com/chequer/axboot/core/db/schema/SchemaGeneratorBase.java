@@ -78,7 +78,7 @@ public class SchemaGeneratorBase {
 
             if (entityClass.isAnnotationPresent(Table.class)) {
                 String entityTableName = entityClass.getAnnotation(Table.class).name();
-                if (entityTableName.equals(tableName)) {
+                if (entityTableName.toLowerCase().equals(tableName.toLowerCase())) {
                     return entityClass.getName();
                 }
             } else {
