@@ -2,6 +2,7 @@ package com.chequer.axboot.core.db.schema;
 
 import com.chequer.axboot.core.annotations.ColumnPosition;
 import org.apache.commons.io.IOUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.hibernate.tool.hbm2ddl.SchemaExport;
 import org.hibernate.tool.schema.TargetType;
 import org.springframework.boot.orm.jpa.hibernate.SpringNamingStrategy;
@@ -65,35 +66,38 @@ public class SchemaGenerator extends SchemaGeneratorBase {
         List<ColumnDefinition> columnDefinitions = Arrays.stream(columnBody.split(", ")).map(ColumnDefinition::new).collect(toList());
         columnDefinitions.add(new ColumnDefinition(primaryKeyDefinition));
 
-        Class<?> clazz = Class.forName(getEntityClassName(tableName));
-        Field[] fields = clazz.getDeclaredFields();
+        String className =getEntityClassName(tableName);
 
-        for (Field field : fields) {
-            setPosition(field, columnDefinitions);
+        if(StringUtils.isNotEmpty(className)) {
+            Class<?> clazz = Class.forName(className);
+            Field[] fields = clazz.getDeclaredFields();
+
+            for (Field field : fields) {
+                setPosition(field, columnDefinitions);
+            }
+
+            convertedDDL
+                    .append("create table")
+                    .append(" ")
+                    .append(tableName)
+                    .append(" ")
+                    .append("(");
+
+            StringJoiner columns = new StringJoiner(", ");
+
+            columnDefinitions
+                    .stream()
+                    .sorted(
+                            Comparator.comparingInt(ColumnDefinition::getPosition)
+                                    .thenComparing(ColumnDefinition::getColumnName))
+                    .forEach(entityField -> {
+                        columns.add(entityField.getColumnDefinition());
+                    });
+
+            convertedDDL.append(columns.toString());
+
+            convertedDDL.append(")");
         }
-
-        convertedDDL
-                .append("create table")
-                .append(" ")
-                .append(tableName)
-                .append(" ")
-                .append("(");
-
-        StringJoiner columns = new StringJoiner(", ");
-
-        columnDefinitions
-                .stream()
-                .sorted(
-                        Comparator.comparingInt(ColumnDefinition::getPosition)
-                                .thenComparing(ColumnDefinition::getColumnName))
-                .forEach(entityField -> {
-                    columns.add(entityField.getColumnDefinition());
-                });
-
-        convertedDDL.append(columns.toString());
-
-        convertedDDL.append(")");
-
         return convertedDDL.toString();
     }
 

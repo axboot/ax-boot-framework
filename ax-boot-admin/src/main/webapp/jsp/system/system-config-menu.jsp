@@ -49,50 +49,51 @@
             <ax:splitter></ax:splitter>
             <ax:split-panel width="*" style="padding-left: 10px;">
 
-                <div class="ax-button-group">
-                    <div class="left">
-                        <h2>
-                            <i class="cqc-news"></i>
-                            메뉴 정보 </h2>
-                    </div>
-                    <div class="right">
+                <div data-fit-height-aside="form-view-01">
+                    <div class="ax-button-group">
+                        <div class="left">
+                            <h2>
+                                <i class="cqc-news"></i>
+                                메뉴 정보 </h2>
+                        </div>
+                        <div class="right">
 
+                        </div>
+                    </div>
+
+                    <ax:form name="formView01">
+                        <ax:tbl clazz="ax-form-tbl" minWidth="500px">
+                            <ax:tr>
+                                <ax:td label="프로그램코드" width="100%">
+                                    <input type="text" data-ax-path="progCd" class="form-control" value="" readonly="readonly"/>
+                                </ax:td>
+                            </ax:tr>
+                            <ax:tr>
+                                <ax:td label="프로그램 명" width="100%">
+                                    <input type="hidden" data-ax-path="menuId" class="form-control" value=""/>
+                                    <input type="hidden" data-ax-path="progNm" class="form-control" value=""/>
+                                    <div class="form-group">
+                                        <div data-ax5combobox="progCd" data-ax5combobox-config='{size: "", editable: false, multiple: false}'></div>
+                                    </div>
+                                </ax:td>
+                            </ax:tr>
+                        </ax:tbl>
+                    </ax:form>
+
+                    <div class="H20"></div>
+                    <!-- 목록 -->
+                    <div class="ax-button-group">
+                        <div class="left">
+                            <h2><i class="cqc-list"></i>
+                                권한그룹 설정 </h2>
+                        </div>
+                        <div class="right">
+
+                        </div>
                     </div>
                 </div>
 
-                <ax:form name="formView01">
-                    <ax:tbl clazz="ax-form-tbl" minWidth="500px">
-                        <ax:tr>
-                            <ax:td label="프로그램코드" width="100%">
-                                <input type="text" data-ax-path="progCd" class="form-control" value="" readonly="readonly"/>
-                            </ax:td>
-                        </ax:tr>
-                        <ax:tr>
-                            <ax:td label="프로그램 명" width="100%">
-                                <input type="hidden" data-ax-path="menuId" class="form-control" value=""/>
-                                <input type="hidden" data-ax-path="progNm" class="form-control" value=""/>
-                                <div class="form-group">
-                                    <div data-ax5combobox="progCd" data-ax5combobox-config='{size: "", editable: false, multiple: false}'></div>
-                                </div>
-                            </ax:td>
-                        </ax:tr>
-                    </ax:tbl>
-                </ax:form>
-
-                <div class="H20"></div>
-                <!-- 목록 -->
-                <div class="ax-button-group">
-                    <div class="left">
-                        <h2><i class="cqc-list"></i>
-                            권한그룹 설정 </h2>
-                    </div>
-                    <div class="right">
-
-                    </div>
-                </div>
-                <div data-ax5grid="grid-view-01" style="height: 300px;"></div>
-
-
+                <div data-ax5grid="grid-view-01" data-fit-height-content="form-view-01" style="height: 300px;"></div>
 
 
             </ax:split-panel>
