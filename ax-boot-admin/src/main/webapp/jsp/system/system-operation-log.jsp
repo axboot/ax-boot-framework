@@ -1,157 +1,16 @@
 <%@ page contentType="text/html; charset=UTF-8" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="ax" tagdir="/WEB-INF/tags" %>
-<ax:layout name="base.jsp">
 
-    <ax:div name="css">
-        <link rel="stylesheet" type="text/css" href="<c:url value='/assets/plugins/CodeMirror/lib/codemirror.css' />"/>
-        <link rel="stylesheet" type="text/css"
-              href="<c:url value='/assets/plugins/CodeMirror/addon/fold/foldgutter.css' />"/>
-        <link rel="stylesheet" type="text/css" href="<c:url value='/assets/plugins/CodeMirror/addon/lint/lint.css' />"/>
-        <link rel="stylesheet" type="text/css" href="<c:url value='/assets/plugins/CodeMirror/theme/eclipse.css' />"/>
 
-        <style>
-            .CodeMirror {
-            / / border: 1 px solid #ccc;
-                line-height: 1.7em;
-                font-size: 12px;
-            }
-        </style>
-    </ax:div>
-    <ax:div name="js">
-        <script src="<c:url value='/assets/plugins/CodeMirror/lib/codemirror.js' />"></script>
-        <script src="<c:url value='/assets/plugins/CodeMirror/addon/mode/loadmode.js' />"></script>
-        <script src="<c:url value='/assets/plugins/CodeMirror/lib/util/formatting.js' />"></script>
-        <script src="<c:url value='/assets/plugins/CodeMirror/mode/javascript/javascript.js' />"></script>
-        <script src="<c:url value='/assets/plugins/CodeMirror/mode/xml/xml.js' />"></script>
-        <script src="<c:url value='/assets/plugins/CodeMirror/mode/htmlmixed/htmlmixed.js' />"></script>
-        <script src="<c:url value='/assets/plugins/CodeMirror/mode/clike/clike.js' />"></script>
-        <script src="<c:url value='/assets/plugins/CodeMirror/addon/fold/foldcode.js' />"></script>
-        <script src="<c:url value='/assets/plugins/CodeMirror/addon/fold/foldgutter.js' />"></script>
-        <script src="<c:url value='/assets/plugins/CodeMirror/addon/fold/brace-fold.js' />"></script>
-        <script src="<c:url value='/assets/plugins/CodeMirror/addon/fold/xml-fold.js' />"></script>
-        <script src="<c:url value='/assets/plugins/CodeMirror/addon/fold/markdown-fold.js' />"></script>
-        <script src="<c:url value='/assets/plugins/CodeMirror/addon/fold/comment-fold.js' />"></script>
-        <script src="<c:url value='/assets/plugins/CodeMirror/addon/selection/active-line.js' />"></script>
-        <script src="<c:url value='/assets/plugins/CodeMirror/addon/edit/closebrackets.js' />"></script>
-        <script src="<c:url value='/assets/plugins/CodeMirror/addon/edit/closetag.js' />"></script>
-    </ax:div>
+<ax:set key="title" value="${pageName}"/>
+<ax:set key="page_desc" value="${PAGE_REMARK}"/>
+<ax:set key="page_auto_height" value="true"/>
 
-    <ax:div name="contents">
-        <ax:row>
-            <ax:col size="12">
-                <ax:custom customId="page-button"/>
-                <div class="ax-search" id="page-search-box"></div>
-
-                <ax:custom customId="table">
-                    <ax:custom customId="tr">
-                        <ax:custom customId="td">
-
-                            <div class="ax-button-group">
-                                <div class="left">
-                                    <h2><i class="axi axi-table"></i> 에러목록</h2>
-                                </div>
-                                <div class="right">
-                                    <button type="button" class="AXButton" id="ax-grid1-btn-del"><i
-                                            class="axi axi-minus-circle"></i> 삭제
-                                    </button>
-                                    <button type="button" class="AXButton" id="ax-grid1-btn-del-all"><i
-                                            class="axi axi-delete2"></i> 전체삭제
-                                    </button>
-                                </div>
-                                <div class="ax-clear"></div>
-                            </div>
-                            <%-- %%%%%%%%%% 그리드 %%%%%%%%%% --%>
-                            <div class="ax-grid" id="page-grid-box" style="min-height: 250px; max-height:250px;"></div>
-                        </ax:custom>
-                    </ax:custom>
-                    <ax:custom customId="tr">
-                        <ax:custom customId="td">
-
-                            <div class="ax-button-group">
-                                <div class="left">
-                                    <h2><i class="axi axi-table"></i> Stack Trace</h2>
-                                </div>
-                                <div class="right" id="error-date" style="color:#ff3300;font-weight:bold;">
-                                    <!--<button type="button" class="AXButton" id="ax-form-btn-new"><i class="axi axi-plus-circle"></i> 신규</button>-->
-                                </div>
-                                <div class="ax-clear"></div>
-                            </div>
-
-                            <div id="trace-target" class="AXTextarea" style="padding:0px;overflow: hidden;"></div>
-
-                            <div class="ax-button-group">
-                                <div class="left">
-                                    <h2><i class="axi axi-table"></i> 에러 메시지</h2>
-                                </div>
-                                <div class="right">
-                                    <!--<button type="button" class="AXButton" id="ax-form-btn-new"><i class="axi axi-plus-circle"></i> 신규</button>-->
-                                </div>
-                                <div class="ax-clear"></div>
-                            </div>
-
-							<textarea class="AXTextarea" id="message-target"
-                                      style="width:100%;box-sizing: border-box;height:50px;font-size: 12px;line-height: 1.6;font-family:'Monaco', 'Consolas';padding:10px;"></textarea>
-
-                            <div class="ax-button-group">
-                                <div class="left">
-                                    <h2><i class="axi axi-table"></i> Request 파라미터 정보</h2>
-                                </div>
-                                <div class="right">
-                                    <!--<button type="button" class="AXButton" id="ax-form-btn-new"><i class="axi axi-plus-circle"></i> 신규</button>-->
-                                </div>
-                                <div class="ax-clear"></div>
-                            </div>
-
-							<textarea class="AXTextarea" id="request-parameter-map"
-                                      style="width:100%;box-sizing: border-box;height:150px;font-size: 12px;line-height: 1.3;font-family:'Monaco', 'Consolas';padding:10px;"></textarea>
-
-                            <div class="ax-button-group">
-                                <div class="left">
-                                    <h2><i class="axi axi-table"></i> Request 헤더 정보</h2>
-                                </div>
-                                <div class="right">
-                                    <!--<button type="button" class="AXButton" id="ax-form-btn-new"><i class="axi axi-plus-circle"></i> 신규</button>-->
-                                </div>
-                                <div class="ax-clear"></div>
-                            </div>
-
-							<textarea class="AXTextarea" id="request-header-map"
-                                      style="width:100%;box-sizing: border-box;height:150px;font-size: 12px;line-height: 1.3;font-family:'Monaco', 'Consolas';padding:10px;"></textarea>
-
-                            <div class="ax-button-group">
-                                <div class="left">
-                                    <h2><i class="axi axi-table"></i> Request 사용자 정보</h2>
-                                </div>
-                                <div class="right">
-                                    <!--<button type="button" class="AXButton" id="ax-form-btn-new"><i class="axi axi-plus-circle"></i> 신규</button>-->
-                                </div>
-                                <div class="ax-clear"></div>
-                            </div>
-
-							<textarea class="AXTextarea" id="request-user-info"
-                                      style="width:100%;box-sizing: border-box;height:150px;font-size: 12px;line-height: 1.3;font-family:'Monaco', 'Consolas';padding:10px;"></textarea>
-
-                            <div id="test-el"></div>
-                        </ax:custom>
-                    </ax:custom>
-                </ax:custom>
-
-            </ax:col>
-        </ax:row>
-        <div class="H10"></div>
-    </ax:div>
-    <ax:div name="scripts">
+<ax:layout name="base">
+    <jsp:attribute name="script">
         <script type="text/javascript">
-            var RESIZE_ELEMENTS = [
-                {id: "page-grid-box", adjust: -55},
-                {
-                    id: "trace-target", adjust: function () {
-                    return -200;
-                }
-                }
-            ];
-            var fnObj = {
+            var __fnObj = {
                 CODES: {
                     "etc3": [
                         {CD: '1', NM: "코드"},
@@ -203,7 +62,7 @@
                     });
                 },
                 search: {
-                    target: new AXSearch(),
+                    //target: new AXSearch(),
                     bind: function () {
                         var _this = this;
                         this.target.setConfig({
@@ -238,78 +97,9 @@
                     }
                 },
 
-                progress: new AXProgress(),
-                del: function () {
-
-                    var _this = this;
-                    var delete_queue = [];
-                    $.each(fnObj.grid.target.getCheckedList(0), function () {
-                        delete_queue.push(this.id);
-                    });
-                    if (delete_queue.length == 0) {
-                        alert("삭제할 목록을 선택해주세요");
-                        return;
-                    }
-
-                    if (!confirm("정말 삭제하시겠습니까?")) return;
-
-                    this.progress.setConfig({
-                        theme: "AXlineProgress",
-                        totalCount: delete_queue.length,
-                        width: 400,
-                        top: 100,
-                        title: "삭제중입니다",
-                        duration: 50
-                    });
-
-                    mask.open();
-
-                    this.progress.start(function () {
-                        if (this.isEnd) {
-                            _this.progress.close();
-                            mask.close();
-                            toast.push("삭제 처리 되었습니다.");
-                            fnObj.search.submit();
-                        }
-                        else {
-                            var pars;
-                            if (pars = delete_queue.shift()) {
-                                app.ajax({
-                                    type: "DELETE", url: "/api/v1/errorLogs/" + pars, data: ""
-                                }, function (res) {
-                                    if (res.error) {
-                                        console.log(res.error);
-                                    }
-                                    else {
-                                        _this.progress.update();
-                                    }
-                                });
-                            }
-                            else {
-                                _this.progress.update();
-                            }
-                        }
-                    });
-                },
-                delAll: function () {
-                    if (!confirm("정말 삭제하시겠습니까?")) return;
-                    app.ajax({
-                                type: "DELETE", url: "/api/v1/errorLogs/events/all", data: ""
-                            },
-                            function (res) {
-                                if (res.error) {
-                                    console.log(res.error);
-                                }
-                                else {
-                                    toast.push("삭제 처리 되었습니다.");
-                                    fnObj.search.submit();
-                                }
-                            });
-                },
-
                 grid: {
                     pageNo: 1,
-                    target: new AXGrid(),
+                    //target: new AXGrid(),
                     bind: function () {
                         var target = this.target, _this = this;
                         target.setConfig({
@@ -383,7 +173,7 @@
                  */
                 form: {
                     target: $('#form-info'),
-                    validate_target: new AXValidator(),
+                    //validate_target: new AXValidator(),
                     bind: function () {
                         var _this = this
                     },
@@ -468,5 +258,101 @@
                 }
             };
         </script>
-    </ax:div>
+        <script type="text/javascript" src="<c:url value='/assets/js/view/system/system-operation-log.js' />"></script>
+    </jsp:attribute>
+    <jsp:body>
+
+        <ax:page-buttons></ax:page-buttons>
+
+        <div role="page-header">
+            <ax:form name="searchView0">
+                <ax:tbl clazz="ax-search-tbl" minWidth="500px">
+                    <ax:tr>
+                        <ax:td label='<lang data-id="검색"></lang>' width="300px">
+                            <input type="text" name="filter" id="filter" class="form-control" value="" placeholder="검색어를 입력하세요."/>
+                        </ax:td>
+                    </ax:tr>
+                </ax:tbl>
+            </ax:form>
+            <div class="H10"></div>
+        </div>
+
+
+        <ax:split-layout name="ax1" oriental="vertical">
+            <ax:split-panel height="300" style="padding-bottom: 10px;">
+                <div class="ax-button-group" data-fit-height-aside="grid-view-01">
+                    <div class="left">
+                        <h2><i class="cqc-list"></i>
+                            에러목록
+                        </h2>
+                    </div>
+                    <div class="right">
+                        <button type="button" class="btn btn-default" data-grid-view-01-btn="remove"><i class="cqc-circle-with-minus"></i> 삭제</button>
+                        <button type="button" class="btn btn-default" data-grid-view-01-btn="removeAll"><i class="cqc-circle-with-minus"></i> 전체삭제</button>
+                    </div>
+                </div>
+                <div data-ax5grid="grid-view-01" data-fit-height-content="grid-view-01" style="height: 300px;"></div>
+            </ax:split-panel>
+            <ax:splitter></ax:splitter>
+            <ax:split-panel height="*" style="padding-top: 10px;" scroll="scroll">
+
+                <div class="H20"></div>
+
+                <ax:form name="formView01">
+                    <div class="ax-button-group">
+                        <div class="left">
+                            <h2><i class="cqc-classic-computer"></i> Stack Trace</h2>
+                        </div>
+                    </div>
+
+                    <div class="form-control" data-ax-path="trace" style="height:auto;"></div>
+
+                    <div class="ax-button-group">
+                        <div class="left">
+                            <h3><i class="cqc-info-with-circle"></i> 에러 메시지</h3>
+                        </div>
+                    </div>
+
+                    <textarea class="form-control" data-ax-path="message"
+                              style="width:100%;box-sizing: border-box;height:50px;font-size: 12px;line-height: 1.6;font-family:'Monaco', 'Consolas';padding:10px;"></textarea>
+
+                    <div class="ax-button-group">
+                        <div class="left">
+                            <h3><i class="cqc-info-with-circle"></i> Request 파라미터 정보</h3>
+                        </div>
+                    </div>
+
+                    <textarea class="form-control" data-ax-path="parameterMap"
+                              style="width:100%;box-sizing: border-box;height:150px;font-size: 12px;line-height: 1.3;font-family:'Monaco', 'Consolas';padding:10px;"></textarea>
+
+                    <div class="ax-button-group">
+                        <div class="left">
+                            <h2><i class="cqc-info-with-circle"></i> Request 헤더 정보</h2>
+                        </div>
+                        <div class="right">
+                            <!--<button type="button" class="AXButton" id="ax-form-btn-new"><i class="axi axi-plus-circle"></i> 신규</button>-->
+                        </div>
+                    </div>
+
+                    <textarea class="form-control" data-ax-path="headerMap"
+                              style="width:100%;box-sizing: border-box;height:150px;font-size: 12px;line-height: 1.3;font-family:'Monaco', 'Consolas';padding:10px;"></textarea>
+
+                    <div class="ax-button-group">
+                        <div class="left">
+                            <h2><i class="cqc-info-with-circle"></i> Request 사용자 정보</h2>
+                        </div>
+                    </div>
+
+                    <textarea class="form-control" data-ax-path="userInfo"
+                              style="width:100%;box-sizing: border-box;height:150px;font-size: 12px;line-height: 1.3;font-family:'Monaco', 'Consolas';padding:10px;"></textarea>
+                </ax:form>
+
+
+            </ax:split-panel>
+        </ax:split-layout>
+
+
+
+
+    </jsp:body>
 </ax:layout>
