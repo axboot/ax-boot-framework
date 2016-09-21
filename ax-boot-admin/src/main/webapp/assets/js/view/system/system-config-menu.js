@@ -434,7 +434,6 @@ fnObj.treeView01 = axboot.viewExtend(axboot.treeView, {
         return true;
     },
     updateNode: function (data) {
-        console.log(data);
         var treeNodes = this.target.getSelectedNodes();
         if (treeNodes[0]) {
             treeNodes[0].progCd = data.progCd;
@@ -481,12 +480,14 @@ fnObj.formView01 = axboot.viewExtend(axboot.formView, {
                     ACTIONS.dispatch(ACTIONS.MENU_AUTH_CLEAR);
                     ACTIONS.dispatch(ACTIONS.SELECT_PROG, this.value[0]);
                 } else {
-                    _this.model.set("progCd", "");
-                    _this.model.set("progNm", "");
-                    _this.combobox.ax5combobox("close");
+                    if(_this.model.get("progCd")) {
+                        _this.model.set("progCd", "");
+                        _this.model.set("progNm", "");
+                        _this.combobox.ax5combobox("close");
 
-                    ACTIONS.dispatch(ACTIONS.SELECT_PROG, "");
-                    ACTIONS.dispatch(ACTIONS.MENU_AUTH_CLEAR);
+                        ACTIONS.dispatch(ACTIONS.SELECT_PROG, "");
+                        ACTIONS.dispatch(ACTIONS.MENU_AUTH_CLEAR);
+                    }
                 }
             }
         });
@@ -518,7 +519,7 @@ fnObj.formView01 = axboot.viewExtend(axboot.formView, {
             ACTIONS.dispatch(ACTIONS.SEARCH_AUTH, {menuId: data.menuId});
         }
 
-        this.combobox.ax5combobox("blur");
+        //this.combobox.ax5combobox("blur");
         this.model.setModel(_data);
         this.modelFormatter.formatting(); // 입력된 값을 포메팅 된 값으로 변경
     },

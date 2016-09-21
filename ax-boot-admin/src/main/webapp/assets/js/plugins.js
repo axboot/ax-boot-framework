@@ -28173,7 +28173,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
 
     UI.addClass({
         className: "combobox",
-        version: "0.3.7"
+        version: "0.3.8"
     }, function () {
         /**
          * @class ax5combobox
@@ -28368,7 +28368,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
                             gindex: target.getAttribute("data-option-group-index"),
                             index: target.getAttribute("data-option-index")
                         }
-                    }, undefined, "internal");
+                    }, undefined, true);
                     U.selectRange(item.$displayLabel, "end"); // 포커스 end || selectAll
                     if (!item.multiple) {
                         this.close();
@@ -28398,7 +28398,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
                         }
                     }
 
-                    setOptionSelect.call(this, item.id, values, true); // set Value
+                    setOptionSelect.call(this, item.id, values, true, true); // set Value
                     focusLabel.call(this, this.activecomboboxQueueIndex);
                     if (!item.multiple) this.close();
                 }
@@ -28494,8 +28494,6 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
                     i = -1,
                     l = this.queue[queIdx].indexedOptions.length - 1,
                     n;
-
-                console.log(searchWord);
 
                 if (searchWord != "") {
                     var regExp = /[\{\}\[\]\/?.,;:|\)*~`!^\-_+<>@\#$%&\\\=\(\'\"]/gi;
@@ -29024,21 +29022,24 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
 
                         for (var i = 0, l = childNodes.length; i < l; i++) {
                             var node = childNodes[i];
-                            if (node.nodeType in COMBOBOX.util.nodeTypeProcessor) {
-                                var value = COMBOBOX.util.nodeTypeProcessor[node.nodeType].call(this, queIdx, node, false);
-                                if (typeof value === "undefined") {
-                                    //
-                                } else if (U.isString(value)) {
-                                        //editingText = value;
-                                        //values.push(value);
-                                    } else {
-                                            values.push(value);
-                                        }
+                            if (node.nodeType == 1) {
+                                if (node.nodeType in COMBOBOX.util.nodeTypeProcessor) {
+
+                                    var value = COMBOBOX.util.nodeTypeProcessor[node.nodeType].call(this, queIdx, node, false);
+                                    if (typeof value === "undefined") {
+                                        //
+                                    } else if (U.isString(value)) {
+                                            //editingText = value;
+                                            //values.push(value);
+                                        } else {
+                                                values.push(value);
+                                            }
+                                }
                             }
                         }
 
-                        //블러 이벤트명 작성중인 텍스트를 제외
-                        setOptionSelect.call(this, item.id, values, undefined, { noStateChange: true }); // set Value
+                        setOptionSelect.call(this, item.id, values, undefined, false); // set Value
+                        //if(item.selected.length != values.length){}
                     };
 
                     var comboboxEvent = {
@@ -29420,7 +29421,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
                 } else if (U.isString(_value) || U.isNumber(_value)) {
                     setOptionSelect.call(this, queIdx, { value: _value }, _selected || true, { noStateChange: true });
                 }
-                blurLabel.call(this, queIdx);
+                //blurLabel.call(this, queIdx);
 
                 return this;
             };
@@ -29445,7 +29446,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
                 }
                 clearSelected.call(this, queIdx);
                 setOptionSelect.call(this, queIdx, _text, true, { noStateChange: true });
-                blurLabel.call(this, queIdx);
+                //blurLabel.call(this, queIdx);
 
                 return this;
             };

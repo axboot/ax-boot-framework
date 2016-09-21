@@ -296,8 +296,6 @@
             <ax:splitter></ax:splitter>
             <ax:split-panel height="*" style="padding-top: 10px;" scroll="scroll">
 
-                <div class="H20"></div>
-
                 <ax:form name="formView01">
                     <div class="ax-button-group">
                         <div class="left">

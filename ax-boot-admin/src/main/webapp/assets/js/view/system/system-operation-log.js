@@ -240,7 +240,9 @@ fnObj.gridView01 = axboot.viewExtend(axboot.gridView, {
  */
 fnObj.formView01 = axboot.viewExtend(axboot.formView, {
     getDefaultData: function () {
-        return {};
+        return {
+            trace: "에러목록을 선택하세요."
+        };
     },
     initView: function () {
         this.target = $("#formView01");
