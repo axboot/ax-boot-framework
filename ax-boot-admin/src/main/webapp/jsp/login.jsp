@@ -73,7 +73,7 @@
     <jsp:body>
         <ax:flex-layout valign="middle" align="center" style="width:100%;height:100%;">
             <div>
-                <img src="/assets/images/login-logo.png" class="img-logo">
+                <img src="${pageContext.request.contextPath}/assets/images/login-logo.png" class="img-logo">
             </div>
 
             <div class="panel">

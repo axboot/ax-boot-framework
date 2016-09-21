@@ -39,7 +39,7 @@
                             // do something
 
                             alert("초기화가 완료 되었습니다");
-                            location.href = "/";
+                            location.href = CONTEXT_PATH + "/";
                         });
                     });
                 }
