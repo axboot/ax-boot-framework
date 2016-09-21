@@ -1,6 +1,7 @@
 package com.chequer.axboot.core.config;
 
 import ch.qos.logback.classic.Level;
+import com.chequer.axboot.core.code.GlobalConstants;
 import com.chequer.axboot.core.code.Types;
 import com.chequer.axboot.core.context.AppContextManager;
 import com.chequer.axboot.core.mybatis.typehandler.*;
@@ -262,7 +263,7 @@ public class AXBootContextConfig implements ApplicationContextAware {
                         vendorAdapter.setDatabasePlatform(Class.forName("org.hibernate.dialect." + dialect).getName());
                     } catch (ClassNotFoundException e) {
                         try {
-                            vendorAdapter.setDatabasePlatform(Class.forName(String.format("%s.db.dialect.%s", "com.chequer.pos.core", dialect)).getName());
+                            vendorAdapter.setDatabasePlatform(Class.forName(String.format("%s.db.dialect.%s", GlobalConstants.CORE_PACKAGE, dialect)).getName());
                         } catch (ClassNotFoundException e1) {
                             e1.printStackTrace();
                         }

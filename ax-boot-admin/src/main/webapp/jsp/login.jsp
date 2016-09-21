@@ -1,15 +1,23 @@
+<%@ page import="com.chequer.axboot.core.context.AppContextManager" %>
+<%@ page import="com.chequer.axboot.core.db.schema.init.DatabaseInitService" %>
 <%@ page import="com.chequer.axboot.core.utils.SessionUtils" %>
 <%@ page language="java" contentType="text/html; charset=utf-8" pageEncoding="utf-8" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="ax" tagdir="/WEB-INF/tags" %>
 <%
+    boolean initialized = AppContextManager.getBean(DatabaseInitService.class).initialized();
+
     String lastNavigatedPage = null;
 
     if (SessionUtils.isLoggedIn()) {
         lastNavigatedPage = "/jsp/main.jsp";
     }
 
-    request.setAttribute("redirect", lastNavigatedPage);
+    if (initialized) {
+        request.setAttribute("redirect", lastNavigatedPage);
+    } else {
+        request.setAttribute("redirect", "/setup");
+    }
 %>
 
 <c:if test="${redirect!=null}">
@@ -75,12 +83,12 @@
 
                         <div class="form-group">
                             <label for="userCd"><i class="cqc-new-message"></i> ID</label>
-                            <input type="text" name="userCd" id="userCd" value="system" class="form-control ime-false" placeholder="" />
+                            <input type="text" name="userCd" id="userCd" value="system" class="form-control ime-false" placeholder=""/>
                         </div>
 
                         <div class="form-group">
                             <label for="password"><i class="cqc-key"></i> Password</label>
-                            <input type="password" name="userPs" id="userPs" value="1234" class="form-control ime-false" placeholder="" />
+                            <input type="password" name="userPs" id="userPs" value="1234" class="form-control ime-false" placeholder=""/>
                         </div>
 
                         <input type="hidden"

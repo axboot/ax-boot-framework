@@ -1,12 +1,17 @@
 package com.chequer.axboot.core.domain.user.auth.menu;
 
+import com.chequer.axboot.core.annotations.ColumnPosition;
 import com.chequer.axboot.core.annotations.Comment;
 import com.chequer.axboot.core.code.Types;
+import com.chequer.axboot.core.db.type.LabelEnumType;
+import com.chequer.axboot.core.db.type.MySQLJSONUserType;
 import com.chequer.axboot.core.domain.BaseJpaModel;
 import com.chequer.axboot.core.domain.program.Program;
 import lombok.*;
 import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.DynamicUpdate;
+import org.hibernate.annotations.TypeDef;
+import org.hibernate.annotations.TypeDefs;
 
 import javax.persistence.*;
 import java.io.Serializable;
@@ -20,53 +25,68 @@ import java.io.Serializable;
 @EqualsAndHashCode(callSuper = true)
 @Table(name = "AUTH_GROUP_MAP_M")
 @Comment(value = "권한그룹 맵")
-@IdClass(AuthGroupMenu.AuthGroupMenuV2Id.class)
-public class AuthGroupMenu extends BaseJpaModel<AuthGroupMenu.AuthGroupMenuV2Id> {
+@IdClass(AuthGroupMenu.AuthGroupMenuId.class)
+@TypeDefs({
+        @TypeDef(name = "jsonNode", typeClass = MySQLJSONUserType.class, parameters = {@org.hibernate.annotations.Parameter(name = MySQLJSONUserType.CLASS, value = "com.fasterxml.jackson.databind.JsonNode")}),
+        @TypeDef(name = "labelEnum", typeClass = LabelEnumType.class, parameters = {@org.hibernate.annotations.Parameter(name = MySQLJSONUserType.CLASS, value = "com.chequer.axboot.core.db.type.LabelEnumType")})
+})
+public class AuthGroupMenu extends BaseJpaModel<AuthGroupMenu.AuthGroupMenuId> {
 
     @Id
     @Column(name = "GRP_AUTH_CD", length = 100, nullable = false)
     @Comment(value = "권한그룹코드")
+    @ColumnPosition(1)
     private String grpAuthCd;
 
     @Id
     @Column(name = "MENU_ID", length = 50, nullable = false)
     @Comment(value = "메뉴 ID")
+    @ColumnPosition(2)
     private Long menuId;
 
     @Column(name = "SCH_AH", length = 1)
     @Comment(value = "조회권한")
+    @ColumnPosition(3)
     private String schAh = Types.Used.NO.getLabel();
 
     @Column(name = "SAV_AH", length = 1)
     @Comment(value = "저장권한")
+    @ColumnPosition(4)
     private String savAh = Types.Used.NO.getLabel();
 
     @Column(name = "EXL_AH", length = 1)
     @Comment(value = "엑셀권한")
+    @ColumnPosition(5)
     private String exlAh = Types.Used.NO.getLabel();
 
     @Column(name = "DEL_AH", length = 1)
     @Comment(value = "삭제권한")
+    @ColumnPosition(6)
     private String delAh = Types.Used.NO.getLabel();
 
     @Column(name = "FN1_AH", length = 1)
     @Comment(value = "기능키1권한")
+    @ColumnPosition(7)
     private String fn1Ah = Types.Used.NO.getLabel();
 
     @Column(name = "FN2_AH", length = 1)
     @Comment(value = "기능키2권한")
+    @ColumnPosition(8)
     private String fn2Ah = Types.Used.NO.getLabel();
 
     @Column(name = "FN3_AH", length = 1)
     @Comment(value = "기능키3권한")
+    @ColumnPosition(9)
     private String fn3Ah = Types.Used.NO.getLabel();
 
     @Column(name = "FN4_AH", length = 1)
     @Comment(value = "기능키4권한")
+    @ColumnPosition(10)
     private String fn4Ah = Types.Used.NO.getLabel();
 
     @Column(name = "FN5_AH", length = 1)
     @Comment(value = "기능키5권한")
+    @ColumnPosition(11)
     private String fn5Ah = Types.Used.NO.getLabel();
 
     @Transient
@@ -114,21 +134,36 @@ public class AuthGroupMenu extends BaseJpaModel<AuthGroupMenu.AuthGroupMenuV2Id>
     }
 
     @Override
-    public AuthGroupMenuV2Id getId() {
-        return AuthGroupMenuV2Id.of(grpAuthCd, menuId);
+    public AuthGroupMenuId getId() {
+        return AuthGroupMenuId.of(grpAuthCd, menuId);
     }
 
     @Embeddable
     @Data
     @NoArgsConstructor
     @RequiredArgsConstructor(staticName = "of")
-    public static class AuthGroupMenuV2Id implements Serializable {
+    public static class AuthGroupMenuId implements Serializable {
 
         @NonNull
         private String grpAuthCd;
 
         @NonNull
         private Long menuId;
+    }
 
+    public static AuthGroupMenu of(String grpAuthCd, Long menuId, String schAh, String savAh, String exlAh, String delAh, String fn1Ah, String fn2Ah, String fn3Ah, String fn4Ah, String fn5Ah) {
+        AuthGroupMenu authGroupMenu = new AuthGroupMenu();
+        authGroupMenu.setGrpAuthCd(grpAuthCd);
+        authGroupMenu.setMenuId(menuId);
+        authGroupMenu.setSchAh(schAh);
+        authGroupMenu.setSavAh(savAh);
+        authGroupMenu.setExlAh(exlAh);
+        authGroupMenu.setDelAh(delAh);
+        authGroupMenu.setFn1Ah(fn1Ah);
+        authGroupMenu.setFn2Ah(fn2Ah);
+        authGroupMenu.setFn3Ah(fn3Ah);
+        authGroupMenu.setFn4Ah(fn4Ah);
+        authGroupMenu.setFn5Ah(fn5Ah);
+        return authGroupMenu;
     }
 }

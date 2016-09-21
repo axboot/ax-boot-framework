@@ -1,5 +1,6 @@
 package com.chequer.axboot.core.domain.program.menu;
 
+import com.chequer.axboot.core.annotations.ColumnPosition;
 import com.chequer.axboot.core.annotations.Comment;
 import com.chequer.axboot.core.domain.BaseJpaModel;
 import com.chequer.axboot.core.domain.program.Program;
@@ -31,30 +32,37 @@ public class Menu extends BaseJpaModel<Long> implements Cloneable {
     @Column(name = "MENU_ID", precision = 20, nullable = false)
     @Comment(value = "ID")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @ColumnPosition(1)
     private Long menuId;
 
     @Column(name = "MENU_GRP_CD", length = 100)
     @Comment(value = "메뉴 그룹코드")
+    @ColumnPosition(2)
     private String menuGrpCd;
 
     @Column(name = "MENU_NM", length = 100)
     @Comment(value = "메뉴명")
+    @ColumnPosition(3)
     private String menuNm;
 
     @Column(name = "PARENT_ID", precision = 19)
     @Comment(value = "부모 ID")
+    @ColumnPosition(4)
     private Long parentId;
 
     @Column(name = "LEVEL", precision = 10)
     @Comment(value = "레벨")
+    @ColumnPosition(5)
     private Integer level;
 
     @Column(name = "SORT", precision = 10)
     @Comment(value = "정렬")
+    @ColumnPosition(6)
     private Integer sort;
 
     @Column(name = "PROG_CD", length = 50)
     @Comment(value = "프로그램 코드")
+    @ColumnPosition(7)
     private String progCd;
 
     @Transient
@@ -100,5 +108,17 @@ public class Menu extends BaseJpaModel<Long> implements Cloneable {
             // ignore
         }
         return null;
+    }
+
+    public static Menu of(Long id, String menuGrpCd, String menuNm, Long parentId, int level, int sort, String progCd) {
+        Menu menu = new Menu();
+        menu.setMenuId(id);
+        menu.setMenuGrpCd(menuGrpCd);
+        menu.setMenuNm(menuNm);
+        menu.setParentId(parentId);
+        menu.setLevel(level);
+        menu.setSort(sort);
+        menu.setProgCd(progCd);
+        return menu;
     }
 }

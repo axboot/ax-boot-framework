@@ -1,5 +1,6 @@
 package com.chequer.axboot.core.domain.user.role;
 
+import com.chequer.axboot.core.annotations.ColumnPosition;
 import com.chequer.axboot.core.annotations.Comment;
 import com.chequer.axboot.core.domain.BaseJpaModel;
 import lombok.EqualsAndHashCode;
@@ -23,19 +24,22 @@ import javax.persistence.*;
 @Alias("userRole")
 public class UserRole extends BaseJpaModel<Long> {
 
-	@Id
-	@Column(name = "ID", precision = 19, nullable = false)
-	@Comment(value = "ID")
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private Long id;
+    @Id
+    @Column(name = "ID", precision = 19, nullable = false)
+    @Comment(value = "ID")
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @ColumnPosition(1)
+    private Long id;
 
-	@Column(name = "USER_CD", length = 100, nullable = false)
-	@Comment(value = "사용자 코드")
-	private String userCd;
+    @Column(name = "USER_CD", length = 100, nullable = false)
+    @Comment(value = "사용자 코드")
+    @ColumnPosition(2)
+    private String userCd;
 
-	@Column(name = "ROLE_CD", length = 100, nullable = false)
-	@Comment(value = "롤 코드")
-	private String roleCd;
+    @Column(name = "ROLE_CD", length = 100, nullable = false)
+    @Comment(value = "롤 코드")
+    @ColumnPosition(3)
+    private String roleCd;
 
     @Override
     public Long getId() {

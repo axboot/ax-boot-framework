@@ -1,5 +1,6 @@
 package com.chequer.axboot.core.domain.user.auth;
 
+import com.chequer.axboot.core.annotations.ColumnPosition;
 import com.chequer.axboot.core.annotations.Comment;
 import com.chequer.axboot.core.domain.BaseJpaModel;
 import lombok.Getter;
@@ -21,12 +22,15 @@ public class UserAuth extends BaseJpaModel<Long> {
     @Column(name = "ID", precision = 19, nullable = false)
     @Comment(value = "ID")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @ColumnPosition(1)
     private Long id;
 
     @Column(name = "USER_CD")
+    @ColumnPosition(2)
     private String userCd;
 
     @Column(name = "GRP_AUTH_CD")
+    @ColumnPosition(3)
     private String grpAuthCd;
 
     @Override

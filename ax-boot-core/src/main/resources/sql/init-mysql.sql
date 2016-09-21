@@ -7,7 +7,7 @@
 #
 # Host: 14.63.169.27 (MySQL 5.7.11)
 # Database: axboot_dev
-# Generation Time: 2016-09-19 06:42:52 +0000
+# Generation Time: 2016-09-21 07:34:32 +0000
 # ************************************************************
 
 
@@ -63,6 +63,23 @@ VALUES
 UNLOCK TABLES;
 
 
+# Dump of table CHILD_SAMPLE
+# ------------------------------------------------------------
+
+DROP TABLE IF EXISTS `CHILD_SAMPLE`;
+
+CREATE TABLE `CHILD_SAMPLE` (
+  `SAMPLE_KEY` varchar(100) NOT NULL DEFAULT '',
+  `SAMPLE_PARENT_KEY` varchar(100) DEFAULT NULL,
+  `SAMPLE_VALUE` varchar(500) DEFAULT NULL,
+  `ETC1` varchar(100) DEFAULT NULL,
+  `ETC2` varchar(100) DEFAULT NULL,
+  `ETC3` varchar(100) DEFAULT NULL,
+  PRIMARY KEY (`SAMPLE_KEY`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+
+
 # Dump of table COMMON_CODE_M
 # ------------------------------------------------------------
 
@@ -103,8 +120,8 @@ VALUES
 	('MENU_GROUP','메뉴그룹','SYSTEM_MANAGER','시스템 관리자 그룹',1,NULL,NULL,NULL,NULL,NULL,'N',NULL,'Y','2016-09-18 12:20:29','system','2016-09-18 12:20:29','system'),
 	('MENU_GROUP','메뉴그룹','USER','사용자 그룹',2,NULL,NULL,NULL,NULL,NULL,'N',NULL,'Y','2016-09-18 12:20:29','system','2016-09-18 12:20:29','system'),
 	('USER_ROLE','사용자 롤','API','API 접근 롤',6,NULL,NULL,NULL,NULL,NULL,'N',NULL,'Y','2016-09-18 12:20:29','system','2016-09-18 12:20:29','system'),
-	('USER_ROLE','사용자 롤','ASP_ACCESS','ASP 접근 롤',1,NULL,NULL,NULL,NULL,NULL,'N',NULL,'Y','2016-09-18 12:20:29','system','2016-09-18 12:20:29','system'),
-	('USER_ROLE','사용자 롤','ASP_MANAGER','ASP 관리자 롤',3,NULL,NULL,NULL,NULL,NULL,'N',NULL,'Y','2016-09-18 12:20:29','system','2016-09-18 12:20:29','system'),
+	('USER_ROLE','사용자 롤','ASP_ACCESS','관리시스템 접근 롤',1,NULL,NULL,NULL,NULL,NULL,'N',NULL,'Y','2016-09-18 12:20:29','system','2016-09-18 12:20:29','system'),
+	('USER_ROLE','사용자 롤','ASP_MANAGER','일반괸리자 롤',3,NULL,NULL,NULL,NULL,NULL,'N',NULL,'Y','2016-09-18 12:20:29','system','2016-09-18 12:20:29','system'),
 	('USER_ROLE','사용자 롤','SYSTEM_MANAGER','시스템 관리자 롤',2,NULL,NULL,NULL,NULL,NULL,'N',NULL,'Y','2016-09-18 12:20:29','system','2016-09-18 12:20:29','system'),
 	('USER_STATUS','계정상태','ACCOUNT_LOCK','잠김',2,NULL,NULL,NULL,NULL,NULL,'N',NULL,'Y','2016-09-18 12:20:29','system','2016-09-18 12:20:29','system'),
 	('USER_STATUS','계정상태','NORMAL','활성',1,NULL,NULL,NULL,NULL,NULL,'N',NULL,'Y','2016-09-18 12:20:29','system','2016-09-18 12:20:29','system'),
@@ -186,6 +203,23 @@ VALUES
 
 /*!40000 ALTER TABLE `MENU_M` ENABLE KEYS */;
 UNLOCK TABLES;
+
+
+# Dump of table PARENT_SAMPLE
+# ------------------------------------------------------------
+
+DROP TABLE IF EXISTS `PARENT_SAMPLE`;
+
+CREATE TABLE `PARENT_SAMPLE` (
+  `SAMPLE_KEY` varchar(100) NOT NULL DEFAULT '',
+  `SAMPLE_VALUE` varchar(500) DEFAULT NULL,
+  `ETC1` varchar(100) DEFAULT NULL,
+  `ETC2` varchar(100) DEFAULT NULL,
+  `ETC3` varchar(100) DEFAULT NULL,
+  `ETC4` varchar(100) DEFAULT '',
+  PRIMARY KEY (`SAMPLE_KEY`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
 
 
 # Dump of table PROG_M
@@ -279,7 +313,7 @@ UNLOCK TABLES;
 DROP TABLE IF EXISTS `USER_M`;
 
 CREATE TABLE `USER_M` (
-  `USER_CD` varchar(100) CHARACTER SET utf8 COLLATE utf8_bin NOT NULL DEFAULT '' COMMENT '사용자코드',
+  `USER_CD` varchar(100) NOT NULL DEFAULT '' COMMENT '사용자코드',
   `USER_NM` varchar(30) NOT NULL COMMENT '사용자명',
   `USER_PS` varchar(128) NOT NULL COMMENT '비밀번호',
   `EMAIL` varchar(50) DEFAULT NULL COMMENT '이메일',
@@ -298,14 +332,14 @@ CREATE TABLE `USER_M` (
   `UPDATED_AT` datetime DEFAULT NULL COMMENT '수정일',
   `UPDATED_BY` varchar(100) DEFAULT NULL COMMENT '수정자',
   PRIMARY KEY (`USER_CD`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='사용자';
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 LOCK TABLES `USER_M` WRITE;
 /*!40000 ALTER TABLE `USER_M` DISABLE KEYS */;
 
 INSERT INTO `USER_M` (`USER_CD`, `USER_NM`, `USER_PS`, `EMAIL`, `HP_NO`, `REMARK`, `LAST_LOGIN_DATE`, `PASSWORD_UPDATE_DATE`, `USER_STATUS`, `IP`, `LOCALE`, `MENU_GRP_CD`, `USE_YN`, `DEL_YN`, `CREATED_AT`, `CREATED_BY`, `UPDATED_AT`, `UPDATED_BY`)
 VALUES
-	(X'73797374656D','시스템관리자','$2a$11$ruVkoieCPghNOA6mtKzWReZ5Ee66hbeqwvlBT1z.W4VMYckBld6uC',NULL,NULL,NULL,'2016-09-19 15:39:28','2016-01-26 11:50:41','NORMAL','0:0:0:0:0:0:0:1','ko_KR','SYSTEM_MANAGER','Y','N','2016-09-18 12:20:32','system','2016-09-19 15:39:28','system');
+	('system','시스템관리자','$2a$11$ruVkoieCPghNOA6mtKzWReZ5Ee66hbeqwvlBT1z.W4VMYckBld6uC',NULL,NULL,NULL,'2016-09-19 15:39:28','2016-01-26 11:50:41','NORMAL','0:0:0:0:0:0:0:1','ko_KR','SYSTEM_MANAGER','Y','N','2016-09-18 12:20:32','system','2016-09-19 15:39:28','system');
 
 /*!40000 ALTER TABLE `USER_M` ENABLE KEYS */;
 UNLOCK TABLES;
@@ -325,7 +359,7 @@ CREATE TABLE `USER_ROLE_M` (
   `UPDATED_AT` datetime DEFAULT NULL COMMENT '수정일',
   `UPDATED_BY` varchar(100) DEFAULT NULL COMMENT '수정자',
   PRIMARY KEY (`ID`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='사용자 롤 정보';
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 LOCK TABLES `USER_ROLE_M` WRITE;
 /*!40000 ALTER TABLE `USER_ROLE_M` DISABLE KEYS */;

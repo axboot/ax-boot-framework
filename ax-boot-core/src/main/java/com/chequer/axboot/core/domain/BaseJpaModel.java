@@ -1,5 +1,6 @@
 package com.chequer.axboot.core.domain;
 
+import com.chequer.axboot.core.annotations.ColumnPosition;
 import com.chequer.axboot.core.domain.user.User;
 import com.chequer.axboot.core.utils.SessionUtils;
 import com.fasterxml.jackson.annotation.JsonIgnore;
@@ -28,15 +29,19 @@ public abstract class BaseJpaModel<PK extends Serializable> extends CrudModel im
     }
 
     @Column(name = "CREATED_AT", updatable = false)
+    @ColumnPosition(Integer.MAX_VALUE - 4)
     protected Instant createdAt;
 
-    @Column(name = "UPDATED_AT")
-    protected Instant updatedAt;
-
     @Column(name = "CREATED_BY", updatable = false)
+    @ColumnPosition(Integer.MAX_VALUE - 3)
     protected String createdBy;
 
+    @Column(name = "UPDATED_AT")
+    @ColumnPosition(Integer.MAX_VALUE - 2)
+    protected Instant updatedAt;
+
     @Column(name = "UPDATED_BY")
+    @ColumnPosition(Integer.MAX_VALUE - 1)
     protected String updatedBy;
 
     @Transient

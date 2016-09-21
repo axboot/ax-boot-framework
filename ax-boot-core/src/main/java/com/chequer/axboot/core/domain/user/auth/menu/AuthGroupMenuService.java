@@ -15,7 +15,7 @@ import javax.inject.Inject;
 import java.util.List;
 
 @Service
-public class AuthGroupMenuService extends BaseService<AuthGroupMenu, AuthGroupMenu.AuthGroupMenuV2Id> {
+public class AuthGroupMenuService extends BaseService<AuthGroupMenu, AuthGroupMenu.AuthGroupMenuId> {
     private AuthGroupMenuRepository authGroupMenuRepository;
 
     @Inject
