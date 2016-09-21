@@ -183,13 +183,6 @@ fnObj.searchView = axboot.viewExtend(axboot.searchView, {
  * gridView
  */
 fnObj.gridView01 = axboot.viewExtend(axboot.gridView, {
-    userType: {
-        R: "시스템 관리자",
-        A: "ASP 관리자",
-        C: "업체 관리자",
-        B: "브랜드 관리자",
-        S: "매장 관리자"
-    },
     useYn: {
         Y: "사용",
         N: "사용안함"
@@ -200,12 +193,6 @@ fnObj.gridView01 = axboot.viewExtend(axboot.gridView, {
         this.target = axboot.gridBuilder({
             target: $('[data-ax5grid="grid-view-01"]'),
             columns: [
-                {
-                    key: "compCd",
-                    label: "업체코드",
-                    width: 70,
-                    align: "center"
-                },
                 {
                     key: "userCd",
                     label: "아이디",
