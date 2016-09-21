@@ -106,7 +106,6 @@
         <bitwalker.userAgentUtil.version>1.18</bitwalker.userAgentUtil.version>
 
         <excel.parser.version>1.0</excel.parser.version>
-        <embedded.redis.version>0.6</embedded.redis.version>
 
         <hibernate.version>5.2.2.Final</hibernate.version>
 
@@ -461,13 +460,6 @@
                 <artifactId>querydsl-jpa</artifactId>
                 <version>${querydsl.version}</version>
             </dependency>
-
-            <dependency>
-                <groupId>com.github.kstyrc</groupId>
-                <artifactId>embedded-redis</artifactId>
-                <version>${embedded.redis.version}</version>
-            </dependency>
-
         </dependencies>
     </dependencyManagement>
 
