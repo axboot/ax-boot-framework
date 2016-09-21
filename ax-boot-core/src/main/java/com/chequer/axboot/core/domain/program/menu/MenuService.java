@@ -62,7 +62,11 @@ public class MenuService extends BaseService<Menu, Long> {
                 }
             }
 
-            filterNoChildMenu(filterList, hierarchyList);
+            if (menuIds != null) {
+                filterNoChildMenu(filterList, hierarchyList);
+            } else {
+                filterList.addAll(hierarchyList);
+            }
 
             return filterList;
         }
