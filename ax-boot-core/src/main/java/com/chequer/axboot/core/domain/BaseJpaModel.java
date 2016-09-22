@@ -1,6 +1,8 @@
 package com.chequer.axboot.core.domain;
 
 import com.chequer.axboot.core.annotations.ColumnPosition;
+import com.chequer.axboot.core.db.type.LabelEnumType;
+import com.chequer.axboot.core.db.type.MySQLJSONUserType;
 import com.chequer.axboot.core.domain.user.User;
 import com.chequer.axboot.core.utils.SessionUtils;
 import com.fasterxml.jackson.annotation.JsonIgnore;
@@ -8,6 +10,8 @@ import lombok.Getter;
 import lombok.Setter;
 import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.DynamicUpdate;
+import org.hibernate.annotations.TypeDef;
+import org.hibernate.annotations.TypeDefs;
 import org.springframework.data.domain.Persistable;
 
 import javax.persistence.*;
@@ -15,6 +19,10 @@ import java.io.Serializable;
 import java.time.Clock;
 import java.time.Instant;
 
+@TypeDefs({
+        @TypeDef(name = "jsonNode", typeClass = MySQLJSONUserType.class, parameters = {@org.hibernate.annotations.Parameter(name = MySQLJSONUserType.CLASS, value = "com.fasterxml.jackson.databind.JsonNode")}),
+        @TypeDef(name = "labelEnum", typeClass = LabelEnumType.class, parameters = {@org.hibernate.annotations.Parameter(name = MySQLJSONUserType.CLASS, value = "com.chequer.axboot.core.db.type.LabelEnumType")})
+})
 @Setter
 @Getter
 @MappedSuperclass

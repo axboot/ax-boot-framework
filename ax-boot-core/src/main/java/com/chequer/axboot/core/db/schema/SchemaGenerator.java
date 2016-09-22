@@ -1,6 +1,7 @@
 package com.chequer.axboot.core.db.schema;
 
 import com.chequer.axboot.core.annotations.ColumnPosition;
+import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.hibernate.tool.hbm2ddl.SchemaExport;
@@ -10,6 +11,7 @@ import org.springframework.stereotype.Component;
 
 import javax.persistence.Column;
 import javax.persistence.Transient;
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.lang.reflect.Field;
@@ -23,9 +25,12 @@ public class SchemaGenerator extends SchemaGeneratorBase {
     public void createSchema() throws IOException, ClassNotFoundException {
         SchemaExport schemaExport = new SchemaExport();
         String scriptOutputPath = System.getProperty("java.io.tmpdir") + "/schema.sql";
+
+        FileUtils.deleteQuietly(new File(scriptOutputPath));
+
         EnumSet<TargetType> targetTypes = EnumSet.of(TargetType.SCRIPT);
         schemaExport.setOutputFile(scriptOutputPath);
-        schemaExport.create(targetTypes, getMetaData());
+        schemaExport.createOnly(targetTypes, getMetaData());
 
         List<String> DDLs = IOUtils.readLines(new FileInputStream(scriptOutputPath), "UTF-8");
         List<String> convertedDDLs = new ArrayList<>();
@@ -44,7 +49,6 @@ public class SchemaGenerator extends SchemaGeneratorBase {
             try {
                 jdbcTemplate.execute(convertedDDL.toUpperCase());
             } catch (Exception e) {
-                e.printStackTrace();
             }
         }
     }
@@ -66,9 +70,9 @@ public class SchemaGenerator extends SchemaGeneratorBase {
         List<ColumnDefinition> columnDefinitions = Arrays.stream(columnBody.split(", ")).map(ColumnDefinition::new).collect(toList());
         columnDefinitions.add(new ColumnDefinition(primaryKeyDefinition));
 
-        String className =getEntityClassName(tableName);
+        String className = getEntityClassName(tableName);
 
-        if(StringUtils.isNotEmpty(className)) {
+        if (StringUtils.isNotEmpty(className)) {
             Class<?> clazz = Class.forName(className);
             Field[] fields = clazz.getDeclaredFields();
 

@@ -1,5 +1,6 @@
 package com.chequer.axboot.core.domain.file;
 
+import com.chequer.axboot.core.annotations.ColumnPosition;
 import com.chequer.axboot.core.annotations.Comment;
 import com.chequer.axboot.core.code.Types;
 import com.chequer.axboot.core.domain.BaseJpaModel;
@@ -32,48 +33,59 @@ public class CommonFile extends BaseJpaModel<Long> {
     @Id
     @Column(name = "ID")
     @Comment(value = "ID")
+    @ColumnPosition(1)
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @Column(name = "TARGET_TYPE", length = 50)
     @Comment(value = "타겟 TYPE")
+    @ColumnPosition(2)
     private String targetType;
 
     @Column(name = "TARGET_ID", length = 100)
     @Comment(value = "타겟 ID")
+    @ColumnPosition(3)
     private String targetId;
 
     @Column(name = "FILE_NM", columnDefinition = "TEXT")
     @Comment(value = "실제 파일명")
+    @ColumnPosition(4)
     private String fileNm;
 
     @Column(name = "SAVE_NM", columnDefinition = "TEXT")
     @Comment(value = "저장 파일명")
+    @ColumnPosition(5)
     private String saveNm;
 
     @Column(name = "FILE_TYPE", length = 30)
     @Comment(value = "파일 타입")
+    @ColumnPosition(6)
     private String fileType;
 
     @Column(name = "EXTENSION", length = 10)
     @Comment(value = "확장자")
+    @ColumnPosition(7)
     private String extension;
 
     @Column(name = "FILE_SIZE")
     @Comment(value = "파일 크기")
+    @ColumnPosition(8)
     private Long fileSize;
 
     @Column(name = "DEL_YN", length = 1)
     @Comment(value = "삭제여부")
     @Type(type = "labelEnum")
+    @ColumnPosition(9)
     private Types.Deleted delYn = Types.Deleted.NO;
 
     @Column(name = "FILE_DESC", columnDefinition = "TEXT")
     @Comment(value = "설명")
+    @ColumnPosition(10)
     private String desc;
 
     @Column(name = "SORT")
     @Comment(value = "정렬")
+    @ColumnPosition(11)
     private Integer sort;
 
     @JsonIgnore

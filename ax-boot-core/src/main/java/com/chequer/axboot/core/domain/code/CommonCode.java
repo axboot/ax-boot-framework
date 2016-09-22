@@ -2,16 +2,14 @@ package com.chequer.axboot.core.domain.code;
 
 import com.chequer.axboot.core.annotations.ColumnPosition;
 import com.chequer.axboot.core.code.Types;
-import com.chequer.axboot.core.db.type.LabelEnumType;
-import com.chequer.axboot.core.db.type.MySQLJSONUserType;
 import com.chequer.axboot.core.domain.BaseJpaModel;
 import lombok.Getter;
 import lombok.Setter;
-import org.hibernate.annotations.*;
+import org.hibernate.annotations.DynamicInsert;
+import org.hibernate.annotations.DynamicUpdate;
+import org.hibernate.annotations.Type;
 
 import javax.persistence.*;
-import javax.persistence.Entity;
-import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
@@ -22,10 +20,6 @@ import javax.validation.constraints.Size;
 @Entity
 @Table(name = "COMMON_CODE_M")
 @IdClass(CommonCodeId.class)
-@TypeDefs({
-        @TypeDef(name = "jsonNode", typeClass = MySQLJSONUserType.class, parameters = {@org.hibernate.annotations.Parameter(name = MySQLJSONUserType.CLASS, value = "com.fasterxml.jackson.databind.JsonNode")}),
-        @TypeDef(name = "labelEnum", typeClass = LabelEnumType.class, parameters = {@org.hibernate.annotations.Parameter(name = MySQLJSONUserType.CLASS, value = "com.chequer.axboot.core.db.type.LabelEnumType")})
-})
 public class CommonCode extends BaseJpaModel<CommonCodeId> {
 
     @Id

@@ -241,7 +241,7 @@ public class AXBootContextConfig implements ApplicationContextAware {
 
                         case Types.DatabaseType.MYSQL:
                             vendorAdapter.setDatabase(Database.MYSQL);
-                            vendorAdapter.setDatabasePlatform(MySQL5InnoDBDialect.class.getName());
+                            vendorAdapter.setDatabasePlatform(MySQL57InnoDBDialect.class.getName());
                             break;
 
                         case Types.DatabaseType.ORACLE:

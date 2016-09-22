@@ -218,16 +218,16 @@ public class DatabaseInitService {
         menuService.save(Menu.of(7L, "SYSTEM_MANAGER", "매뉴얼 관리", 1L, 1, 4, "system-help-manual"));
         menuService.save(Menu.of(8L, "SYSTEM_MANAGER", "레이아웃 샘플", null, 0, 1, null));
         menuService.save(Menu.of(9L, "SYSTEM_MANAGER", "API", null, 0, 2, null));
-        menuService.save(Menu.of(33L, "SYSTEM_MANAGER", "검색&그리드", 7L, 1, 0, null));
-        menuService.save(Menu.of(34L, "SYSTEM_MANAGER", "검색&그리드(인라인에디트)", 7L, 1, 1, null));
-        menuService.save(Menu.of(35L, "SYSTEM_MANAGER", "검색&그리드(페이징)", 7L, 1, 2, null));
-        menuService.save(Menu.of(36L, "SYSTEM_MANAGER", "그리드&폼(좌우)", 7L, 1, 3, null));
-        menuService.save(Menu.of(37L, "SYSTEM_MANAGER", "그리드&폼(좌우,모달)", 7L, 1, 4, null));
-        menuService.save(Menu.of(38L, "SYSTEM_MANAGER", "그리드&폼(상하)", 7L, 1, 5, null));
-        menuService.save(Menu.of(39L, "SYSTEM_MANAGER", "그리드&탭폼(상하)", 7L, 1, 6, null));
-        menuService.save(Menu.of(40L, "SYSTEM_MANAGER", "트리&폼(좌우)", 7L, 1, 7, null));
-        menuService.save(Menu.of(41L, "SYSTEM_MANAGER", "AXBOOT.js", 8L, 1, 0, null));
-        menuService.save(Menu.of(42L, "SYSTEM_MANAGER", "AXBOOT.css", 8L, 1, 1, null));
+        menuService.save(Menu.of(33L, "SYSTEM_MANAGER", "검색&그리드", 8L, 1, 0, null));
+        menuService.save(Menu.of(34L, "SYSTEM_MANAGER", "검색&그리드(인라인에디트)", 8L, 1, 1, null));
+        menuService.save(Menu.of(35L, "SYSTEM_MANAGER", "검색&그리드(페이징)", 8L, 1, 2, null));
+        menuService.save(Menu.of(36L, "SYSTEM_MANAGER", "그리드&폼(좌우)", 8L, 1, 3, null));
+        menuService.save(Menu.of(37L, "SYSTEM_MANAGER", "그리드&폼(좌우,모달)", 8L, 1, 4, null));
+        menuService.save(Menu.of(38L, "SYSTEM_MANAGER", "그리드&폼(상하)", 8L, 1, 5, null));
+        menuService.save(Menu.of(39L, "SYSTEM_MANAGER", "그리드&탭폼(상하)", 8L, 1, 6, null));
+        menuService.save(Menu.of(40L, "SYSTEM_MANAGER", "트리&폼(좌우)", 8L, 1, 7, null));
+        menuService.save(Menu.of(41L, "SYSTEM_MANAGER", "AXBOOT.js", 9L, 1, 0, null));
+        menuService.save(Menu.of(42L, "SYSTEM_MANAGER", "AXBOOT.css", 9L, 1, 1, null));
 
 
         commonCodeService.save(CommonCode.of("USER_STATUS", "계정상태", "ACCOUNT_LOCK", "잠김", 2));

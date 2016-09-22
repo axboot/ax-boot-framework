@@ -3,15 +3,11 @@ package com.chequer.axboot.core.domain.user.auth.menu;
 import com.chequer.axboot.core.annotations.ColumnPosition;
 import com.chequer.axboot.core.annotations.Comment;
 import com.chequer.axboot.core.code.Types;
-import com.chequer.axboot.core.db.type.LabelEnumType;
-import com.chequer.axboot.core.db.type.MySQLJSONUserType;
 import com.chequer.axboot.core.domain.BaseJpaModel;
 import com.chequer.axboot.core.domain.program.Program;
 import lombok.*;
 import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.DynamicUpdate;
-import org.hibernate.annotations.TypeDef;
-import org.hibernate.annotations.TypeDefs;
 
 import javax.persistence.*;
 import java.io.Serializable;
@@ -26,10 +22,6 @@ import java.io.Serializable;
 @Table(name = "AUTH_GROUP_MAP_M")
 @Comment(value = "권한그룹 맵")
 @IdClass(AuthGroupMenu.AuthGroupMenuId.class)
-@TypeDefs({
-        @TypeDef(name = "jsonNode", typeClass = MySQLJSONUserType.class, parameters = {@org.hibernate.annotations.Parameter(name = MySQLJSONUserType.CLASS, value = "com.fasterxml.jackson.databind.JsonNode")}),
-        @TypeDef(name = "labelEnum", typeClass = LabelEnumType.class, parameters = {@org.hibernate.annotations.Parameter(name = MySQLJSONUserType.CLASS, value = "com.chequer.axboot.core.db.type.LabelEnumType")})
-})
 public class AuthGroupMenu extends BaseJpaModel<AuthGroupMenu.AuthGroupMenuId> {
 
     @Id
