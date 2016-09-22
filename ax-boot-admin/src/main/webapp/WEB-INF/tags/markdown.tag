@@ -57,8 +57,10 @@
     List<Extension> extensions = Arrays.asList(TablesExtension.create(), StrikethroughExtension.create(), AutolinkExtension.create());
     Parser parser = Parser.builder().extensions(extensions).build();
     Node document = parser.parse(md);
-    HtmlRenderer renderer = HtmlRenderer.builder().build();
+    //HtmlRenderer renderer = HtmlRenderer.builder().build();
+    HtmlRenderer renderer = HtmlRenderer.builder().extensions(extensions).build();
     html = renderer.render(document);
 %>
-
+<div class="ax-markdown">
 <%=html%>
+</div>
