@@ -114,8 +114,8 @@ public class ManualService extends BaseService<Manual, Long> {
     @Transactional
     public void saveManuals(List<Manual> manuals) {
         manuals.forEach(manual -> {
-            Manual exist = findOne(manual.getId());
             if (!manual.isNew()) {
+                Manual exist = findOne(manual.getId());
                 manual.setKey(exist.getKey());
                 manual.setContent(exist.getContent());
             }
