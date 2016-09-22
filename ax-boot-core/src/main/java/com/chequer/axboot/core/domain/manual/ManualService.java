@@ -126,7 +126,9 @@ public class ManualService extends BaseService<Manual, Long> {
 
     @Transactional
     public void process(List<Manual> manuals) {
+        manuals.stream().filter(manual -> manual.getLevel() == 0).forEach(manual -> manual.setParentId(null));
         update(manuals);
+
         manuals.stream().filter(manual -> isNotEmpty(manual.getChildren())).forEach(menu -> {
             menu.getChildren().forEach(m -> m.setParentId(menu.getId()));
             process(menu.getChildren());

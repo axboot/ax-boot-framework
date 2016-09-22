@@ -153,6 +153,10 @@ public class MenuService extends BaseService<Menu, Long> {
             if (isEmpty(m.getProgCd())) {
                 m.setProgCd(null);
             }
+
+            if (m.getLevel() == 0) {
+                m.setParentId(null);
+            }
         });
 
         save(menus);
