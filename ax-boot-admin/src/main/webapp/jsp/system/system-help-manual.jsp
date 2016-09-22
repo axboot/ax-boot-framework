@@ -30,7 +30,7 @@
             <ax:form name="searchView0">
                 <ax:tbl clazz="ax-search-tbl" minWidth="500px">
                     <ax:tr>
-                        <ax:td label='메뉴얼 그룹' width="300px">
+                        <ax:td label='매뉴얼 그룹' width="300px">
                             <ax:common-code groupCd="MANUAL_GROUP" id="manualGrpCd"/>
                         </ax:td>
                     </ax:tr>
@@ -65,7 +65,7 @@
                         <div class="left">
                             <h2>
                                 <i class="cqc-news"></i>
-                                메뉴얼 내용 </h2>
+                                매뉴얼 내용 </h2>
                         </div>
                         <div class="right">
 
