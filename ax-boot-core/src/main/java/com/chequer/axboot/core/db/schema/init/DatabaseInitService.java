@@ -240,6 +240,7 @@ public class DatabaseInitService {
         commonCodeService.save(CommonCode.of("AUTH_GROUP", "권한그룹", "S0001", "시스템관리자 그룹", 1));
         commonCodeService.save(CommonCode.of("AUTH_GROUP", "권한그룹", "S0002", "사용자 권한그룹", 2));
         commonCodeService.save(CommonCode.of("MENU_GROUP", "메뉴그룹", "SYSTEM_MANAGER", "시스템 관리자 그룹", 1));
+        commonCodeService.save(CommonCode.of("MANUAL_GROUP", "메뉴얼 그룹", "DEFAULT", "기본그룹", 1));
         commonCodeService.save(CommonCode.of("USER_ROLE", "사용자 롤", "SYSTEM_MANAGER", "시스템 관리자 롤", 2));
         commonCodeService.save(CommonCode.of("MENU_GROUP", "메뉴그룹", "USER", "사용자 그룹", 2));
         commonCodeService.save(CommonCode.of("DEL_YN", "삭제여부", "Y", "삭제", 2));
