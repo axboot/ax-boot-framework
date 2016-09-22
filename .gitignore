@@ -35,3 +35,4 @@ overridedb.*
 .factorypath
 node_modules/
 rebel.xml
+axboot-dev.properties
