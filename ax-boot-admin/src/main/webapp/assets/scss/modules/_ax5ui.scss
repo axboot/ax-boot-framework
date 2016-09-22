@@ -138,3 +138,14 @@ $ax5layout-tab-panel-label-item-active-bg-colors: (#fff, #fff);
         background: #7a0000;
     }
 }
+.ax-mask.form-mask{
+    .ax-mask-bg {
+        background: #fff;
+        opacity: 0.8;
+    }
+    .ax-mask-content{
+        color: #000;
+        text-shadow: none;
+        font-size: 20px;
+    }
+}

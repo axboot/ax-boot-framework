@@ -23,7 +23,23 @@ var ACTIONS = axboot.actionExtend(fnObj, {
                 });
                 break;
             case ACTIONS.TREEITEM_CLICK:
-                this.formView01.setData(data);
+
+                if (typeof data.manualId === "undefined") {
+                    this.formView01.clear();
+                    if(confirm("신규 생성된 목차는 저장 후 편집 할수 있습니다. 지금 저장 하시겠습니까? (저장 후에 다시 선택해주세요)")){
+                        ACTIONS.dispatch(ACTIONS.PAGE_SAVE);
+                    }
+                    return;
+                }
+
+                axboot.ajax({
+                    type: "GET",
+                    url: "/api/v1/manual/" + data.manualId,
+                    data: ""
+                }, function (res) {
+                    _this.formView01.setData(res);
+                });
+
                 break;
             case ACTIONS.ITEM_ADD:
                 this.gridView01.addRow();
@@ -41,21 +57,29 @@ var ACTIONS = axboot.actionExtend(fnObj, {
                     deletedList: this.treeView01.getDeletedList()
                 };
 
-                axboot.ajax({
-                    type: "PUT",
-                    url: "/api/v1/manual",
-                    data: JSON.stringify(obj)
-                }, function (res) {
+                axboot
+                    .call({
+                        type: "PUT",
+                        url: "/api/v1/manual",
+                        data: JSON.stringify(obj),
+                        callback: function(){
+                            _this.treeView01.clearDeletedList();
+                            axToast.push("목차가 저장 되었습니다");
+                        }
+                    })
+                    .done(function(){
+                        var data = this.formView01.getData();
 
-                    _this.treeView01.clearDeletedList();
-                    axToast.push("메뉴 카테고리가 저장 되었습니다");
-
-                    if (data && data.callback) {
-                        data.callback();
-                    } else {
-                        ACTIONS.dispatch(ACTIONS.PAGE_SEARCH);
-                    }
-                });
+                        if(data.manualId) {
+                            axboot.ajax({
+                                type: "PUT",
+                                url: "/api/v1/manual/detail",
+                                data: JSON.stringify(this.formView01.getData())
+                            }, function (res) {
+                                axToast.push("매뉴얼 내용이 저장 되었습니다");
+                            });
+                        }
+                    });
 
                 break;
             case ACTIONS.FORM_CLEAR:
@@ -195,6 +219,7 @@ fnObj.treeView01 = axboot.viewExtend(axboot.treeView, {
     initView: function () {
         var _this = this;
 
+
         $('[data-tree-view-01-btn]').click(function () {
             var _act = this.getAttribute("data-tree-view-01-btn");
             switch (_act) {
@@ -319,6 +344,9 @@ fnObj.treeView01 = axboot.viewExtend(axboot.treeView, {
         if (treeNodes[0]) {
             treeNodes[0].progCd = data.progCd;
         }
+    },
+    deselectNode: function () {
+        ACTIONS.dispatch(ACTIONS.TREEITEM_DESELECTE);
     }
 });
 
@@ -331,9 +359,18 @@ fnObj.formView01 = axboot.viewExtend(axboot.formView, {
     },
     initView: function () {
         var _this = this;
-        this.manualGroup = CODE.manualGroup;
 
-        $('#summernote').summernote({
+        this.mask = new ax5.ui.mask({
+            theme: "form-mask",
+            target: $('#split-panel-form'),
+            content: '좌측 메뉴를 선택해주세요.'
+        });
+        this.mask.open();
+
+        this.manualGroup = CODE.manualGroup;
+        
+        this.summernote = $('#summernote');
+        this.summernote.summernote({
             height: ($('#summernote').height() - 50),                 // set editor height
             minHeight: null,             // set minimum height of editor
             maxHeight: null,             // set maximum height of editor
@@ -375,15 +412,22 @@ fnObj.formView01 = axboot.viewExtend(axboot.formView, {
     },
     getData: function () {
         var data = this.modelFormatter.getClearData(this.model.get()); // 모델의 값을 포멧팅 전 값으로 치환.
+
+        data.content = this.summernote.summernote("code");
+        
         return data;
     },
     setData: function (data) {
-        var _data = this.getDefaultData();
-
-        //this.combobox.ax5combobox("blur");
-        this.model.setModel(_data);
+        this.mask.close();
+        $.extend(true, data, this.getDefaultData());
+        this.model.setModel(data);
+        console.log(this.summernote.summernote("code", data.content||""));
     },
     resize: function(){
         $('.note-editable.panel-body').height(($('#summernote').height() - 200));
+    },
+    clear: function () {
+        this.mask.open();
+        this.model.setModel(this.getDefaultData());
     }
 });

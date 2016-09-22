@@ -58,7 +58,7 @@
 
             </ax:split-panel>
             <ax:splitter></ax:splitter>
-            <ax:split-panel width="*" style="padding-left: 10px;">
+            <ax:split-panel width="*" style="padding-left: 10px;" id="split-panel-form">
 
                 <div data-fit-height-aside="form-view-01">
                     <div class="ax-button-group">
@@ -76,6 +76,7 @@
                         <ax:tbl clazz="ax-form-tbl" minWidth="500px">
                             <ax:tr>
                                 <ax:td label="호출 아이디">
+                                    <input type="hidden" data-ax-path="manualId" />
                                     <input type="text" data-ax-path="key" class="form-control" value=""/>
                                 </ax:td>
                             </ax:tr>

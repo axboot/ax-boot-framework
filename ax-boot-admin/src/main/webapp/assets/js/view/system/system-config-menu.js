@@ -77,9 +77,7 @@ var ACTIONS = axboot.actionExtend(fnObj, {
                         }
                     })
                     .done(function () {
-                        
-                        console.log(_data);
-                        
+                        //console.log(_data);
                         ACTIONS.dispatch(ACTIONS.SEARCH_AUTH, {menuId: _data.menuId});
                     });
 
@@ -501,6 +499,7 @@ fnObj.formView01 = axboot.viewExtend(axboot.formView, {
         this.model.setModel(this.getDefaultData(), this.target);
         this.modelFormatter = new axboot.modelFormatter(this.model); // 모델 포메터 시작
         this.mask = new ax5.ui.mask({
+            theme: "form-mask",
             target: $('#split-panel-form'),
             content: '좌측 메뉴를 선택해주세요.'
         });
