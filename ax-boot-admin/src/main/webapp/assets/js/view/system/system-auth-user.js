@@ -96,7 +96,7 @@ fnObj.pageStart = function () {
     axboot
         .call({
             type: "GET", url: "/api/v1/commonCodes", data: {groupCd: "USER_ROLE", useYn: "Y"},
-            callBack: function (res) {
+            callback: function (res) {
                 var userRole = [];
                 res.list.forEach(function (n) {
                     userRole.push({

@@ -1,7 +1,7 @@
 /**
  * @method axboot.ajax
  * @param {Object} http
- * @param {Function} callBack
+ * @param {Function} callback
  * @param {Object} [options]
  * @param {Fundtion} [options.onError]
  * @param {String} [options.contentType]
@@ -39,7 +39,7 @@ axboot.ajax = (function () {
         contentType: 'application/json'
     };
 
-    return function (http, callBack, options) {
+    return function (http, callback, options) {
         options = $.extend(true, {}, defaultOption, options);
         if (!options.nomask) axAJAXMask.open();
 
@@ -69,7 +69,7 @@ axboot.ajax = (function () {
                 }
             }else{
                 var args = [].concat($.makeArray(arguments));
-                if (callBack) callBack.apply(this, args); // callBack
+                if (callback) callback.apply(this, args); // callback
             }
 
         }).fail(function (data, textStatus, msg) {
@@ -77,9 +77,9 @@ axboot.ajax = (function () {
 
             }
             else {
-                if (callBack) callBack.apply(this, [{
+                if (callback) callback.apply(this, [{
                     error: {message: msg}
-                }]); // callBack
+                }]); // callback
             }
         }).always(function (data, textStatus, jqXHR) {
             queue.pop();

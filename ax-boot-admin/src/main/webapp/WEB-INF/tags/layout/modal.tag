@@ -13,14 +13,13 @@
     <link rel="icon" href="<c:url value='/assets/favicon.ico'/>" type="image/x-icon"/>
     <link rel="stylesheet" type="text/css" href="<c:url value='/assets/css/axboot.css'/>"/>
     <link rel="stylesheet" type="text/css" href="<c:url value='/assets/css/lang-kor.css'/>"/>
-    <jsp:invoke fragment="css"/>
-
-    <jsp:invoke fragment="js"/>
     <script type="text/javascript">
         var CONTEXT_PATH = "<%=ContextUtil.getContext()%>";
     </script>
     <script type="text/javascript" src="<c:url value='/assets/js/plugins.min.js' />"></script>
     <script type="text/javascript" src="<c:url value='/assets/js/axboot/dist/axboot.js' />"></script>
+    <jsp:invoke fragment="css"/>
+    <jsp:invoke fragment="js"/>
 </head>
 <body class="ax-body ${axbody_class}" onselectstart="return false;">
 <div id="AXPage" class="bodyHeightDiv page-modal">

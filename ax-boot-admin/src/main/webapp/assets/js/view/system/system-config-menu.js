@@ -41,7 +41,7 @@ var ACTIONS = axboot.actionExtend(fnObj, {
                 this.treeView01.updateNode(data);
 
                 ACTIONS.dispatch(ACTIONS.PAGE_SAVE, {
-                    callBack: function () {
+                    callback: function () {
                         _this.formView01.onSelectProg();
                     }
                 });
@@ -63,14 +63,14 @@ var ACTIONS = axboot.actionExtend(fnObj, {
                     _this.treeView01.clearDeletedList();
                     axToast.push("메뉴 카테고리가 저장 되었습니다");
 
-                    if (data && data.callBack) {
-                        data.callBack();
+                    if (data && data.callback) {
+                        data.callback();
                     } else {
                         ACTIONS.dispatch(ACTIONS.PAGE_SEARCH);
                     }
                 });
 
-                if (data && data.callBack) {
+                if (data && data.callback) {
 
                 } else {
 
@@ -187,7 +187,7 @@ fnObj.pageStart = function () {
     axboot
         .call({
             type: "GET", url: "/api/v1/programs", data: "",
-            callBack: function (res) {
+            callback: function (res) {
                 var programList = [];
                 res.list.forEach(function (n) {
                     programList.push({
@@ -204,7 +204,7 @@ fnObj.pageStart = function () {
         })
         .call({
             type: "GET", url: "/api/v1/commonCodes", data: {groupCd: "AUTH_GROUP", useYn: "Y"},
-            callBack: function (res) {
+            callback: function (res) {
                 var authGroup = [];
                 res.list.forEach(function (n) {
                     authGroup.push({

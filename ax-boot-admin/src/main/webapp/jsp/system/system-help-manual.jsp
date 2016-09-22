@@ -7,6 +7,12 @@
 <ax:set key="page_auto_height" value="true"/>
 
 <ax:layout name="base">
+    <jsp:attribute name="css">
+        <link href="http://cdnjs.cloudflare.com/ajax/libs/summernote/0.8.2/summernote.css" rel="stylesheet">
+    </jsp:attribute>
+    <jsp:attribute name="js">
+        <script src="http://cdnjs.cloudflare.com/ajax/libs/summernote/0.8.2/summernote.js"></script>
+    </jsp:attribute>
     <jsp:attribute name="script">
         <script type="text/javascript" src="<c:url value='/assets/js/view/system/system-help-manual.js' />"></script>
     </jsp:attribute>
@@ -60,6 +66,9 @@
 
                         </div>
                     </div>
+
+
+                    <div class="summernote">summernote 1</div>
 
                     <ax:form name="formView01">
 

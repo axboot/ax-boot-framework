@@ -153,7 +153,7 @@ $(document.body).ready(function () {
 /**
  * @method axboot.ajax
  * @param {Object} http
- * @param {Function} callBack
+ * @param {Function} callback
  * @param {Object} [options]
  * @param {Fundtion} [options.onError]
  * @param {String} [options.contentType]
@@ -191,7 +191,7 @@ axboot.ajax = function () {
         contentType: 'application/json'
     };
 
-    return function (http, callBack, options) {
+    return function (http, callback, options) {
         options = $.extend(true, {}, defaultOption, options);
         if (!options.nomask) axAJAXMask.open();
 
@@ -222,13 +222,13 @@ axboot.ajax = function () {
                 }
             } else {
                 var args = [].concat($.makeArray(arguments));
-                if (callBack) callBack.apply(this, args); // callBack
+                if (callback) callback.apply(this, args); // callback
             }
         }).fail(function (data, textStatus, msg) {
             if (msg == "") {} else {
-                if (callBack) callBack.apply(this, [{
+                if (callback) callback.apply(this, [{
                     error: { message: msg }
-                }]); // callBack
+                }]); // callback
             }
         }).always(function (data, textStatus, jqXHR) {
             queue.pop();
@@ -716,14 +716,14 @@ axboot.ajax = function () {
     };
 }(jQuery);
 /**
- * 여러개의 AJAX콜을 순차적으로 해야 하는 경우 callBack 지옥에 빠지기 쉽다. `axboot.call & done`은 이런 상황에서 코드가 보기 어려워지는 문제를 해결 하기 위해 개발된 오브젝트 입니다
+ * 여러개의 AJAX콜을 순차적으로 해야 하는 경우 callback 지옥에 빠지기 쉽다. `axboot.call & done`은 이런 상황에서 코드가 보기 어려워지는 문제를 해결 하기 위해 개발된 오브젝트 입니다
  * @type {Object} axboot.call
  * @example
  * ```js
  *   axboot
  *       .call({
  *           type: "GET", url: "/api/v1/programs", data: "",
- *           callBack: function (res) {
+ *           callback: function (res) {
  *               var programList = [];
  *               res.list.forEach(function (n) {
  *                   programList.push({
@@ -740,7 +740,7 @@ axboot.ajax = function () {
  *       })
  *       .call({
  *           type: "GET", url: "/api/v1/commonCodes", data: {groupCd: "AUTH_GROUP", useYn: "Y"},
- *           callBack: function (res) {
+ *           callback: function (res) {
  *               var authGroup = [];
  *               res.list.forEach(function (n) {
  *                   authGroup.push({
@@ -771,22 +771,22 @@ axboot.call = function () {
         this.queue = [];
 
         var self = this;
-        var processor = function processor(callBack) {
+        var processor = function processor(callback) {
             var item = self.queue.shift();
             if (ax5.util.isFunction(item)) {
                 item.call(this);
-                processor.call(this, callBack);
+                processor.call(this, callback);
             } else if (item) {
                 axboot.ajax({
                     type: item.type,
                     url: item.url,
                     data: item.data
                 }, function (res) {
-                    item.callBack.call(this, res);
-                    processor.call(this, callBack);
+                    item.callback.call(this, res);
+                    processor.call(this, callback);
                 }.bind(this), { nomask: false });
             } else {
-                callBack.call(this);
+                callback.call(this);
             }
         };
 
@@ -794,8 +794,8 @@ axboot.call = function () {
             this.queue.push(_obj);
             return this;
         };
-        this.done = function (callBack) {
-            processor.call({}, callBack);
+        this.done = function (callback) {
+            processor.call({}, callback);
         };
         this.call(_obj);
     };
