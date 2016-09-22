@@ -2,7 +2,6 @@ package com.chequer.axboot.core.domain.manual;
 
 import com.chequer.axboot.core.annotations.Comment;
 import com.chequer.axboot.core.domain.BaseJpaModel;
-import com.chequer.axboot.core.domain.program.Program;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
@@ -66,10 +65,6 @@ public class Manual extends BaseJpaModel<Long> implements Cloneable {
 
     @Transient
     private List<Manual> children = new ArrayList<>();
-
-    //@ManyToOne
-    //@JoinColumn(name = "PROG_CD", referencedColumnName = "PROG_CD", insertable = false, updatable = false)
-    //private Program program;
 
     @JsonProperty("name")
     public String label() {

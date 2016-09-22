@@ -156,7 +156,7 @@
         <taglibs.standard.version>1.2.5</taglibs.standard.version>
 
         <xml.apis.version>1.4.01</xml.apis.version>
-
+        <ztzip.version>1.9</ztzip.version>
         <maven.test.skip>true</maven.test.skip>
         <disable.checks>true</disable.checks>
         <main.basedir>${basedir}</main.basedir>
@@ -494,6 +494,11 @@
                 <version>${commonmark.version}</version>
             </dependency>
 
+            <dependency>
+                <groupId>org.zeroturnaround</groupId>
+                <artifactId>zt-zip</artifactId>
+                <version>${ztzip.version}</version>
+            </dependency>
 
         </dependencies>
     </dependencyManagement>

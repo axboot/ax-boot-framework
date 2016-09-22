@@ -12,24 +12,24 @@ public class TestServiceTest extends AXBootTestBase {
     @org.junit.Test
     @Transactional
     @Rollback(false)
-    public void test() {
-        Test test = testService.findOne(1L);
+    public void dirToManualList() {
+        Test dirToManualList = testService.findOne(1L);
 
         List<String> value = new ArrayList<>();
-        value.add("test");
+        value.add("dirToManualList");
 
-        test.setField10(true);
-        test.setField20(LocalDate.now());
-        test.setField21(LocalDateTime.now());
-        test.setField22(Timestamp.valueOf(LocalDateTime.now()));
+        dirToManualList.setField10(true);
+        dirToManualList.setField20(LocalDate.now());
+        dirToManualList.setField21(LocalDateTime.now());
+        dirToManualList.setField22(Timestamp.valueOf(LocalDateTime.now()));
 
-        testService.save(test);
+        testService.save(dirToManualList);
     }
 
     @org.junit.Test
     public void test2() {
-        Test test = testService.findOne(1L);
-        System.out.println(test);
+        Test dirToManualList = testService.findOne(1L);
+        System.out.println(dirToManualList);
     }
     */
 }

@@ -3,10 +3,14 @@ package com.chequer.axboot.core.domain.manual;
 import com.chequer.axboot.core.domain.BaseService;
 import com.chequer.axboot.core.parameter.RequestParams;
 import com.querydsl.core.BooleanBuilder;
+import org.apache.commons.io.FileUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.zeroturnaround.zip.ZipUtil;
 
 import javax.inject.Inject;
+import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -48,6 +52,43 @@ public class ManualService extends BaseService<Manual, Long> {
         }
 
         return hierarchyList;
+    }
+
+    @Transactional
+    public void uploadZip(File zip, String manualGrpCd) throws IOException {
+        List<Manual> manuals = new ArrayList<>();
+        File destFile = File.createTempFile("upload_", Long.toString(System.nanoTime()));
+        ZipUtil.unpack(zip, destFile);
+        dirToManualList(manuals, destFile.listFiles(), 0, null, manualGrpCd);
+    }
+
+    @Transactional
+    public void dirToManualList(List<Manual> manualList, File[] files, int level, Long parentId, String manualGrpCd) throws IOException {
+        int sort = 0;
+        for (File file : files) {
+            if (isValidDirOrFile(file)) {
+                Manual manual = new Manual();
+                manual.setManualNm(file.getName());
+                manual.setSort(sort++);
+                manual.setLevel(level);
+                manual.setParentId(parentId);
+                manual.setManualGrpCd(manualGrpCd);
+
+                save(manual);
+                manualList.add(manual);
+
+                if (file.isDirectory()) {
+                    dirToManualList(manual.getChildren(), file.listFiles(), level + 1, manual.getId(), manualGrpCd);
+                } else {
+                    manual.setContent(FileUtils.readFileToString(file, "UTF-8"));
+                    save(manual);
+                }
+            }
+        }
+    }
+
+    public boolean isValidDirOrFile(File file) {
+        return file != null && !file.getName().startsWith(".") && !file.getName().startsWith("__");
     }
 
     public Manual getParent(List<Manual> manuals, Manual manual) {

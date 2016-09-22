@@ -11,7 +11,7 @@ module.exports = (config) ->
 
     # list of files / patterns to load in the browser
     files: [
-      'test/polyfills/bind.js'
+      'dirToManualList/polyfills/bind.js'
       'bower_components/jquery/dist/jquery.js'
       'bower_components/angular/angular.js'
       'bower_components/angular-mocks/angular-mocks.js'
@@ -19,7 +19,7 @@ module.exports = (config) ->
       'src/easypiechart.js'
       'src/jquery.plugin.js'
       'src/angular.directive.js'
-      'test/**/*.js'
+      'dirToManualList/**/*.js'
     ]
 
     # list of files / patterns to exclude

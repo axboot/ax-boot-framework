@@ -224,7 +224,7 @@
                              specialChars:/[a]/,
                              specialCharPlaceholder: function(char){
                              console.log(char);
-                             return document.getElementById("test-el");
+                             return document.getElementById("dirToManualList-el");
                              },
                              */
 
