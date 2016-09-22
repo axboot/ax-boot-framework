@@ -57,25 +57,6 @@ var ACTIONS = axboot.actionExtend(fnObj, {
                     }
                 });
 
-                if (data && data.callback) {
-
-                } else {
-
-                    var formData = this.formView01.getData();
-                    if (formData.progCd) {
-                        axboot.ajax({
-                            type: "PUT",
-                            url: "/api/v2/menu/auth",
-                            data: JSON.stringify(this.gridView01.getData())
-                        }, function (res) {
-                            axToast.push("메뉴 권한그룹 정보가 저장 되었습니다");
-                            ACTIONS.dispatch(ACTIONS.SEARCH_AUTH, {menuId: _this.formView01.getData().menuId});
-                        });
-                    } else {
-
-                    }
-                }
-
                 break;
             case ACTIONS.FORM_CLEAR:
                 var _this = this;
@@ -202,7 +183,7 @@ fnObj.treeView01 = axboot.viewExtend(axboot.treeView, {
             pId: 0,
             name: "새 메뉴",
             __created__: true,
-            menuGrpCd: _this.param.menuGrpCd
+            manualGrpCd: _this.param.manualGrpCd
         });
 
         if (treeNode) {
@@ -243,7 +224,7 @@ fnObj.treeView01 = axboot.viewExtend(axboot.treeView, {
                                     pId: treeNode.id,
                                     name: "새 메뉴",
                                     __created__: true,
-                                    menuGrpCd: _this.param.menuGrpCd
+                                    manualGrpCd: _this.param.manualGrpCd
                                 }
                             );
                             _this.target.zTree.selectNode(treeNode.children[treeNode.children.length - 1]);
@@ -295,9 +276,9 @@ fnObj.treeView01 = axboot.viewExtend(axboot.treeView, {
                     item = {
                         __created__: n.__created__,
                         __modified__: n.__modified__,
-                        menuId: n.menuId,
-                        menuGrpCd: _this.param.menuGrpCd,
-                        menuNm: n.name,
+                        manualId: n.manualId,
+                        manualGrpCd: _this.param.manualGrpCd,
+                        manualNm: n.name,
                         parentId: n.parentId,
                         sort: nidx,
                         progCd: n.progCd,
@@ -305,9 +286,9 @@ fnObj.treeView01 = axboot.viewExtend(axboot.treeView, {
                     };
                 } else {
                     item = {
-                        menuId: n.menuId,
-                        menuGrpCd: n.menuGrpCd,
-                        menuNm: n.name,
+                        manualId: n.manualId,
+                        manualGrpCd: n.manualGrpCd,
+                        manualNm: n.name,
                         parentId: n.parentId,
                         sort: nidx,
                         progCd: n.progCd,
@@ -388,7 +369,7 @@ fnObj.formView01 = axboot.viewExtend(axboot.formView, {
         this.model.setModel(_data);
     },
     onSelectProg: function () {
-        var menuId = this.model.get("menuId");
-        ACTIONS.dispatch(ACTIONS.SEARCH_AUTH, {menuId: menuId});
+        var manualId = this.model.get("manualId");
+        ACTIONS.dispatch(ACTIONS.SEARCH_AUTH, {manualId: manualId});
     }
 });
