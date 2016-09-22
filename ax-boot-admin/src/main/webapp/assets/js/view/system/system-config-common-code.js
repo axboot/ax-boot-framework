@@ -148,7 +148,6 @@ fnObj.gridView01 = axboot.viewExtend(axboot.gridView, {
                 {key: "code", label: "코드", width: 100, align: "center", editor: {type: "text", disabled: "notCreated"}},
                 {key: "name", label: "코드값", width: 150, align: "left", editor: "text"},
                 {key: "sort", editor: "number"},
-                {key: "posUseYn", editor: "checkYn"},
                 {key: "useYn", editor: "checkYn"},
                 {key: "remark", label: "비고", width: 200, align: "left", editor: "text"},
                 {key: "data1", label: "데이터1", width: 70, align: "left", editor: "text"},

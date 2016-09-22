@@ -78,11 +78,6 @@ public class CommonCode extends BaseJpaModel<CommonCodeId> {
     @ColumnPosition(10)
     private Integer data5;
 
-    @Column(name = "POS_USE_YN", length = 1)
-    @Type(type = "labelEnum")
-    @ColumnPosition(11)
-    private Types.Used posUseYn = Types.Used.YES;
-
     @Column(name = "REMARK", length = 200)
     @ColumnPosition(12)
     private String remark;

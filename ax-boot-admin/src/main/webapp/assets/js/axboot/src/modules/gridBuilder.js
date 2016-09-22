@@ -58,7 +58,6 @@ axboot.gridBuilder = (function () {
         "userNm": {width: 100, label: "이름", align: "center"},
         "delYn": {width: 50, label: "삭제", align: "center"},
         "useYn": {width: 70, label: "사용여부", align: "center"},
-        "posUseYn": {width: 90, label: "포스사용여부", align: "center"},
         "sort": {width: 50, label: "정렬", align: "center"},
         "companyJson.대표자명": {width: 100, label: "대표자명", align: "center"},
         "companyJson.사업자등록번호": {
