@@ -81,7 +81,7 @@ public class AdminTokenAuthenticationService {
         if (!requestUri.startsWith(ContextUtil.getBaseApiPath())) {
             Program program = programService.findOne(progCd);
 
-            if (progCd != null) {
+            if (program != null) {
                 requestUtils.setAttribute("program", program);
                 requestUtils.setAttribute("pageName", program.getProgNm());
                 requestUtils.setAttribute("pageRemark", program.getRemark());
