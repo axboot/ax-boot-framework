@@ -43,7 +43,7 @@ var ACTIONS = axboot.actionExtend(fnObj, {
 
                 axboot.ajax({
                     type: "PUT",
-                    url: "/api/v2/menu",
+                    url: "/api/v1/manual",
                     data: JSON.stringify(obj)
                 }, function (res) {
 
