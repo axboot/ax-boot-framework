@@ -3,6 +3,7 @@ var ACTIONS = axboot.actionExtend(fnObj, {
     PAGE_SEARCH: "PAGE_SEARCH",
     PAGE_SAVE: "PAGE_SAVE",
     TREEITEM_CLICK: "TREEITEM_CLICK",
+    TREEITEM_DESELECTE: "TREEITEM_DESELECTE",
     TREE_ROOTNODE_ADD: "TREE_ROOTNODE_ADD",
     SELECT_PROG: "SELECT_PROG",
     SEARCH_AUTH: "SEARCH_AUTH",
@@ -26,7 +27,18 @@ var ACTIONS = axboot.actionExtend(fnObj, {
                 });
                 break;
             case ACTIONS.TREEITEM_CLICK:
+                if (typeof data.menuId === "undefined") {
+                    this.formView01.clear();
+                    if(confirm("신규 생성된 메뉴는 저장 후 편집 할수 있습니다. 지금 저장 하시겠습니까?")){
+                        ACTIONS.dispatch(ACTIONS.PAGE_SAVE);
+                    }
+                    return;
+                }
+
                 this.formView01.setData(data);
+                break;
+            case ACTIONS.TREEITEM_DESELECTE:
+                this.formView01.clear();
                 break;
             case ACTIONS.ITEM_ADD:
                 this.gridView01.addRow();
@@ -40,11 +52,36 @@ var ACTIONS = axboot.actionExtend(fnObj, {
             case ACTIONS.SELECT_PROG:
                 this.treeView01.updateNode(data);
 
-                ACTIONS.dispatch(ACTIONS.PAGE_SAVE, {
-                    callback: function () {
-                        _this.formView01.onSelectProg();
-                    }
-                });
+                var _data = this.formView01.getData();
+                var obj = {
+                    list: this.treeView01.getData(),
+                    deletedList: this.treeView01.getDeletedList()
+                };
+
+                axboot
+                    .call({
+                        type: "PUT",
+                        url: "/api/v2/menu",
+                        data: JSON.stringify(obj),
+                        callback: function (res) {
+                            _this.treeView01.clearDeletedList();
+                            axToast.push("메뉴 카테고리가 저장 되었습니다");
+                        }
+                    })
+                    .call({
+                        type: "GET",
+                        url: "/api/v2/menu",
+                        data: this.searchView.getData(),
+                        callback: function (res) {
+                            _this.treeView01.setData(searchData, res.list);
+                        }
+                    })
+                    .done(function () {
+                        
+                        console.log(_data);
+                        
+                        ACTIONS.dispatch(ACTIONS.SEARCH_AUTH, {menuId: _data.menuId});
+                    });
 
                 break;
             case ACTIONS.PAGE_SAVE:
@@ -310,6 +347,7 @@ fnObj.treeView01 = axboot.viewExtend(axboot.treeView, {
         if (treeNode) {
             _this.target.zTree.editName(treeNode[0]);
         }
+        fnObj.treeView01.deselectNode();
     },
     initView: function () {
         var _this = this;
@@ -350,6 +388,7 @@ fnObj.treeView01 = axboot.viewExtend(axboot.treeView, {
                             );
                             _this.target.zTree.selectNode(treeNode.children[treeNode.children.length - 1]);
                             _this.target.editName();
+                            fnObj.treeView01.deselectNode();
                             return false;
                         });
                     }
@@ -377,6 +416,7 @@ fnObj.treeView01 = axboot.viewExtend(axboot.treeView, {
                         treeNode.__deleted__ = true;
                         _this.deletedList.push(treeNode);
                     }
+                    fnObj.treeView01.deselectNode();
                 }
             }
         }, []);
@@ -438,6 +478,9 @@ fnObj.treeView01 = axboot.viewExtend(axboot.treeView, {
         if (treeNodes[0]) {
             treeNodes[0].progCd = data.progCd;
         }
+    },
+    deselectNode: function () {
+        ACTIONS.dispatch(ACTIONS.TREEITEM_DESELECTE);
     }
 });
 
@@ -457,6 +500,11 @@ fnObj.formView01 = axboot.viewExtend(axboot.formView, {
         this.model = new ax5.ui.binder();
         this.model.setModel(this.getDefaultData(), this.target);
         this.modelFormatter = new axboot.modelFormatter(this.model); // 모델 포메터 시작
+        this.mask = new ax5.ui.mask({
+            target: $('#split-panel-form'),
+            content: '좌측 메뉴를 선택해주세요.'
+        });
+        this.mask.open();
 
         this.initEvent();
 
@@ -480,7 +528,7 @@ fnObj.formView01 = axboot.viewExtend(axboot.formView, {
                     ACTIONS.dispatch(ACTIONS.MENU_AUTH_CLEAR);
                     ACTIONS.dispatch(ACTIONS.SELECT_PROG, this.value[0]);
                 } else {
-                    if(_this.model.get("progCd")) {
+                    if (_this.model.get("progCd")) {
                         _this.model.set("progCd", "");
                         _this.model.set("progNm", "");
                         _this.combobox.ax5combobox("close");
@@ -500,6 +548,7 @@ fnObj.formView01 = axboot.viewExtend(axboot.formView, {
         return data;
     },
     setData: function (data) {
+        this.mask.close();
         var _data = this.getDefaultData();
         this.combobox.ax5combobox("setValue", []);
 
@@ -523,9 +572,9 @@ fnObj.formView01 = axboot.viewExtend(axboot.formView, {
         this.model.setModel(_data);
         this.modelFormatter.formatting(); // 입력된 값을 포메팅 된 값으로 변경
     },
-    onSelectProg: function () {
-        var menuId = this.model.get("menuId");
-        ACTIONS.dispatch(ACTIONS.SEARCH_AUTH, {menuId: menuId});
+    clear: function () {
+        this.mask.open();
+        this.model.setModel(this.getDefaultData());
     }
 });
 

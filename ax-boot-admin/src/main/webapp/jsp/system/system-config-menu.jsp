@@ -47,7 +47,7 @@
 
             </ax:split-panel>
             <ax:splitter></ax:splitter>
-            <ax:split-panel width="*" style="padding-left: 10px;">
+            <ax:split-panel width="*" style="padding-left: 10px;" id="split-panel-form">
 
                 <div data-fit-height-aside="form-view-01">
                     <div class="ax-button-group">
