@@ -75,8 +75,12 @@ var ACTIONS = axboot.actionExtend(fnObj, {
                                 data: JSON.stringify(data)
                             }, function (res) {
                                 axToast.push("매뉴얼 내용이 저장 되었습니다");
+                                ACTIONS.dispatch(ACTIONS.PAGE_SEARCH);
                             });
+                        }else{
+                            ACTIONS.dispatch(ACTIONS.PAGE_SEARCH);
                         }
+
                     });
 
                 break;
