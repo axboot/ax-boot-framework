@@ -206,6 +206,7 @@ public class DatabaseInitService {
         programService.save(Program.of("system-config-program", "프로그램관리", "/jsp/system/system-config-program.jsp", "_self", "Y", "Y", "Y", "N", "N", "N", "N", "N", "N", "N"));
         programService.save(Program.of("system-auth-user", "사용자관리", "/jsp/system/system-auth-user.jsp", "_self", "Y", "Y", "Y", "N", "N", "N", "N", "N", "N", "N"));
         programService.save(Program.of("system-operation-log", "에러로그 조회", "/jsp/system/system-operation-log.jsp", "_self", "Y", "Y", "N", "N", "N", "Y", "N", "N", "N", "N"));
+        programService.save(Program.of("system-help-manual", "매뉴얼 관리", "/jsp/system/system-help-manual.jsp", "_self", "Y", "Y", "N", "N", "N", "Y", "N", "N", "N", "N"));
 
 
         menuService.save(Menu.of(1L, "SYSTEM_MANAGER", "시스템관리", null, 0, 0, null));
@@ -214,8 +215,9 @@ public class DatabaseInitService {
         menuService.save(Menu.of(4L, "SYSTEM_MANAGER", "메뉴관리", 1L, 1, 2, "system-config-menu"));
         menuService.save(Menu.of(5L, "SYSTEM_MANAGER", "사용자 관리", 1L, 1, 3, "system-auth-user"));
         menuService.save(Menu.of(6L, "SYSTEM_MANAGER", "에러로그 조회", 1L, 1, 4, "system-operation-log"));
-        menuService.save(Menu.of(7L, "SYSTEM_MANAGER", "레이아웃 샘플", null, 0, 1, null));
-        menuService.save(Menu.of(8L, "SYSTEM_MANAGER", "API", null, 0, 2, null));
+        menuService.save(Menu.of(7L, "SYSTEM_MANAGER", "매뉴얼 관리", 1L, 1, 4, "system-help-manual"));
+        menuService.save(Menu.of(8L, "SYSTEM_MANAGER", "레이아웃 샘플", null, 0, 1, null));
+        menuService.save(Menu.of(9L, "SYSTEM_MANAGER", "API", null, 0, 2, null));
         menuService.save(Menu.of(33L, "SYSTEM_MANAGER", "검색&그리드", 7L, 1, 0, null));
         menuService.save(Menu.of(34L, "SYSTEM_MANAGER", "검색&그리드(인라인에디트)", 7L, 1, 1, null));
         menuService.save(Menu.of(35L, "SYSTEM_MANAGER", "검색&그리드(페이징)", 7L, 1, 2, null));
@@ -255,7 +257,6 @@ public class DatabaseInitService {
         authGroupMenuService.save(AuthGroupMenu.of("S0001", 6L, "Y", "Y", "N", "N", "N", "N", "N", "N", "N"));
         authGroupMenuService.save(AuthGroupMenu.of("S0001", 7L, "Y", "Y", "N", "N", "N", "N", "N", "N", "N"));
         authGroupMenuService.save(AuthGroupMenu.of("S0001", 8L, "Y", "Y", "N", "N", "N", "N", "N", "N", "N"));
-        authGroupMenuService.save(AuthGroupMenu.of("S0001", 9L, "Y", "N", "N", "N", "N", "N", "N", "N", "N"));
 
     }
 

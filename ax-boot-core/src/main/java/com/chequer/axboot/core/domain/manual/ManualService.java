@@ -32,10 +32,10 @@ public class ManualService extends BaseService<Manual, Long> {
         BooleanBuilder builder = new BooleanBuilder();
 
         if (isNotEmpty(manualGrpCd)) {
-            builder.and(qMenual.manualGrpCd.eq(manualGrpCd));
+            builder.and(qManual.manualGrpCd.eq(manualGrpCd));
         }
 
-        List<Manual> manualList = select().from(qMenual).where(builder).orderBy(qMenual.level.asc(), qMenual.sort.asc()).fetch();
+        List<Manual> manualList = select().from(qManual).where(builder).orderBy(qManual.level.asc(), qManual.sort.asc()).fetch();
 
         List<Manual> hierarchyList = new ArrayList<>();
 

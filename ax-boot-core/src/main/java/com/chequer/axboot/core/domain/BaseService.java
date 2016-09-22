@@ -3,6 +3,7 @@ package com.chequer.axboot.core.domain;
 import com.chequer.axboot.core.code.Types;
 import com.chequer.axboot.core.db.mapper.ColumnToBeanPropertyRowMapper;
 import com.chequer.axboot.core.domain.code.QCommonCode;
+import com.chequer.axboot.core.domain.file.QCommonFile;
 import com.chequer.axboot.core.domain.manual.QManual;
 import com.chequer.axboot.core.domain.program.QProgram;
 import com.chequer.axboot.core.domain.program.menu.QMenu;
@@ -41,7 +42,8 @@ public class BaseService<T, ID extends Serializable> extends FilterService<T> {
     protected QProgram qProgram = QProgram.program;
     protected QUserAuth qUserAuth = QUserAuth.userAuth;
     protected QMenu qMenu = QMenu.menu;
-    protected QManual qMenual = QManual.manual;
+    protected QManual qManual = QManual.manual;
+    protected QCommonFile qCommonFile = QCommonFile.commonFile;
 
     protected JPAQueryDSLRepository<T, ID> repository;
 

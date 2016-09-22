@@ -142,6 +142,8 @@
 
         <reflections.version>0.9.10</reflections.version>
 
+        <thumbnailator.version>0.4.8</thumbnailator.version>
+
         <phantom.ghost.driver.version>1.1.0</phantom.ghost.driver.version>
         <postgresql.jdbc.version>9.4-1206-jdbc42</postgresql.jdbc.version>
         <proguard.version>4.4</proguard.version>
@@ -498,6 +500,12 @@
                 <groupId>org.zeroturnaround</groupId>
                 <artifactId>zt-zip</artifactId>
                 <version>${ztzip.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>net.coobird</groupId>
+                <artifactId>thumbnailator</artifactId>
+                <version>${thumbnailator.version}</version>
             </dependency>
 
         </dependencies>

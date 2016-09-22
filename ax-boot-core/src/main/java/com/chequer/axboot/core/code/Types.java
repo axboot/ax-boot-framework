@@ -45,6 +45,14 @@ public class Types {
         public String getLabel() {
             return label;
         }
+
+        public static Deleted get(String delYn) {
+            for (Deleted deleted : values()) {
+                if (deleted.getLabel().equals(delYn))
+                    return deleted;
+            }
+            return null;
+        }
     }
 
     public enum UserStatus implements LabelEnum {
@@ -194,48 +202,25 @@ public class Types {
         ORIGIN
     }
 
-    public static class TranAdjustStatus {
-        public static final String ORIGIN = "O";
-        public static final String ADJUSTING = "A";
-        public static final String CONFIRM = "C";
-        public static final String MONTHLY_CLOSE = "M";
-        public static final String RESET = "R";
+    public static class FileExtensions {
+        public static final String PNG = "PNG";
+        public static final String JPG = "JPG";
+        public static final String JPEG = "JPEG";
+        public static final String GIF = "GIF";
+        public static final String BMP = "BMP";
+        public static final String TIFF = "TIFF";
+        public static final String TIF = "TIF";
+        public static final String PDF = "PDF";
     }
 
-    public static class TranSendFlag {
-        public static final String NORMAL = "N";
-        public static final String ADJUST = "A";
-        public static final String FINISHED = "Y";
-        public static final String ERROR = "W";
+    public static class FileType {
+        public static final String IMAGE = "IMAGE";
+        public static final String PDF = "PDF";
+        public static final String ETC = "ETC";
     }
 
-    public static class ItemFlag {
-        public static final String NORMAL = "1";
-    }
-
-    public static class TranFlag {
-        public static final String NORMAL = "0";
-    }
-
-    public static class SaleFlag {
-        public static final String NORMAL = "0";
-        public static final String CANCEL = "1";
-        public static final String ADJUST = "2";
-    }
-
-    public static class TaxRefundFlag {
-        public static final String TAXATION = "N";
-        public static final String TAX_FREE = "Y";
-    }
-
-    public static class TaxFlag {
-        public static final String TAXATION = "1";
-        public static final String TAX_FREE = "2";
-    }
-
-    public static class TranAdjust {
-        public static final String POS_NO = "9999";
-        public static final String BILL_NO = "9999";
-        public static final String SALE_TM = "000000";
+    public static class ImagePreviewType {
+        public static final String THUMBNAIL = "THUMBNAIL";
+        public static final String ORIGIN = "ORIGIN";
     }
 }
