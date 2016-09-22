@@ -7,8 +7,20 @@
 <ax:set key="page_auto_height" value="false"/>
 
 <ax:layout name="base">
+    <jsp:attribute name="js">
+    <script src="/assets/plugins/prettify/prettify.js"></script>
+    <script src="/assets/plugins/prettify/lang-css.js"></script>
+    </jsp:attribute>
+    <jsp:attribute name="css">
+    <link rel="stylesheet" type="text/css" href="/assets/plugins/prettify/skins/github.css"/>
+    </jsp:attribute>
     <jsp:attribute name="script">
-
+    <script>
+        $(document.body).ready(function () {
+            $(document.body).find("pre").addClass("prettyprint linenums lang-js");
+            if (window["prettyPrint"]) window["prettyPrint"]();
+        });
+    </script>
     </jsp:attribute>
     <jsp:body>
 

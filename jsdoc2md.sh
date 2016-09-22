@@ -1,2 +1,2 @@
 #!/usr/bin/env bash
-jsdoc2md "chequer-admin/src/main/webapp/assets/js/axboot/dist/axboot.js" > chequer-admin/src/main/resources/md/api.md
+jsdoc2md "ax-boot-admin/src/main/webapp/assets/js/axboot/dist/axboot.js" > ax-boot-admin/src/main/resources/md/api.md
