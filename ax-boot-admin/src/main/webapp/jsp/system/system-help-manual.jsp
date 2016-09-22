@@ -77,7 +77,7 @@
                             <ax:tr>
                                 <ax:td label="호출 아이디">
                                     <input type="hidden" data-ax-path="manualId" />
-                                    <input type="text" data-ax-path="key" class="form-control" value=""/>
+                                    <input type="text" data-ax-path="manualKey" class="form-control" value=""/>
                                 </ax:td>
                             </ax:tr>
                         </ax:tbl>
