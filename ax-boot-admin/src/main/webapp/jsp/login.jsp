@@ -87,7 +87,7 @@
                         </div>
 
                         <div class="form-group">
-                            <label for="password"><i class="cqc-key"></i> Password</label>
+                            <label for="userPs"><i class="cqc-key"></i> Password</label>
                             <input type="password" name="userPs" id="userPs" value="1234" class="form-control ime-false" placeholder=""/>
                         </div>
 

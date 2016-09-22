@@ -81,18 +81,20 @@ public class AdminTokenAuthenticationService {
         if (!requestUri.startsWith(ContextUtil.getBaseApiPath())) {
             Program program = programService.findOne(progCd);
 
-            if (program != null && program.getAuthCheck().equals(Types.Used.YES.getLabel())) {
-                AuthGroupMenu authGroupMenu = authGroupMenuService.getCurrentAuthGroupMenu(menuId, user);
-
-                if (authGroupMenu == null) {
-                    //response.sendRedirect(request.getContextPath() + "/jsp/common/not-authorized.jsp");
-                }
-
+            if (progCd != null) {
                 requestUtils.setAttribute("program", program);
                 requestUtils.setAttribute("pageName", program.getProgNm());
                 requestUtils.setAttribute("pageRemark", program.getRemark());
-                requestUtils.setAttribute("authGroupMenu", authGroupMenu);
+
+                if (program.getAuthCheck().equals(Types.Used.YES.getLabel())) {
+                    AuthGroupMenu authGroupMenu = authGroupMenuService.getCurrentAuthGroupMenu(menuId, user);
+                    if (authGroupMenu == null) {
+                        //response.sendRedirect(request.getContextPath() + "/jsp/common/not-authorized.jsp");
+                    }
+                    requestUtils.setAttribute("authGroupMenu", authGroupMenu);
+                }
             }
+
 
             ScriptSessionVO scriptSessionVO = ModelMapperUtils.map(user, ScriptSessionVO.class);
             scriptSessionVO.setDateFormat(scriptSessionVO.getDateFormat().toUpperCase());
