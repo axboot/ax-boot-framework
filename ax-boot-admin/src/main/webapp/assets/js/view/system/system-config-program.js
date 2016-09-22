@@ -185,6 +185,6 @@ fnObj.gridView01 = axboot.viewExtend(axboot.gridView, {
         return list;
     },
     addRow: function () {
-        this.target.addRow({__created__: true, useYn: "N"}, "last");
+        this.target.addRow({__created__: true, useYn: "N", authCheck: "N"}, "last");
     }
 });
