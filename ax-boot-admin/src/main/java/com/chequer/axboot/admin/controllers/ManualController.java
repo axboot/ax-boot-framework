@@ -45,7 +45,7 @@ import java.util.List;
 
     @RequestMapping(method = {RequestMethod.PUT}, produces = APPLICATION_JSON)
     public ApiResponse save(@RequestBody ManualRequestVO vo) {
-        manualService.processManual(vo);
+        manualService.saveOrDelete(vo);
         return ok();
     }
 }

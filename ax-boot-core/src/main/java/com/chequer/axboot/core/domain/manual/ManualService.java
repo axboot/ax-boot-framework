@@ -106,13 +106,13 @@ public class ManualService extends BaseService<Manual, Long> {
     }
 
     @Transactional
-    public void processManual(ManualRequestVO vo) {
+    public void saveOrDelete(ManualRequestVO vo) {
         process(vo.getList());
         deleteManual(vo.getDeletedList());
     }
 
     @Transactional
-    public void saveManuals(List<Manual> manuals) {
+    public void update(List<Manual> manuals) {
         manuals.forEach(manual -> {
             if (!manual.isNew()) {
                 Manual exist = findOne(manual.getId());
@@ -126,7 +126,7 @@ public class ManualService extends BaseService<Manual, Long> {
 
     @Transactional
     public void process(List<Manual> manuals) {
-        saveManuals(manuals);
+        update(manuals);
         manuals.stream().filter(manual -> isNotEmpty(manual.getChildren())).forEach(menu -> {
             menu.getChildren().forEach(m -> m.setParentId(menu.getId()));
             process(menu.getChildren());
