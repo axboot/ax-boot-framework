@@ -1,7 +1,13 @@
+[data-page-auto-height="true"]{
+    #ax-base-root {
+        overflow: hidden;
+        height: 100%;
+    }
+}
+
 #ax-base-root{
     padding: 0 15px;
-    overflow: hidden;
-    height: 100%;
+    overflow: auto;
 
     .ax-base-title{
         display: table;

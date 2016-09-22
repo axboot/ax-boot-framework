@@ -4,7 +4,7 @@
 
 <ax:set key="title" value="${pageName}"/>
 <ax:set key="page_desc" value="${PAGE_REMARK}"/>
-<ax:set key="page_auto_height" value="true"/>
+<ax:set key="page_auto_height" value="false"/>
 
 <ax:layout name="base">
     <jsp:attribute name="script">
