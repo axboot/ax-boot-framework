@@ -116,7 +116,7 @@ public class ManualService extends BaseService<Manual, Long> {
         manuals.forEach(manual -> {
             if (!manual.isNew()) {
                 Manual exist = findOne(manual.getId());
-                manual.setKey(exist.getKey());
+                manual.setManualKey(exist.getManualKey());
                 manual.setContent(exist.getContent());
             }
 
