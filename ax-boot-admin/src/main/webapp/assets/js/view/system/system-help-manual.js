@@ -41,12 +41,10 @@ var ACTIONS = axboot.actionExtend(fnObj, {
                 });
 
                 break;
-            case ACTIONS.ITEM_ADD:
-                this.gridView01.addRow();
+            case ACTIONS.TREEITEM_DESELECTE:
+                this.formView01.clear();
                 break;
-            case ACTIONS.ITEM_DEL:
-                this.gridView01.delRow("selected");
-                break;
+
             case ACTIONS.TREE_ROOTNODE_ADD:
                 this.treeView01.addRootNode();
                 break;
@@ -68,13 +66,13 @@ var ACTIONS = axboot.actionExtend(fnObj, {
                         }
                     })
                     .done(function(){
-                        var data = this.formView01.getData();
+                        var data = _this.formView01.getData();
 
                         if(data.manualId) {
                             axboot.ajax({
                                 type: "PUT",
                                 url: "/api/v1/manual/detail",
-                                data: JSON.stringify(this.formView01.getData())
+                                data: JSON.stringify(data)
                             }, function (res) {
                                 axToast.push("매뉴얼 내용이 저장 되었습니다");
                             });
@@ -215,10 +213,10 @@ fnObj.treeView01 = axboot.viewExtend(axboot.treeView, {
         if (treeNode) {
             _this.target.zTree.editName(treeNode[0]);
         }
+        fnObj.treeView01.deselectNode();
     },
     initView: function () {
         var _this = this;
-
 
         $('[data-tree-view-01-btn]').click(function () {
             var _act = this.getAttribute("data-tree-view-01-btn");
@@ -256,6 +254,7 @@ fnObj.treeView01 = axboot.viewExtend(axboot.treeView, {
                             );
                             _this.target.zTree.selectNode(treeNode.children[treeNode.children.length - 1]);
                             _this.target.editName();
+                            fnObj.treeView01.deselectNode();
                             return false;
                         });
                     }

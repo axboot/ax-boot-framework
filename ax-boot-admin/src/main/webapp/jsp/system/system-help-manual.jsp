@@ -85,7 +85,7 @@
                     <div class="H10"></div>
                 </div>
 
-                <div id="summernote" data-fit-height-content="form-view-01">summernote 1</div>
+                <div id="summernote" data-fit-height-content="form-view-01"></div>
 
             </ax:split-panel>
         </ax:split-layout>
