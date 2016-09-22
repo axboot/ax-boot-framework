@@ -37,7 +37,6 @@ public class ManualController extends BaseController {
         return manualService.findOne(id);
     }
 
-
     @RequestMapping(value = "/detail", method = {RequestMethod.PUT}, produces = APPLICATION_JSON)
     public ApiResponse save(@RequestBody Manual manual) {
         manualService.save(manual);
