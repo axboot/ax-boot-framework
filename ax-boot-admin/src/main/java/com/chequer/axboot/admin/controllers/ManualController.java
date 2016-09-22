@@ -19,9 +19,9 @@ import javax.inject.Inject;
 import java.util.List;
 
 
-@Controller
-@RequestMapping(value = "/api/v1/manual")
-public class ManualController extends BaseController {
+    @Controller
+    @RequestMapping(value = "/api/v1/manual")
+    public class ManualController extends BaseController {
 
     @Inject
     private ManualService manualService;
