@@ -68,7 +68,7 @@
                     </div>
 
 
-                    <div class="summernote">summernote 1</div>
+                    <div id="summernote">summernote 1</div>
 
                     <ax:form name="formView01">
 

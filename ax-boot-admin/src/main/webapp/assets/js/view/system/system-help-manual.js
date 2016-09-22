@@ -350,6 +350,14 @@ fnObj.formView01 = axboot.viewExtend(axboot.formView, {
         var _this = this;
         this.manualGroup = CODE.manualGroup;
 
+        $('#summernote').summernote({
+            height: 300,                 // set editor height
+            minHeight: null,             // set minimum height of editor
+            maxHeight: null,             // set maximum height of editor
+            focus: true                  // set focus to editable area after initializing summernote
+        });
+        return ;
+
         this.target = $("#formView01");
         this.model = new ax5.ui.binder();
         this.model.setModel(this.getDefaultData(), this.target);
