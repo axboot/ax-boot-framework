@@ -47,10 +47,13 @@
     } else {
         md = IOUtils.toString(new ClassPathResource("/md/" + src).getInputStream(), "UTF-8");
     }
+
     Parser parser = Parser.builder().build();
     Node document = parser.parse(md);
     HtmlRenderer renderer = HtmlRenderer.builder().build();
     html = renderer.render(document);
 %>
 
+<div class="ax-markdown">
 <%=html%>
+</div>

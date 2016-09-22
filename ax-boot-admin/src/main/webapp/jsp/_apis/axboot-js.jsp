@@ -14,7 +14,11 @@
 
         <ax:page-buttons></ax:page-buttons>
 
-        <ax:markdown src="api.md"></ax:markdown>
+        <div class="panel panel-default">
+            <div class="panel-body">
+                <ax:markdown src="api.md"></ax:markdown>
+            </div>
+        </div>
 
     </jsp:body>
 </ax:layout>
