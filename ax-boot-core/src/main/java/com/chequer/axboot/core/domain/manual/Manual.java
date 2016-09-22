@@ -12,6 +12,7 @@ import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.DynamicUpdate;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotNull;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -40,8 +41,9 @@ public class Manual extends BaseJpaModel<Long> implements Cloneable {
     private String manualGrpCd;
 
     @Column(name = "MANUAL_NM", length = 100)
-    @Comment(value = "메뉴얼 명")
+    @Comment(value = "목차명")
     @ColumnPosition(3)
+    @NotNull(message = "목차를 입력하세요")
     private String manualNm;
 
     @Column(name = "PARENT_ID", precision = 19)
@@ -67,6 +69,7 @@ public class Manual extends BaseJpaModel<Long> implements Cloneable {
     @Column(name = "MANUAL_KEY", length = 100)
     @Comment(value = "호출 키")
     @ColumnPosition(8)
+    @NotNull(message = "호출키를 입력하세요")
     private String manualKey;
 
     @Transient

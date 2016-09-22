@@ -4,11 +4,14 @@ import com.chequer.axboot.core.domain.BaseService;
 import com.chequer.axboot.core.parameter.RequestParams;
 import com.querydsl.core.BooleanBuilder;
 import org.apache.commons.io.FileUtils;
+import org.apache.commons.io.IOUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 import org.zeroturnaround.zip.ZipUtil;
 
 import javax.inject.Inject;
+import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -141,5 +144,20 @@ public class ManualService extends BaseService<Manual, Long> {
         manuals.stream().filter(menu -> isNotEmpty(menu.getChildren())).forEach(menu -> {
             deleteManual(menu.getChildren());
         });
+    }
+
+    @Transactional
+    public Manual uploadFile(Long id, MultipartFile file) {
+        Manual manual = findOne(id);
+        try {
+            ByteArrayInputStream stream = new ByteArrayInputStream(file.getBytes());
+            String content = IOUtils.toString(stream, "UTF-8");
+
+            manual.setContent(content);
+            save(manual);
+        } catch (Exception e) {
+            // ignore
+        }
+        return manual;
     }
 }
