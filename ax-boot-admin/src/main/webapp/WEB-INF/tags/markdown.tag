@@ -1,9 +1,15 @@
 <%@ tag import="org.apache.commons.io.IOUtils" %>
 <%@ tag import="org.apache.commons.lang3.StringUtils" %>
+<%@ tag import="org.commonmark.Extension" %>
+<%@ tag import="org.commonmark.ext.autolink.AutolinkExtension" %>
+<%@ tag import="org.commonmark.ext.gfm.strikethrough.StrikethroughExtension" %>
+<%@ tag import="org.commonmark.ext.gfm.tables.TablesExtension" %>
 <%@ tag import="org.commonmark.html.HtmlRenderer" %>
 <%@ tag import="org.commonmark.node.Node" %>
 <%@ tag import="org.commonmark.parser.Parser" %>
 <%@ tag import="org.springframework.core.io.ClassPathResource" %>
+<%@ tag import="java.util.Arrays" %>
+<%@ tag import="java.util.List" %>
 <%@ tag language="java" pageEncoding="UTF-8" body-content="scriptless" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ attribute name="src" %>
@@ -47,7 +53,9 @@
     } else {
         md = IOUtils.toString(new ClassPathResource("/md/" + src).getInputStream(), "UTF-8");
     }
-    Parser parser = Parser.builder().build();
+
+    List<Extension> extensions = Arrays.asList(TablesExtension.create(), StrikethroughExtension.create(), AutolinkExtension.create());
+    Parser parser = Parser.builder().extensions(extensions).build();
     Node document = parser.parse(md);
     HtmlRenderer renderer = HtmlRenderer.builder().build();
     html = renderer.render(document);
