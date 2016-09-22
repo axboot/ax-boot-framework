@@ -4,9 +4,6 @@ var ACTIONS = axboot.actionExtend(fnObj, {
     PAGE_SAVE: "PAGE_SAVE",
     TREEITEM_CLICK: "TREEITEM_CLICK",
     TREE_ROOTNODE_ADD: "TREE_ROOTNODE_ADD",
-    SELECT_PROG: "SELECT_PROG",
-    SEARCH_AUTH: "SEARCH_AUTH",
-    MENU_AUTH_CLEAR: "MENU_AUTH_CLEAR",
     dispatch: function (caller, act, data) {
         var _this = this;
         switch (act) {
@@ -14,7 +11,7 @@ var ACTIONS = axboot.actionExtend(fnObj, {
                 var searchData = this.searchView.getData();
                 axboot.ajax({
                     type: "GET",
-                    url: "/api/v2/menu",
+                    url: "/api/v1/manual",
                     data: this.searchView.getData()
                 }, function (res) {
                     _this.treeView01.setData(searchData, res.list);
@@ -36,16 +33,6 @@ var ACTIONS = axboot.actionExtend(fnObj, {
                 break;
             case ACTIONS.TREE_ROOTNODE_ADD:
                 this.treeView01.addRootNode();
-                break;
-            case ACTIONS.SELECT_PROG:
-                this.treeView01.updateNode(data);
-
-                ACTIONS.dispatch(ACTIONS.PAGE_SAVE, {
-                    callBack: function () {
-                        _this.formView01.onSelectProg();
-                    }
-                });
-
                 break;
             case ACTIONS.PAGE_SAVE:
 
@@ -100,77 +87,6 @@ var ACTIONS = axboot.actionExtend(fnObj, {
                     }
                 });
                 break;
-            case ACTIONS.MENU_AUTH_CLEAR:
-                this.gridView01.clear();
-                break;
-            case ACTIONS.SEARCH_AUTH:
-                axboot.ajax({
-                        type: "GET",
-                        url: "/api/v2/menu/auth",
-                        data: data
-                    },
-                    function (res) {
-
-                        var list = [];
-                        if (res.program) {
-                            _this.formView01.authGroup.forEach(function (g) {
-                                var item = {
-                                    grpAuthCd: g.grpAuthCd,
-                                    grpAuthNm: g.grpAuthNm,
-                                    useYn: "N",
-                                    schAh: "N",
-                                    savAh: "N",
-                                    exlAh: "N",
-                                    delAh: "N",
-                                    fn1Ah: "N",
-                                    fn2Ah: "N",
-                                    fn3Ah: "N",
-                                    fn4Ah: "N",
-                                    fn5Ah: "N",
-                                    menuId: data.menuId
-                                };
-
-                                res.list.forEach(function (n) {
-                                    if (n.grpAuthCd == item.grpAuthCd) {
-                                        $.extend(item, {
-                                            useYn: "Y",
-                                            schAh: n.schAh || "N",
-                                            savAh: n.savAh || "N",
-                                            exlAh: n.exlAh || "N",
-                                            delAh: n.delAh || "N",
-                                            fn1Ah: n.fn1Ah || "N",
-                                            fn2Ah: n.fn2Ah || "N",
-                                            fn3Ah: n.fn3Ah || "N",
-                                            fn4Ah: n.fn4Ah || "N",
-                                            fn5Ah: n.fn5Ah || "N"
-                                        });
-                                    }
-                                });
-
-                                if (res.program) {
-                                    $.extend(item, {
-                                        program_schAh: res.program.schAh || "N",
-                                        program_savAh: res.program.savAh || "N",
-                                        program_exlAh: res.program.exlAh || "N",
-                                        program_delAh: res.program.delAh || "N",
-                                        program_fn1Ah: res.program.fn1Ah || "N",
-                                        program_fn2Ah: res.program.fn2Ah || "N",
-                                        program_fn3Ah: res.program.fn3Ah || "N",
-                                        program_fn4Ah: res.program.fn4Ah || "N",
-                                        program_fn5Ah: res.program.fn5Ah || "N"
-                                    });
-                                }
-                                list.push(item);
-                            });
-                        }
-                        _this.gridView01.setData(list);
-
-                    }, {
-                        onError: function (err) {
-                            console.log(err);
-                        }
-                    });
-                break;
             default:
                 return false;
         }
@@ -186,34 +102,17 @@ fnObj.pageStart = function () {
 
     axboot
         .call({
-            type: "GET", url: "/api/v1/programs", data: "",
+            type: "GET", url: "/api/v1/commonCodes", data: {groupCd: "MANUAL_GROUP", useYn: "Y"},
             callBack: function (res) {
-                var programList = [];
+                var manualGroup = [];
                 res.list.forEach(function (n) {
-                    programList.push({
-                        value: n.progCd, text: n.progNm + "(" + n.progCd + ")",
-                        progCd: n.progCd, progNm: n.progNm,
-                        data: n
-                    });
-                });
-                this.programList = programList;
-            }
-        })
-        .call(function () {
-            this.something = 1;
-        })
-        .call({
-            type: "GET", url: "/api/v1/commonCodes", data: {groupCd: "AUTH_GROUP", useYn: "Y"},
-            callBack: function (res) {
-                var authGroup = [];
-                res.list.forEach(function (n) {
-                    authGroup.push({
+                    manualGroup.push({
                         value: n.code, text: n.name + "(" + n.code + ")",
                         grpAuthCd: n.code, grpAuthNm: n.name,
                         data: n
                     });
                 });
-                this.authGroup = authGroup;
+                this.authGroup = manualGroup;
             }
         })
         .done(function () {
@@ -223,7 +122,6 @@ fnObj.pageStart = function () {
             _this.searchView.initView();
             _this.treeView01.initView();
             _this.formView01.initView();
-            _this.gridView01.initView();
 
             ACTIONS.dispatch(ACTIONS.PAGE_SEARCH);
         });
@@ -274,13 +172,13 @@ fnObj.searchView = axboot.viewExtend(axboot.searchView, {
     initView: function () {
         this.target = $(document["searchView0"]);
         this.target.attr("onsubmit", "return ACTIONS.dispatch(ACTIONS.PAGE_SEARCH);");
-        this.menuGrpCd = $("#menuGrpCd");
+        this.manualGrpCd = $("#manualGrpCd");
     },
     getData: function () {
         return {
             pageNumber: 0,
             pageSize: 99999,
-            menuGrpCd: this.menuGrpCd.val()
+            manualGrpCd: this.manualGrpCd.val()
         }
     }
 });
@@ -450,8 +348,7 @@ fnObj.formView01 = axboot.viewExtend(axboot.formView, {
     },
     initView: function () {
         var _this = this;
-        this.programList = CODE.programList;
-        this.authGroup = CODE.authGroup;
+        this.manualGroup = CODE.manualGroup;
 
         this.target = $("#formView01");
         this.model = new ax5.ui.binder();
@@ -468,29 +365,6 @@ fnObj.formView01 = axboot.viewExtend(axboot.formView, {
                     break;
             }
         });
-
-        this.combobox = $('[data-ax5combobox]').ax5combobox({
-            options: this.programList,
-            onChange: function () {
-                if (this.value[0]) {
-                    _this.model.set("progCd", this.value[0].progCd);
-                    _this.model.set("progNm", this.value[0].progNm);
-                    // console.log(this.value[0].data);
-
-                    ACTIONS.dispatch(ACTIONS.MENU_AUTH_CLEAR);
-                    ACTIONS.dispatch(ACTIONS.SELECT_PROG, this.value[0]);
-                } else {
-                    if(_this.model.get("progCd")) {
-                        _this.model.set("progCd", "");
-                        _this.model.set("progNm", "");
-                        _this.combobox.ax5combobox("close");
-
-                        ACTIONS.dispatch(ACTIONS.SELECT_PROG, "");
-                        ACTIONS.dispatch(ACTIONS.MENU_AUTH_CLEAR);
-                    }
-                }
-            }
-        });
     },
     initEvent: function () {
         var _this = this;
@@ -501,96 +375,12 @@ fnObj.formView01 = axboot.viewExtend(axboot.formView, {
     },
     setData: function (data) {
         var _data = this.getDefaultData();
-        this.combobox.ax5combobox("setValue", []);
-
-        ACTIONS.dispatch(ACTIONS.MENU_AUTH_CLEAR);
-        _data.menuId = data.menuId;
-
-        if (data.progCd) {
-            var progIndex = ax5.util.search(this.programList, function () {
-                return this.progCd == data.progCd;
-            });
-            var prog = this.programList[progIndex];
-
-            _data.progCd = prog.progCd;
-            _data.progNm = prog.progNm;
-
-            this.combobox.ax5combobox("setValue", _data.progCd);
-            ACTIONS.dispatch(ACTIONS.SEARCH_AUTH, {menuId: data.menuId});
-        }
 
         //this.combobox.ax5combobox("blur");
         this.model.setModel(_data);
-        this.modelFormatter.formatting(); // 입력된 값을 포메팅 된 값으로 변경
     },
     onSelectProg: function () {
         var menuId = this.model.get("menuId");
         ACTIONS.dispatch(ACTIONS.SEARCH_AUTH, {menuId: menuId});
-    }
-});
-
-
-/**
- * gridView
- */
-fnObj.gridView01 = axboot.viewExtend(axboot.gridView, {
-    initView: function () {
-        var _this = this;
-
-        $('[data-grid-view-01-btn]').click(function () {
-            var _act = this.getAttribute("data-grid-view-01-btn");
-            switch (_act) {
-                case "add":
-                    ACTIONS.dispatch(ACTIONS.ITEM_ADD);
-                    break;
-                case "delete":
-                    ACTIONS.dispatch(ACTIONS.ITEM_DEL);
-                    break;
-            }
-        });
-
-        this.target = axboot.gridBuilder({
-            showLineNumber: false,
-            showRowSelector: false,
-            frozenColumnIndex: 0,
-            target: $('[data-ax5grid="grid-view-01"]'),
-            columns: [
-                //menuId
-                {key: "grpAuthCd", label: "권한그룹코드", width: 80, align: "center"},
-                {key: "grpAuthNm", label: "권한그룹명", width: 160, align: "left"},
-                {key: "useYn", label: "권한적용", editor: "checkYn"},
-                {key: "schAh", label: "조회", width: 50, align: "center", editor: "menu-program-auth-checkYn"},
-                {key: "savAh", label: "저장", width: 50, align: "center", editor: "menu-program-auth-checkYn"},
-                {key: "exlAh", label: "엑셀", width: 50, align: "center", editor: "menu-program-auth-checkYn"},
-                {key: "delAh", label: "삭제", width: 50, align: "center", editor: "menu-program-auth-checkYn"},
-                {key: "fn1Ah", label: "FN1", width: 50, align: "center", editor: "menu-program-auth-checkYn"},
-                {key: "fn2Ah", label: "FN2", width: 50, align: "center", editor: "menu-program-auth-checkYn"},
-                {key: "fn3Ah", label: "FN3", width: 50, align: "center", editor: "menu-program-auth-checkYn"},
-                {key: "fn4Ah", label: "FN4", width: 50, align: "center", editor: "menu-program-auth-checkYn"},
-                {key: "fn5Ah", label: "FN5", width: 50, align: "center", editor: "menu-program-auth-checkYn"}
-                /// --> 이것들을 list로 담아서  [PUT] "/api/v2/menu/auth"
-            ],
-            body: {
-                onClick: function () {
-                    // this.self.select(this.dindex);
-                }
-            }
-        });
-    },
-    getData: function (_type) {
-        var list = [];
-        var _list = this.target.getList(_type);
-
-        if (_type == "modified" || _type == "deleted") {
-            list = ax5.util.filter(_list, function () {
-                return this.progNm && this.progPh;
-            });
-        } else {
-            list = _list;
-        }
-        return list;
-    },
-    addRow: function () {
-        this.target.addRow({__created__: true, useYn: "N"}, "last");
     }
 });

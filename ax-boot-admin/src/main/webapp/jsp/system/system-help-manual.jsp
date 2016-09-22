@@ -20,7 +20,7 @@
                 <ax:tbl clazz="ax-search-tbl" minWidth="500px">
                     <ax:tr>
                         <ax:td label='메뉴얼 그룹' width="300px">
-                            <ax:common-code groupCd="MENU_GROUP" id="menuGrpCd"/>
+                            <ax:common-code groupCd="MANUAL_GROUP" id="manualGrpCd"/>
                         </ax:td>
                     </ax:tr>
                 </ax:tbl>
@@ -62,22 +62,7 @@
                     </div>
 
                     <ax:form name="formView01">
-                        <ax:tbl clazz="ax-form-tbl" minWidth="500px">
-                            <ax:tr>
-                                <ax:td label="프로그램코드" width="100%">
-                                    <input type="text" data-ax-path="progCd" class="form-control" value="" readonly="readonly"/>
-                                </ax:td>
-                            </ax:tr>
-                            <ax:tr>
-                                <ax:td label="프로그램 명" width="100%">
-                                    <input type="hidden" data-ax-path="menuId" class="form-control" value=""/>
-                                    <input type="hidden" data-ax-path="progNm" class="form-control" value=""/>
-                                    <div class="form-group">
-                                        <div data-ax5combobox="progCd" data-ax5combobox-config='{size: "", editable: false, multiple: false}'></div>
-                                    </div>
-                                </ax:td>
-                            </ax:tr>
-                        </ax:tbl>
+
                     </ax:form>
                 </div>
 

@@ -1,8 +1,51 @@
 /**
+ * 여러개의 AJAX콜을 순차적으로 해야 하는 경우 callBack 지옥에 빠지기 쉽다. `axboot.call & done`은 이런 상황에서 코드가 보기 어려워지는 문제를 해결 하기 위해 개발된 오브젝트 입니다
  * @type {Object} axboot.call
  * @example
  * ```js
-
+ *   axboot
+ *       .call({
+ *           type: "GET", url: "/api/v1/programs", data: "",
+ *           callBack: function (res) {
+ *               var programList = [];
+ *               res.list.forEach(function (n) {
+ *                   programList.push({
+ *                       value: n.progCd, text: n.progNm + "(" + n.progCd + ")",
+ *                       progCd: n.progCd, progNm: n.progNm,
+ *                       data: n
+ *                   });
+ *               });
+ *               this.programList = programList;
+ *           }
+ *       })
+ *       .call(function () {
+ *           this.something = 1;
+ *       })
+ *       .call({
+ *           type: "GET", url: "/api/v1/commonCodes", data: {groupCd: "AUTH_GROUP", useYn: "Y"},
+ *           callBack: function (res) {
+ *               var authGroup = [];
+ *               res.list.forEach(function (n) {
+ *                   authGroup.push({
+ *                       value: n.code, text: n.name + "(" + n.code + ")",
+ *                       grpAuthCd: n.code, grpAuthNm: n.name,
+ *                       data: n
+ *                   });
+ *               });
+ *               this.authGroup = authGroup;
+ *           }
+ *       })
+ *       .done(function () {
+ *           CODE = this; // this는 call을 통해 수집된 데이터들.
+ *
+ *           _this.pageButtonView.initView();
+ *           _this.searchView.initView();
+ *           _this.treeView01.initView();
+ *           _this.formView01.initView();
+ *           _this.gridView01.initView();
+ *
+ *           ACTIONS.dispatch(ACTIONS.PAGE_SEARCH);
+ *       });
  * ```
  */
 axboot.call = (function () {
