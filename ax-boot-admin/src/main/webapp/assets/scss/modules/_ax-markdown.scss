@@ -46,4 +46,21 @@
     p{
         margin: 1em auto;
     }
+
+    table{
+        display: block;
+        width: 100%;
+        overflow: auto;
+        tr{
+            background-color: #fff;
+            border-top: 1px solid #ccc;
+            th, td{
+                padding: 6px 13px;
+                border: 1px solid #ddd;
+            }
+            &:nth-child(2n){
+                background-color: #f8f8f8;
+            }
+        }
+    }
 }
