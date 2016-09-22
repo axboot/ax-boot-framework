@@ -8,10 +8,16 @@
 
 <ax:layout name="base">
     <jsp:attribute name="css">
-        <link href="http://cdnjs.cloudflare.com/ajax/libs/summernote/0.8.2/summernote.css" rel="stylesheet">
+        <link href="/assets/plugins/summernote/dist/summernote.css" rel="stylesheet">
+        <style>
+            .note-btn-group .note-btn {
+                padding: 2px 8px 4px 8px;
+            }
+        </style>
     </jsp:attribute>
     <jsp:attribute name="js">
-        <script src="http://cdnjs.cloudflare.com/ajax/libs/summernote/0.8.2/summernote.js"></script>
+        <script src="/assets/plugins/summernote/dist/summernote.min.js"></script>
+        <script src="/assets/plugins/summernote/dist/lang/summernote-ko-KR.js"></script>
     </jsp:attribute>
     <jsp:attribute name="script">
         <script type="text/javascript" src="<c:url value='/assets/js/view/system/system-help-manual.js' />"></script>
@@ -66,14 +72,19 @@
                         </div>
                     </div>
 
-
-                    <div id="summernote">summernote 1</div>
-
                     <ax:form name="formView01">
-
+                        <ax:tbl clazz="ax-form-tbl" minWidth="500px">
+                            <ax:tr>
+                                <ax:td label="호출 아이디">
+                                    <input type="text" data-ax-path="key" class="form-control" value=""/>
+                                </ax:td>
+                            </ax:tr>
+                        </ax:tbl>
                     </ax:form>
+                    <div class="H10"></div>
                 </div>
 
+                <div id="summernote" data-fit-height-content="form-view-01">summernote 1</div>
 
             </ax:split-panel>
         </ax:split-layout>

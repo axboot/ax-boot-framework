@@ -109,7 +109,9 @@ fnObj.pageStart = function () {
 };
 
 fnObj.pageResize = function () {
-
+    setTimeout(function(){
+        fnObj.formView01.resize();
+    }, 100);
 };
 
 
@@ -332,12 +334,25 @@ fnObj.formView01 = axboot.viewExtend(axboot.formView, {
         this.manualGroup = CODE.manualGroup;
 
         $('#summernote').summernote({
-            height: 300,                 // set editor height
+            height: ($('#summernote').height() - 50),                 // set editor height
             minHeight: null,             // set minimum height of editor
             maxHeight: null,             // set maximum height of editor
-            focus: true                  // set focus to editable area after initializing summernote
+            focus: true,                  // set focus to editable area after initializing summernote,
+            lang: 'ko-KR',
+            airMode: false,
+            toolbar: [
+                ['style', ['style']],
+                ['font', ['bold', 'italic', 'underline', 'clear']],
+                ['fontname', ['fontname']],
+                ['color', ['color']],
+                ['para', ['ul', 'ol', 'paragraph']],
+                ['height', ['height']],
+                ['table', ['table']],
+                ['insert', ['link', 'picture', 'hr']],
+                ['view', ['codeview']],
+                ['help', ['help']]
+            ]
         });
-        return ;
 
         this.target = $("#formView01");
         this.model = new ax5.ui.binder();
@@ -368,8 +383,7 @@ fnObj.formView01 = axboot.viewExtend(axboot.formView, {
         //this.combobox.ax5combobox("blur");
         this.model.setModel(_data);
     },
-    onSelectProg: function () {
-        var manualId = this.model.get("manualId");
-        ACTIONS.dispatch(ACTIONS.SEARCH_AUTH, {manualId: manualId});
+    resize: function(){
+        $('.note-editable.panel-body').height(($('#summernote').height() - 200));
     }
 });
