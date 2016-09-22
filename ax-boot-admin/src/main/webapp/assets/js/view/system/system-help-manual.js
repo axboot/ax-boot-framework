@@ -209,7 +209,7 @@ fnObj.treeView01 = axboot.viewExtend(axboot.treeView, {
         treeNode = _this.target.zTree.addNodes(null, {
             id: "_isnew_" + (++_this.newCount),
             pId: 0,
-            name: "새 메뉴",
+            name: "새 목차",
             __created__: true,
             manualGrpCd: _this.param.manualGrpCd
         });
@@ -251,7 +251,7 @@ fnObj.treeView01 = axboot.viewExtend(axboot.treeView, {
                                 {
                                     id: "_isnew_" + (++_this.newCount),
                                     pId: treeNode.id,
-                                    name: "새 메뉴",
+                                    name: "새 목차",
                                     __created__: true,
                                     manualGrpCd: _this.param.manualGrpCd
                                 }
@@ -366,7 +366,7 @@ fnObj.formView01 = axboot.viewExtend(axboot.formView, {
         this.mask = new ax5.ui.mask({
             theme: "form-mask",
             target: $('#split-panel-form'),
-            content: '좌측 메뉴를 선택해주세요.'
+            content: '좌측 목차를 선택해주세요.'
         });
         this.mask.open();
 
