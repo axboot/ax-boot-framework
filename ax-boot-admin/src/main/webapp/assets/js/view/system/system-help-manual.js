@@ -50,12 +50,31 @@ var ACTIONS = axboot.actionExtend(fnObj, {
                     _this.treeView01.clearDeletedList();
                     axToast.push("메뉴 카테고리가 저장 되었습니다");
 
-                    if (data && data.callBack) {
-                        data.callBack();
+                    if (data && data.callback) {
+                        data.callback();
                     } else {
                         ACTIONS.dispatch(ACTIONS.PAGE_SEARCH);
                     }
                 });
+
+                if (data && data.callback) {
+
+                } else {
+
+                    var formData = this.formView01.getData();
+                    if (formData.progCd) {
+                        axboot.ajax({
+                            type: "PUT",
+                            url: "/api/v2/menu/auth",
+                            data: JSON.stringify(this.gridView01.getData())
+                        }, function (res) {
+                            axToast.push("메뉴 권한그룹 정보가 저장 되었습니다");
+                            ACTIONS.dispatch(ACTIONS.SEARCH_AUTH, {menuId: _this.formView01.getData().menuId});
+                        });
+                    } else {
+
+                    }
+                }
 
                 break;
             case ACTIONS.FORM_CLEAR:
@@ -84,7 +103,7 @@ fnObj.pageStart = function () {
     axboot
         .call({
             type: "GET", url: "/api/v1/commonCodes", data: {groupCd: "MANUAL_GROUP", useYn: "Y"},
-            callBack: function (res) {
+            callback: function (res) {
                 var manualGroup = [];
                 res.list.forEach(function (n) {
                     manualGroup.push({
@@ -183,7 +202,7 @@ fnObj.treeView01 = axboot.viewExtend(axboot.treeView, {
             pId: 0,
             name: "새 메뉴",
             __created__: true,
-            manualGrpCd: _this.param.manualGrpCd
+            menuGrpCd: _this.param.menuGrpCd
         });
 
         if (treeNode) {
@@ -224,7 +243,7 @@ fnObj.treeView01 = axboot.viewExtend(axboot.treeView, {
                                     pId: treeNode.id,
                                     name: "새 메뉴",
                                     __created__: true,
-                                    manualGrpCd: _this.param.manualGrpCd
+                                    menuGrpCd: _this.param.menuGrpCd
                                 }
                             );
                             _this.target.zTree.selectNode(treeNode.children[treeNode.children.length - 1]);
@@ -276,9 +295,9 @@ fnObj.treeView01 = axboot.viewExtend(axboot.treeView, {
                     item = {
                         __created__: n.__created__,
                         __modified__: n.__modified__,
-                        manualId: n.manualId,
-                        manualGrpCd: _this.param.manualGrpCd,
-                        manualNm: n.name,
+                        menuId: n.menuId,
+                        menuGrpCd: _this.param.menuGrpCd,
+                        menuNm: n.name,
                         parentId: n.parentId,
                         sort: nidx,
                         progCd: n.progCd,
@@ -286,9 +305,9 @@ fnObj.treeView01 = axboot.viewExtend(axboot.treeView, {
                     };
                 } else {
                     item = {
-                        manualId: n.manualId,
-                        manualGrpCd: n.manualGrpCd,
-                        manualNm: n.name,
+                        menuId: n.menuId,
+                        menuGrpCd: n.menuGrpCd,
+                        menuNm: n.name,
                         parentId: n.parentId,
                         sort: nidx,
                         progCd: n.progCd,
@@ -331,6 +350,14 @@ fnObj.formView01 = axboot.viewExtend(axboot.formView, {
         var _this = this;
         this.manualGroup = CODE.manualGroup;
 
+        $('#summernote').summernote({
+            height: 300,                 // set editor height
+            minHeight: null,             // set minimum height of editor
+            maxHeight: null,             // set maximum height of editor
+            focus: true                  // set focus to editable area after initializing summernote
+        });
+        return ;
+
         this.target = $("#formView01");
         this.model = new ax5.ui.binder();
         this.model.setModel(this.getDefaultData(), this.target);
@@ -361,7 +388,7 @@ fnObj.formView01 = axboot.viewExtend(axboot.formView, {
         this.model.setModel(_data);
     },
     onSelectProg: function () {
-        var manualId = this.model.get("manualId");
-        ACTIONS.dispatch(ACTIONS.SEARCH_AUTH, {manualId: manualId});
+        var menuId = this.model.get("menuId");
+        ACTIONS.dispatch(ACTIONS.SEARCH_AUTH, {menuId: menuId});
     }
 });

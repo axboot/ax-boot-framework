@@ -20,6 +20,7 @@
     "ax5ui-binder": "",
     "bootstrap-sass": "^3.3.7",
     "bourbon": "^4.2.7",
-    "ztree_v3": "^3.5.24"
+    "ztree_v3": "^3.5.24",
+    "summernote": "^0.8.2"
   }
 }
