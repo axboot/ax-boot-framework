@@ -122,11 +122,13 @@ $ax5layout-tab-panel-label-item-active-bg-colors: (#fff, #fff);
 
 [data-ax5layout] {
     > .split-panel-horizontal[data-splitter]{
+        z-index: auto;
         @include ax-background(left #eee #ccc);
         border: 1px solid #b5b5b5;
         border-radius: 3px;
     }
     > .split-panel-vertical[data-splitter]{
+        z-index: auto;
         @include ax-background(top #eee #ccc);
         border: 1px solid #b5b5b5;
         border-radius: 3px;
