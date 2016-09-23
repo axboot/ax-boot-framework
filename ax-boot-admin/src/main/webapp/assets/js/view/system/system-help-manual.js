@@ -379,11 +379,10 @@ fnObj.formView01 = axboot.viewExtend(axboot.formView, {
         this.modelFormatter = new axboot.modelFormatter(this.model); // 모델 포메터 시작
 
         this.editor = CKEDITOR.replace('editor1', {
-            language: 'ko-kr',
-            uiColor: '#eeeeee',
+            language: 'korean',
             removePlugins: 'resize'
         });
-
+// todo : upload-image config 찾기
         this.resize();
         this.initEvent();
 
