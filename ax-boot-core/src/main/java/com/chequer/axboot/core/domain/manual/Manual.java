@@ -69,7 +69,6 @@ public class Manual extends BaseJpaModel<Long> implements Cloneable {
     @Column(name = "MANUAL_KEY", length = 100)
     @Comment(value = "호출 키")
     @ColumnPosition(8)
-    @NotNull(message = "호출키를 입력하세요")
     private String manualKey;
 
     @Transient
