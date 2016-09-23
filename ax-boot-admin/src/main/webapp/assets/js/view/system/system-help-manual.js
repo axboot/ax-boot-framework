@@ -372,27 +372,7 @@ fnObj.formView01 = axboot.viewExtend(axboot.formView, {
 
         this.manualGroup = CODE.manualGroup;
         
-        this.summernote = $('#summernote');
-        this.summernote.summernote({
-            height: ($('#summernote').height() - 50),                 // set editor height
-            minHeight: null,             // set minimum height of editor
-            maxHeight: null,             // set maximum height of editor
-            focus: true,                  // set focus to editable area after initializing summernote,
-            lang: 'ko-KR',
-            airMode: false,
-            toolbar: [
-                ['style', ['style']],
-                ['font', ['bold', 'italic', 'underline', 'clear']],
-                ['fontname', ['fontname']],
-                ['color', ['color']],
-                ['para', ['ul', 'ol', 'paragraph']],
-                ['height', ['height']],
-                ['table', ['table']],
-                ['insert', ['link', 'picture', 'hr']],
-                ['view', ['codeview']],
-                ['help', ['help']]
-            ]
-        });
+
 
         this.target = $("#formView01");
         this.model = new ax5.ui.binder();
@@ -424,10 +404,10 @@ fnObj.formView01 = axboot.viewExtend(axboot.formView, {
         this.mask.close();
         $.extend(true, data, this.getDefaultData());
         this.model.setModel(data);
-        console.log(this.summernote.summernote("code", data.content||""));
+
     },
     resize: function(){
-        $('.note-editable.panel-body').height(($('#summernote').height() - 200));
+        //$('.note-editable.panel-body').height(($('#summernote').height() - 200));
     },
     clear: function () {
         this.mask.open();
