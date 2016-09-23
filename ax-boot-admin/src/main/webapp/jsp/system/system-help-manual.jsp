@@ -8,16 +8,10 @@
 
 <ax:layout name="base">
     <jsp:attribute name="css">
-        <link href="/assets/plugins/summernote/dist/summernote.css" rel="stylesheet">
-        <style>
-            .note-btn-group .note-btn {
-                padding: 2px 8px 4px 8px;
-            }
-        </style>
+
     </jsp:attribute>
     <jsp:attribute name="js">
-        <script src="/assets/plugins/summernote/dist/summernote.min.js"></script>
-        <script src="/assets/plugins/summernote/dist/lang/summernote-ko-KR.js"></script>
+        <script src="/assets/plugins/ckeditor/ckeditor.js"></script>
     </jsp:attribute>
     <jsp:attribute name="script">
         <script type="text/javascript" src="<c:url value='/assets/js/view/system/system-help-manual.js' />"></script>
@@ -60,32 +54,33 @@
             <ax:splitter></ax:splitter>
             <ax:split-panel width="*" style="padding-left: 10px;" id="split-panel-form">
 
-                <div data-fit-height-aside="form-view-01">
-                    <div class="ax-button-group">
-                        <div class="left">
-                            <h2>
-                                <i class="cqc-news"></i>
-                                매뉴얼 내용 </h2>
-                        </div>
-                        <div class="right">
+                <ax:form name="formView01">
+                    <div data-fit-height-aside="form-view-01">
+                        <div class="ax-button-group">
+                            <div class="left">
+                                <h2>
+                                    <i class="cqc-news"></i>
+                                    매뉴얼 내용 </h2>
+                            </div>
+                            <div class="right">
 
+                            </div>
                         </div>
-                    </div>
 
-                    <ax:form name="formView01">
+
                         <ax:tbl clazz="ax-form-tbl" minWidth="500px">
                             <ax:tr>
                                 <ax:td label="호출 아이디">
-                                    <input type="hidden" data-ax-path="manualId" />
+                                    <input type="hidden" data-ax-path="manualId"/>
                                     <input type="text" data-ax-path="manualKey" class="form-control" value=""/>
                                 </ax:td>
                             </ax:tr>
                         </ax:tbl>
-                    </ax:form>
+                    </div>
                     <div class="H10"></div>
-                </div>
-
-                <div id="summernote" data-fit-height-content="form-view-01"></div>
+                    <textarea data-ax-path="content" id="editor1"></textarea>
+                    <div data-fit-height-content="form-view-01"></div>
+                </ax:form>
 
             </ax:split-panel>
         </ax:split-layout>

@@ -26,7 +26,7 @@ var ACTIONS = axboot.actionExtend(fnObj, {
 
                 if (typeof data.manualId === "undefined") {
                     this.formView01.clear();
-                    if(confirm("신규 생성된 목차는 저장 후 편집 할수 있습니다. 지금 저장 하시겠습니까? (저장 후에 다시 선택해주세요)")){
+                    if (confirm("신규 생성된 목차는 저장 후 편집 할수 있습니다. 지금 저장 하시겠습니까? (저장 후에 다시 선택해주세요)")) {
                         ACTIONS.dispatch(ACTIONS.PAGE_SAVE);
                     }
                     return;
@@ -60,15 +60,15 @@ var ACTIONS = axboot.actionExtend(fnObj, {
                         type: "PUT",
                         url: "/api/v1/manual",
                         data: JSON.stringify(obj),
-                        callback: function(){
+                        callback: function () {
                             _this.treeView01.clearDeletedList();
                             axToast.push("목차가 저장 되었습니다");
                         }
                     })
-                    .done(function(){
+                    .done(function () {
                         var data = _this.formView01.getData();
 
-                        if(data.manualId) {
+                        if (data.manualId) {
                             axboot.ajax({
                                 type: "PUT",
                                 url: "/api/v1/manual/detail",
@@ -77,7 +77,7 @@ var ACTIONS = axboot.actionExtend(fnObj, {
                                 axToast.push("매뉴얼 내용이 저장 되었습니다");
                                 ACTIONS.dispatch(ACTIONS.PAGE_SEARCH);
                             });
-                        }else{
+                        } else {
                             ACTIONS.dispatch(ACTIONS.PAGE_SEARCH);
                         }
 
@@ -135,7 +135,7 @@ fnObj.pageStart = function () {
 };
 
 fnObj.pageResize = function () {
-    setTimeout(function(){
+    setTimeout(function () {
         fnObj.formView01.resize();
     }, 100);
 };
@@ -371,7 +371,6 @@ fnObj.formView01 = axboot.viewExtend(axboot.formView, {
         this.mask.open();
 
         this.manualGroup = CODE.manualGroup;
-        
 
 
         this.target = $("#formView01");
@@ -379,6 +378,13 @@ fnObj.formView01 = axboot.viewExtend(axboot.formView, {
         this.model.setModel(this.getDefaultData(), this.target);
         this.modelFormatter = new axboot.modelFormatter(this.model); // 모델 포메터 시작
 
+        this.editor = CKEDITOR.replace('editor1', {
+            language: 'ko-kr',
+            uiColor: '#eeeeee',
+            removePlugins: 'resize'
+        });
+
+        this.resize();
         this.initEvent();
 
         $('[data-form-view-01-btn]').click(function () {
@@ -395,19 +401,18 @@ fnObj.formView01 = axboot.viewExtend(axboot.formView, {
     },
     getData: function () {
         var data = this.modelFormatter.getClearData(this.model.get()); // 모델의 값을 포멧팅 전 값으로 치환.
-
-        data.content = this.summernote.summernote("code");
-        
         return data;
     },
     setData: function (data) {
         this.mask.close();
         $.extend(true, data, this.getDefaultData());
         this.model.setModel(data);
-
+        this.resize();
     },
-    resize: function(){
-        //$('.note-editable.panel-body').height(($('#summernote').height() - 200));
+    resize: function () {
+        try {
+            this.editor.resize('100%', $('[data-fit-height-content="form-view-01"]').height() - 10, false);
+        }catch(e){}
     },
     clear: function () {
         this.mask.open();
