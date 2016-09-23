@@ -42,6 +42,7 @@ public class ManualController extends BaseController {
         return ok();
     }
 
+
     @RequestMapping(method = {RequestMethod.PUT}, produces = APPLICATION_JSON)
     public ApiResponse save(@RequestBody ManualRequestVO vo) {
         manualService.saveOrDelete(vo);
