@@ -11,6 +11,7 @@ import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.ToString;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.hibernate.annotations.DynamicInsert;
@@ -29,6 +30,7 @@ import javax.persistence.*;
 @Table(name = "FILE_L")
 @Comment(value = "공통 파일")
 @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
+@ToString
 public class CommonFile extends BaseJpaModel<Long> {
     @Id
     @Column(name = "ID")

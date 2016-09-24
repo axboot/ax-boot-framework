@@ -6,7 +6,7 @@
 <h1>파일목록</h1>
 
 <c:forEach var="file" items="${files}">
-    파일명 : ${file.fileNm}<br/>
+    파일명 : ${file.fileNm} / 상세정보 : ${file} / 프리뷰 : <img src="${file.preview()}"/>"<br/><br/>
 </c:forEach>
 </body>
 </html>
