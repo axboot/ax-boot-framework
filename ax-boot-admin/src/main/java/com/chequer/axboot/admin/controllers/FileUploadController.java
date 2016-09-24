@@ -3,6 +3,7 @@ package com.chequer.axboot.admin.controllers;
 import com.chequer.axboot.core.api.response.ApiResponse;
 import com.chequer.axboot.core.api.response.GeneralResponse;
 import com.chequer.axboot.core.controllers.BaseController;
+import com.chequer.axboot.core.domain.file.CKEditorUploadResponse;
 import com.chequer.axboot.core.domain.file.CommonFile;
 import com.chequer.axboot.core.domain.file.CommonFileService;
 import com.chequer.axboot.core.domain.file.UploadParameters;
@@ -52,6 +53,23 @@ public class FileUploadController extends BaseController {
         uploadParameters.setThumbnailHeight(thumbnailHeight);
 
         return commonFileService.upload(uploadParameters);
+    }
+
+    @RequestMapping(method = RequestMethod.POST, produces = APPLICATION_JSON)
+    public CKEditorUploadResponse uploadDragAndDropFromCKEditor(@RequestParam(value = "upload") MultipartFile multipartFile, @RequestParam String menuId) throws IOException {
+        UploadParameters uploadParameters = new UploadParameters();
+        uploadParameters.setMultipartFile(multipartFile);
+        uploadParameters.setTargetId(menuId);
+        uploadParameters.setTargetType("CKEDITOR");
+        uploadParameters.setThumbnail(false);
+
+        CommonFile commonFile = commonFileService.upload(uploadParameters);
+
+        CKEditorUploadResponse ckEditorUploadResponse = new CKEditorUploadResponse();
+        ckEditorUploadResponse.setFileName(commonFile.getFileNm());
+        ckEditorUploadResponse.setUrl(commonFile.preview());
+
+        return ckEditorUploadResponse;
     }
 
     @RequestMapping(method = RequestMethod.GET, produces = APPLICATION_JSON, params = {"targetType", "targetId"})

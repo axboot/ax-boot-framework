@@ -1,6 +1,12 @@
+<%@ page import="com.chequer.axboot.core.utils.RequestUtils" %>
 <%@ page contentType="text/html; charset=UTF-8" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="ax" tagdir="/WEB-INF/tags" %>
+<%
+    RequestUtils requestUtils = RequestUtils.of(request);
+    long menuId = requestUtils.getLong("menuId");
+    request.setAttribute("menuId", menuId);
+%>
 
 <ax:set key="title" value="${pageName}"/>
 <ax:set key="page_desc" value="${PAGE_REMARK}"/>
@@ -11,6 +17,9 @@
 
     </jsp:attribute>
     <jsp:attribute name="js">
+        <script type="text/javascript">
+            var menuId = ${menuId};
+        </script>
         <script src="/assets/plugins/ckeditor/ckeditor.js"></script>
     </jsp:attribute>
     <jsp:attribute name="script">

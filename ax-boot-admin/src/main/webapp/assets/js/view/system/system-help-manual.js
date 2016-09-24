@@ -380,6 +380,8 @@ fnObj.formView01 = axboot.viewExtend(axboot.formView, {
 
         this.editor = CKEDITOR.replace('editor1', {
             language: 'korean',
+            extraPlugins: 'uploadimage',
+            imageUploadUrl: CONTEXT_PATH + "/api/v1/files?menuId=" + menuId,
             removePlugins: 'resize'
         });
 // todo : upload-image config 찾기
@@ -411,7 +413,8 @@ fnObj.formView01 = axboot.viewExtend(axboot.formView, {
     resize: function () {
         try {
             this.editor.resize('100%', $('[data-fit-height-content="form-view-01"]').height() - 10, false);
-        }catch(e){}
+        } catch (e) {
+        }
     },
     clear: function () {
         this.mask.open();
