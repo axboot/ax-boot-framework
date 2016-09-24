@@ -38,7 +38,7 @@ import java.util.stream.Collectors;
 public class CommonFileService extends BaseService<CommonFile, Long> implements InitializingBean {
     private CommonFileRepository commonFileRepository;
 
-    @Value("${axboot.upload.repository")
+    @Value("${axboot.upload.repository}")
     public String uploadRepository;
 
     @Inject
