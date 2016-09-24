@@ -24,7 +24,7 @@ public class CKEditorController extends BaseController {
     @Inject
     private CommonFileService commonFileService;
 
-    @RequestMapping(value = "/imageUpload", method = RequestMethod.POST, produces = APPLICATION_JSON)
+    @RequestMapping(value = "/uploadImage", method = RequestMethod.POST, produces = APPLICATION_JSON)
     public CKEditorUploadResponse uploadDragAndDropFromCKEditor(@RequestParam(value = "upload") MultipartFile multipartFile, @RequestParam String menuId) throws IOException {
         UploadParameters uploadParameters = new UploadParameters();
         uploadParameters.setMultipartFile(multipartFile);
@@ -47,6 +47,6 @@ public class CKEditorController extends BaseController {
 
         modelMap.put("files", commonFileList);
 
-        return "common/fileBrowser";
+        return "/common/fileBrowser";
     }
 }

@@ -6,7 +6,7 @@
 <h1>파일목록</h1>
 
 <c:forEach var="file" items="${files}">
-    <c:out value="file"/>
+    파일명 : ${file.fileNm}<br/>
 </c:forEach>
 </body>
 </html>
