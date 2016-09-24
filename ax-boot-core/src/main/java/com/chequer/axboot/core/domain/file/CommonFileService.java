@@ -255,7 +255,7 @@ public class CommonFileService extends BaseService<CommonFile, Long> implements 
             builder.and(qCommonFile.targetId.in(_ids));
         }
 
-        return select().from(qCommonFile).where(builder).orderBy(qCommonFile.id.asc()).fetch();
+        return select().from(qCommonFile).where(builder).orderBy(qCommonFile.sort.asc(), qCommonFile.id.desc()).fetch();
     }
 
     public CommonFile get(RequestParams<CommonFile> requestParams) {
