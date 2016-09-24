@@ -381,10 +381,10 @@ fnObj.formView01 = axboot.viewExtend(axboot.formView, {
         this.editor = CKEDITOR.replace('editor1', {
             language: 'korean',
             extraPlugins: 'uploadimage',
-            filebrowserBrowseUrl: '/ckeditor/fileBrowser?targetType=CKEDITOR&targetId=' + menuId,
+            filebrowserBrowseUrl: CONTEXT_PATH + '/ckeditor/fileBrowser?targetType=CKEDITOR&targetId=' + menuId,
             filebrowserWindowWidth: '640',
             filebrowserWindowHeight: '480',
-            imageUploadUrl: CONTEXT_PATH + '/ckeditor/uploadImage?menuId=' + menuId,
+            imageUploadUrl: CONTEXT_PATH + '/ckeditor/uploadImage?&targetId=' + menuId,
             removePlugins: 'resize'
         });
 // todo : upload-image config 찾기
