@@ -6,7 +6,6 @@ import org.springframework.validation.Validator;
 import org.springframework.validation.beanvalidation.LocalValidatorFactoryBean;
 
 import java.util.Collection;
-import java.util.List;
 
 public class CollectionValidator implements Validator {
 
@@ -23,7 +22,7 @@ public class CollectionValidator implements Validator {
 
     @Override
     public void validate(Object target, Errors errors) {
-        if (target instanceof List) {
+        if (target instanceof Collection) {
             Collection collection = (Collection) target;
             for (Object object : collection) {
                 ValidationUtils.invokeValidator(validator, object, errors);
