@@ -5,11 +5,8 @@ import com.chequer.axboot.core.domain.file.CKEditorUploadResponse;
 import com.chequer.axboot.core.domain.file.CommonFile;
 import com.chequer.axboot.core.domain.file.CommonFileService;
 import com.chequer.axboot.core.domain.file.UploadParameters;
-import com.chequer.axboot.core.parameter.RequestParams;
 import org.apache.commons.lang3.StringUtils;
-import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -52,11 +49,7 @@ public class CKEditorController extends BaseController {
     }
 
     @RequestMapping(value = "/fileBrowser")
-    public String fileBrowser(RequestParams<CommonFile> requestParams, ModelMap modelMap) {
-        Page<CommonFile> commonFileList = commonFileService.getList(requestParams);
-
-        modelMap.put("files", commonFileList.getContent());
-
+    public String fileBrowser() {
         return "/common/fileBrowser";
     }
 }

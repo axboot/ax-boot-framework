@@ -372,7 +372,6 @@ fnObj.formView01 = axboot.viewExtend(axboot.formView, {
 
         this.manualGroup = CODE.manualGroup;
 
-
         this.target = $("#formView01");
         this.model = new ax5.ui.binder();
         this.model.setModel(this.getDefaultData(), this.target);
@@ -380,7 +379,7 @@ fnObj.formView01 = axboot.viewExtend(axboot.formView, {
 
         this.editor = CKEDITOR.replace('editor1', {
             language: 'korean',
-            extraPlugins: 'uploadimage',
+            extraPlugins: 'uploadimage,filemanager',
             filebrowserBrowseUrl: CONTEXT_PATH + '/ckeditor/fileBrowser?targetType=CKEDITOR&targetId=' + menuId,
             filebrowserWindowWidth: '960',
             filebrowserWindowHeight: '600',
