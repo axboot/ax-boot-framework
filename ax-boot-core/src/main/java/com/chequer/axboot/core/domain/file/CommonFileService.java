@@ -14,6 +14,9 @@ import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.io.IOUtils;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -169,6 +172,9 @@ public class CommonFileService extends BaseService<CommonFile, Long> implements 
     public void preview(HttpServletResponse response, Long id, String type) throws IOException {
         CommonFile commonFile = findOne(id);
 
+        if (commonFile == null)
+            return;
+
         MediaType mediaType = null;
         String imagePath = "";
 
@@ -229,11 +235,15 @@ public class CommonFileService extends BaseService<CommonFile, Long> implements 
         return FileUtils.readFileToByteArray(new File(getSavePath(saveName)));
     }
 
-    public List<CommonFile> getList(RequestParams<CommonFile> requestParams) {
+    public Page<CommonFile> getList(RequestParams<CommonFile> requestParams) {
         String targetType = requestParams.getString("targetType", "");
         String targetId = requestParams.getString("targetId", "");
         String delYn = requestParams.getString("delYn", "");
         String targetIds = requestParams.getString("targetIds", "");
+        requestParams.addSort("sort", Sort.Direction.ASC);
+        requestParams.addSort("id", Sort.Direction.DESC);
+
+        Pageable pageable = requestParams.getPageable();
 
         BooleanBuilder builder = new BooleanBuilder();
 
@@ -255,11 +265,11 @@ public class CommonFileService extends BaseService<CommonFile, Long> implements 
             builder.and(qCommonFile.targetId.in(_ids));
         }
 
-        return select().from(qCommonFile).where(builder).orderBy(qCommonFile.sort.asc(), qCommonFile.id.desc()).fetch();
+        return findAll(builder, pageable);
     }
 
     public CommonFile get(RequestParams<CommonFile> requestParams) {
-        List<CommonFile> commonFiles = getList(requestParams);
+        List<CommonFile> commonFiles = getList(requestParams).getContent();
         return isEmpty(commonFiles) ? null : commonFiles.get(0);
     }
 
@@ -292,9 +302,13 @@ public class CommonFileService extends BaseService<CommonFile, Long> implements 
     }
 
     @Transactional
-    public void updateTargetTypeAndTargetId(List<CommonFile> commonFileList) {
+    public void updateOrDelete(List<CommonFile> commonFileList) {
         for (CommonFile file : commonFileList) {
-            update(qCommonFile).set(qCommonFile.targetType, file.getTargetType()).set(qCommonFile.targetId, file.getTargetId()).where(qCommonFile.id.eq(file.getId())).execute();
+            if (file.isDeleted()) {
+                deleteFile(file.getId());
+            } else {
+                update(qCommonFile).set(qCommonFile.targetType, file.getTargetType()).set(qCommonFile.targetId, file.getTargetId()).where(qCommonFile.id.eq(file.getId())).execute();
+            }
         }
     }
 }
