@@ -22,6 +22,7 @@ import org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
+import org.springframework.validation.beanvalidation.LocalValidatorFactoryBean;
 
 import javax.inject.Named;
 import javax.persistence.EntityManagerFactory;
@@ -120,5 +121,10 @@ public class CoreApplicationContext {
     @Bean
     public SqlMonitoringService sqlMonitoringService(DataSource dataSource) throws Exception {
         return new SqlMonitoringService(dataSource);
+    }
+
+    @Bean
+    public LocalValidatorFactoryBean validatorFactoryBean() {
+        return new LocalValidatorFactoryBean();
     }
 }
