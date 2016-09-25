@@ -32,7 +32,7 @@ public class CKEditorController extends BaseController {
             @RequestParam String targetId) throws IOException {
 
 
-        if (StringUtils.isEmpty(multipartFile.getName())) {
+        if (StringUtils.isEmpty(multipartFile.getName()) || multipartFile.getBytes().length == 0) {
             throw new IllegalArgumentException("file not presented");
         }
 
