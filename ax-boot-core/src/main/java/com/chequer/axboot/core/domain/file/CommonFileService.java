@@ -172,7 +172,7 @@ public class CommonFileService extends BaseService<CommonFile, Long> implements 
     public void preview(HttpServletResponse response, Long id, String type) throws IOException {
         CommonFile commonFile = findOne(id);
 
-        if(commonFile == null)
+        if (commonFile == null)
             return;
 
         MediaType mediaType = null;
@@ -302,9 +302,13 @@ public class CommonFileService extends BaseService<CommonFile, Long> implements 
     }
 
     @Transactional
-    public void updateTargetTypeAndTargetId(List<CommonFile> commonFileList) {
+    public void updateOrDelete(List<CommonFile> commonFileList) {
         for (CommonFile file : commonFileList) {
-            update(qCommonFile).set(qCommonFile.targetType, file.getTargetType()).set(qCommonFile.targetId, file.getTargetId()).where(qCommonFile.id.eq(file.getId())).execute();
+            if (file.isDeleted()) {
+                deleteFile(file.getId());
+            } else {
+                update(qCommonFile).set(qCommonFile.targetType, file.getTargetType()).set(qCommonFile.targetId, file.getTargetId()).where(qCommonFile.id.eq(file.getId())).execute();
+            }
         }
     }
 }

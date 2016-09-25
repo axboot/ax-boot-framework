@@ -1,6 +1,5 @@
 package com.chequer.axboot.admin.controllers;
 
-import com.chequer.axboot.core.api.response.ApiResponse;
 import com.chequer.axboot.core.api.response.PageableResponse;
 import com.chequer.axboot.core.controllers.BaseController;
 import com.chequer.axboot.core.domain.file.CommonFile;
@@ -20,7 +19,6 @@ import javax.inject.Inject;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.List;
-import java.util.Set;
 
 @Controller
 @RequestMapping(value = "/api/v1/files")
@@ -61,9 +59,9 @@ public class FileUploadController extends BaseController {
         return PageableResponse.PageResponse.of(files);
     }
 
-    @RequestMapping(value = "/update", method = RequestMethod.PUT, produces = APPLICATION_JSON)
-    public List<CommonFile> updateFile(@RequestBody List<CommonFile> file) {
-        commonFileService.updateTargetTypeAndTargetId(file);
+    @RequestMapping(method = RequestMethod.PUT, produces = APPLICATION_JSON)
+    public List<CommonFile> updateOrDelete(@RequestBody List<CommonFile> file) {
+        commonFileService.updateOrDelete(file);
         return file;
     }
 
@@ -85,17 +83,5 @@ public class FileUploadController extends BaseController {
     @RequestMapping(value = "/download", method = RequestMethod.GET, params = {"targetType", "targetId"})
     public ResponseEntity<byte[]> downloadByTargetTypeAndTargetId(@RequestParam String targetType, @RequestParam String targetId) throws IOException {
         return commonFileService.downloadByTargetTypeAndTargetId(targetType, targetId);
-    }
-
-    @RequestMapping(value = "/delete", method = RequestMethod.GET, produces = APPLICATION_JSON, params = "id")
-    public ApiResponse delete(@RequestParam Long id) throws IOException {
-        commonFileService.deleteFile(id);
-        return ok();
-    }
-
-    @RequestMapping(value = "/delete", method = RequestMethod.GET, produces = APPLICATION_JSON, params = {"targetType,targetId"})
-    public ApiResponse delete(@RequestParam String targetType, @RequestParam Set<String> targetId) throws IOException {
-        commonFileService.deleteByTargetTypeAndTargetIds(targetType, targetId);
-        return ok();
     }
 }
