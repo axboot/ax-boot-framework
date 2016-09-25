@@ -167,18 +167,18 @@ fnObj.gridView01 = axboot.viewExtend(axboot.gridView, {
             columns: [
                 {
                     key: "fileNm",
-                    label: "fileNm",
+                    label: "파일명",
                     width: 300
                 },
                 {
                     key: "fileType",
-                    label: "fileType",
+                    label: "타입",
                     align: "center",
                     width: 60
                 },
                 {
                     key: "fileSize",
-                    label: "Size",
+                    label: "크기",
                     align: "right",
                     width: 80, formatter: function () {
                     return ax5.util.number(this.value, {"byte": true});
@@ -186,7 +186,7 @@ fnObj.gridView01 = axboot.viewExtend(axboot.gridView, {
                 },
                 {
                     key: "createdAt",
-                    label: "date",
+                    label: "등록일자",
                     width: 180
                 }
             ],
