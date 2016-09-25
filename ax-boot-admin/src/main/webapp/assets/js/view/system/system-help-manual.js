@@ -382,8 +382,8 @@ fnObj.formView01 = axboot.viewExtend(axboot.formView, {
             language: 'korean',
             extraPlugins: 'uploadimage',
             filebrowserBrowseUrl: CONTEXT_PATH + '/ckeditor/fileBrowser?targetType=CKEDITOR&targetId=' + menuId,
-            filebrowserWindowWidth: '640',
-            filebrowserWindowHeight: '480',
+            filebrowserWindowWidth: '800',
+            filebrowserWindowHeight: '600',
             imageUploadUrl: CONTEXT_PATH + '/ckeditor/uploadImage?&targetId=' + menuId,
             removePlugins: 'resize'
         });

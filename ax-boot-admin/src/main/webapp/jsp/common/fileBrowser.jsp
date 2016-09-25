@@ -7,27 +7,38 @@
     requestUtils.setAttribute("CKEditorFuncNum", requestUtils.getInt("CKEditorFuncNum"));
     requestUtils.setAttribute("targetId", requestUtils.getString("targetId"));
 %>
-<html>
-<head>
-    <script type="text/javascript">
-        var CKEditorFuncNum = ${CKEditorFuncNum};
-        function selectImage(url) {
-            window.opener.CKEDITOR.tools.callFunction(CKEditorFuncNum, url);
-            window.close();
-        }
-    </script>
-</head>
-<body>
-<h1>파일목록</h1>
-<form name="uploadForm" action="/ckeditor/uploadImage" method="POST" enctype="multipart/form-data">
-    <input type="hidden" name="targetId" value="${targetId}"/>
-    <input type="hidden" name="targetType" value="CKEDITOR"/>
-    <input type="file" name="upload"/>
-    <input type="submit" name="Upload"/>
-</form>
+<ax:set key="pageName" value="File Browser"/>
+<ax:set key="page_auto_height" value="false"/>
+<ax:set key="axbody_class" value="baseStyle"/>
 
-<c:forEach var="file" items="${files}">
-    파일명 : ${file.fileNm} / 상세정보 : ${file} / 프리뷰 : <a href="javascript:selectImage('${file.preview()}');"><img src="${file.preview()}"/></a><br/><br/>
-</c:forEach>
-</body>
-</html>
+<ax:layout name="modal">
+    <jsp:attribute name="css">
+    </jsp:attribute>
+    <jsp:attribute name="script">
+        <script type="text/javascript">
+            var CKEditorFuncNum = ${CKEditorFuncNum};
+            function selectImage(url) {
+                window.opener.CKEDITOR.tools.callFunction(CKEditorFuncNum, url);
+                window.close();
+            }
+        </script>
+    </jsp:attribute>
+    <jsp:attribute name="header">
+        <h1>파일목록</h1>
+    </jsp:attribute>
+    <jsp:body>
+
+
+        <form name="uploadForm" action="/ckeditor/uploadImage" method="POST" enctype="multipart/form-data">
+            <input type="hidden" name="targetId" value="${targetId}"/>
+            <input type="hidden" name="targetType" value="CKEDITOR"/>
+            <input type="file" name="upload"/>
+            <input type="submit" name="Upload"/>
+        </form>
+
+        <c:forEach var="file" items="${files}">
+            파일명 : ${file.fileNm} / 상세정보 : ${file} / 프리뷰 : <a href="javascript:selectImage('${file.preview()}');"><img src="${file.preview()}"/></a><br/><br/>
+        </c:forEach>
+
+    </jsp:body>
+</ax:layout>

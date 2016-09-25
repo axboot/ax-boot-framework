@@ -205,7 +205,7 @@ fnObj.gridView01 = axboot.viewExtend(axboot.gridView, {
                 {key: "message", label: "에러 메시지", width: 400, align: "left"},
                 {
                     key: "errorDatetime", label: "발생시간", width: 140, align: "center", formatter: function () {
-                    return ax5.util.date(this.value || "", {"return": 'yyyy/MM/dd hh:mm:ss'});
+                    return ax5.util.date(new Date(this.value || ""), {"return": 'yyyy/MM/dd hh:mm:ss'});
                 }
                 }
             ],
