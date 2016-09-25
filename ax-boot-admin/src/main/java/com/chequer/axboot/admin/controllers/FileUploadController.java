@@ -1,12 +1,13 @@
 package com.chequer.axboot.admin.controllers;
 
 import com.chequer.axboot.core.api.response.ApiResponse;
-import com.chequer.axboot.core.api.response.GeneralResponse;
+import com.chequer.axboot.core.api.response.PageableResponse;
 import com.chequer.axboot.core.controllers.BaseController;
 import com.chequer.axboot.core.domain.file.CommonFile;
 import com.chequer.axboot.core.domain.file.CommonFileService;
 import com.chequer.axboot.core.domain.file.UploadParameters;
 import com.chequer.axboot.core.parameter.RequestParams;
+import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -55,9 +56,9 @@ public class FileUploadController extends BaseController {
     }
 
     @RequestMapping(method = RequestMethod.GET, produces = APPLICATION_JSON, params = {"targetType", "targetId"})
-    public GeneralResponse.ListResponse listByTarget(RequestParams<CommonFile> requestParams) {
-        List<CommonFile> files = commonFileService.getList(requestParams);
-        return GeneralResponse.ListResponse.of(files);
+    public PageableResponse.PageResponse listByTarget(RequestParams<CommonFile> requestParams) {
+        Page<CommonFile> files = commonFileService.getList(requestParams);
+        return PageableResponse.PageResponse.of(files);
     }
 
     @RequestMapping(value = "/update", method = RequestMethod.PUT, produces = APPLICATION_JSON)

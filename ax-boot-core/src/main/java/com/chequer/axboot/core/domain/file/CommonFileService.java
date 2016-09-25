@@ -14,6 +14,8 @@ import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.io.IOUtils;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -229,11 +231,12 @@ public class CommonFileService extends BaseService<CommonFile, Long> implements 
         return FileUtils.readFileToByteArray(new File(getSavePath(saveName)));
     }
 
-    public List<CommonFile> getList(RequestParams<CommonFile> requestParams) {
+    public Page<CommonFile> getList(RequestParams<CommonFile> requestParams) {
         String targetType = requestParams.getString("targetType", "");
         String targetId = requestParams.getString("targetId", "");
         String delYn = requestParams.getString("delYn", "");
         String targetIds = requestParams.getString("targetIds", "");
+        Pageable pageable = requestParams.getPageable();
 
         BooleanBuilder builder = new BooleanBuilder();
 
@@ -255,11 +258,11 @@ public class CommonFileService extends BaseService<CommonFile, Long> implements 
             builder.and(qCommonFile.targetId.in(_ids));
         }
 
-        return select().from(qCommonFile).where(builder).orderBy(qCommonFile.sort.asc(), qCommonFile.id.desc()).fetch();
+        return findAll(builder, pageable);
     }
 
     public CommonFile get(RequestParams<CommonFile> requestParams) {
-        List<CommonFile> commonFiles = getList(requestParams);
+        List<CommonFile> commonFiles = getList(requestParams).getContent();
         return isEmpty(commonFiles) ? null : commonFiles.get(0);
     }
 
