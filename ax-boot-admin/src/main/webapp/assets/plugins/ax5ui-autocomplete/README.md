@@ -85,7 +85,7 @@ options.push({value: "9", text: "max"});
 $(document.body).ready(function () {
     $('[data-ax5autocomplete]').ax5autocomplete({
         removeIcon: '<i class="fa fa-times" aria-hidden="true"></i>',
-        onSearch: function (callBack) {
+        onSearch: function (callback) {
             var searchWord = this.searchWord;
             setTimeout(function () { // like AJAX
                 var regExp = new RegExp(searchWord);
@@ -93,7 +93,7 @@ $(document.body).ready(function () {
                 options.forEach(function (n) {
                     if (n.text.match(regExp)) myOptions.push({ value: n.value, text: n.text });
                 });
-                callBack({
+                callback({
                     options: myOptions
                 });
             }, 150);

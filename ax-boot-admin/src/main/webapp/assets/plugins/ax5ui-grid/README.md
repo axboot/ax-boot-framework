@@ -14,7 +14,7 @@
 bower install ax5ui-grid
 ```
 [bower](http://bower.io/#install-bower) is web front-end package manager.
-using the `bower`, when you install the plug-in is installed to resolve the plug-in dependencies under the `bower_components` folder.
+Using the `bower`, when you install the plug-in is installed to resolve the plug-in dependencies under the `bower_components` folder.
 (You can change the folder location. [.bowerrc](http://bower.io/docs/config/#bowerrc-specification) )
 
 It is recommended that you install by using the `bower`.
@@ -110,6 +110,7 @@ firstGrid.setConfig({
     ]
 });
 ```
+
 
 ***
 

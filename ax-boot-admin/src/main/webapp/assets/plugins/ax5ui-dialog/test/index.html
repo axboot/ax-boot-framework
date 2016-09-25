@@ -55,6 +55,10 @@
     <button type="button" data-prompt="danger" class="btn btn-danger" id="prompt-danger-open">prompt-danger-open
     </button>
 </div>
+<div style="padding:20px;">
+    <button type="button" data-alert-double="default" class="btn btn-default" id="alert-default-open">alert-default-double-open
+    </button>
+</div>
 <script>
     var dialog = new ax5.ui.dialog();
     var mask = new ax5.ui.mask();
@@ -74,6 +78,17 @@
 
         $('button[data-alert]').click(function () {
             var theme = this.getAttribute("data-alert");
+            dialog.alert({
+                theme: theme,
+                title: 'Alert ' + theme,
+                msg: theme + ' color'
+            }, function () {
+                console.log(this);
+            });
+        });
+
+        $('button[data-alert-double]').click(function () {
+            var theme = this.getAttribute("data-alert-double");
             dialog.alert({
                 theme: theme,
                 title: 'Alert ' + theme,

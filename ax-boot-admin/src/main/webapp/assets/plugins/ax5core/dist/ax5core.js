@@ -666,6 +666,8 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
                 jsonString = "undefined";
             } else if (ax5.util.isFunction(O)) {
                 jsonString = '"{Function}"';
+            } else {
+                jsonString = O;
             }
             return jsonString;
         }

@@ -28,8 +28,10 @@
     </jsp:attribute>
     <jsp:body>
         <ax:page-buttons>
+            <button type="button" class="btn btn-default" data-page-btn="close">창닫기</button>
             <button type="button" class="btn btn-info" data-page-btn="search">조회</button>
-            <button type="button" class="btn btn-info" data-page-btn="choice">선택</button>
+            <button type="button" class="btn btn-fn1" data-page-btn="choice">선택</button>
+
             <button type="button" class="btn btn-fn1" data-page-btn="fn1">삭제</button>
         </ax:page-buttons>
 
@@ -90,14 +92,19 @@
                         </div>
 
                         <ax:tbl clazz="ax-form-tbl">
-                            <ax:tr>
+                            <ax:tr labelWidth="80px">
                                 <ax:td label="파일명" width="100%">
-                                    <input type="text" data-ax-path="manualKey" class="form-control" value=""/>
+                                    <input type="text" data-ax-path="fileNm" class="form-control" value=""/>
                                 </ax:td>
                             </ax:tr>
-                            <ax:tr>
+                            <ax:tr labelWidth="80px">
+                                <ax:td label="타입" width="100%">
+                                    <input type="text" data-ax-path="fileType" class="form-control" value=""/>
+                                </ax:td>
+                            </ax:tr>
+                            <ax:tr labelWidth="80px">
                                 <ax:td label="URL" width="100%">
-                                    <input type="text" data-ax-path="manualKey" class="form-control" value=""/>
+                                    <input type="text" data-ax-path="preview" class="form-control" value=""/>
                                 </ax:td>
                             </ax:tr>
                         </ax:tbl>

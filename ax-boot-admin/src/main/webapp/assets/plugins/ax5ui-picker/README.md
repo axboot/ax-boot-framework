@@ -76,14 +76,14 @@ picker.bind({
     target: $("#pickerTarget"),
     direction: "top",
     contentWidth: 200,
-    content: function (callBack) {
+    content: function (callback) {
         var html = ''
                 + 'picker contents'
                 + '<div style="padding: 10px;">'
                 + '<button class="btn btn-default">FN 1</button>'
                 + '</div>'
             ;
-        callBack(html);
+        callback(html);
     }
 });
 ```

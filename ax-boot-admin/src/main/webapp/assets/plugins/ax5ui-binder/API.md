@@ -8,15 +8,15 @@
     * [.setModel(model, [view_target])](#ax5binder.setModel) ⇒ <code>[ax5binder](#ax5binder)</code>
     * [.set(dataPath, value)](#ax5binder.set) ⇒ <code>[ax5binder](#ax5binder)</code>
     * [.get(dataPath)](#ax5binder.get) ⇒ <code>\*</code>
-    * [.onChange(dataPath, callBack)](#ax5binder.onChange) ⇒ <code>[ax5binder](#ax5binder)</code>
-    * [.onClick(dataPath, callBack)](#ax5binder.onClick) ⇒ <code>[ax5binder](#ax5binder)</code>
+    * [.onChange(dataPath, callback)](#ax5binder.onChange) ⇒ <code>[ax5binder](#ax5binder)</code>
+    * [.onClick(dataPath, callback)](#ax5binder.onClick) ⇒ <code>[ax5binder](#ax5binder)</code>
     * [.add(dataPath, item)](#ax5binder.add) ⇒ <code>[ax5binder](#ax5binder)</code>
     * [.remove(dataPath, index)](#ax5binder.remove) ⇒ <code>[ax5binder](#ax5binder)</code>
     * [.update(dataPath, index, item)](#ax5binder.update) ⇒ <code>[ax5binder](#ax5binder)</code>
     * [.childAdd(dataPath, index, child_path, child_item)](#ax5binder.childAdd)
     * [.childUpdate(dataPath, index, child_path, child_index, child_item)](#ax5binder.childUpdate)
     * [.childSet(dataPath, index, child_path, value)](#ax5binder.childSet) ⇒ <code>[ax5binder](#ax5binder)</code>
-    * [.onUpdate(dataPath, callBack)](#ax5binder.onUpdate) ⇒ <code>[ax5binder](#ax5binder)</code>
+    * [.onUpdate(dataPath, callback)](#ax5binder.onUpdate) ⇒ <code>[ax5binder](#ax5binder)</code>
     * [.focus(dataPath)](#ax5binder.focus) ⇒ <code>[ax5binder](#ax5binder)</code>
     * [.validate()](#ax5binder.validate) ⇒ <code>\*</code>
 
@@ -67,15 +67,15 @@ data_path에 값을 반환한다. data_path 가 없으면 전체 Object를 반�
 
 <a name="ax5binder.onChange"></a>
 
-### ax5binder.onChange(dataPath, callBack) ⇒ <code>[ax5binder](#ax5binder)</code>
-data_path에 값이 변경되는 이벤트 발생하면 callBack을 실행합니다.
+### ax5binder.onChange(dataPath, callback) ⇒ <code>[ax5binder](#ax5binder)</code>
+data_path에 값이 변경되는 이벤트 발생하면 callback을 실행합니다.
 
 **Kind**: static method of <code>[ax5binder](#ax5binder)</code>  
 
 | Param |
 | --- |
 | dataPath | 
-| callBack | 
+| callback | 
 
 **Example**  
 ```js
@@ -94,15 +94,15 @@ myModel.onChange("name", function () {
 ```
 <a name="ax5binder.onClick"></a>
 
-### ax5binder.onClick(dataPath, callBack) ⇒ <code>[ax5binder](#ax5binder)</code>
-data-ax-repeat="list" 속성이 부여된 엘리먼트 하위에 태그중에 data-ax-repeat-click 속성을 가진 아이템에 대해 클릭 이벤트 발생하면 callBack을 실행합니다.
+### ax5binder.onClick(dataPath, callback) ⇒ <code>[ax5binder](#ax5binder)</code>
+data-ax-repeat="list" 속성이 부여된 엘리먼트 하위에 태그중에 data-ax-repeat-click 속성을 가진 아이템에 대해 클릭 이벤트 발생하면 callback을 실행합니다.
 
 **Kind**: static method of <code>[ax5binder](#ax5binder)</code>  
 
 | Param |
 | --- |
 | dataPath | 
-| callBack | 
+| callback | 
 
 **Example**  
 ```js
@@ -206,13 +206,13 @@ myModel.update("list", 0, {a:1});
 
 <a name="ax5binder.onUpdate"></a>
 
-### ax5binder.onUpdate(dataPath, callBack) ⇒ <code>[ax5binder](#ax5binder)</code>
+### ax5binder.onUpdate(dataPath, callback) ⇒ <code>[ax5binder](#ax5binder)</code>
 **Kind**: static method of <code>[ax5binder](#ax5binder)</code>  
 
 | Param |
 | --- |
 | dataPath | 
-| callBack | 
+| callback | 
 
 **Example**  
 ```js

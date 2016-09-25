@@ -493,10 +493,10 @@
             this.open = (function () {
 
                 var pickerContent = {
-                    '@fn'       : function (queIdx, callBack) {
+                    '@fn'       : function (queIdx, callback) {
                         var item = this.queue[queIdx];
                         item.content.call(item, function (html) {
-                            callBack(html);
+                            callback(html);
                         });
                         return true;
                     },

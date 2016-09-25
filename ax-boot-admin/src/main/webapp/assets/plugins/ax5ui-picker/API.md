@@ -11,11 +11,11 @@ picker.bind({
     target: $("#input"),
     direction: "top",
     contentWidth: 200,
-    content: function (callBack) {
+    content: function (callback) {
         var html = ''
                 + 'HTML CONTENT'
             ;
-        callBack(html);
+        callback(html);
     }
 );
 
@@ -63,9 +63,9 @@ Type: `Function|Object`
 
 - **Function**
 ```js
-function (callBack) {
+function (callback) {
     var html = 'HTML CONTENT';
-    callBack(html);
+    callback(html);
 }
 ```
 - **Object**

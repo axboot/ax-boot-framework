@@ -134,14 +134,14 @@
          $('[data-ax5picker="custom"]').ax5picker({
          direction: "top",
          contentWidth: 200,
-         content: function (callBack) {
+         content: function (callback) {
          var html = ''
          + '가나다라마바사'
          + '<div style="padding: 10px;">'
          + '<button class="btn btn-default">기능 1</button>'
          + '</div>'
          ;
-         callBack(html);
+         callback(html);
          }
          });
 
@@ -232,14 +232,14 @@
                     target: this,
                     direction: "top",
                     contentWidth: 200,
-                    content: function (callBack) {
+                    content: function (callback) {
                         var html = ''
                                         + '가나다라마바사'
                                         + '<div style="padding: 10px;">'
                                         + '<button class="btn btn-default">기능 1</button>'
                                         + '</div>'
                                 ;
-                        callBack(html);
+                        callback(html);
                     }
                 });
             }

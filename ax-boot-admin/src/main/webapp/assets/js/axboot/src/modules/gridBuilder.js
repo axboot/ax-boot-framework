@@ -152,14 +152,10 @@ axboot.gridBuilder = (function () {
             return columns;
         };
         myGridConfig.columns = convertColumn(myGridConfig.columns);
-
-        var instance;
         myGridConfig.page.onChange = function () {
-            instance.onPageChange(this.page.selectPage);
+            myGridConfig.onPageChange(this.page.selectPage);
         };
-        instance = new ax5.ui.grid(myGridConfig);
-        instance.onPageChange = function(){};
-        return instance;
+        return new ax5.ui.grid(myGridConfig);
     }
 })();
 

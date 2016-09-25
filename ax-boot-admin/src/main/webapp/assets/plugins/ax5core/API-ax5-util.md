@@ -447,10 +447,10 @@ console.log(obj[1].child[0].name, copiedObj[1].child[0].name);
 # String
 
 ## ax5.util.left
-Return string from first index to finall index of original data.
+Return string from first index to final index of original data.
 
 - Argument 01 : Original Data.
-- Argument 02 : finall index || finall character.
+- Argument 02 : final index || finall character.
 - Usage : ax5.util.left(Argument01, Argument02)
 - Output
 

@@ -15322,6 +15322,8 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
                 jsonString = "undefined";
             } else if (ax5.util.isFunction(O)) {
                 jsonString = '"{Function}"';
+            } else {
+                jsonString = O;
             }
             return jsonString;
         }
@@ -20643,10 +20645,10 @@ ax5.ui = function () {
             this.open = function () {
 
                 var pickerContent = {
-                    '@fn': function fn(queIdx, callBack) {
+                    '@fn': function fn(queIdx, callback) {
                         var item = this.queue[queIdx];
                         item.content.call(item, function (html) {
-                            callBack(html);
+                            callback(html);
                         });
                         return true;
                     },
@@ -23449,7 +23451,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
 
     UI.addClass({
         className: "grid",
-        version: "0.2.18"
+        version: "0.2.20"
     }, function () {
         /**
          * @class ax5grid
@@ -23738,7 +23740,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
                 }
             },
                 alignGrid = function alignGrid(_isFirst) {
-                // isFirst : 그리드 정렬 메소드가 처음 호출 되었는지 판단 하하는 아규먼트
+                // isFirst : 그리드 정렬 메소드가 처음 호출 되었는지 판단 하는 아규먼트
                 var CT_WIDTH = this.$["container"]["root"].width();
                 var CT_HEIGHT = this.$["container"]["root"].height();
                 var CT_INNER_WIDTH = CT_WIDTH;
@@ -24862,6 +24864,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
                         self: self,
                         page: self.page,
                         list: self.list,
+                        item: self.list[_column.dindex],
                         dindex: _column.dindex,
                         rowIndex: _column.rowIndex,
                         colIndex: _column.colIndex,
@@ -26391,9 +26394,9 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
                     }
                 }
                 break;
-            case "modified":
+            case "selected":
                 for (; i < l; i++) {
-                    if (this.list[i] && !this.list[i]["__isGrouping"] && this.list[i][this.config.columnKeys.modified]) {
+                    if (this.list[i] && !this.list[i]["__isGrouping"] && this.list[i][this.config.columnKeys.selected]) {
                         returnList.push(jQuery.extend({}, this.list[i]));
                     }
                 }
@@ -27775,6 +27778,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
      * @param _frozenColumnIndex
      * @returns {{leftHeaderData: {rows: Array}, headerData: {rows: Array}}}
      */
+
     var divideTableByFrozenColumnIndex = function divideTableByFrozenColumnIndex(_table, _frozenColumnIndex) {
         var tempTable_l = { rows: [] };
         var tempTable_r = { rows: [] };
@@ -30833,7 +30837,7 @@ jQuery.fn.ax5layout = function () {
                 /*
                 var path = [];
                 var _path = [].concat(dataPath.split(/[\.\[\]]/g));
-                 _path.forEach(function (n) {
+                  _path.forEach(function (n) {
                     if (n !== "") path.push(n);
                 });
                 _path = null;
@@ -30922,10 +30926,10 @@ jQuery.fn.ax5layout = function () {
             };
 
             /**
-             * data_path에 값이 변경되는 이벤트 발생하면 callBack을 실행합니다.
+             * data_path에 값이 변경되는 이벤트 발생하면 callback을 실행합니다.
              * @method ax5binder.onChange
              * @param dataPath
-             * @param callBack
+             * @param callback
              * @returns {ax5binder}
              * @example
              * ```js
@@ -30943,16 +30947,16 @@ jQuery.fn.ax5layout = function () {
              *   });
              * ```
              */
-            this.onChange = function (dataPath, callBack) {
-                this.change_trigger[dataPath || "*"] = callBack;
+            this.onChange = function (dataPath, callback) {
+                this.change_trigger[dataPath || "*"] = callback;
                 return this;
             };
 
             /**
-             * data-ax-repeat="list" 속성이 부여된 엘리먼트 하위에 태그중에 data-ax-repeat-click 속성을 가진 아이템에 대해 클릭 이벤트 발생하면 callBack을 실행합니다.
+             * data-ax-repeat="list" 속성이 부여된 엘리먼트 하위에 태그중에 data-ax-repeat-click 속성을 가진 아이템에 대해 클릭 이벤트 발생하면 callback을 실행합니다.
              * @method ax5binder.onClick
              * @param dataPath
-             * @param callBack
+             * @param callback
              * @returns {ax5binder}
              * @example
              * ```js
@@ -30969,8 +30973,8 @@ jQuery.fn.ax5layout = function () {
              *   });
              * ```
              */
-            this.onClick = function (dataPath, callBack) {
-                this.click_trigger[dataPath] = callBack;
+            this.onClick = function (dataPath, callback) {
+                this.click_trigger[dataPath] = callback;
                 return this;
             };
 
@@ -31004,14 +31008,14 @@ jQuery.fn.ax5layout = function () {
 
                 this.change("*");
 
-                var callBack = this.update_trigger[dataPath];
-                if (callBack) {
+                var callback = this.update_trigger[dataPath];
+                if (callback) {
                     var that = {
                         repeat_path: dataPath,
                         tmpl: tmpl,
                         list: list
                     };
-                    callBack.call(that, that);
+                    callback.call(that, that);
                 }
 
                 return this;
@@ -31046,14 +31050,14 @@ jQuery.fn.ax5layout = function () {
 
                 this.change("*");
 
-                var callBack = this.update_trigger[dataPath];
-                if (callBack) {
+                var callback = this.update_trigger[dataPath];
+                if (callback) {
                     var that = {
                         repeat_path: dataPath,
                         tmpl: tmpl,
                         list: list
                     };
-                    callBack.call(that, that);
+                    callback.call(that, that);
                 }
 
                 return this;
@@ -31083,14 +31087,14 @@ jQuery.fn.ax5layout = function () {
 
                 this.change("*");
 
-                var callBack = this.update_trigger[dataPath];
-                if (callBack) {
+                var callback = this.update_trigger[dataPath];
+                if (callback) {
                     var that = {
                         repeat_path: dataPath,
                         tmpl: tmpl,
                         list: list
                     };
-                    callBack.call(that, that);
+                    callback.call(that, that);
                 }
 
                 return this;
@@ -31168,7 +31172,7 @@ jQuery.fn.ax5layout = function () {
             /**
              * @method ax5binder.onUpdate
              * @param dataPath
-             * @param callBack
+             * @param callback
              * @returns {ax5binder}
              * @example
              * ```js
@@ -31180,8 +31184,8 @@ jQuery.fn.ax5layout = function () {
              *  });
              * ```
              */
-            this.onUpdate = function (dataPath, callBack) {
-                this.update_trigger[dataPath] = callBack;
+            this.onUpdate = function (dataPath, callback) {
+                this.update_trigger[dataPath] = callback;
                 return this;
             };
 
@@ -31274,8 +31278,8 @@ jQuery.fn.ax5layout = function () {
                                     if (origin_value[i] == this.value) {
                                         //hasItemIndex = i;
                                     } else {
-                                            new_value.push(origin_value[i]);
-                                        }
+                                        new_value.push(origin_value[i]);
+                                    }
                                 }
                                 origin_value = new_value;
                             }
@@ -31306,20 +31310,20 @@ jQuery.fn.ax5layout = function () {
                  */
 
                 //_this.tmpl
-                var callBack;
+                var callback;
                 for (var tk in _this.tmpl) {
                     for (var ix in _this.tmpl[tk]) {
                         // console.log(_this.tmpl[tk][ix].content);
                         this.print_tmpl(tk, _this.tmpl[tk][ix], "isInit");
                     }
 
-                    if (callBack = this.update_trigger[tk]) {
+                    if (callback = this.update_trigger[tk]) {
                         var that = {
                             repeat_path: tk,
                             tmpl: _this.tmpl[tk],
                             list: Function("", "return this." + tk + ";").call(this.model)
                         };
-                        callBack.call(that, that);
+                        callback.call(that, that);
                     }
                 }
             };
@@ -31355,7 +31359,7 @@ jQuery.fn.ax5layout = function () {
 
                     while (i--) {
                         vi = value.length;
-                        while (vi--) {
+                        while (vi--) { 
                             if (typeof value[vi] !== "undefined" && options[i].value === value[vi].toString()) {
                                 options[i].selected = true;
                                 option_matched = true;
@@ -31394,9 +31398,9 @@ jQuery.fn.ax5layout = function () {
             };
 
             this.change = function (dataPath, that) {
-                var callBack = this.change_trigger[dataPath];
-                if (callBack) {
-                    callBack.call(that, that);
+                var callback = this.change_trigger[dataPath];
+                if (callback) {
+                    callback.call(that, that);
                 }
                 if (dataPath != "*" && this.change_trigger["*"]) {
                     this.change_trigger["*"].call(that, that);
@@ -31404,9 +31408,9 @@ jQuery.fn.ax5layout = function () {
             };
 
             this.click = function (dataPath, that) {
-                var callBack = this.click_trigger[dataPath];
-                if (callBack) {
-                    callBack.call(that, that);
+                var callback = this.click_trigger[dataPath];
+                if (callback) {
+                    callback.call(that, that);
                 }
             };
 
@@ -31527,8 +31531,8 @@ jQuery.fn.ax5layout = function () {
                                     if (origin_value[i] == this.value) {
                                         //hasItemIndex = i;
                                     } else {
-                                            new_value.push(origin_value[i]);
-                                        }
+                                        new_value.push(origin_value[i]);
+                                    }
                                 }
                                 origin_value = new_value;
                             }
@@ -32072,9 +32076,9 @@ jQuery.fn.ax5layout = function () {
                             _focusIndex = 0;
                             //_focusIndex = (direction > 0) ? 0 : item.optionItemLength - 1; // 맨 끝으로 보낼것인가 말 것인가.
                         } else {
-                                _focusIndex = _prevFocusIndex + direction;
-                                if (_focusIndex < 0) _focusIndex = 0;else if (_focusIndex > item.optionItemLength - 1) _focusIndex = item.optionItemLength - 1;
-                            }
+                            _focusIndex = _prevFocusIndex + direction;
+                            if (_focusIndex < 0) _focusIndex = 0;else if (_focusIndex > item.optionItemLength - 1) _focusIndex = item.optionItemLength - 1;
+                        }
                     }
 
                     item.optionFocusIndex = _focusIndex;
@@ -32442,25 +32446,25 @@ jQuery.fn.ax5layout = function () {
                                 if (typeof value === "undefined") {
                                     //
                                 } else if (U.isString(value)) {
-                                        searchWord = value;
-                                    } else {
-                                        if (value.removeSelectedIndex) {
-                                            resetSelected = true;
-                                        }
-                                        values.push(value);
+                                    searchWord = value;
+                                } else {
+                                    if (value.removeSelectedIndex) {
+                                        resetSelected = true;
                                     }
+                                    values.push(value);
+                                }
                             }
                         }
 
                         if (childNodes.length == 0) {
                             setSelected.call(this, item.id, null, undefined, "internal"); // clear value
                         } else if (searchWord != "") {
-                                onSearch.call(self, queIdx, searchWord);
-                            } else if (resetSelected) {
-                                setSelected.call(this, item.id, values, undefined, "internal"); // set Value
-                                U.selectRange(item.$displayLabel, "end"); // label focus end
-                                self.close();
-                            }
+                            onSearch.call(self, queIdx, searchWord);
+                        } else if (resetSelected) {
+                            setSelected.call(this, item.id, values, undefined, "internal"); // set Value
+                            U.selectRange(item.$displayLabel, "end"); // label focus end
+                            self.close();
+                        }
                     }, 150);
 
                     var blurLabel = function blurLabel(queIdx) {
@@ -32476,11 +32480,11 @@ jQuery.fn.ax5layout = function () {
                                 if (typeof value === "undefined") {
                                     //
                                 } else if (U.isString(value)) {
-                                        //editingText = value;
-                                        //values.push(value);
-                                    } else {
-                                            values.push(value);
-                                        }
+                                    //editingText = value;
+                                    //values.push(value);
+                                } else {
+                                    values.push(value);
+                                }
                             }
                         }
 
@@ -32618,6 +32622,7 @@ jQuery.fn.ax5layout = function () {
                         item.$display.unbind('click.ax5autocomplete').bind('click.ax5autocomplete', autocompleteEvent.click.bind(this, queIdx));
 
                         // autocomplete 태그에 대한 이벤트 감시
+
 
                         item.$displayLabel.unbind("focus.ax5autocomplete").bind("focus.ax5autocomplete", autocompleteEvent.focus.bind(this, queIdx)).unbind("blur.ax5autocomplete").bind("blur.ax5autocomplete", autocompleteEvent.blur.bind(this, queIdx)).unbind('keyup.ax5autocomplete').bind('keyup.ax5autocomplete', autocompleteEvent.keyUp.bind(this, queIdx)).unbind("keydown.ax5autocomplete").bind("keydown.ax5autocomplete", autocompleteEvent.keyDown.bind(this, queIdx));
 
@@ -33020,7 +33025,6 @@ jQuery.fn.ax5autocomplete = function () {
 }();
 // ax5.ui.autocomplete.tmpl
 (function () {
-
     var AUTOCOMPLETE = ax5.ui.autocomplete;
     var U = ax5.util;
 
