@@ -111,7 +111,7 @@ axboot.gridBuilder = (function () {
         },
         "menu-program-auth-checkYn": {
             type: "checkbox", config: {trueValue: "Y", falseValue: "N"},
-            disabled: function(){
+            disabled: function () {
                 return this.item["program_" + this.key] == "N";
             }
         },
@@ -153,7 +153,13 @@ axboot.gridBuilder = (function () {
         };
         myGridConfig.columns = convertColumn(myGridConfig.columns);
 
-        return new ax5.ui.grid(myGridConfig);
+        var instance;
+        myGridConfig.page.onChange = function () {
+            instance.onPageChange(this.page.selectPage);
+        };
+        instance = new ax5.ui.grid(myGridConfig);
+        instance.onPageChange = function(){};
+        return instance;
     }
 })();
 
