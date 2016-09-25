@@ -171,8 +171,8 @@ fnObj.searchView = axboot.viewExtend(axboot.searchView, {
     },
     getData: function () {
         return {
-            pageNumber: 0,
-            pageSize: 99999,
+            pageNumber: this.pageNumber,
+            pageSize: this.pageSize,
             filter: this.filter.val()
         }
     }
@@ -242,11 +242,11 @@ fnObj.gridView01 = axboot.viewExtend(axboot.gridView, {
  */
 fnObj.formView01 = axboot.viewExtend(axboot.formView, {
     getDefaultData: function () {
-        return {
+        return $.extend({}, axboot.formView.defaultData, {
             "compCd": "S0001",
             roleList: [],
             authList: []
-        };
+        });
     },
     initView: function () {
         this.target = $("#formView01");
