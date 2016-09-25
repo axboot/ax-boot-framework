@@ -2,6 +2,7 @@ package com.chequer.axboot.core.parameter;
 
 
 import com.chequer.axboot.core.api.ApiException;
+import com.chequer.axboot.core.utils.ArrayUtils;
 import com.querydsl.core.BooleanBuilder;
 import com.querydsl.core.types.Predicate;
 import com.querydsl.core.types.dsl.EntityPathBase;
@@ -18,6 +19,8 @@ import java.util.stream.Collectors;
 public class RequestParams<T> {
 
     private Map<String, Object> map;
+
+    private List<Sort.Order> sortOrders = new ArrayList<>();
 
     public Class<T> clazz;
 
@@ -106,22 +109,36 @@ public class RequestParams<T> {
         return new PageRequest(page, size, getSort());
     }
 
+    public void addSort(String value, Sort.Direction direction) {
+        if (!hasSortParameter()) {
+            sortOrders.add(new Sort.Order(direction, value));
+        }
+    }
+
+    public boolean hasSortParameter() {
+        return StringUtils.isNotEmpty(getString("sort"));
+    }
+
     public Sort getSort() {
-        String sortParameter = getString("sort");
+        if (hasSortParameter()) {
+            List<Sort.Order> orders = new ArrayList<>();
 
-        if (StringUtils.isEmpty(sortParameter)) {
-            return null;
+            String sortParameter = getString("sort");
+
+            String[] sortValues = sortParameter.split(",");
+
+            for (int i = 0; i < sortValues.length; i += 2) {
+                orders.add(new Sort.Order(Sort.Direction.fromString(sortValues[i + 1]), sortValues[i]));
+            }
+
+            return new Sort(orders);
         }
 
-        List<Sort.Order> orders = new ArrayList<>();
-
-        String[] sortValues = sortParameter.split(",");
-
-        for (int i = 0; i < sortValues.length; i += 2) {
-            orders.add(new Sort.Order(Sort.Direction.fromString(sortValues[i + 1]), sortValues[i]));
+        if (ArrayUtils.isNotEmpty(sortOrders)) {
+            return new Sort(sortOrders);
         }
 
-        return new Sort(orders);
+        return null;
     }
 
     public Predicate getPredicate() {

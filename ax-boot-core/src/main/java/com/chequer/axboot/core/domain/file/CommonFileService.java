@@ -16,6 +16,7 @@ import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -236,6 +237,9 @@ public class CommonFileService extends BaseService<CommonFile, Long> implements 
         String targetId = requestParams.getString("targetId", "");
         String delYn = requestParams.getString("delYn", "");
         String targetIds = requestParams.getString("targetIds", "");
+        requestParams.addSort("sort", Sort.Direction.ASC);
+        requestParams.addSort("id", Sort.Direction.DESC);
+
         Pageable pageable = requestParams.getPageable();
 
         BooleanBuilder builder = new BooleanBuilder();
