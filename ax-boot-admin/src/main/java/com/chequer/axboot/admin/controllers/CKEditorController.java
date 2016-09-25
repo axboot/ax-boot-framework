@@ -25,11 +25,14 @@ public class CKEditorController extends BaseController {
     private CommonFileService commonFileService;
 
     @RequestMapping(value = "/uploadImage", method = RequestMethod.POST, produces = APPLICATION_JSON)
-    public CKEditorUploadResponse uploadDragAndDropFromCKEditor(@RequestParam(value = "upload") MultipartFile multipartFile, @RequestParam String targetId) throws IOException {
+    public CKEditorUploadResponse uploadDragAndDropFromCKEditor(
+            @RequestParam(value = "upload") MultipartFile multipartFile,
+            @RequestParam(defaultValue = "CKEDITOR", required = false) String targetType,
+            @RequestParam String targetId) throws IOException {
         UploadParameters uploadParameters = new UploadParameters();
         uploadParameters.setMultipartFile(multipartFile);
         uploadParameters.setTargetId(targetId);
-        uploadParameters.setTargetType("CKEDITOR");
+        uploadParameters.setTargetType(targetType);
         uploadParameters.setThumbnail(false);
 
         CommonFile commonFile = commonFileService.upload(uploadParameters);

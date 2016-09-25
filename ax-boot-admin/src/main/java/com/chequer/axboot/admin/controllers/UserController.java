@@ -23,7 +23,7 @@ public class UserController extends BaseController {
     private UserService userService;
 
     @RequestMapping(method = RequestMethod.GET, produces = APPLICATION_JSON)
-    public GeneralResponse.ListResponse list(RequestParams requestParams) {
+    public GeneralResponse.ListResponse list(RequestParams<User> requestParams) {
         List<User> users = userService.get(requestParams);
         return GeneralResponse.ListResponse.of(users);
     }
