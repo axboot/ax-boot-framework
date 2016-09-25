@@ -172,6 +172,9 @@ public class CommonFileService extends BaseService<CommonFile, Long> implements 
     public void preview(HttpServletResponse response, Long id, String type) throws IOException {
         CommonFile commonFile = findOne(id);
 
+        if(commonFile == null)
+            return;
+
         MediaType mediaType = null;
         String imagePath = "";
 
