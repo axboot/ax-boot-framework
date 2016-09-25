@@ -6,6 +6,7 @@ import com.chequer.axboot.core.domain.file.CommonFile;
 import com.chequer.axboot.core.domain.file.CommonFileService;
 import com.chequer.axboot.core.domain.file.UploadParameters;
 import com.chequer.axboot.core.parameter.RequestParams;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
@@ -29,6 +30,12 @@ public class CKEditorController extends BaseController {
             @RequestParam(value = "upload") MultipartFile multipartFile,
             @RequestParam(defaultValue = "CKEDITOR", required = false) String targetType,
             @RequestParam String targetId) throws IOException {
+
+
+        if (StringUtils.isEmpty(multipartFile.getName())) {
+            throw new IllegalArgumentException("file not presented");
+        }
+
         UploadParameters uploadParameters = new UploadParameters();
         uploadParameters.setMultipartFile(multipartFile);
         uploadParameters.setTargetId(targetId);
