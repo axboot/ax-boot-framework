@@ -2,7 +2,7 @@ package com.chequer.axboot.admin;
 
 import com.chequer.axboot.admin.interceptor.HttpRequestInterceptor;
 import com.chequer.axboot.core.filters.MultiReadableHttpServletRequestFilter;
-import com.chequer.axboot.core.jackson.AxBootMappingJackson2JsonView;
+import com.chequer.axboot.core.json.ContentTypeSwitchableMappingJackson2JsonView;
 import com.chequer.axboot.core.parameter.RequestParamsArgumentResolver;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.core.JsonEncoding;
@@ -94,13 +94,13 @@ public class AXBootAdminWebMvcConfigurerAdapter extends WebMvcConfigurerAdapter 
         contentNegotiatingViewResolver.setOrder(Ordered.HIGHEST_PRECEDENCE);
 
         List<View> views = new ArrayList<>();
-        AxBootMappingJackson2JsonView chequerMappingJackson2JsonView = new AxBootMappingJackson2JsonView();
-        chequerMappingJackson2JsonView.setEncoding(JsonEncoding.UTF8);
-        chequerMappingJackson2JsonView.setExtractValueFromSingleKeyModel(true);
-        chequerMappingJackson2JsonView.setPrefixJson(false);
-        chequerMappingJackson2JsonView.setObjectMapper(objectMapper());
+        ContentTypeSwitchableMappingJackson2JsonView contentTypeSwitchableMappingJackson2JsonView = new ContentTypeSwitchableMappingJackson2JsonView();
+        contentTypeSwitchableMappingJackson2JsonView.setEncoding(JsonEncoding.UTF8);
+        contentTypeSwitchableMappingJackson2JsonView.setExtractValueFromSingleKeyModel(true);
+        contentTypeSwitchableMappingJackson2JsonView.setPrefixJson(false);
+        contentTypeSwitchableMappingJackson2JsonView.setObjectMapper(objectMapper());
 
-        views.add(chequerMappingJackson2JsonView);
+        views.add(contentTypeSwitchableMappingJackson2JsonView);
 
         contentNegotiatingViewResolver.setDefaultViews(views);
 
