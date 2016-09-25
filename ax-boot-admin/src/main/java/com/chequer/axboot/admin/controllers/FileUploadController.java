@@ -55,8 +55,8 @@ public class FileUploadController extends BaseController {
         return commonFileService.upload(uploadParameters);
     }
 
-    @RequestMapping(method = RequestMethod.GET, produces = APPLICATION_JSON, params = {"targetType", "targetId"})
-    public PageableResponse.PageResponse listByTarget(RequestParams<CommonFile> requestParams) {
+    @RequestMapping(method = RequestMethod.GET, produces = APPLICATION_JSON)
+    public PageableResponse.PageResponse list(RequestParams<CommonFile> requestParams) {
         Page<CommonFile> files = commonFileService.getList(requestParams);
         return PageableResponse.PageResponse.of(files);
     }
