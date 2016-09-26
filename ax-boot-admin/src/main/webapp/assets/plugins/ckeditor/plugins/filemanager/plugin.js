@@ -1,11 +1,10 @@
 CKEDITOR.plugins.add('filemanager', {
     init: function (editor) {
-        var pluginName = 'filemanager';
         editor.ui.addButton('FileManager',
             {
                 label: 'My New Plugin',
-                command: 'OpenFileManager'
-                //icon: CKEDITOR.plugins.getPath('filemanager') + 'mybuttonicon.gif'
+                command: 'OpenFileManager',
+                icon: CKEDITOR.plugins.getPath('filemanager') + 'icon.png'
             });
         editor.addCommand('OpenFileManager', {exec: openFileManager});
     }

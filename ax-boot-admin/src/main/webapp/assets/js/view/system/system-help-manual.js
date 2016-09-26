@@ -384,9 +384,26 @@ fnObj.formView01 = axboot.viewExtend(axboot.formView, {
             filebrowserWindowWidth: '960',
             filebrowserWindowHeight: '600',
             imageUploadUrl: CONTEXT_PATH + '/ckeditor/uploadImage?&targetId=' + menuId,
-            removePlugins: 'resize'
+            removePlugins: 'resize',
+
+            toolbarGroups: [
+                {name: 'clipboard', groups: ['clipboard', 'undo']},
+                {name: 'editing', groups: ['find', 'selection', 'spellchecker']},
+                {name: 'links'},
+                {name: 'insert'},
+                {name: 'forms'},
+                {name: 'tools'},
+                {name: 'document', groups: ['mode', 'document', 'doctools']},
+                {name: 'others'},
+                '/',
+                {name: 'basicstyles', groups: ['basicstyles', 'cleanup']},
+                {name: 'paragraph', groups: ['list', 'indent', 'blocks', 'align', 'bidi']},
+                {name: 'styles'},
+                {name: 'colors'},
+                {name: 'about'}
+            ]
         });
-// todo : upload-image config 찾기
+
         this.resize();
         this.initEvent();
 

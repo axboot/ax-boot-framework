@@ -27,8 +27,11 @@ var ACTIONS = axboot.actionExtend(fnObj, {
                 break;
             case ACTIONS.PAGE_CHOICE:
                 data = this.formView01.getData();
+
                 if(data.id){
-                    window.opener.CKEDITOR.tools.callFunction(CKEditorFuncNum, data.preview);
+                    var image_tag="<img src=\"" + data.preview +"\"/>";
+                    var doctarget = opener.CKEDITOR.instances.editor1;
+                    doctarget.insertHtml(image_tag);
                     window.close();
                 }else{
                     alert("선택된 파일이 없습니다.");
