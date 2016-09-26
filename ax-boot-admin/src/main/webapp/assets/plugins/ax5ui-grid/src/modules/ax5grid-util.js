@@ -4,12 +4,15 @@
     var GRID = ax5.ui.grid;
     var U = ax5.util;
 
+
+
     /**
      * @method ax5grid.util.divideTableByFrozenColumnIndex
      * @param _table
      * @param _frozenColumnIndex
      * @returns {{leftHeaderData: {rows: Array}, headerData: {rows: Array}}}
      */
+
     var divideTableByFrozenColumnIndex = function (_table, _frozenColumnIndex) {
         var tempTable_l = {rows: []};
         var tempTable_r = {rows: []};
@@ -337,7 +340,7 @@
                     colIndex: addC,
                     colspan: colspan,
                     rowspan: 1,
-                    label: "&nbsp;",
+                    label: "&nbsp;"
                 });
             }
             addC += colspan;

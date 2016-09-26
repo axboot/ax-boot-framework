@@ -1,6 +1,5 @@
 // ax5.ui.autocomplete.tmpl
 (function () {
-
     var AUTOCOMPLETE = ax5.ui.autocomplete;
     var U = ax5.util;
 
