@@ -98,6 +98,8 @@ gulp.task('import-ax5ui-file', function () {
      */
     for (var k in AX5UI_PLUGINS) {
         gulp.src([
+            '!' + AX5UI_PATH + k + '/**/test/**/*',
+            '!' + AX5UI_PATH + k + '/**/node_modules/**/*',
             AX5UI_PATH + k + '/**/src/**/*',
             AX5UI_PATH + k + '/**/dist/**/*',
             AX5UI_PATH + k + '/**/*.json'

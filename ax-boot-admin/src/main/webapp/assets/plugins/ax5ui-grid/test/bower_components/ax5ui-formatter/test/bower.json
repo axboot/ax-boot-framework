@@ -1,9 +1,0 @@
-{
-	"name": "ax5ui-formatter-tester",
-	"dependencies": {
-		"jquery": "^1.11.0",
-		"ax5core": ">=1.0.9",
-		"bootstrap": "^3.3.6",
-		"font-awesome": ""
-	}
-}
