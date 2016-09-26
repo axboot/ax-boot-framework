@@ -1,8 +1,0 @@
-{
-	"name": "bootstrap-ax5mask-tester",
-	"dependencies": {
-		"jquery": "^1.11.0",
-		"ax5core": "^0.2.0",
-		"font-awesome": ""
-	}
-}

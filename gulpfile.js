@@ -96,9 +96,14 @@ gulp.task('import-ax5ui-file', function () {
     /*
      ax5ui 소스를 로컬에서 직접 복붙하는 타스크
      */
-
     for (var k in AX5UI_PLUGINS) {
-        gulp.src(AX5UI_PATH + k + '/**/*', {base: AX5UI_PATH})
+        gulp.src([
+            '!' + AX5UI_PATH + k + '/**/test/**/*',
+            '!' + AX5UI_PATH + k + '/**/node_modules/**/*',
+            AX5UI_PATH + k + '/**/src/**/*',
+            AX5UI_PATH + k + '/**/dist/**/*',
+            AX5UI_PATH + k + '/**/*.json'
+        ], {base: AX5UI_PATH})
             .pipe(gulp.dest(ASSETS + '/plugins'));
     }
 

@@ -1,6 +1,0 @@
-{
-	"name": "ax5ui-dialog-tester",
-	"dependencies": {
-		"jquery": "^1.11.0"
-	}
-}
