@@ -680,9 +680,6 @@
             else if (ax5.util.isFunction(O)) {
                 jsonString = '"{Function}"';
             }
-            else {
-                jsonString = O;
-            }
             return jsonString;
         }
 

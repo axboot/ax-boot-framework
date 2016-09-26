@@ -139,9 +139,9 @@
                     }
                 }
                 break;
-            case "selected":
+            case "modified":
                 for (; i < l; i++) {
-                    if (this.list[i] && !this.list[i]["__isGrouping"] && this.list[i][this.config.columnKeys.selected]) {
+                    if (this.list[i] && !this.list[i]["__isGrouping"] && this.list[i][this.config.columnKeys.modified]) {
                         returnList.push(jQuery.extend({}, this.list[i]));
                     }
                 }

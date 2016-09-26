@@ -456,10 +456,10 @@
             this.open = function () {
 
                 var pickerContent = {
-                    '@fn': function fn(queIdx, callback) {
+                    '@fn': function fn(queIdx, callBack) {
                         var item = this.queue[queIdx];
                         item.content.call(item, function (html) {
-                            callback(html);
+                            callBack(html);
                         });
                         return true;
                     },

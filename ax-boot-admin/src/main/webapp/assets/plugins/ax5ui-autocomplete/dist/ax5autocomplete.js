@@ -400,9 +400,9 @@
                             _focusIndex = 0;
                             //_focusIndex = (direction > 0) ? 0 : item.optionItemLength - 1; // 맨 끝으로 보낼것인가 말 것인가.
                         } else {
-                            _focusIndex = _prevFocusIndex + direction;
-                            if (_focusIndex < 0) _focusIndex = 0;else if (_focusIndex > item.optionItemLength - 1) _focusIndex = item.optionItemLength - 1;
-                        }
+                                _focusIndex = _prevFocusIndex + direction;
+                                if (_focusIndex < 0) _focusIndex = 0;else if (_focusIndex > item.optionItemLength - 1) _focusIndex = item.optionItemLength - 1;
+                            }
                     }
 
                     item.optionFocusIndex = _focusIndex;
@@ -770,25 +770,25 @@
                                 if (typeof value === "undefined") {
                                     //
                                 } else if (U.isString(value)) {
-                                    searchWord = value;
-                                } else {
-                                    if (value.removeSelectedIndex) {
-                                        resetSelected = true;
+                                        searchWord = value;
+                                    } else {
+                                        if (value.removeSelectedIndex) {
+                                            resetSelected = true;
+                                        }
+                                        values.push(value);
                                     }
-                                    values.push(value);
-                                }
                             }
                         }
 
                         if (childNodes.length == 0) {
                             setSelected.call(this, item.id, null, undefined, "internal"); // clear value
                         } else if (searchWord != "") {
-                            onSearch.call(self, queIdx, searchWord);
-                        } else if (resetSelected) {
-                            setSelected.call(this, item.id, values, undefined, "internal"); // set Value
-                            U.selectRange(item.$displayLabel, "end"); // label focus end
-                            self.close();
-                        }
+                                onSearch.call(self, queIdx, searchWord);
+                            } else if (resetSelected) {
+                                setSelected.call(this, item.id, values, undefined, "internal"); // set Value
+                                U.selectRange(item.$displayLabel, "end"); // label focus end
+                                self.close();
+                            }
                     }, 150);
 
                     var blurLabel = function blurLabel(queIdx) {
@@ -804,11 +804,11 @@
                                 if (typeof value === "undefined") {
                                     //
                                 } else if (U.isString(value)) {
-                                    //editingText = value;
-                                    //values.push(value);
-                                } else {
-                                    values.push(value);
-                                }
+                                        //editingText = value;
+                                        //values.push(value);
+                                    } else {
+                                            values.push(value);
+                                        }
                             }
                         }
 
@@ -946,7 +946,6 @@
                         item.$display.unbind('click.ax5autocomplete').bind('click.ax5autocomplete', autocompleteEvent.click.bind(this, queIdx));
 
                         // autocomplete 태그에 대한 이벤트 감시
-
 
                         item.$displayLabel.unbind("focus.ax5autocomplete").bind("focus.ax5autocomplete", autocompleteEvent.focus.bind(this, queIdx)).unbind("blur.ax5autocomplete").bind("blur.ax5autocomplete", autocompleteEvent.blur.bind(this, queIdx)).unbind('keyup.ax5autocomplete').bind('keyup.ax5autocomplete', autocompleteEvent.keyUp.bind(this, queIdx)).unbind("keydown.ax5autocomplete").bind("keydown.ax5autocomplete", autocompleteEvent.keyDown.bind(this, queIdx));
 
@@ -1349,6 +1348,7 @@ jQuery.fn.ax5autocomplete = function () {
 }();
 // ax5.ui.autocomplete.tmpl
 (function () {
+
     var AUTOCOMPLETE = ax5.ui.autocomplete;
     var U = ax5.util;
 
