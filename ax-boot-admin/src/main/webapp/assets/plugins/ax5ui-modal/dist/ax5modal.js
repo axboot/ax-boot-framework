@@ -5,10 +5,11 @@
 
     var UI = ax5.ui;
     var U = ax5.util;
+    var MODAL;
 
     UI.addClass({
         className: "modal",
-        version: "0.7.8"
+        version: "0.7.9"
     }, function () {
         /**
          * @class ax5modal
@@ -47,7 +48,7 @@
                     margin: 10
                 },
                 minimizePosition: "bottom-right",
-                clickEventName: "click", //(('ontouchstart' in document.documentElement) ? "touchstart" : "click"),
+                clickEventName: "mousedown", //(('ontouchstart' in document.documentElement) ? "touchstart" : "click"),
                 theme: 'default',
                 width: 300,
                 height: 400,
@@ -67,9 +68,6 @@
                 }
                 return true;
             },
-                getContentTmpl = function getContentTmpl() {
-                return " \n                    <div id=\"{{modalId}}\" data-modal-els=\"root\" class=\"ax5modal {{theme}} {{fullscreen}}\" style=\"{{styles}}\">\n                        {{#header}}\n                        <div class=\"ax-modal-header\" data-modal-els=\"header\">\n                            {{{title}}}\n                            {{#btns}}\n                                <div class=\"ax-modal-header-addon\">\n                                {{#@each}}\n                                <a tabindex=\"-1\" data-modal-header-btn=\"{{@key}}\" class=\"{{@value.theme}}\">{{{@value.label}}}</a>\n                                {{/@each}}\n                                </div>\n                            {{/btns}}\n                        </div>\n                        {{/header}}\n                        <div class=\"ax-modal-body\" data-modal-els=\"body\">\n                        {{#iframe}}\n                        \n                            <div data-modal-els=\"iframe-wrap\" style=\"-webkit-overflow-scrolling: touch; overflow: auto;position: relative;\">\n                                <table data-modal-els=\"iframe-loading\" style=\"width:100%;height:100%;\"><tr><td style=\"text-align: center;vertical-align: middle\">{{{iframeLoadingMsg}}}</td></tr></table>\n                                <iframe name=\"{{modalId}}-frame\" src=\"\" width=\"100%\" height=\"100%\" frameborder=\"0\" data-modal-els=\"iframe\" style=\"position: absolute;left:0;top:0;\"></iframe>\n                            </div>\n                            <form name=\"{{modalId}}-form\" data-modal-els=\"iframe-form\">\n                            <input type=\"hidden\" name=\"modalId\" value=\"{{modalId}}\" />\n                            {{#param}}\n                            {{#@each}}\n                            <input type=\"hidden\" name=\"{{@key}}\" value=\"{{@value}}\" />\n                            {{/@each}}\n                            {{/param}}\n                            </form>\n                        {{/iframe}}\n                        </div>\n                    </div>\n                    ";
-            },
                 getContent = function getContent(modalId, opts) {
                 var data = {
                     modalId: modalId,
@@ -88,7 +86,7 @@
                     data.iframe.param = ax5.util.param(data.iframe.param);
                 }
 
-                return ax5.mustache.render(getContentTmpl(), data);
+                return MODAL.tmpl.get.call(this, "content", data, {});
             },
                 open = function open(opts, callback) {
                 var that;
@@ -541,4 +539,22 @@
         };
         return ax5modal;
     }());
+
+    MODAL = ax5.ui.modal;
+})();
+// ax5.ui.modal.tmpl
+(function () {
+    var MODAL = ax5.ui.modal;
+
+    var content = function content() {
+        return " \n        <div id=\"{{modalId}}\" data-modal-els=\"root\" class=\"ax5modal {{theme}} {{fullscreen}}\" style=\"{{styles}}\">\n            {{#header}}\n            <div class=\"ax-modal-header\" data-modal-els=\"header\">\n                {{{title}}}\n                {{#btns}}\n                    <div class=\"ax-modal-header-addon\">\n                    {{#@each}}\n                    <a tabindex=\"-1\" data-modal-header-btn=\"{{@key}}\" class=\"{{@value.theme}}\">{{{@value.label}}}</a>\n                    {{/@each}}\n                    </div>\n                {{/btns}}\n            </div>\n            {{/header}}\n            <div class=\"ax-modal-body\" data-modal-els=\"body\">\n            {{#iframe}}\n            \n                <div data-modal-els=\"iframe-wrap\" style=\"-webkit-overflow-scrolling: touch; overflow: auto;position: relative;\">\n                    <table data-modal-els=\"iframe-loading\" style=\"width:100%;height:100%;\"><tr><td style=\"text-align: center;vertical-align: middle\">{{{iframeLoadingMsg}}}</td></tr></table>\n                    <iframe name=\"{{modalId}}-frame\" src=\"\" width=\"100%\" height=\"100%\" frameborder=\"0\" data-modal-els=\"iframe\" style=\"position: absolute;left:0;top:0;\"></iframe>\n                </div>\n                <form name=\"{{modalId}}-form\" data-modal-els=\"iframe-form\">\n                <input type=\"hidden\" name=\"modalId\" value=\"{{modalId}}\" />\n                {{#param}}\n                {{#@each}}\n                <input type=\"hidden\" name=\"{{@key}}\" value=\"{{@value}}\" />\n                {{/@each}}\n                {{/param}}\n                </form>\n            {{/iframe}}\n            </div>\n        </div>\n        ";
+    };
+
+    MODAL.tmpl = {
+        "content": content,
+
+        get: function get(tmplName, data, columnKeys) {
+            return ax5.mustache.render(MODAL.tmpl[tmplName].call(this, columnKeys), data);
+        }
+    };
 })();

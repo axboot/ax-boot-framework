@@ -1,11 +1,13 @@
 // ax5.ui.calendar
 (function () {
+
     var UI = ax5.ui;
     var U = ax5.util;
+    var CALENDAR;
 
     UI.addClass({
         className: "calendar",
-        version: "0.8.9"
+        version: "0.9.0"
     }, (function () {
 
         /**
@@ -74,27 +76,12 @@
 
                     that = null;
                 },
-                getFrameTmpl = function () {
-                    return `
-                <div class="ax5-ui-calendar {{theme}}" data-calendar-els="root" onselectstart="return false;">
-                    {{#control}}
-                    <div class="calendar-control" data-calendar-els="control" style="{{controlCSS}}">
-                        <a class="date-move-left" data-calendar-move="left" style="{{controlButtonCSS}}">{{{left}}}</a>
-                        <div class="date-display" data-calendar-els="control-display" style="{{controlCSS}}"></div>
-                        <a class="date-move-right" data-calendar-move="right" style="{{controlButtonCSS}}">{{{right}}}</a>
-                    </div>
-                    {{/control}}
-                    <div class="calendar-body" data-calendar-els="body"></div>
-                </div>
-                `;
-                },
                 getFrame = function () {
                     var
                         data = jQuery.extend(true, {}, cfg, {
                             controlCSS: {},
                             controlButtonCSS: {}
-                        }),
-                        tmpl = getFrameTmpl();
+                        });
 
                     data.controlButtonCSS["height"] = data.controlCSS["height"] = U.cssNumber(cfg.dimensions.controlHeight);
                     data.controlButtonCSS["line-height"] = data.controlCSS["line-height"] = U.cssNumber(cfg.dimensions.controlHeight);
@@ -103,112 +90,12 @@
                     data.controlCSS = U.css(data.controlCSS);
                     data.controlButtonCSS = U.css(data.controlButtonCSS);
 
-
                     try {
-                        return ax5.mustache.render(tmpl, data);
+                        return CALENDAR.tmpl.get.call(this, "frameTmpl", data);
                     }
                     finally {
                         data = null;
-                        tmpl = null;
                     }
-                },
-                getDayTmpl = function () {
-                    return `
-                <table data-calendar-table="day" cellpadding="0" cellspacing="0" style="width:100%;">
-                    <thead>
-                        <tr>
-                        {{#weekNames}}
-                            <td class="calendar-col-{{col}}" style="height: {{colHeadHeight}}">
-                            {{label}}
-                            </td>
-                        {{/weekNames}}
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            {{#list}}    
-                            {{#isStartOfWeek}}
-                            {{^@first}}
-                        </tr>
-                        <tr>
-                            {{/@first}}
-                            {{/isStartOfWeek}}
-                            <td class="calendar-col-{{col}}" style="{{itemStyles}}">
-                                <a class="calendar-item-day {{addClass}}" data-calendar-item-date="{{thisDate}}">
-                                    <span class="addon addon-header"></span>
-                                    {{thisDataLabel}}
-                                    <span class="addon addon-footer"></span>
-                                </a>
-                            </td>
-                            {{/list}}
-                        </tr>
-                    </tbody>
-                </table>
-                `;
-                },
-                getMonthTmpl = function () {
-                    return `
-                <table data-calendar-table="month" cellpadding="0" cellspacing="0" style="width:100%;">
-                    <thead>
-                        <tr>
-                            <td class="calendar-col-0" colspan="3" style="height: {{colHeadHeight}}">
-                            {{colHeadLabel}}
-                            </td>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            {{#list}}    
-                            {{#isStartOfRow}}
-                            {{^@first}}
-                        </tr>
-                        <tr>
-                            {{/@first}}
-                            {{/isStartOfRow}}
-                            <td class="calendar-col-{{col}}" style="{{itemStyles}}">
-                                <a class="calendar-item-month {{addClass}}" data-calendar-item-month="{{thisMonth}}">
-                                    <span class="addon"></span>
-                                    {{thisMonthLabel}}
-                                    <span class="lunar"></span>
-                                </a>
-                            </td>
-                            {{/list}}
-                        </tr>
-                    </tbody>
-                </table>
-                `;
-                },
-                getYearTmpl = function () {
-                    return `
-                <table data-calendar-table="year" cellpadding="0" cellspacing="0" style="width:100%;">
-                    <thead>
-                        <tr>
-                            <td class="calendar-col-0" colspan="4" style="height: {{colHeadHeight}}">
-                            {{colHeadLabel}}
-                            </td>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            {{#list}}    
-                            {{#isStartOfRow}}
-                            {{^@first}}
-                        </tr>
-                        <tr>
-                            {{/@first}}
-                            {{/isStartOfRow}}
-                            <td class="calendar-col-{{col}}" style="{{itemStyles}}">
-                                <a class="calendar-item-year {{addClass}}" data-calendar-item-year="{{thisYear}}">
-                                    <span class="addon"></span>
-                                    {{thisYearLabel}}
-                                    <span class="lunar"></span>
-                                </a>
-                            </td>
-                            {{/list}}
-                        </tr>
-                    </tbody>
-                </table>
-                `;
                 },
                 setDisplay = function () {
                     var
@@ -289,8 +176,7 @@
                         frameWidth = this.$["body"].width(),
                         frameHeight = Math.floor(frameWidth * (6 / 7)), // 1week = 7days, 1month = 6weeks
                         data,
-                        tmpl = getDayTmpl()
-                        ;
+                        tmpl;
 
                     if (cfg.dimensions.height) {
                         frameHeight = U.number(cfg.dimensions.height) - U.number(cfg.dimensions.colHeadHeight);
@@ -355,8 +241,8 @@
                         }
                         i++;
                     }
-
-                    this.$["body"].html(ax5.mustache.render(tmpl, data));
+                    tmpl = CALENDAR.tmpl.get.call(this, "dayTmpl", data);
+                    this.$["body"].html(tmpl);
                     this.$["body"].find('[data-calendar-item-date]').on(cfg.clickEventName, function (e) {
                         e = e || window.event;
                         onclick.call(self, e, 'date');
@@ -400,8 +286,7 @@
                         frameWidth = this.$["body"].width(),
                         frameHeight = Math.floor(frameWidth * (6 / 7)),
                         data,
-                        tmpl = getMonthTmpl()
-                        ;
+                        tmpl;
 
                     if (cfg.dimensions.height) {
                         frameHeight = U.number(cfg.dimensions.height) - U.number(cfg.dimensions.colHeadHeight);
@@ -455,8 +340,8 @@
                         }
                         i++;
                     }
-
-                    this.$["body"].html(ax5.mustache.render(tmpl, data));
+                    tmpl = CALENDAR.tmpl.get.call(this, "monthTmpl", data);
+                    this.$["body"].html(tmpl);
                     this.$["body"].find('[data-calendar-item-month]').on(cfg.clickEventName, function (e) {
                         e = e || window.event;
                         onclick.call(self, e, 'month');
@@ -499,8 +384,7 @@
                         frameWidth = this.$["body"].width(),
                         frameHeight = Math.floor(frameWidth * (6 / 7)),
                         data,
-                        tmpl = getYearTmpl()
-                        ;
+                        tmpl;
 
                     if (cfg.dimensions.height) {
                         frameHeight = U.number(cfg.dimensions.height) - U.number(cfg.dimensions.colHeadHeight);
@@ -554,8 +438,8 @@
                         }
                         i++;
                     }
-
-                    this.$["body"].html(ax5.mustache.render(tmpl, data));
+                    tmpl = CALENDAR.tmpl.get.call(this, "yearTmpl", data);
+                    this.$["body"].html(tmpl);
                     this.$["body"].find('[data-calendar-item-year]').on(cfg.clickEventName, function (e) {
                         e = (e || window.event);
                         onclick.call(this, e, 'year');
@@ -1136,4 +1020,5 @@
         };
         return ax5calendar;
     })());
+    CALENDAR = ax5.ui.calendar;
 })();

@@ -3,10 +3,11 @@
 
     var UI = ax5.ui;
     var U = ax5.util;
+    var MODAL;
 
     UI.addClass({
         className: "modal",
-        version  : "0.7.8"
+        version  : "0.7.9"
     }, (function () {
         /**
          * @class ax5modal
@@ -46,7 +47,7 @@
                     margin: 10
                 },
                 minimizePosition: "bottom-right",
-                clickEventName  : "click", //(('ontouchstart' in document.documentElement) ? "touchstart" : "click"),
+                clickEventName  : "mousedown", //(('ontouchstart' in document.documentElement) ? "touchstart" : "click"),
                 theme           : 'default',
                 width           : 300,
                 height          : 400,
@@ -68,41 +69,6 @@
                     }
                     return true;
                 },
-                getContentTmpl = function () {
-                    return ` 
-                    <div id="{{modalId}}" data-modal-els="root" class="ax5modal {{theme}} {{fullscreen}}" style="{{styles}}">
-                        {{#header}}
-                        <div class="ax-modal-header" data-modal-els="header">
-                            {{{title}}}
-                            {{#btns}}
-                                <div class="ax-modal-header-addon">
-                                {{#@each}}
-                                <a tabindex="-1" data-modal-header-btn="{{@key}}" class="{{@value.theme}}">{{{@value.label}}}</a>
-                                {{/@each}}
-                                </div>
-                            {{/btns}}
-                        </div>
-                        {{/header}}
-                        <div class="ax-modal-body" data-modal-els="body">
-                        {{#iframe}}
-                        
-                            <div data-modal-els="iframe-wrap" style="-webkit-overflow-scrolling: touch; overflow: auto;position: relative;">
-                                <table data-modal-els="iframe-loading" style="width:100%;height:100%;"><tr><td style="text-align: center;vertical-align: middle">{{{iframeLoadingMsg}}}</td></tr></table>
-                                <iframe name="{{modalId}}-frame" src="" width="100%" height="100%" frameborder="0" data-modal-els="iframe" style="position: absolute;left:0;top:0;"></iframe>
-                            </div>
-                            <form name="{{modalId}}-form" data-modal-els="iframe-form">
-                            <input type="hidden" name="modalId" value="{{modalId}}" />
-                            {{#param}}
-                            {{#@each}}
-                            <input type="hidden" name="{{@key}}" value="{{@value}}" />
-                            {{/@each}}
-                            {{/param}}
-                            </form>
-                        {{/iframe}}
-                        </div>
-                    </div>
-                    `;
-                },
                 getContent = function (modalId, opts) {
                     var
                         data = {
@@ -122,7 +88,7 @@
                         data.iframe.param = ax5.util.param(data.iframe.param);
                     }
 
-                    return ax5.mustache.render(getContentTmpl(), data);
+                    return MODAL.tmpl.get.call(this, "content", data, {});
                 },
                 open = function (opts, callback) {
                     var that;
@@ -603,4 +569,5 @@
         return ax5modal;
     })());
 
+    MODAL = ax5.ui.modal;
 })();

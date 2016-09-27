@@ -9,7 +9,7 @@
 
     UI.addClass({
         className: "toast",
-        version: "0.4.0"
+        version: "0.4.1"
     }, function () {
         /**
          * @class ax5toast
@@ -312,7 +312,7 @@
     var TOAST = ax5.ui.toast;
 
     var toastDisplay = function toastDisplay(columnKeys) {
-        return "\n        <div id=\"{{toastId}}\" data-ax5-ui=\"toast\" class=\"ax5-ui-toast {{theme}}\">\n            {{#icon}}\n            <div class=\"ax-toast-icon\">{{{.}}}</div>\n            {{/icon}}\n            <div class=\"ax-toast-body\">{{{msg}}}</div>\n            {{#btns}}\n            <div class=\"ax-toast-buttons\">\n                <div class=\"ax-button-wrap\">\n                    {{#@each}}\n                    <button type=\"button\" data-ax-toast-btn=\"{{@key}}\" class=\"btn btn-{{@value.theme}}\">{{{@value.label}}}</button>\n                    {{/@each}}\n                </div>\n            </div>\n            {{/btns}}\n            {{^btns}}\n                <a class=\"ax-toast-close\" data-ax-toast-btn=\"ok\">{{{closeIcon}}}</a>\n            {{/btns}}\n            <div style=\"clear:both;\"></div>\n        </div>\n        ";
+        return "\n        <div id=\"{{toastId}}\" data-ax5-ui=\"toast\" class=\"ax5-ui-toast {{theme}}\">\n            {{#icon}}\n            <div class=\"ax-toast-icon\">{{{.}}}</div>\n            {{/icon}}\n            <div class=\"ax-toast-body\">{{{msg}}}</div>\n            {{#btns}}\n            <div class=\"ax-toast-buttons\">\n                <div class=\"ax-button-wrap\">\n                    {{#@each}}\n                    <button type=\"button\" data-ax-toast-btn=\"{{@key}}\" class=\"btn btn-{{@value.theme}}\">{{{@value.label}}}</button>\n                    {{/@each}}\n                </div>\n            </div>\n            {{/btns}}\n            {{^btns}}\n                <a class=\"ax-toast-close\" data-ax-toast-btn=\"ok\">{{{closeIcon}}}</a>\n            {{/btns}}\n            <div style=\"clear:both;\"></div>\n        </div>";
     };
 
     TOAST.tmpl = {

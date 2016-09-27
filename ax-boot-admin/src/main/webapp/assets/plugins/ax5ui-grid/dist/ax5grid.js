@@ -125,6 +125,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
             this.footSumData = {}; // frozenColumnIndex 를 기준으로 나누어진 출력 레이아웃 오른쪽
             this.needToPaintSum = true; // 데이터 셋이 변경되어 summary 변경 필요여부
 
+
             cfg = this.config;
 
             var onStateChanged = function onStateChanged(_opts, _that) {
@@ -1201,6 +1202,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
 // todo : filter
 // todo : body menu
 // todo : column reorder
+
 
 // ax5.ui.grid.body
 (function () {

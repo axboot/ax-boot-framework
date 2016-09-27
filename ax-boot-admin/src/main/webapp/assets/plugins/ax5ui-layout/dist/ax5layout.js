@@ -7,7 +7,7 @@
 
     UI.addClass({
         className: "layout",
-        version: "0.2.10"
+        version: "0.3.0"
     }, function () {
         /**
          * @class ax5layout
@@ -78,7 +78,7 @@
                 alignLayout = function () {
                 var beforeSetCSS = {
                     "split": {
-                        "vertical": function vertical(item, panel, panelIndex) {
+                        "horizontal": function horizontal(item, panel, panelIndex) {
                             if (panel.splitter) {
                                 panel.__height = item.splitter.size;
                             } else {
@@ -99,7 +99,7 @@
                                 }
                             }
                         },
-                        "horizontal": function horizontal(item, panel, panelIndex) {
+                        "vertical": function vertical(item, panel, panelIndex) {
                             if (panel.splitter) {
                                 panel.__width = item.splitter.size;
                             } else {
@@ -240,7 +240,7 @@
                         panel.$target.css(css);
                     },
                     "split": {
-                        "vertical": function vertical(item, panel, panelIndex, withoutAsteriskSize, windowResize) {
+                        "horizontal": function horizontal(item, panel, panelIndex, withoutAsteriskSize, windowResize) {
                             var css = {};
                             var prevPosition = panelIndex ? Number(item.splitPanel[panelIndex - 1].offsetEnd) : 0;
                             if (panel.splitter) {
@@ -258,7 +258,7 @@
                             panel.offsetEnd = Number(prevPosition) + Number(css.height);
                             panel.$target.css(css);
                         },
-                        "horizontal": function horizontal(item, panel, panelIndex, withoutAsteriskSize, windowResize) {
+                        "vertical": function vertical(item, panel, panelIndex, withoutAsteriskSize, windowResize) {
                             var css = {};
                             var prevPosition = panelIndex ? Number(item.splitPanel[panelIndex - 1].offsetEnd) : 0;
 
@@ -298,7 +298,7 @@
                             beforeSetCSS["split"][item.oriental].call(this, item, panel, panelIndex);
                         });
 
-                        if (item.oriental == "vertical") {
+                        if (item.oriental == "horizontal") {
                             withoutAsteriskSize = U.sum(item.splitPanel, function (n) {
                                 if (n.height != "*") return U.number(n.__height);
                             });
@@ -411,7 +411,7 @@
                         "split": function split(e) {
                             var mouseObj = 'changedTouches' in e.originalEvent ? e.originalEvent.changedTouches[0] : e;
 
-                            if (item.oriental == "vertical") {
+                            if (item.oriental == "horizontal") {
                                 panel.__da = mouseObj.clientY - panel.mousePosition.clientY;
 
                                 var prevPanel = item.splitPanel[panel.panelIndex - 1];
@@ -487,7 +487,7 @@
                         },
                         "split-panel": {
                             "split": function split() {
-                                if (item.oriental == "vertical") {
+                                if (item.oriental == "horizontal") {
                                     // 앞과 뒤의 높이 조절
                                     item.splitPanel[panel.panelIndex - 1].__height += panel.__da;
                                     item.splitPanel[panel.panelIndex + 1].__height -= panel.__da;
@@ -620,10 +620,10 @@
                                 });
                                 panelInfo.resizerType = "split";
                             } else {
-                                if (item.oriental == "vertical") {
+                                if (item.oriental == "horizontal") {
                                     panelInfo.__height = getPixel(panelInfo.height, item.targetDimension.height);
                                 } else {
-                                    item.oriental = "horizontal";
+                                    item.oriental = "vertical";
                                     panelInfo.__width = getPixel(panelInfo.width, item.targetDimension.width);
                                 }
                             }

@@ -18391,7 +18391,7 @@ ax5.ui = function () {
 
     UI.addClass({
         className: "toast",
-        version: "0.4.0"
+        version: "0.4.1"
     }, function () {
         /**
          * @class ax5toast
@@ -18694,7 +18694,7 @@ ax5.ui = function () {
     var TOAST = ax5.ui.toast;
 
     var toastDisplay = function toastDisplay(columnKeys) {
-        return "\n        <div id=\"{{toastId}}\" data-ax5-ui=\"toast\" class=\"ax5-ui-toast {{theme}}\">\n            {{#icon}}\n            <div class=\"ax-toast-icon\">{{{.}}}</div>\n            {{/icon}}\n            <div class=\"ax-toast-body\">{{{msg}}}</div>\n            {{#btns}}\n            <div class=\"ax-toast-buttons\">\n                <div class=\"ax-button-wrap\">\n                    {{#@each}}\n                    <button type=\"button\" data-ax-toast-btn=\"{{@key}}\" class=\"btn btn-{{@value.theme}}\">{{{@value.label}}}</button>\n                    {{/@each}}\n                </div>\n            </div>\n            {{/btns}}\n            {{^btns}}\n                <a class=\"ax-toast-close\" data-ax-toast-btn=\"ok\">{{{closeIcon}}}</a>\n            {{/btns}}\n            <div style=\"clear:both;\"></div>\n        </div>\n        ";
+        return "\n        <div id=\"{{toastId}}\" data-ax5-ui=\"toast\" class=\"ax5-ui-toast {{theme}}\">\n            {{#icon}}\n            <div class=\"ax-toast-icon\">{{{.}}}</div>\n            {{/icon}}\n            <div class=\"ax-toast-body\">{{{msg}}}</div>\n            {{#btns}}\n            <div class=\"ax-toast-buttons\">\n                <div class=\"ax-button-wrap\">\n                    {{#@each}}\n                    <button type=\"button\" data-ax-toast-btn=\"{{@key}}\" class=\"btn btn-{{@value.theme}}\">{{{@value.label}}}</button>\n                    {{/@each}}\n                </div>\n            </div>\n            {{/btns}}\n            {{^btns}}\n                <a class=\"ax-toast-close\" data-ax-toast-btn=\"ok\">{{{closeIcon}}}</a>\n            {{/btns}}\n            <div style=\"clear:both;\"></div>\n        </div>";
     };
 
     TOAST.tmpl = {
@@ -18712,10 +18712,11 @@ ax5.ui = function () {
 
     var UI = ax5.ui;
     var U = ax5.util;
+    var MODAL;
 
     UI.addClass({
         className: "modal",
-        version: "0.7.8"
+        version: "0.7.9"
     }, function () {
         /**
          * @class ax5modal
@@ -18754,7 +18755,7 @@ ax5.ui = function () {
                     margin: 10
                 },
                 minimizePosition: "bottom-right",
-                clickEventName: "click", //(('ontouchstart' in document.documentElement) ? "touchstart" : "click"),
+                clickEventName: "mousedown", //(('ontouchstart' in document.documentElement) ? "touchstart" : "click"),
                 theme: 'default',
                 width: 300,
                 height: 400,
@@ -18774,9 +18775,6 @@ ax5.ui = function () {
                 }
                 return true;
             },
-                getContentTmpl = function getContentTmpl() {
-                return " \n                    <div id=\"{{modalId}}\" data-modal-els=\"root\" class=\"ax5modal {{theme}} {{fullscreen}}\" style=\"{{styles}}\">\n                        {{#header}}\n                        <div class=\"ax-modal-header\" data-modal-els=\"header\">\n                            {{{title}}}\n                            {{#btns}}\n                                <div class=\"ax-modal-header-addon\">\n                                {{#@each}}\n                                <a tabindex=\"-1\" data-modal-header-btn=\"{{@key}}\" class=\"{{@value.theme}}\">{{{@value.label}}}</a>\n                                {{/@each}}\n                                </div>\n                            {{/btns}}\n                        </div>\n                        {{/header}}\n                        <div class=\"ax-modal-body\" data-modal-els=\"body\">\n                        {{#iframe}}\n                        \n                            <div data-modal-els=\"iframe-wrap\" style=\"-webkit-overflow-scrolling: touch; overflow: auto;position: relative;\">\n                                <table data-modal-els=\"iframe-loading\" style=\"width:100%;height:100%;\"><tr><td style=\"text-align: center;vertical-align: middle\">{{{iframeLoadingMsg}}}</td></tr></table>\n                                <iframe name=\"{{modalId}}-frame\" src=\"\" width=\"100%\" height=\"100%\" frameborder=\"0\" data-modal-els=\"iframe\" style=\"position: absolute;left:0;top:0;\"></iframe>\n                            </div>\n                            <form name=\"{{modalId}}-form\" data-modal-els=\"iframe-form\">\n                            <input type=\"hidden\" name=\"modalId\" value=\"{{modalId}}\" />\n                            {{#param}}\n                            {{#@each}}\n                            <input type=\"hidden\" name=\"{{@key}}\" value=\"{{@value}}\" />\n                            {{/@each}}\n                            {{/param}}\n                            </form>\n                        {{/iframe}}\n                        </div>\n                    </div>\n                    ";
-            },
                 getContent = function getContent(modalId, opts) {
                 var data = {
                     modalId: modalId,
@@ -18795,7 +18793,7 @@ ax5.ui = function () {
                     data.iframe.param = ax5.util.param(data.iframe.param);
                 }
 
-                return ax5.mustache.render(getContentTmpl(), data);
+                return MODAL.tmpl.get.call(this, "content", data, {});
             },
                 open = function open(opts, callback) {
                 var that;
@@ -19248,17 +19246,37 @@ ax5.ui = function () {
         };
         return ax5modal;
     }());
+
+    MODAL = ax5.ui.modal;
+})();
+// ax5.ui.modal.tmpl
+(function () {
+    var MODAL = ax5.ui.modal;
+
+    var content = function content() {
+        return " \n        <div id=\"{{modalId}}\" data-modal-els=\"root\" class=\"ax5modal {{theme}} {{fullscreen}}\" style=\"{{styles}}\">\n            {{#header}}\n            <div class=\"ax-modal-header\" data-modal-els=\"header\">\n                {{{title}}}\n                {{#btns}}\n                    <div class=\"ax-modal-header-addon\">\n                    {{#@each}}\n                    <a tabindex=\"-1\" data-modal-header-btn=\"{{@key}}\" class=\"{{@value.theme}}\">{{{@value.label}}}</a>\n                    {{/@each}}\n                    </div>\n                {{/btns}}\n            </div>\n            {{/header}}\n            <div class=\"ax-modal-body\" data-modal-els=\"body\">\n            {{#iframe}}\n            \n                <div data-modal-els=\"iframe-wrap\" style=\"-webkit-overflow-scrolling: touch; overflow: auto;position: relative;\">\n                    <table data-modal-els=\"iframe-loading\" style=\"width:100%;height:100%;\"><tr><td style=\"text-align: center;vertical-align: middle\">{{{iframeLoadingMsg}}}</td></tr></table>\n                    <iframe name=\"{{modalId}}-frame\" src=\"\" width=\"100%\" height=\"100%\" frameborder=\"0\" data-modal-els=\"iframe\" style=\"position: absolute;left:0;top:0;\"></iframe>\n                </div>\n                <form name=\"{{modalId}}-form\" data-modal-els=\"iframe-form\">\n                <input type=\"hidden\" name=\"modalId\" value=\"{{modalId}}\" />\n                {{#param}}\n                {{#@each}}\n                <input type=\"hidden\" name=\"{{@key}}\" value=\"{{@value}}\" />\n                {{/@each}}\n                {{/param}}\n                </form>\n            {{/iframe}}\n            </div>\n        </div>\n        ";
+    };
+
+    MODAL.tmpl = {
+        "content": content,
+
+        get: function get(tmplName, data, columnKeys) {
+            return ax5.mustache.render(MODAL.tmpl[tmplName].call(this, columnKeys), data);
+        }
+    };
 })();
 "use strict";
 
 // ax5.ui.calendar
 (function () {
+
     var UI = ax5.ui;
     var U = ax5.util;
+    var CALENDAR;
 
     UI.addClass({
         className: "calendar",
-        version: "0.8.9"
+        version: "0.9.0"
     }, function () {
 
         /**
@@ -19323,15 +19341,11 @@ ax5.ui = function () {
 
                 that = null;
             },
-                getFrameTmpl = function getFrameTmpl() {
-                return "\n                <div class=\"ax5-ui-calendar {{theme}}\" data-calendar-els=\"root\" onselectstart=\"return false;\">\n                    {{#control}}\n                    <div class=\"calendar-control\" data-calendar-els=\"control\" style=\"{{controlCSS}}\">\n                        <a class=\"date-move-left\" data-calendar-move=\"left\" style=\"{{controlButtonCSS}}\">{{{left}}}</a>\n                        <div class=\"date-display\" data-calendar-els=\"control-display\" style=\"{{controlCSS}}\"></div>\n                        <a class=\"date-move-right\" data-calendar-move=\"right\" style=\"{{controlButtonCSS}}\">{{{right}}}</a>\n                    </div>\n                    {{/control}}\n                    <div class=\"calendar-body\" data-calendar-els=\"body\"></div>\n                </div>\n                ";
-            },
                 getFrame = function getFrame() {
                 var data = jQuery.extend(true, {}, cfg, {
                     controlCSS: {},
                     controlButtonCSS: {}
-                }),
-                    tmpl = getFrameTmpl();
+                });
 
                 data.controlButtonCSS["height"] = data.controlCSS["height"] = U.cssNumber(cfg.dimensions.controlHeight);
                 data.controlButtonCSS["line-height"] = data.controlCSS["line-height"] = U.cssNumber(cfg.dimensions.controlHeight);
@@ -19341,20 +19355,10 @@ ax5.ui = function () {
                 data.controlButtonCSS = U.css(data.controlButtonCSS);
 
                 try {
-                    return ax5.mustache.render(tmpl, data);
+                    return CALENDAR.tmpl.get.call(this, "frameTmpl", data);
                 } finally {
                     data = null;
-                    tmpl = null;
                 }
-            },
-                getDayTmpl = function getDayTmpl() {
-                return "\n                <table data-calendar-table=\"day\" cellpadding=\"0\" cellspacing=\"0\" style=\"width:100%;\">\n                    <thead>\n                        <tr>\n                        {{#weekNames}}\n                            <td class=\"calendar-col-{{col}}\" style=\"height: {{colHeadHeight}}\">\n                            {{label}}\n                            </td>\n                        {{/weekNames}}\n                        </tr>\n                    </thead>\n                    <tbody>\n                        <tr>\n                            {{#list}}    \n                            {{#isStartOfWeek}}\n                            {{^@first}}\n                        </tr>\n                        <tr>\n                            {{/@first}}\n                            {{/isStartOfWeek}}\n                            <td class=\"calendar-col-{{col}}\" style=\"{{itemStyles}}\">\n                                <a class=\"calendar-item-day {{addClass}}\" data-calendar-item-date=\"{{thisDate}}\">\n                                    <span class=\"addon addon-header\"></span>\n                                    {{thisDataLabel}}\n                                    <span class=\"addon addon-footer\"></span>\n                                </a>\n                            </td>\n                            {{/list}}\n                        </tr>\n                    </tbody>\n                </table>\n                ";
-            },
-                getMonthTmpl = function getMonthTmpl() {
-                return "\n                <table data-calendar-table=\"month\" cellpadding=\"0\" cellspacing=\"0\" style=\"width:100%;\">\n                    <thead>\n                        <tr>\n                            <td class=\"calendar-col-0\" colspan=\"3\" style=\"height: {{colHeadHeight}}\">\n                            {{colHeadLabel}}\n                            </td>\n                        </tr>\n                    </thead>\n                    <tbody>\n                        <tr>\n                            {{#list}}    \n                            {{#isStartOfRow}}\n                            {{^@first}}\n                        </tr>\n                        <tr>\n                            {{/@first}}\n                            {{/isStartOfRow}}\n                            <td class=\"calendar-col-{{col}}\" style=\"{{itemStyles}}\">\n                                <a class=\"calendar-item-month {{addClass}}\" data-calendar-item-month=\"{{thisMonth}}\">\n                                    <span class=\"addon\"></span>\n                                    {{thisMonthLabel}}\n                                    <span class=\"lunar\"></span>\n                                </a>\n                            </td>\n                            {{/list}}\n                        </tr>\n                    </tbody>\n                </table>\n                ";
-            },
-                getYearTmpl = function getYearTmpl() {
-                return "\n                <table data-calendar-table=\"year\" cellpadding=\"0\" cellspacing=\"0\" style=\"width:100%;\">\n                    <thead>\n                        <tr>\n                            <td class=\"calendar-col-0\" colspan=\"4\" style=\"height: {{colHeadHeight}}\">\n                            {{colHeadLabel}}\n                            </td>\n                        </tr>\n                    </thead>\n                    <tbody>\n                        <tr>\n                            {{#list}}    \n                            {{#isStartOfRow}}\n                            {{^@first}}\n                        </tr>\n                        <tr>\n                            {{/@first}}\n                            {{/isStartOfRow}}\n                            <td class=\"calendar-col-{{col}}\" style=\"{{itemStyles}}\">\n                                <a class=\"calendar-item-year {{addClass}}\" data-calendar-item-year=\"{{thisYear}}\">\n                                    <span class=\"addon\"></span>\n                                    {{thisYearLabel}}\n                                    <span class=\"lunar\"></span>\n                                </a>\n                            </td>\n                            {{/list}}\n                        </tr>\n                    </tbody>\n                </table>\n                ";
             },
                 setDisplay = function setDisplay() {
                 var myDate = U.date(cfg.displayDate),
@@ -19429,7 +19433,7 @@ ax5.ui = function () {
                     frameHeight = Math.floor(frameWidth * (6 / 7)),
                     // 1week = 7days, 1month = 6weeks
                 data,
-                    tmpl = getDayTmpl();
+                    tmpl;
 
                 if (cfg.dimensions.height) {
                     frameHeight = U.number(cfg.dimensions.height) - U.number(cfg.dimensions.colHeadHeight);
@@ -19487,8 +19491,8 @@ ax5.ui = function () {
                     }
                     i++;
                 }
-
-                this.$["body"].html(ax5.mustache.render(tmpl, data));
+                tmpl = CALENDAR.tmpl.get.call(this, "dayTmpl", data);
+                this.$["body"].html(tmpl);
                 this.$["body"].find('[data-calendar-item-date]').on(cfg.clickEventName, function (e) {
                     e = e || window.event;
                     onclick.call(self, e, 'date');
@@ -19531,7 +19535,7 @@ ax5.ui = function () {
                     frameWidth = this.$["body"].width(),
                     frameHeight = Math.floor(frameWidth * (6 / 7)),
                     data,
-                    tmpl = getMonthTmpl();
+                    tmpl;
 
                 if (cfg.dimensions.height) {
                     frameHeight = U.number(cfg.dimensions.height) - U.number(cfg.dimensions.colHeadHeight);
@@ -19579,8 +19583,8 @@ ax5.ui = function () {
                     }
                     i++;
                 }
-
-                this.$["body"].html(ax5.mustache.render(tmpl, data));
+                tmpl = CALENDAR.tmpl.get.call(this, "monthTmpl", data);
+                this.$["body"].html(tmpl);
                 this.$["body"].find('[data-calendar-item-month]').on(cfg.clickEventName, function (e) {
                     e = e || window.event;
                     onclick.call(self, e, 'month');
@@ -19622,7 +19626,7 @@ ax5.ui = function () {
                     frameWidth = this.$["body"].width(),
                     frameHeight = Math.floor(frameWidth * (6 / 7)),
                     data,
-                    tmpl = getYearTmpl();
+                    tmpl;
 
                 if (cfg.dimensions.height) {
                     frameHeight = U.number(cfg.dimensions.height) - U.number(cfg.dimensions.colHeadHeight);
@@ -19670,8 +19674,8 @@ ax5.ui = function () {
                     }
                     i++;
                 }
-
-                this.$["body"].html(ax5.mustache.render(tmpl, data));
+                tmpl = CALENDAR.tmpl.get.call(this, "yearTmpl", data);
+                this.$["body"].html(tmpl);
                 this.$["body"].find('[data-calendar-item-year]').on(cfg.clickEventName, function (e) {
                     e = e || window.event;
                     onclick.call(this, e, 'year');
@@ -20223,6 +20227,36 @@ ax5.ui = function () {
         };
         return ax5calendar;
     }());
+    CALENDAR = ax5.ui.calendar;
+})();
+// ax5.ui.calendar.tmpl
+(function () {
+
+    var CALENDAR = ax5.ui.calendar;
+
+    var frameTmpl = function frameTmpl(columnKeys) {
+        return "\n                <div class=\"ax5-ui-calendar {{theme}}\" data-calendar-els=\"root\" onselectstart=\"return false;\">\n                    {{#control}}\n                    <div class=\"calendar-control\" data-calendar-els=\"control\" style=\"{{controlCSS}}\">\n                        <a class=\"date-move-left\" data-calendar-move=\"left\" style=\"{{controlButtonCSS}}\">{{{left}}}</a>\n                        <div class=\"date-display\" data-calendar-els=\"control-display\" style=\"{{controlCSS}}\"></div>\n                        <a class=\"date-move-right\" data-calendar-move=\"right\" style=\"{{controlButtonCSS}}\">{{{right}}}</a>\n                    </div>\n                    {{/control}}\n                    <div class=\"calendar-body\" data-calendar-els=\"body\"></div>\n                </div>\n                ";
+    };
+    var dayTmpl = function dayTmpl(columnKeys) {
+        return "\n                <table data-calendar-table=\"day\" cellpadding=\"0\" cellspacing=\"0\" style=\"width:100%;\">\n                    <thead>\n                        <tr>\n                        {{#weekNames}}\n                            <td class=\"calendar-col-{{col}}\" style=\"height: {{colHeadHeight}}\">\n                            {{label}}\n                            </td>\n                        {{/weekNames}}\n                        </tr>\n                    </thead>\n                    <tbody>\n                        <tr>\n                            {{#list}}    \n                            {{#isStartOfWeek}}\n                            {{^@first}}\n                        </tr>\n                        <tr>\n                            {{/@first}}\n                            {{/isStartOfWeek}}\n                            <td class=\"calendar-col-{{col}}\" style=\"{{itemStyles}}\">\n                                <a class=\"calendar-item-day {{addClass}}\" data-calendar-item-date=\"{{thisDate}}\">\n                                    <span class=\"addon addon-header\"></span>\n                                    {{thisDataLabel}}\n                                    <span class=\"addon addon-footer\"></span>\n                                </a>\n                            </td>\n                            {{/list}}\n                        </tr>\n                    </tbody>\n                </table>\n                ";
+    };
+    var monthTmpl = function monthTmpl(columnKeys) {
+        return "\n                <table data-calendar-table=\"month\" cellpadding=\"0\" cellspacing=\"0\" style=\"width:100%;\">\n                    <thead>\n                        <tr>\n                            <td class=\"calendar-col-0\" colspan=\"3\" style=\"height: {{colHeadHeight}}\">\n                            {{colHeadLabel}}\n                            </td>\n                        </tr>\n                    </thead>\n                    <tbody>\n                        <tr>\n                            {{#list}}    \n                            {{#isStartOfRow}}\n                            {{^@first}}\n                        </tr>\n                        <tr>\n                            {{/@first}}\n                            {{/isStartOfRow}}\n                            <td class=\"calendar-col-{{col}}\" style=\"{{itemStyles}}\">\n                                <a class=\"calendar-item-month {{addClass}}\" data-calendar-item-month=\"{{thisMonth}}\">\n                                    <span class=\"addon\"></span>\n                                    {{thisMonthLabel}}\n                                    <span class=\"lunar\"></span>\n                                </a>\n                            </td>\n                            {{/list}}\n                        </tr>\n                    </tbody>\n                </table>\n                ";
+    };
+    var yearTmpl = function yearTmpl(columnKeys) {
+        return "\n                <table data-calendar-table=\"year\" cellpadding=\"0\" cellspacing=\"0\" style=\"width:100%;\">\n                    <thead>\n                        <tr>\n                            <td class=\"calendar-col-0\" colspan=\"4\" style=\"height: {{colHeadHeight}}\">\n                            {{colHeadLabel}}\n                            </td>\n                        </tr>\n                    </thead>\n                    <tbody>\n                        <tr>\n                            {{#list}}    \n                            {{#isStartOfRow}}\n                            {{^@first}}\n                        </tr>\n                        <tr>\n                            {{/@first}}\n                            {{/isStartOfRow}}\n                            <td class=\"calendar-col-{{col}}\" style=\"{{itemStyles}}\">\n                                <a class=\"calendar-item-year {{addClass}}\" data-calendar-item-year=\"{{thisYear}}\">\n                                    <span class=\"addon\"></span>\n                                    {{thisYearLabel}}\n                                    <span class=\"lunar\"></span>\n                                </a>\n                            </td>\n                            {{/list}}\n                        </tr>\n                    </tbody>\n                </table>\n                ";
+    };
+
+    CALENDAR.tmpl = {
+        "frameTmpl": frameTmpl,
+        "dayTmpl": dayTmpl,
+        "monthTmpl": monthTmpl,
+        "yearTmpl": yearTmpl,
+
+        get: function get(tmplName, data, columnKeys) {
+            return ax5.mustache.render(CALENDAR.tmpl[tmplName].call(this, columnKeys), data);
+        }
+    };
 })();
 "use strict";
 
@@ -21727,10 +21761,11 @@ jQuery.fn.ax5formatter = function () {
 (function () {
     var UI = ax5.ui;
     var U = ax5.util;
+    var MENU;
 
     UI.addClass({
         className: "menu",
-        version: "0.6.5"
+        version: "0.7.0"
     }, function () {
         /**
          * @class ax5.ui.menu
@@ -21808,12 +21843,6 @@ jQuery.fn.ax5formatter = function () {
                 that = null;
                 return true;
             },
-                getTmpl = function getTmpl(columnKeys) {
-                return "\n                    <div class=\"ax5-ui-menu {{theme}}\" {{#width}}style=\"width:{{width}}px;\"{{/width}}>\n                        <div class=\"ax-menu-body\">\n                            {{#" + columnKeys.items + "}}\n                                {{^@isMenu}}\n                                    {{#divide}}\n                                    <div class=\"ax-menu-item-divide\" data-menu-item-index=\"{{@i}}\"></div>\n                                    {{/divide}}\n                                    {{#html}}\n                                    <div class=\"ax-menu-item-html\" data-menu-item-index=\"{{@i}}\">{{{@html}}}</div>\n                                    {{/html}}\n                                {{/@isMenu}}\n                                {{#@isMenu}}\n                                <div class=\"ax-menu-item\" data-menu-item-depth=\"{{@depth}}\" data-menu-item-index=\"{{@i}}\" data-menu-item-path=\"{{@path}}.{{@i}}\">\n                                    <span class=\"ax-menu-item-cell ax-menu-item-checkbox\">\n                                        {{#check}}\n                                        <span class=\"item-checkbox-wrap useCheckBox\" {{#checked}}data-item-checked=\"true\"{{/checked}}></span>\n                                        {{/check}}\n                                        {{^check}}\n                                        <span class=\"item-checkbox-wrap\"></span>\n                                        {{/check}}\n                                    </span>\n                                    {{#icon}}\n                                    <span class=\"ax-menu-item-cell ax-menu-item-icon\" style=\"width:{{cfg.iconWidth}}px;\">{{{.}}}</span>\n                                    {{/icon}}\n                                    <span class=\"ax-menu-item-cell ax-menu-item-label\">{{{" + columnKeys.label + "}}}</span>\n                                    {{#accelerator}}\n                                    <span class=\"ax-menu-item-cell ax-menu-item-accelerator\" style=\"width:{{cfg.acceleratorWidth}}px;\"><span class=\"item-wrap\">{{.}}</span></span>\n                                    {{/accelerator}}\n                                    {{#@hasChild}}\n                                    <span class=\"ax-menu-item-cell ax-menu-item-handle\">{{{cfg.icons.arrow}}}</span>\n                                    {{/@hasChild}}\n                                </div>\n                                {{/@isMenu}}\n        \n                            {{/" + columnKeys.items + "}}\n                        </div>\n                        <div class=\"ax-menu-arrow\"></div>\n                    </div>\n                    ";
-            },
-                getTmpl_menuBar = function getTmpl_menuBar(columnKeys) {
-                return "\n                    <div class=\"ax5-ui-menubar {{theme}}\">\n                        <div class=\"ax-menu-body\">\n                            {{#" + columnKeys.items + "}}\n                                {{^@isMenu}}\n                                    {{#divide}}\n                                    <div class=\"ax-menu-item-divide\" data-menu-item-index=\"{{@i}}\"></div>\n                                    {{/divide}}\n                                    {{#html}}\n                                    <div class=\"ax-menu-item-html\" data-menu-item-index=\"{{@i}}\">{{{@html}}}</div>\n                                    {{/html}}\n                                {{/@isMenu}}\n                                {{#@isMenu}}\n                                <div class=\"ax-menu-item\" data-menu-item-index=\"{{@i}}\">\n                                    {{#icon}}\n                                    <span class=\"ax-menu-item-cell ax-menu-item-icon\" style=\"width:{{cfg.iconWidth}}px;\">{{{.}}}</span>\n                                    {{/icon}}\n                                    <span class=\"ax-menu-item-cell ax-menu-item-label\">{{{" + columnKeys.label + "}}}</span>\n                                </div>\n                                {{/@isMenu}}\n                            {{/" + columnKeys.items + "}}\n                        </div>\n                    </div>\n                    ";
-            },
                 popup = function popup(opt, items, depth, path) {
                 var data = opt,
                     activeMenu,
@@ -21847,7 +21876,7 @@ jQuery.fn.ax5formatter = function () {
                 data['@hasChild'] = function () {
                     return this[cfg.columnKeys.items] && this[cfg.columnKeys.items].length > 0;
                 };
-                activeMenu = jQuery(ax5.mustache.render(getTmpl(cfg.columnKeys), data));
+                activeMenu = jQuery(MENU.tmpl.get.call(this, "tmpl", data, cfg.columnKeys));
                 jQuery(document.body).append(activeMenu);
 
                 // remove queue
@@ -22273,7 +22302,7 @@ jQuery.fn.ax5formatter = function () {
 
                     data[cfg.columnKeys.items] = items;
 
-                    activeMenu = jQuery(ax5.mustache.render(getTmpl_menuBar(cfg.columnKeys), data));
+                    activeMenu = jQuery(MENU.tmpl.get.call(this, "tmplMenubar", data, cfg.columnKeys));
                     self.menuBar = {
                         target: jQuery(el),
                         opened: false
@@ -22383,6 +22412,28 @@ jQuery.fn.ax5formatter = function () {
         };
         return ax5menu;
     }());
+
+    MENU = ax5.ui.menu;
+})();
+// ax5.ui.menu.tmpl
+(function () {
+    var MENU = ax5.ui.menu;
+
+    var tmpl = function tmpl(columnKeys) {
+        return "\n        <div class=\"ax5-ui-menu {{theme}}\" {{#width}}style=\"width:{{width}}px;\"{{/width}}>\n            <div class=\"ax-menu-body\">\n                {{#" + columnKeys.items + "}}\n                    {{^@isMenu}}\n                        {{#divide}}\n                        <div class=\"ax-menu-item-divide\" data-menu-item-index=\"{{@i}}\"></div>\n                        {{/divide}}\n                        {{#html}}\n                        <div class=\"ax-menu-item-html\" data-menu-item-index=\"{{@i}}\">{{{@html}}}</div>\n                        {{/html}}\n                    {{/@isMenu}}\n                    {{#@isMenu}}\n                    <div class=\"ax-menu-item\" data-menu-item-depth=\"{{@depth}}\" data-menu-item-index=\"{{@i}}\" data-menu-item-path=\"{{@path}}.{{@i}}\">\n                        <span class=\"ax-menu-item-cell ax-menu-item-checkbox\">\n                            {{#check}}\n                            <span class=\"item-checkbox-wrap useCheckBox\" {{#checked}}data-item-checked=\"true\"{{/checked}}></span>\n                            {{/check}}\n                            {{^check}}\n                            <span class=\"item-checkbox-wrap\"></span>\n                            {{/check}}\n                        </span>\n                        {{#icon}}\n                        <span class=\"ax-menu-item-cell ax-menu-item-icon\" style=\"width:{{cfg.iconWidth}}px;\">{{{.}}}</span>\n                        {{/icon}}\n                        <span class=\"ax-menu-item-cell ax-menu-item-label\">{{{" + columnKeys.label + "}}}</span>\n                        {{#accelerator}}\n                        <span class=\"ax-menu-item-cell ax-menu-item-accelerator\" style=\"width:{{cfg.acceleratorWidth}}px;\"><span class=\"item-wrap\">{{.}}</span></span>\n                        {{/accelerator}}\n                        {{#@hasChild}}\n                        <span class=\"ax-menu-item-cell ax-menu-item-handle\">{{{cfg.icons.arrow}}}</span>\n                        {{/@hasChild}}\n                    </div>\n                    {{/@isMenu}}\n\n                {{/" + columnKeys.items + "}}\n            </div>\n            <div class=\"ax-menu-arrow\"></div>\n        </div>\n        ";
+    };
+    var tmplMenubar = function tmplMenubar(columnKeys) {
+        return "\n        <div class=\"ax5-ui-menubar {{theme}}\">\n            <div class=\"ax-menu-body\">\n                {{#" + columnKeys.items + "}}\n                    {{^@isMenu}}\n                        {{#divide}}\n                        <div class=\"ax-menu-item-divide\" data-menu-item-index=\"{{@i}}\"></div>\n                        {{/divide}}\n                        {{#html}}\n                        <div class=\"ax-menu-item-html\" data-menu-item-index=\"{{@i}}\">{{{@html}}}</div>\n                        {{/html}}\n                    {{/@isMenu}}\n                    {{#@isMenu}}\n                    <div class=\"ax-menu-item\" data-menu-item-index=\"{{@i}}\">\n                        {{#icon}}\n                        <span class=\"ax-menu-item-cell ax-menu-item-icon\" style=\"width:{{cfg.iconWidth}}px;\">{{{.}}}</span>\n                        {{/icon}}\n                        <span class=\"ax-menu-item-cell ax-menu-item-label\">{{{" + columnKeys.label + "}}}</span>\n                    </div>\n                    {{/@isMenu}}\n                {{/" + columnKeys.items + "}}\n            </div>\n        </div>\n        ";
+    };
+
+    MENU.tmpl = {
+        "tmpl": tmpl,
+        "tmplMenubar": tmplMenubar,
+
+        get: function get(tmplName, data, columnKeys) {
+            return ax5.mustache.render(MENU.tmpl[tmplName].call(this, columnKeys), data);
+        }
+    };
 })();
 "use strict";
 
@@ -23596,6 +23647,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
             this.footSumData = {}; // frozenColumnIndex 를 기준으로 나누어진 출력 레이아웃 오른쪽
             this.needToPaintSum = true; // 데이터 셋이 변경되어 summary 변경 필요여부
 
+
             cfg = this.config;
 
             var onStateChanged = function onStateChanged(_opts, _that) {
@@ -24672,6 +24724,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
 // todo : filter
 // todo : body menu
 // todo : column reorder
+
 
 // ax5.ui.grid.body
 (function () {
@@ -29830,7 +29883,7 @@ jQuery.fn.ax5combobox = function () {
 
     UI.addClass({
         className: "layout",
-        version: "0.2.10"
+        version: "0.3.0"
     }, function () {
         /**
          * @class ax5layout
@@ -29901,7 +29954,7 @@ jQuery.fn.ax5combobox = function () {
                 alignLayout = function () {
                 var beforeSetCSS = {
                     "split": {
-                        "vertical": function vertical(item, panel, panelIndex) {
+                        "horizontal": function horizontal(item, panel, panelIndex) {
                             if (panel.splitter) {
                                 panel.__height = item.splitter.size;
                             } else {
@@ -29922,7 +29975,7 @@ jQuery.fn.ax5combobox = function () {
                                 }
                             }
                         },
-                        "horizontal": function horizontal(item, panel, panelIndex) {
+                        "vertical": function vertical(item, panel, panelIndex) {
                             if (panel.splitter) {
                                 panel.__width = item.splitter.size;
                             } else {
@@ -30063,7 +30116,7 @@ jQuery.fn.ax5combobox = function () {
                         panel.$target.css(css);
                     },
                     "split": {
-                        "vertical": function vertical(item, panel, panelIndex, withoutAsteriskSize, windowResize) {
+                        "horizontal": function horizontal(item, panel, panelIndex, withoutAsteriskSize, windowResize) {
                             var css = {};
                             var prevPosition = panelIndex ? Number(item.splitPanel[panelIndex - 1].offsetEnd) : 0;
                             if (panel.splitter) {
@@ -30081,7 +30134,7 @@ jQuery.fn.ax5combobox = function () {
                             panel.offsetEnd = Number(prevPosition) + Number(css.height);
                             panel.$target.css(css);
                         },
-                        "horizontal": function horizontal(item, panel, panelIndex, withoutAsteriskSize, windowResize) {
+                        "vertical": function vertical(item, panel, panelIndex, withoutAsteriskSize, windowResize) {
                             var css = {};
                             var prevPosition = panelIndex ? Number(item.splitPanel[panelIndex - 1].offsetEnd) : 0;
 
@@ -30121,7 +30174,7 @@ jQuery.fn.ax5combobox = function () {
                             beforeSetCSS["split"][item.oriental].call(this, item, panel, panelIndex);
                         });
 
-                        if (item.oriental == "vertical") {
+                        if (item.oriental == "horizontal") {
                             withoutAsteriskSize = U.sum(item.splitPanel, function (n) {
                                 if (n.height != "*") return U.number(n.__height);
                             });
@@ -30234,7 +30287,7 @@ jQuery.fn.ax5combobox = function () {
                         "split": function split(e) {
                             var mouseObj = 'changedTouches' in e.originalEvent ? e.originalEvent.changedTouches[0] : e;
 
-                            if (item.oriental == "vertical") {
+                            if (item.oriental == "horizontal") {
                                 panel.__da = mouseObj.clientY - panel.mousePosition.clientY;
 
                                 var prevPanel = item.splitPanel[panel.panelIndex - 1];
@@ -30310,7 +30363,7 @@ jQuery.fn.ax5combobox = function () {
                         },
                         "split-panel": {
                             "split": function split() {
-                                if (item.oriental == "vertical") {
+                                if (item.oriental == "horizontal") {
                                     // 앞과 뒤의 높이 조절
                                     item.splitPanel[panel.panelIndex - 1].__height += panel.__da;
                                     item.splitPanel[panel.panelIndex + 1].__height -= panel.__da;
@@ -30443,10 +30496,10 @@ jQuery.fn.ax5combobox = function () {
                                 });
                                 panelInfo.resizerType = "split";
                             } else {
-                                if (item.oriental == "vertical") {
+                                if (item.oriental == "horizontal") {
                                     panelInfo.__height = getPixel(panelInfo.height, item.targetDimension.height);
                                 } else {
-                                    item.oriental = "horizontal";
+                                    item.oriental = "vertical";
                                     panelInfo.__width = getPixel(panelInfo.width, item.targetDimension.width);
                                 }
                             }
@@ -32129,9 +32182,9 @@ jQuery.fn.ax5layout = function () {
                             _focusIndex = 0;
                             //_focusIndex = (direction > 0) ? 0 : item.optionItemLength - 1; // 맨 끝으로 보낼것인가 말 것인가.
                         } else {
-                                _focusIndex = _prevFocusIndex + direction;
-                                if (_focusIndex < 0) _focusIndex = 0;else if (_focusIndex > item.optionItemLength - 1) _focusIndex = item.optionItemLength - 1;
-                            }
+                            _focusIndex = _prevFocusIndex + direction;
+                            if (_focusIndex < 0) _focusIndex = 0;else if (_focusIndex > item.optionItemLength - 1) _focusIndex = item.optionItemLength - 1;
+                        }
                     }
 
                     item.optionFocusIndex = _focusIndex;
@@ -32499,25 +32552,25 @@ jQuery.fn.ax5layout = function () {
                                 if (typeof value === "undefined") {
                                     //
                                 } else if (U.isString(value)) {
-                                        searchWord = value;
-                                    } else {
-                                        if (value.removeSelectedIndex) {
-                                            resetSelected = true;
-                                        }
-                                        values.push(value);
+                                    searchWord = value;
+                                } else {
+                                    if (value.removeSelectedIndex) {
+                                        resetSelected = true;
                                     }
+                                    values.push(value);
+                                }
                             }
                         }
 
                         if (childNodes.length == 0) {
                             setSelected.call(this, item.id, null, undefined, "internal"); // clear value
                         } else if (searchWord != "") {
-                                onSearch.call(self, queIdx, searchWord);
-                            } else if (resetSelected) {
-                                setSelected.call(this, item.id, values, undefined, "internal"); // set Value
-                                U.selectRange(item.$displayLabel, "end"); // label focus end
-                                self.close();
-                            }
+                            onSearch.call(self, queIdx, searchWord);
+                        } else if (resetSelected) {
+                            setSelected.call(this, item.id, values, undefined, "internal"); // set Value
+                            U.selectRange(item.$displayLabel, "end"); // label focus end
+                            self.close();
+                        }
                     }, 150);
 
                     var blurLabel = function blurLabel(queIdx) {
@@ -32533,11 +32586,11 @@ jQuery.fn.ax5layout = function () {
                                 if (typeof value === "undefined") {
                                     //
                                 } else if (U.isString(value)) {
-                                        //editingText = value;
-                                        //values.push(value);
-                                    } else {
-                                            values.push(value);
-                                        }
+                                    //editingText = value;
+                                    //values.push(value);
+                                } else {
+                                    values.push(value);
+                                }
                             }
                         }
 
@@ -32675,6 +32728,7 @@ jQuery.fn.ax5layout = function () {
                         item.$display.unbind('click.ax5autocomplete').bind('click.ax5autocomplete', autocompleteEvent.click.bind(this, queIdx));
 
                         // autocomplete 태그에 대한 이벤트 감시
+
 
                         item.$displayLabel.unbind("focus.ax5autocomplete").bind("focus.ax5autocomplete", autocompleteEvent.focus.bind(this, queIdx)).unbind("blur.ax5autocomplete").bind("blur.ax5autocomplete", autocompleteEvent.blur.bind(this, queIdx)).unbind('keyup.ax5autocomplete').bind('keyup.ax5autocomplete', autocompleteEvent.keyUp.bind(this, queIdx)).unbind("keydown.ax5autocomplete").bind("keydown.ax5autocomplete", autocompleteEvent.keyDown.bind(this, queIdx));
 

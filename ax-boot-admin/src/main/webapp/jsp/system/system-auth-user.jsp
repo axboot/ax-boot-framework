@@ -28,7 +28,7 @@
             <div class="H10"></div>
         </div>
 
-        <ax:split-layout name="ax1" oriental="horizontal">
+        <ax:split-layout name="ax1" oriental="vertical">
             <ax:split-panel width="40%" style="padding-right: 10px;">
 
                 <!-- 목록 -->

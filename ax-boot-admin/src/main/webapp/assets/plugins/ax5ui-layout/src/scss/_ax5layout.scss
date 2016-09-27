@@ -77,10 +77,10 @@
         height: 100%;
 
         &.split-panel-vertical {
-            width: 100%;
+            height: 100%;
         }
         &.split-panel-horizontal {
-            height: 100%;
+            width: 100%;
         }
     }
     > [data-splitter] {
@@ -110,12 +110,12 @@
             cursor: ew-resize;
         }
         &.split-panel-vertical {
-            width: 100%;
-            cursor: ns-resize;
-        }
-        &.split-panel-horizontal {
             height: 100%;
             cursor: ew-resize;
+        }
+        &.split-panel-horizontal {
+            width: 100%;
+            cursor: ns-resize;
         }
     }
     > [data-tab-panel-label-holder] {
