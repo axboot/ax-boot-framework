@@ -1,6 +1,6 @@
 {
 	"name": "ax5ui-combobox",
-	"version": "0.3.8",
+	"version": "0.3.9",
 	"description": "A combobox plugin that works with Bootstrap & jQuery",
 	"authors": [
 		"ThomasJ <tom@axisj.com>"

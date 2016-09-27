@@ -7,7 +7,7 @@
 
     UI.addClass({
         className: "combobox",
-        version: "0.3.8"
+        version: "0.3.9"
     }, (function () {
         /**
          * @class ax5combobox
@@ -336,6 +336,9 @@
                     }).bind(this));
                 },
                 focusWord = function (queIdx, searchWord) {
+                    
+                    console.log(searchWord);
+                    
                     if (this.activecomboboxQueueIndex == -1) return this; // 옵션박스가 닫힌상태이면 진행안함.
                     var options = [], i = -1, l = this.queue[queIdx].indexedOptions.length - 1, n;
 
@@ -478,6 +481,7 @@
                                 if (typeof direction !== "undefined") {
                                     // 방향이 있으면 커서 업/다운 아니면 사용자 키보드 입력
                                     // 방향이 있으면 라벨 값을 수정
+
                                     var childNodes = item.$displayLabel.get(0).childNodes;
                                     var lastNode = childNodes[childNodes.length - 1];
                                     if (lastNode && lastNode.nodeType == '3') {
@@ -487,6 +491,7 @@
                                         jQuery(lastNode).after(item.indexedOptions[_focusIndex].text);
                                         U.selectRange(item.$displayLabel, "end");
                                     }
+
                                 }
                             }
                         }
@@ -985,7 +990,14 @@
                                 self.open(queIdx);
                                 U.stopEvent(e);
                             }
-                            debouncedFocusWord.call(this, queIdx);
+
+                            var disableCtrlKeys = {
+                                "40": "KEY_DOWN",
+                                "38": "KEY_UP"
+                            };
+                            if(!disableCtrlKeys[e.which]) {
+                                debouncedFocusWord.call(this, queIdx);
+                            }
                         },
                         'keyDown': function (queIdx, e) {
                             if (e.which == ax5.info.eventKeys.ESC) {
