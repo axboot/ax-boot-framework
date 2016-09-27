@@ -2,8 +2,8 @@
 (function () {
 
     var GRID = ax5.ui.grid;
-    var main =
-        `<div data-ax5grid-container="root" data-ax5grid-instance="{{instanceId}}">
+    var main = function () {
+        return `<div data-ax5grid-container="root" data-ax5grid-instance="{{instanceId}}">
             <div data-ax5grid-container="hidden">
                 <textarea data-ax5grid-form="clipboard"></textarea>
             </div>
@@ -59,9 +59,11 @@
             <div data-ax5grid-resizer="vertical"></div>
             <div data-ax5grid-resizer="horizontal"></div>
         </div>`;
+    };
 
-    var page_navigation =
-        `<div data-ax5grid-page-navigation="holder">
+
+    var page_navigation = function(){
+        return `<div data-ax5grid-page-navigation="holder">
             {{#hasPage}}
             <div data-ax5grid-page-navigation="cell">    
                 {{#firstIcon}}<button data-ax5grid-page-move="first">{{{firstIcon}}}</button>{{/firstIcon}}
@@ -78,18 +80,20 @@
             </div>
             {{/hasPage}}
         </div>`;
+    };
 
-    var page_status =
-        `<span>{{fromRowIndex}} - {{toRowIndex}} of {{totalElements}}</span>`;
 
+    var page_status = function(){
+        return `<span>{{fromRowIndex}} - {{toRowIndex}} of {{totalElements}}</span>`;
+    };
 
     GRID.tmpl = {
         "main": main,
         "page_navigation": page_navigation,
         "page_status": page_status,
 
-        get: function (tmplName, data) {
-            return ax5.mustache.render(GRID.tmpl[tmplName], data);
+        get: function (tmplName, data, columnKeys) {
+            return ax5.mustache.render(GRID.tmpl[tmplName].call(this, columnKeys), data);
         }
     };
 

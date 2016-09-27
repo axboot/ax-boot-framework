@@ -5,10 +5,11 @@
 
     var UI = ax5.ui;
     var U = ax5.util;
+    var TOAST;
 
     UI.addClass({
         className: "toast",
-        version: "0.3.3"
+        version: "0.4.0"
     }, function () {
         /**
          * @class ax5toast
@@ -56,9 +57,6 @@
                 that = null;
                 return true;
             },
-                getContentTmpl = function getContentTmpl() {
-                return "\n                    <div id=\"{{toastId}}\" data-ax5-ui=\"toast\" class=\"ax5-ui-toast {{theme}}\">\n                        {{#icon}}\n                        <div class=\"ax-toast-icon\">{{{.}}}</div>\n                        {{/icon}}\n                        <div class=\"ax-toast-body\">{{{msg}}}</div>\n                        {{#btns}}\n                        <div class=\"ax-toast-buttons\">\n                            <div class=\"ax-button-wrap\">\n                            {{#@each}}\n                            <button type=\"button\" data-ax-toast-btn=\"{{@key}}\" class=\"btn btn-{{@value.theme}}\">{{{@value.label}}}</button>\n                            {{/@each}}\n                            </div>\n                        </div>\n                        {{/btns}}\n                        {{^btns}}\n                        <a class=\"ax-toast-close\" data-ax-toast-btn=\"ok\">{{{closeIcon}}}</a>\n                        {{/btns}}\n                        <div style=\"clear:both;\"></div>\n                    </div>\n                    ";
-            },
                 getContent = function getContent(toastId, opts) {
                 var data = {
                     toastId: toastId,
@@ -70,7 +68,7 @@
                 };
 
                 try {
-                    return ax5.mustache.render(getContentTmpl(), data);
+                    return TOAST.tmpl.get.call(this, "toastDisplay", data);
                 } finally {
                     toastId = null;
                     data = null;
@@ -306,4 +304,22 @@
         };
         return ax5toast;
     }());
+    TOAST = ax5.ui.toast;
+})();
+// ax5.ui.toast.tmpl
+(function () {
+
+    var TOAST = ax5.ui.toast;
+
+    var toastDisplay = function toastDisplay(columnKeys) {
+        return "\n        <div id=\"{{toastId}}\" data-ax5-ui=\"toast\" class=\"ax5-ui-toast {{theme}}\">\n            {{#icon}}\n            <div class=\"ax-toast-icon\">{{{.}}}</div>\n            {{/icon}}\n            <div class=\"ax-toast-body\">{{{msg}}}</div>\n            {{#btns}}\n            <div class=\"ax-toast-buttons\">\n                <div class=\"ax-button-wrap\">\n                    {{#@each}}\n                    <button type=\"button\" data-ax-toast-btn=\"{{@key}}\" class=\"btn btn-{{@value.theme}}\">{{{@value.label}}}</button>\n                    {{/@each}}\n                </div>\n            </div>\n            {{/btns}}\n            {{^btns}}\n                <a class=\"ax-toast-close\" data-ax-toast-btn=\"ok\">{{{closeIcon}}}</a>\n            {{/btns}}\n            <div style=\"clear:both;\"></div>\n        </div>\n        ";
+    };
+
+    TOAST.tmpl = {
+        "toastDisplay": toastDisplay,
+
+        get: function get(tmplName, data, columnKeys) {
+            return ax5.mustache.render(TOAST.tmpl[tmplName].call(this, columnKeys), data);
+        }
+    };
 })();

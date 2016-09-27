@@ -87,7 +87,7 @@
         // @include transition(all 0.3s, $ease-in-out-cubic);
         position: absolute;
         background: $ax5layout-splitter-background;
-        z-index: 3;
+        //z-index: 3;
 
         &.dock-panel-top {
             top: 0px;
@@ -221,7 +221,7 @@
     position: absolute;
     left: 0px;
     top: 0px;
-    background: $ax5layout-splitter-background;
+    background: $ax5layout-resizer-background;
     z-index: 10;
     overflow: hidden;
     padding: 0;

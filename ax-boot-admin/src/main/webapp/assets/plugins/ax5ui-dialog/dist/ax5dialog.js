@@ -5,6 +5,7 @@
 
     var UI = ax5.ui;
     var U = ax5.util;
+    var DIALOG;
 
     UI.addClass({
         className: "dialog",
@@ -49,9 +50,6 @@
                 that = null;
                 return true;
             },
-                getContentTmpl = function getContentTmpl() {
-                return "\n                    <div id=\"{{dialogId}}\" data-ax5-ui=\"dialog\" class=\"ax5-ui-dialog {{theme}}\">\n                        <div class=\"ax-dialog-header\">\n                            {{{title}}}\n                        </div>\n                        <div class=\"ax-dialog-body\">\n                            <div class=\"ax-dialog-msg\">{{{msg}}}</div>\n                            \n                            {{#input}}\n                            <div class=\"ax-dialog-prompt\">\n                                {{#@each}}\n                                <div class=\"form-group\">\n                                {{#@value.label}}\n                                <label>{{#_crlf}}{{{.}}}{{/_crlf}}</label>\n                                {{/@value.label}}\n                                <input type=\"{{@value.type}}\" placeholder=\"{{@value.placeholder}}\" class=\"form-control {{@value.theme}}\" data-dialog-prompt=\"{{@key}}\" style=\"width:100%;\" value=\"{{@value.value}}\" />\n                                {{#@value.help}}\n                                <p class=\"help-block\">{{#_crlf}}{{.}}{{/_crlf}}</p>\n                                {{/@value.help}}\n                                </div>\n                                {{/@each}}\n                            </div>\n                            {{/input}}\n                            \n                            <div class=\"ax-dialog-buttons\">\n                                <div class=\"ax-button-wrap\">\n                                {{#btns}}\n                                    {{#@each}}\n                                    <button type=\"button\" data-dialog-btn=\"{{@key}}\" class=\"btn btn-{{@value.theme}}\">{{@value.label}}</button>\n                                    {{/@each}}\n                                {{/btns}}\n                                </div>\n                            </div>\n                        </div>\n                    </div>  \n                    ";
-            },
                 getContent = function getContent(dialogId, opts) {
                 var data = {
                     dialogId: dialogId,
@@ -65,12 +63,12 @@
                 };
 
                 try {
-                    return ax5.mustache.render(getContentTmpl(), data);
+                    return DIALOG.tmpl.get.call(this, "dialogDisplay", data);
                 } finally {
                     data = null;
                 }
             },
-                open = function open(opts, callBack) {
+                open = function open(opts, callback) {
                 var pos = {},
                     box;
 
@@ -108,12 +106,12 @@
                 }
 
                 this.activeDialog.find("[data-dialog-btn]").on(cfg.clickEventName, function (e) {
-                    btnOnClick.call(this, e || window.event, opts, callBack);
+                    btnOnClick.call(this, e || window.event, opts, callback);
                 }.bind(this));
 
                 // bind key event
                 jQuery(window).bind("keydown.ax5dialog", function (e) {
-                    onKeyup.call(this, e || window.event, opts, callBack);
+                    onKeyup.call(this, e || window.event, opts, callback);
                 }.bind(this));
 
                 jQuery(window).bind("resize.ax5dialog", function (e) {
@@ -153,7 +151,7 @@
 
                 return this;
             },
-                btnOnClick = function btnOnClick(e, opts, callBack, target, k) {
+                btnOnClick = function btnOnClick(e, opts, callback, target, k) {
                 var that;
                 if (e.srcElement) e.target = e.srcElement;
 
@@ -185,10 +183,10 @@
                     if (opts.btns[k].onClick) {
                         opts.btns[k].onClick.call(that, k);
                     } else if (opts.dialogType === "alert") {
-                        if (callBack) callBack.call(that, k);
+                        if (callback) callback.call(that, k);
                         this.close();
                     } else if (opts.dialogType === "confirm") {
-                        if (callBack) callBack.call(that, k);
+                        if (callback) callback.call(that, k);
                         this.close();
                     } else if (opts.dialogType === "prompt") {
                         if (k === 'ok') {
@@ -197,18 +195,18 @@
                                 return false;
                             }
                         }
-                        if (callBack) callBack.call(that, k);
+                        if (callback) callback.call(that, k);
                         this.close();
                     }
                 }
 
                 that = null;
                 opts = null;
-                callBack = null;
+                callback = null;
                 target = null;
                 k = null;
             },
-                onKeyup = function onKeyup(e, opts, callBack, target, k) {
+                onKeyup = function onKeyup(e, opts, callback, target, k) {
                 var that,
                     emptyKey = null;
 
@@ -236,7 +234,7 @@
                             emptyKey = null;
                             return false;
                         }
-                        if (callBack) callBack.call(that, k);
+                        if (callback) callback.call(that, k);
                         this.close();
                     }
                 }
@@ -244,7 +242,7 @@
                 that = null;
                 emptyKey = null;
                 opts = null;
-                callBack = null;
+                callback = null;
                 target = null;
                 k = null;
             };
@@ -270,7 +268,7 @@
              * open the dialog of alert type
              * @method ax5dialog.alert
              * @param {Object|String} [{theme, title, msg, btns}|msg] - dialog 속성을 json으로 정의하거나 msg만 전달
-             * @param {Function} [callBack] - 사용자 확인 이벤트시 호출될 callBack 함수
+             * @param {Function} [callback] - 사용자 확인 이벤트시 호출될 callback 함수
              * @returns {ax5dialog}
              * @example
              * ```
@@ -280,7 +278,7 @@
              * }, function(){});
              * ```
              */
-            this.alert = function (opts, callBack, tryCount) {
+            this.alert = function (opts, callback, tryCount) {
                 if (U.isString(opts)) {
                     opts = {
                         title: cfg.title,
@@ -292,7 +290,7 @@
                     // try one more
                     if (!tryCount) {
                         setTimeout(function () {
-                            this.alert(opts, callBack, 1);
+                            this.alert(opts, callback, 1);
                         }.bind(this), Number(cfg.animateTime) + 100);
                     } else {
                         console.log(ax5.info.getError("ax5dialog", "501", "alert"));
@@ -310,10 +308,10 @@
                         ok: { label: cfg.lang["ok"], theme: opts.theme }
                     };
                 }
-                open.call(this, opts, callBack);
+                open.call(this, opts, callback);
 
                 opts = null;
-                callBack = null;
+                callback = null;
                 return this;
             };
 
@@ -321,7 +319,7 @@
              * open the dialog of confirm type
              * @method ax5dialog.confirm
              * @param {Object|String} [{theme, title, msg, btns}|msg] - dialog 속성을 json으로 정의하거나 msg만 전달
-             * @param {Function} [callBack] - 사용자 확인 이벤트시 호출될 callBack 함수
+             * @param {Function} [callback] - 사용자 확인 이벤트시 호출될 callback 함수
              * @returns {ax5dialog}
              * @example
              * ```
@@ -331,7 +329,7 @@
              * }, function(){});
              * ```
              */
-            this.confirm = function (opts, callBack, tryCount) {
+            this.confirm = function (opts, callback, tryCount) {
                 if (U.isString(opts)) {
                     opts = {
                         title: cfg.title,
@@ -343,7 +341,7 @@
                     // try one more
                     if (!tryCount) {
                         setTimeout(function () {
-                            this.confirm(opts, callBack, 1);
+                            this.confirm(opts, callback, 1);
                         }.bind(this), Number(cfg.animateTime) + 100);
                     } else {
                         console.log(ax5.info.getError("ax5dialog", "501", "confirm"));
@@ -363,10 +361,10 @@
                         cancel: { label: cfg.lang["cancel"] }
                     };
                 }
-                open.call(this, opts, callBack);
+                open.call(this, opts, callback);
 
                 opts = null;
-                callBack = null;
+                callback = null;
                 return this;
             };
 
@@ -374,7 +372,7 @@
              * open the dialog of prompt type
              * @method ax5dialog.prompt
              * @param {Object|String} [{theme, title, msg, btns, input}|msg] - dialog 속성을 json으로 정의하거나 msg만 전달
-             * @param {Function} [callBack] - 사용자 확인 이벤트시 호출될 callBack 함수
+             * @param {Function} [callback] - 사용자 확인 이벤트시 호출될 callback 함수
              * @returns {ax5dialog}
              * @example
              * ```
@@ -384,7 +382,7 @@
              * }, function(){});
              * ```
              */
-            this.prompt = function (opts, callBack, tryCount) {
+            this.prompt = function (opts, callback, tryCount) {
                 if (U.isString(opts)) {
                     opts = {
                         title: cfg.title,
@@ -396,7 +394,7 @@
                     // try one more
                     if (!tryCount) {
                         setTimeout(function () {
-                            this.prompt(opts, callBack, 1);
+                            this.prompt(opts, callback, 1);
                         }.bind(this), Number(cfg.animateTime) + 100);
                     } else {
                         console.log(ax5.info.getError("ax5dialog", "501", "prompt"));
@@ -407,7 +405,6 @@
                 self.dialogConfig = {};
                 jQuery.extend(true, self.dialogConfig, cfg, opts);
                 opts = self.dialogConfig;
-
                 opts.dialogType = "prompt";
                 opts.theme = opts.theme || cfg.theme || "";
 
@@ -422,10 +419,10 @@
                         cancel: { label: cfg.lang["cancel"] }
                     };
                 }
-                open.call(this, opts, callBack);
+                open.call(this, opts, callback);
 
                 opts = null;
-                callBack = null;
+                callback = null;
                 return this;
             };
 
@@ -479,4 +476,22 @@
         };
         return ax5dialog;
     }());
+    DIALOG = ax5.ui.dialog;
+})();
+
+// ax5.ui.dialog.tmpl
+(function () {
+
+    var DIALOG = ax5.ui.dialog;
+
+    var dialogDisplay = function dialogDisplay(columnKeys) {
+        return " \n        <div id=\"{{dialogId}}\" data-ax5-ui=\"dialog\" class=\"ax5-ui-dialog {{theme}}\">\n            <div class=\"ax-dialog-header\">\n                {{{title}}}\n            </div>\n            <div class=\"ax-dialog-body\">\n                <div class=\"ax-dialog-msg\">{{{msg}}}</div>\n                \n                {{#input}}\n                <div class=\"ax-dialog-prompt\">\n                    {{#@each}}\n                    <div class=\"form-group\">\n                    {{#@value.label}}\n                    <label>{{#_crlf}}{{{.}}}{{/_crlf}}</label>\n                    {{/@value.label}}\n                    <input type=\"{{@value.type}}\" placeholder=\"{{@value.placeholder}}\" class=\"form-control {{@value.theme}}\" data-dialog-prompt=\"{{@key}}\" style=\"width:100%;\" value=\"{{@value.value}}\" />\n                    {{#@value.help}}\n                    <p class=\"help-block\">{{#_crlf}}{{.}}{{/_crlf}}</p>\n                    {{/@value.help}}\n                    </div>\n                    {{/@each}}\n                </div>\n                {{/input}}\n                \n                <div class=\"ax-dialog-buttons\">\n                    <div class=\"ax-button-wrap\">\n                    {{#btns}}\n                        {{#@each}}\n                        <button type=\"button\" data-dialog-btn=\"{{@key}}\" class=\"btn btn-{{@value.theme}}\">{{@value.label}}</button>\n                        {{/@each}}\n                    {{/btns}}\n                    </div>\n                </div>\n            </div>\n        </div>  \n        ";
+    };
+
+    DIALOG.tmpl = {
+        "dialogDisplay": dialogDisplay,
+        get: function get(tmplName, data, columnKeys) {
+            return ax5.mustache.render(DIALOG.tmpl[tmplName].call(this, columnKeys), data);
+        }
+    };
 })();

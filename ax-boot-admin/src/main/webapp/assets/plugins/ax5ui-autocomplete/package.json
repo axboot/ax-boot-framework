@@ -1,6 +1,6 @@
 {
 	"name": "ax5ui-autocomplete",
-	"version": "0.0.4",
+	"version": "0.0.5",
 	"description": "A autocomplete plugin that works with Bootstrap & jQuery",
 	"license": "LGPL-3.0",
 	"repository": {

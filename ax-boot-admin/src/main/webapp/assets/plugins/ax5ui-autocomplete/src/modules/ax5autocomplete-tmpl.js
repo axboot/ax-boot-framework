@@ -94,6 +94,10 @@ data-ax5autocomplete-display="{{id}}" data-ax5autocomplete-instance="{{instanceI
         "formSelectOptions": formSelectOptions,
         "optionGroup": optionGroup,
         "options": options,
-        "label": label
+        "label": label,
+
+        get: function (tmplName, data, columnKeys) {
+            return ax5.mustache.render(AUTOCOMPLETE.tmpl[tmplName].call(this, columnKeys), data);
+        }
     };
 })();

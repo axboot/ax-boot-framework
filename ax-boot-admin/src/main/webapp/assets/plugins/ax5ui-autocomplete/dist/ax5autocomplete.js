@@ -15,7 +15,7 @@
 
     UI.addClass({
         className: "autocomplete",
-        version: "0.0.4"
+        version: "0.0.5"
     }, function () {
         /**
          * @class ax5autocomplete
@@ -259,7 +259,7 @@
                 data.selected = item.selected;
                 data.hasSelected = data.selected && data.selected.length > 0;
                 data.removeIcon = item.removeIcon;
-                return ax5.mustache.render(AUTOCOMPLETE.tmpl["label"].call(this, item.columnKeys), data) + "&nbsp;";
+                return AUTOCOMPLETE.tmpl.get.call(this, "label", data, item.columnKeys) + "&nbsp;";
             },
                 syncLabel = function syncLabel(queIdx) {
                 var item = this.queue[queIdx],
@@ -273,9 +273,9 @@
                     n["@index"] = nindex;
                 });
 
-                item.$select.html(ax5.mustache.render(AUTOCOMPLETE.tmpl["formSelectOptions"].call(this, item.columnKeys), {
+                item.$select.html(AUTOCOMPLETE.tmpl.get.call(this, "formSelectOptions", {
                     selected: item.selected
-                }));
+                }, item.columnKeys));
 
                 item.$displayLabel.html(getLabel.call(this, queIdx));
                 item.$target.height('');
@@ -341,7 +341,7 @@
                     data.multiple = item.multiple;
                     data.lang = item.lang;
                     data.options = item.options;
-                    this.activeautocompleteOptionGroup.find('[data-els="content"]').html(jQuery(ax5.mustache.render(AUTOCOMPLETE.tmpl.options.call(this, item.columnKeys), data)));
+                    this.activeautocompleteOptionGroup.find('[data-els="content"]').html(jQuery(AUTOCOMPLETE.tmpl.get.call(this, "options", data, item.columnKeys)));
 
                     focusWord.call(this, this.activeautocompleteQueueIndex, searchWord);
                 }.bind(this));
@@ -400,9 +400,9 @@
                             _focusIndex = 0;
                             //_focusIndex = (direction > 0) ? 0 : item.optionItemLength - 1; // 맨 끝으로 보낼것인가 말 것인가.
                         } else {
-                            _focusIndex = _prevFocusIndex + direction;
-                            if (_focusIndex < 0) _focusIndex = 0;else if (_focusIndex > item.optionItemLength - 1) _focusIndex = item.optionItemLength - 1;
-                        }
+                                _focusIndex = _prevFocusIndex + direction;
+                                if (_focusIndex < 0) _focusIndex = 0;else if (_focusIndex > item.optionItemLength - 1) _focusIndex = item.optionItemLength - 1;
+                            }
                     }
 
                     item.optionFocusIndex = _focusIndex;
@@ -770,25 +770,25 @@
                                 if (typeof value === "undefined") {
                                     //
                                 } else if (U.isString(value)) {
-                                    searchWord = value;
-                                } else {
-                                    if (value.removeSelectedIndex) {
-                                        resetSelected = true;
+                                        searchWord = value;
+                                    } else {
+                                        if (value.removeSelectedIndex) {
+                                            resetSelected = true;
+                                        }
+                                        values.push(value);
                                     }
-                                    values.push(value);
-                                }
                             }
                         }
 
                         if (childNodes.length == 0) {
                             setSelected.call(this, item.id, null, undefined, "internal"); // clear value
                         } else if (searchWord != "") {
-                            onSearch.call(self, queIdx, searchWord);
-                        } else if (resetSelected) {
-                            setSelected.call(this, item.id, values, undefined, "internal"); // set Value
-                            U.selectRange(item.$displayLabel, "end"); // label focus end
-                            self.close();
-                        }
+                                onSearch.call(self, queIdx, searchWord);
+                            } else if (resetSelected) {
+                                setSelected.call(this, item.id, values, undefined, "internal"); // set Value
+                                U.selectRange(item.$displayLabel, "end"); // label focus end
+                                self.close();
+                            }
                     }, 150);
 
                     var blurLabel = function blurLabel(queIdx) {
@@ -804,11 +804,11 @@
                                 if (typeof value === "undefined") {
                                     //
                                 } else if (U.isString(value)) {
-                                    //editingText = value;
-                                    //values.push(value);
-                                } else {
-                                    values.push(value);
-                                }
+                                        //editingText = value;
+                                        //values.push(value);
+                                    } else {
+                                            values.push(value);
+                                        }
                             }
                         }
 
@@ -917,7 +917,7 @@
                                 return item.size ? "input-" + item.size : "";
                             }();
 
-                            item.$display = jQuery(ax5.mustache.render(AUTOCOMPLETE.tmpl["autocompleteDisplay"].call(this, queIdx), data));
+                            item.$display = jQuery(AUTOCOMPLETE.tmpl.get.call(this, "autocompleteDisplay", data, item.columnKeys));
                             item.$displayTable = item.$display.find('[data-els="display-table"]');
                             item.$displayLabel = item.$display.find('[data-ax5autocomplete-display="label"]');
 
@@ -930,7 +930,7 @@
                                 }
                                 item.$select.attr("multiple", "multiple");
                             } else {
-                                item.$select = jQuery(ax5.mustache.render(AUTOCOMPLETE.tmpl["formSelect"].call(this, queIdx), data));
+                                item.$select = jQuery(AUTOCOMPLETE.tmpl.get.call(this, "formSelect", data, item.columnKeys));
                                 item.$target.append(item.$select);
                             }
 
@@ -946,7 +946,6 @@
                         item.$display.unbind('click.ax5autocomplete').bind('click.ax5autocomplete', autocompleteEvent.click.bind(this, queIdx));
 
                         // autocomplete 태그에 대한 이벤트 감시
-
 
                         item.$displayLabel.unbind("focus.ax5autocomplete").bind("focus.ax5autocomplete", autocompleteEvent.focus.bind(this, queIdx)).unbind("blur.ax5autocomplete").bind("blur.ax5autocomplete", autocompleteEvent.blur.bind(this, queIdx)).unbind('keyup.ax5autocomplete').bind('keyup.ax5autocomplete', autocompleteEvent.keyUp.bind(this, queIdx)).unbind("keydown.ax5autocomplete").bind("keydown.ax5autocomplete", autocompleteEvent.keyDown.bind(this, queIdx));
 
@@ -1061,8 +1060,8 @@
                     data.waitOptions = true;
                     data.options = [];
 
-                    this.activeautocompleteOptionGroup = jQuery(ax5.mustache.render(AUTOCOMPLETE.tmpl["optionGroup"].call(this, item.columnKeys), data));
-                    this.activeautocompleteOptionGroup.find('[data-els="content"]').html(jQuery(ax5.mustache.render(AUTOCOMPLETE.tmpl["options"].call(this, item.columnKeys), data)));
+                    this.activeautocompleteOptionGroup = jQuery(AUTOCOMPLETE.tmpl.get.call(this, "optionGroup", data, item.columnKeys));
+                    this.activeautocompleteOptionGroup.find('[data-els="content"]').html(jQuery(AUTOCOMPLETE.tmpl.get.call(this, "options", data, item.columnKeys)));
                     this.activeautocompleteQueueIndex = queIdx;
 
                     alignAutocompleteOptionGroup.call(this, "append"); // alignAutocompleteOptionGroup 에서 body append
@@ -1382,7 +1381,11 @@ jQuery.fn.ax5autocomplete = function () {
         "formSelectOptions": formSelectOptions,
         "optionGroup": optionGroup,
         "options": options,
-        "label": label
+        "label": label,
+
+        get: function get(tmplName, data, columnKeys) {
+            return ax5.mustache.render(AUTOCOMPLETE.tmpl[tmplName].call(this, columnKeys), data);
+        }
     };
 })();
 // ax5.ui.autocomplete.util

@@ -5,7 +5,7 @@
 
     UI.addClass({
         className: "layout",
-        version  : "0.2.10"
+        version  : "0.2.11"
     }, (function () {
         /**
          * @class ax5layout
@@ -330,8 +330,7 @@
                         }
                     };
 
-                    return function (queIdx, callBack, windowResize) {
-
+                    return function (queIdx, callback, windowResize) {
                         var item = this.queue[queIdx];
 
                         // 레이아웃 타겟의 CSS속성을 미리 저장해 둡니다. 왜? 패널별로 크기 계산 할 때 쓰려고
@@ -351,8 +350,8 @@
                             }).bind(item), 1)
 
                         }
-                        if (callBack) {
-                            callBack.call(item, item);
+                        if (callback) {
+                            callback.call(item, item);
                         }
                     }
                 })(),
@@ -862,7 +861,7 @@
             /**
              * @method ax5layout.align
              * @param boundID
-             * @param {Function} [callBack]
+             * @param {Function} [callback]
              * @param {String} [windowResize]
              * @returns {ax5layout}
              */
@@ -897,7 +896,7 @@
              * @method ax5layout.resize
              * @param boundID
              * @param {Object} resizeOption
-             * @param {Function} [callBack]
+             * @param {Function} [callback]
              * @returns {ax5layout}
              */
             this.resize = (function () {
@@ -923,7 +922,7 @@
                     }
                 };
 
-                return function (boundID, resizeOption, callBack) {
+                return function (boundID, resizeOption, callback) {
                     var queIdx = (U.isNumber(boundID)) ? boundID : getQueIdx.call(this, boundID);
                     if (queIdx === -1) {
                         console.log(ax5.info.getError("ax5layout", "402", "resize"));
@@ -931,7 +930,7 @@
                     }
 
                     resizeLayoutPanel[this.queue[queIdx].layout].call(this, this.queue[queIdx], resizeOption);
-                    alignLayout.call(this, queIdx, callBack);
+                    alignLayout.call(this, queIdx, callback);
                     return this;
                 };
 
@@ -960,7 +959,7 @@
                     }
                 };
 
-                return function (boundID, callBack) {
+                return function (boundID, callback) {
                     var queIdx = (U.isNumber(boundID)) ? boundID : getQueIdx.call(this, boundID);
                     if (queIdx === -1) {
                         console.log(ax5.info.getError("ax5layout", "402", "reset"));
@@ -968,7 +967,7 @@
                     }
 
                     resetLayoutPanel[this.queue[queIdx].layout].call(this, this.queue[queIdx]);
-                    alignLayout.call(this, queIdx, callBack);
+                    alignLayout.call(this, queIdx, callback);
                     return this;
                 };
 

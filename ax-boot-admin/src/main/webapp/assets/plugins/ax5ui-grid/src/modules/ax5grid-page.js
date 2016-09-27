@@ -5,7 +5,7 @@
     var U = ax5.util;
 
     var onclickPageMove = function (_act) {
-        var callBack = function (_pageNo) {
+        var callback = function (_pageNo) {
             if (this.page.currentPage != _pageNo) {
                 this.page.selectPage = _pageNo;
                 if (this.config.page.onChange) {
@@ -19,20 +19,20 @@
         };
         var processor = {
             "first": function () {
-                callBack.call(this, 0);
+                callback.call(this, 0);
             },
             "prev": function () {
                 var pageNo = this.page.currentPage - 1;
                 if (pageNo < 0) pageNo = 0;
-                callBack.call(this, pageNo);
+                callback.call(this, pageNo);
             },
             "next": function () {
                 var pageNo = this.page.currentPage + 1;
                 if (pageNo > this.page.totalPages - 1) pageNo = this.page.totalPages - 1;
-                callBack.call(this, pageNo);
+                callback.call(this, pageNo);
             },
             "last": function () {
-                callBack.call(this, this.page.totalPages - 1);
+                callback.call(this, this.page.totalPages - 1);
             }
         };
 
@@ -40,7 +40,7 @@
             processor[_act].call(this);
         }
         else {
-            callBack.call(this, _act-1);
+            callback.call(this, _act-1);
         }
     };
 

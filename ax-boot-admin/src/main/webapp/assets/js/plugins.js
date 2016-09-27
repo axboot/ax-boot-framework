@@ -15657,7 +15657,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
         function left(str, pos) {
             if (typeof str === "undefined" || typeof pos === "undefined") return "";
             if (isString(pos)) {
-                return str.indexOf(pos) > -1 ? str.substr(0, str.indexOf(pos)) : str;
+                return str.indexOf(pos) > -1 ? str.substr(0, str.indexOf(pos)) : "";
             } else if (isNumber(pos)) {
                 return str.substr(0, pos);
             } else {
@@ -15683,7 +15683,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
             if (typeof str === "undefined" || typeof pos === "undefined") return "";
             str = '' + str;
             if (isString(pos)) {
-                return str.lastIndexOf(pos) > -1 ? str.substr(str.lastIndexOf(pos) + 1) : str;
+                return str.lastIndexOf(pos) > -1 ? str.substr(str.lastIndexOf(pos) + 1) : "";
             } else if (isNumber(pos)) {
                 return str.substr(str.length - pos);
             } else {
@@ -15955,20 +15955,26 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
          */
         function date(d, cond) {
             var yy, mm, dd, hh, mi, aDateTime, aTimes, aTime, aDate, utcD, localD, va;
+            var ISO_8601 = /^\d{4}(-\d\d(-\d\d(T\d\d:\d\d(:\d\d)?(\.\d+)?(([+-]\d\d:\d\d)|Z)?)?)?)?$/i;
+            var ISO_8601_FULL = /^\d{4}-\d\d-\d\dT\d\d:\d\d:\d\d(\.\d+)?(([+-]\d\d:\d\d)|Z)?$/i;
 
             if (isString(d)) {
                 if (d.length == 0) {
                     d = new Date();
                 } else if (d.length > 15) {
-                    aDateTime = d.split(/ /g), aTimes, aTime, aDate = aDateTime[0].split(/\D/g), yy = aDate[0];
-                    mm = parseFloat(aDate[1]);
-                    dd = parseFloat(aDate[2]);
-                    aTime = aDateTime[1] || "09:00";
-                    aTimes = aTime.substring(0, 5).split(":");
-                    hh = parseFloat(aTimes[0]);
-                    mi = parseFloat(aTimes[1]);
-                    if (right(aTime, 2) === "AM" || right(aTime, 2) === "PM") hh += 12;
-                    d = localDate(yy, mm - 1, dd, hh, mi);
+                    if (ISO_8601_FULL.test(d) || ISO_8601.test(d)) {
+                        d = new Date(d);
+                    } else {
+                        aDateTime = d.split(/ /g), aTimes, aTime, aDate = aDateTime[0].split(/\D/g), yy = aDate[0];
+                        mm = parseFloat(aDate[1]);
+                        dd = parseFloat(aDate[2]);
+                        aTime = aDateTime[1] || "09:00";
+                        aTimes = aTime.substring(0, 5).split(":");
+                        hh = parseFloat(aTimes[0]);
+                        mi = parseFloat(aTimes[1]);
+                        if (right(aTime, 2) === "AM" || right(aTime, 2) === "PM") hh += 12;
+                        d = localDate(yy, mm - 1, dd, hh, mi);
+                    }
                 } else if (d.length == 14) {
                     va = d.replace(/\D/g, "");
                     d = localDate(va.substr(0, 4), va.substr(4, 2) - 1, number(va.substr(6, 2)), number(va.substr(8, 2)), number(va.substr(10, 2)), number(va.substr(12, 2)));
@@ -17664,6 +17670,7 @@ ax5.ui = function () {
 
     var UI = ax5.ui;
     var U = ax5.util;
+    var DIALOG;
 
     UI.addClass({
         className: "dialog",
@@ -17708,9 +17715,6 @@ ax5.ui = function () {
                 that = null;
                 return true;
             },
-                getContentTmpl = function getContentTmpl() {
-                return "\n                    <div id=\"{{dialogId}}\" data-ax5-ui=\"dialog\" class=\"ax5-ui-dialog {{theme}}\">\n                        <div class=\"ax-dialog-header\">\n                            {{{title}}}\n                        </div>\n                        <div class=\"ax-dialog-body\">\n                            <div class=\"ax-dialog-msg\">{{{msg}}}</div>\n                            \n                            {{#input}}\n                            <div class=\"ax-dialog-prompt\">\n                                {{#@each}}\n                                <div class=\"form-group\">\n                                {{#@value.label}}\n                                <label>{{#_crlf}}{{{.}}}{{/_crlf}}</label>\n                                {{/@value.label}}\n                                <input type=\"{{@value.type}}\" placeholder=\"{{@value.placeholder}}\" class=\"form-control {{@value.theme}}\" data-dialog-prompt=\"{{@key}}\" style=\"width:100%;\" value=\"{{@value.value}}\" />\n                                {{#@value.help}}\n                                <p class=\"help-block\">{{#_crlf}}{{.}}{{/_crlf}}</p>\n                                {{/@value.help}}\n                                </div>\n                                {{/@each}}\n                            </div>\n                            {{/input}}\n                            \n                            <div class=\"ax-dialog-buttons\">\n                                <div class=\"ax-button-wrap\">\n                                {{#btns}}\n                                    {{#@each}}\n                                    <button type=\"button\" data-dialog-btn=\"{{@key}}\" class=\"btn btn-{{@value.theme}}\">{{@value.label}}</button>\n                                    {{/@each}}\n                                {{/btns}}\n                                </div>\n                            </div>\n                        </div>\n                    </div>  \n                    ";
-            },
                 getContent = function getContent(dialogId, opts) {
                 var data = {
                     dialogId: dialogId,
@@ -17724,12 +17728,12 @@ ax5.ui = function () {
                 };
 
                 try {
-                    return ax5.mustache.render(getContentTmpl(), data);
+                    return DIALOG.tmpl.get.call(this, "dialogDisplay", data);
                 } finally {
                     data = null;
                 }
             },
-                open = function open(opts, callBack) {
+                open = function open(opts, callback) {
                 var pos = {},
                     box;
 
@@ -17767,12 +17771,12 @@ ax5.ui = function () {
                 }
 
                 this.activeDialog.find("[data-dialog-btn]").on(cfg.clickEventName, function (e) {
-                    btnOnClick.call(this, e || window.event, opts, callBack);
+                    btnOnClick.call(this, e || window.event, opts, callback);
                 }.bind(this));
 
                 // bind key event
                 jQuery(window).bind("keydown.ax5dialog", function (e) {
-                    onKeyup.call(this, e || window.event, opts, callBack);
+                    onKeyup.call(this, e || window.event, opts, callback);
                 }.bind(this));
 
                 jQuery(window).bind("resize.ax5dialog", function (e) {
@@ -17812,7 +17816,7 @@ ax5.ui = function () {
 
                 return this;
             },
-                btnOnClick = function btnOnClick(e, opts, callBack, target, k) {
+                btnOnClick = function btnOnClick(e, opts, callback, target, k) {
                 var that;
                 if (e.srcElement) e.target = e.srcElement;
 
@@ -17844,10 +17848,10 @@ ax5.ui = function () {
                     if (opts.btns[k].onClick) {
                         opts.btns[k].onClick.call(that, k);
                     } else if (opts.dialogType === "alert") {
-                        if (callBack) callBack.call(that, k);
+                        if (callback) callback.call(that, k);
                         this.close();
                     } else if (opts.dialogType === "confirm") {
-                        if (callBack) callBack.call(that, k);
+                        if (callback) callback.call(that, k);
                         this.close();
                     } else if (opts.dialogType === "prompt") {
                         if (k === 'ok') {
@@ -17856,18 +17860,18 @@ ax5.ui = function () {
                                 return false;
                             }
                         }
-                        if (callBack) callBack.call(that, k);
+                        if (callback) callback.call(that, k);
                         this.close();
                     }
                 }
 
                 that = null;
                 opts = null;
-                callBack = null;
+                callback = null;
                 target = null;
                 k = null;
             },
-                onKeyup = function onKeyup(e, opts, callBack, target, k) {
+                onKeyup = function onKeyup(e, opts, callback, target, k) {
                 var that,
                     emptyKey = null;
 
@@ -17895,7 +17899,7 @@ ax5.ui = function () {
                             emptyKey = null;
                             return false;
                         }
-                        if (callBack) callBack.call(that, k);
+                        if (callback) callback.call(that, k);
                         this.close();
                     }
                 }
@@ -17903,7 +17907,7 @@ ax5.ui = function () {
                 that = null;
                 emptyKey = null;
                 opts = null;
-                callBack = null;
+                callback = null;
                 target = null;
                 k = null;
             };
@@ -17929,7 +17933,7 @@ ax5.ui = function () {
              * open the dialog of alert type
              * @method ax5dialog.alert
              * @param {Object|String} [{theme, title, msg, btns}|msg] - dialog 속성을 json으로 정의하거나 msg만 전달
-             * @param {Function} [callBack] - 사용자 확인 이벤트시 호출될 callBack 함수
+             * @param {Function} [callback] - 사용자 확인 이벤트시 호출될 callback 함수
              * @returns {ax5dialog}
              * @example
              * ```
@@ -17939,7 +17943,7 @@ ax5.ui = function () {
              * }, function(){});
              * ```
              */
-            this.alert = function (opts, callBack, tryCount) {
+            this.alert = function (opts, callback, tryCount) {
                 if (U.isString(opts)) {
                     opts = {
                         title: cfg.title,
@@ -17951,7 +17955,7 @@ ax5.ui = function () {
                     // try one more
                     if (!tryCount) {
                         setTimeout(function () {
-                            this.alert(opts, callBack, 1);
+                            this.alert(opts, callback, 1);
                         }.bind(this), Number(cfg.animateTime) + 100);
                     } else {
                         console.log(ax5.info.getError("ax5dialog", "501", "alert"));
@@ -17969,10 +17973,10 @@ ax5.ui = function () {
                         ok: { label: cfg.lang["ok"], theme: opts.theme }
                     };
                 }
-                open.call(this, opts, callBack);
+                open.call(this, opts, callback);
 
                 opts = null;
-                callBack = null;
+                callback = null;
                 return this;
             };
 
@@ -17980,7 +17984,7 @@ ax5.ui = function () {
              * open the dialog of confirm type
              * @method ax5dialog.confirm
              * @param {Object|String} [{theme, title, msg, btns}|msg] - dialog 속성을 json으로 정의하거나 msg만 전달
-             * @param {Function} [callBack] - 사용자 확인 이벤트시 호출될 callBack 함수
+             * @param {Function} [callback] - 사용자 확인 이벤트시 호출될 callback 함수
              * @returns {ax5dialog}
              * @example
              * ```
@@ -17990,7 +17994,7 @@ ax5.ui = function () {
              * }, function(){});
              * ```
              */
-            this.confirm = function (opts, callBack, tryCount) {
+            this.confirm = function (opts, callback, tryCount) {
                 if (U.isString(opts)) {
                     opts = {
                         title: cfg.title,
@@ -18002,7 +18006,7 @@ ax5.ui = function () {
                     // try one more
                     if (!tryCount) {
                         setTimeout(function () {
-                            this.confirm(opts, callBack, 1);
+                            this.confirm(opts, callback, 1);
                         }.bind(this), Number(cfg.animateTime) + 100);
                     } else {
                         console.log(ax5.info.getError("ax5dialog", "501", "confirm"));
@@ -18022,10 +18026,10 @@ ax5.ui = function () {
                         cancel: { label: cfg.lang["cancel"] }
                     };
                 }
-                open.call(this, opts, callBack);
+                open.call(this, opts, callback);
 
                 opts = null;
-                callBack = null;
+                callback = null;
                 return this;
             };
 
@@ -18033,7 +18037,7 @@ ax5.ui = function () {
              * open the dialog of prompt type
              * @method ax5dialog.prompt
              * @param {Object|String} [{theme, title, msg, btns, input}|msg] - dialog 속성을 json으로 정의하거나 msg만 전달
-             * @param {Function} [callBack] - 사용자 확인 이벤트시 호출될 callBack 함수
+             * @param {Function} [callback] - 사용자 확인 이벤트시 호출될 callback 함수
              * @returns {ax5dialog}
              * @example
              * ```
@@ -18043,7 +18047,7 @@ ax5.ui = function () {
              * }, function(){});
              * ```
              */
-            this.prompt = function (opts, callBack, tryCount) {
+            this.prompt = function (opts, callback, tryCount) {
                 if (U.isString(opts)) {
                     opts = {
                         title: cfg.title,
@@ -18055,7 +18059,7 @@ ax5.ui = function () {
                     // try one more
                     if (!tryCount) {
                         setTimeout(function () {
-                            this.prompt(opts, callBack, 1);
+                            this.prompt(opts, callback, 1);
                         }.bind(this), Number(cfg.animateTime) + 100);
                     } else {
                         console.log(ax5.info.getError("ax5dialog", "501", "prompt"));
@@ -18066,7 +18070,6 @@ ax5.ui = function () {
                 self.dialogConfig = {};
                 jQuery.extend(true, self.dialogConfig, cfg, opts);
                 opts = self.dialogConfig;
-
                 opts.dialogType = "prompt";
                 opts.theme = opts.theme || cfg.theme || "";
 
@@ -18081,10 +18084,10 @@ ax5.ui = function () {
                         cancel: { label: cfg.lang["cancel"] }
                     };
                 }
-                open.call(this, opts, callBack);
+                open.call(this, opts, callback);
 
                 opts = null;
-                callBack = null;
+                callback = null;
                 return this;
             };
 
@@ -18138,6 +18141,24 @@ ax5.ui = function () {
         };
         return ax5dialog;
     }());
+    DIALOG = ax5.ui.dialog;
+})();
+
+// ax5.ui.dialog.tmpl
+(function () {
+
+    var DIALOG = ax5.ui.dialog;
+
+    var dialogDisplay = function dialogDisplay(columnKeys) {
+        return " \n        <div id=\"{{dialogId}}\" data-ax5-ui=\"dialog\" class=\"ax5-ui-dialog {{theme}}\">\n            <div class=\"ax-dialog-header\">\n                {{{title}}}\n            </div>\n            <div class=\"ax-dialog-body\">\n                <div class=\"ax-dialog-msg\">{{{msg}}}</div>\n                \n                {{#input}}\n                <div class=\"ax-dialog-prompt\">\n                    {{#@each}}\n                    <div class=\"form-group\">\n                    {{#@value.label}}\n                    <label>{{#_crlf}}{{{.}}}{{/_crlf}}</label>\n                    {{/@value.label}}\n                    <input type=\"{{@value.type}}\" placeholder=\"{{@value.placeholder}}\" class=\"form-control {{@value.theme}}\" data-dialog-prompt=\"{{@key}}\" style=\"width:100%;\" value=\"{{@value.value}}\" />\n                    {{#@value.help}}\n                    <p class=\"help-block\">{{#_crlf}}{{.}}{{/_crlf}}</p>\n                    {{/@value.help}}\n                    </div>\n                    {{/@each}}\n                </div>\n                {{/input}}\n                \n                <div class=\"ax-dialog-buttons\">\n                    <div class=\"ax-button-wrap\">\n                    {{#btns}}\n                        {{#@each}}\n                        <button type=\"button\" data-dialog-btn=\"{{@key}}\" class=\"btn btn-{{@value.theme}}\">{{@value.label}}</button>\n                        {{/@each}}\n                    {{/btns}}\n                    </div>\n                </div>\n            </div>\n        </div>  \n        ";
+    };
+
+    DIALOG.tmpl = {
+        "dialogDisplay": dialogDisplay,
+        get: function get(tmplName, data, columnKeys) {
+            return ax5.mustache.render(DIALOG.tmpl[tmplName].call(this, columnKeys), data);
+        }
+    };
 })();
 "use strict";
 
@@ -18366,10 +18387,11 @@ ax5.ui = function () {
 
     var UI = ax5.ui;
     var U = ax5.util;
+    var TOAST;
 
     UI.addClass({
         className: "toast",
-        version: "0.3.3"
+        version: "0.4.0"
     }, function () {
         /**
          * @class ax5toast
@@ -18417,9 +18439,6 @@ ax5.ui = function () {
                 that = null;
                 return true;
             },
-                getContentTmpl = function getContentTmpl() {
-                return "\n                    <div id=\"{{toastId}}\" data-ax5-ui=\"toast\" class=\"ax5-ui-toast {{theme}}\">\n                        {{#icon}}\n                        <div class=\"ax-toast-icon\">{{{.}}}</div>\n                        {{/icon}}\n                        <div class=\"ax-toast-body\">{{{msg}}}</div>\n                        {{#btns}}\n                        <div class=\"ax-toast-buttons\">\n                            <div class=\"ax-button-wrap\">\n                            {{#@each}}\n                            <button type=\"button\" data-ax-toast-btn=\"{{@key}}\" class=\"btn btn-{{@value.theme}}\">{{{@value.label}}}</button>\n                            {{/@each}}\n                            </div>\n                        </div>\n                        {{/btns}}\n                        {{^btns}}\n                        <a class=\"ax-toast-close\" data-ax-toast-btn=\"ok\">{{{closeIcon}}}</a>\n                        {{/btns}}\n                        <div style=\"clear:both;\"></div>\n                    </div>\n                    ";
-            },
                 getContent = function getContent(toastId, opts) {
                 var data = {
                     toastId: toastId,
@@ -18431,7 +18450,7 @@ ax5.ui = function () {
                 };
 
                 try {
-                    return ax5.mustache.render(getContentTmpl(), data);
+                    return TOAST.tmpl.get.call(this, "toastDisplay", data);
                 } finally {
                     toastId = null;
                     data = null;
@@ -18667,6 +18686,24 @@ ax5.ui = function () {
         };
         return ax5toast;
     }());
+    TOAST = ax5.ui.toast;
+})();
+// ax5.ui.toast.tmpl
+(function () {
+
+    var TOAST = ax5.ui.toast;
+
+    var toastDisplay = function toastDisplay(columnKeys) {
+        return "\n        <div id=\"{{toastId}}\" data-ax5-ui=\"toast\" class=\"ax5-ui-toast {{theme}}\">\n            {{#icon}}\n            <div class=\"ax-toast-icon\">{{{.}}}</div>\n            {{/icon}}\n            <div class=\"ax-toast-body\">{{{msg}}}</div>\n            {{#btns}}\n            <div class=\"ax-toast-buttons\">\n                <div class=\"ax-button-wrap\">\n                    {{#@each}}\n                    <button type=\"button\" data-ax-toast-btn=\"{{@key}}\" class=\"btn btn-{{@value.theme}}\">{{{@value.label}}}</button>\n                    {{/@each}}\n                </div>\n            </div>\n            {{/btns}}\n            {{^btns}}\n                <a class=\"ax-toast-close\" data-ax-toast-btn=\"ok\">{{{closeIcon}}}</a>\n            {{/btns}}\n            <div style=\"clear:both;\"></div>\n        </div>\n        ";
+    };
+
+    TOAST.tmpl = {
+        "toastDisplay": toastDisplay,
+
+        get: function get(tmplName, data, columnKeys) {
+            return ax5.mustache.render(TOAST.tmpl[tmplName].call(this, columnKeys), data);
+        }
+    };
 })();
 "use strict";
 
@@ -18760,7 +18797,7 @@ ax5.ui = function () {
 
                 return ax5.mustache.render(getContentTmpl(), data);
             },
-                open = function open(opts, callBack) {
+                open = function open(opts, callback) {
                 var that;
                 jQuery(document.body).append(getContent.call(this, opts.id, opts));
 
@@ -18814,7 +18851,7 @@ ax5.ui = function () {
                     this.$["iframe-form"].submit();
                 }
 
-                if (callBack) callBack.call(that);
+                if (callback) callback.call(that);
                 onStateChanged.call(this, opts, that);
 
                 // bind key event
@@ -18839,7 +18876,7 @@ ax5.ui = function () {
                     return false;
                 });
             },
-                btnOnClick = function btnOnClick(e, opts, callBack, target, k) {
+                btnOnClick = function btnOnClick(e, opts, callback, target, k) {
                 var that;
                 if (e.srcElement) e.target = e.srcElement;
 
@@ -18866,7 +18903,7 @@ ax5.ui = function () {
 
                 that = null;
                 opts = null;
-                callBack = null;
+                callback = null;
                 target = null;
                 k = null;
             },
@@ -19005,10 +19042,10 @@ ax5.ui = function () {
              * my_modal.open();
              * ```
              */
-            this.open = function (opts, callBack) {
+            this.open = function (opts, callback) {
                 if (!this.activeModal) {
                     opts = self.modalConfig = jQuery.extend(true, {}, cfg, opts);
-                    open.call(this, opts, callBack);
+                    open.call(this, opts, callback);
                 }
                 return this;
             };
@@ -27181,7 +27218,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
     var U = ax5.util;
 
     var onclickPageMove = function onclickPageMove(_act) {
-        var callBack = function callBack(_pageNo) {
+        var callback = function callback(_pageNo) {
             if (this.page.currentPage != _pageNo) {
                 this.page.selectPage = _pageNo;
                 if (this.config.page.onChange) {
@@ -27195,27 +27232,27 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
         };
         var processor = {
             "first": function first() {
-                callBack.call(this, 0);
+                callback.call(this, 0);
             },
             "prev": function prev() {
                 var pageNo = this.page.currentPage - 1;
                 if (pageNo < 0) pageNo = 0;
-                callBack.call(this, pageNo);
+                callback.call(this, pageNo);
             },
             "next": function next() {
                 var pageNo = this.page.currentPage + 1;
                 if (pageNo > this.page.totalPages - 1) pageNo = this.page.totalPages - 1;
-                callBack.call(this, pageNo);
+                callback.call(this, pageNo);
             },
             "last": function last() {
-                callBack.call(this, this.page.totalPages - 1);
+                callback.call(this, this.page.totalPages - 1);
             }
         };
 
         if (_act in processor) {
             processor[_act].call(this);
         } else {
-            callBack.call(this, _act - 1);
+            callback.call(this, _act - 1);
         }
     };
 
@@ -27750,19 +27787,25 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
 (function () {
 
     var GRID = ax5.ui.grid;
-    var main = "<div data-ax5grid-container=\"root\" data-ax5grid-instance=\"{{instanceId}}\">\n            <div data-ax5grid-container=\"hidden\">\n                <textarea data-ax5grid-form=\"clipboard\"></textarea>\n            </div>\n            <div data-ax5grid-container=\"header\">\n                <div data-ax5grid-panel=\"aside-header\"></div>\n                <div data-ax5grid-panel=\"left-header\"></div>\n                <div data-ax5grid-panel=\"header\">\n                    <div data-ax5grid-panel-scroll=\"header\"></div>\n                </div>\n                <div data-ax5grid-panel=\"right-header\"></div>\n            </div>\n            <div data-ax5grid-container=\"body\">\n                <div data-ax5grid-panel=\"top-aside-body\"></div>\n                <div data-ax5grid-panel=\"top-left-body\"></div>\n                <div data-ax5grid-panel=\"top-body\">\n                    <div data-ax5grid-panel-scroll=\"top-body\"></div>\n                </div>\n                <div data-ax5grid-panel=\"top-right-body\"></div>\n                <div data-ax5grid-panel=\"aside-body\">\n                    <div data-ax5grid-panel-scroll=\"aside-body\"></div>\n                </div>\n                <div data-ax5grid-panel=\"left-body\">\n                    <div data-ax5grid-panel-scroll=\"left-body\"></div>\n                </div>\n                <div data-ax5grid-panel=\"body\">\n                    <div data-ax5grid-panel-scroll=\"body\"></div>\n                </div>\n                <div data-ax5grid-panel=\"right-body\">\n                  <div data-ax5grid-panel-scroll=\"right-body\"></div>\n                </div>\n                <div data-ax5grid-panel=\"bottom-aside-body\"></div>\n                <div data-ax5grid-panel=\"bottom-left-body\"></div>\n                <div data-ax5grid-panel=\"bottom-body\">\n                    <div data-ax5grid-panel-scroll=\"bottom-body\"></div>\n                </div>\n                <div data-ax5grid-panel=\"bottom-right-body\"></div>\n            </div>\n            <div data-ax5grid-container=\"page\">\n                <div data-ax5grid-page=\"holder\">\n                    <div data-ax5grid-page=\"navigation\"></div>\n                    <div data-ax5grid-page=\"status\"></div>\n                </div>\n            </div>\n            <div data-ax5grid-container=\"scroller\">\n                <div data-ax5grid-scroller=\"vertical\">\n                    <div data-ax5grid-scroller=\"vertical-bar\"></div>    \n                </div>\n                <div data-ax5grid-scroller=\"horizontal\">\n                    <div data-ax5grid-scroller=\"horizontal-bar\"></div>\n                </div>\n                <div data-ax5grid-scroller=\"corner\"></div>\n            </div>\n            <div data-ax5grid-resizer=\"vertical\"></div>\n            <div data-ax5grid-resizer=\"horizontal\"></div>\n        </div>";
+    var main = function main() {
+        return "<div data-ax5grid-container=\"root\" data-ax5grid-instance=\"{{instanceId}}\">\n            <div data-ax5grid-container=\"hidden\">\n                <textarea data-ax5grid-form=\"clipboard\"></textarea>\n            </div>\n            <div data-ax5grid-container=\"header\">\n                <div data-ax5grid-panel=\"aside-header\"></div>\n                <div data-ax5grid-panel=\"left-header\"></div>\n                <div data-ax5grid-panel=\"header\">\n                    <div data-ax5grid-panel-scroll=\"header\"></div>\n                </div>\n                <div data-ax5grid-panel=\"right-header\"></div>\n            </div>\n            <div data-ax5grid-container=\"body\">\n                <div data-ax5grid-panel=\"top-aside-body\"></div>\n                <div data-ax5grid-panel=\"top-left-body\"></div>\n                <div data-ax5grid-panel=\"top-body\">\n                    <div data-ax5grid-panel-scroll=\"top-body\"></div>\n                </div>\n                <div data-ax5grid-panel=\"top-right-body\"></div>\n                <div data-ax5grid-panel=\"aside-body\">\n                    <div data-ax5grid-panel-scroll=\"aside-body\"></div>\n                </div>\n                <div data-ax5grid-panel=\"left-body\">\n                    <div data-ax5grid-panel-scroll=\"left-body\"></div>\n                </div>\n                <div data-ax5grid-panel=\"body\">\n                    <div data-ax5grid-panel-scroll=\"body\"></div>\n                </div>\n                <div data-ax5grid-panel=\"right-body\">\n                  <div data-ax5grid-panel-scroll=\"right-body\"></div>\n                </div>\n                <div data-ax5grid-panel=\"bottom-aside-body\"></div>\n                <div data-ax5grid-panel=\"bottom-left-body\"></div>\n                <div data-ax5grid-panel=\"bottom-body\">\n                    <div data-ax5grid-panel-scroll=\"bottom-body\"></div>\n                </div>\n                <div data-ax5grid-panel=\"bottom-right-body\"></div>\n            </div>\n            <div data-ax5grid-container=\"page\">\n                <div data-ax5grid-page=\"holder\">\n                    <div data-ax5grid-page=\"navigation\"></div>\n                    <div data-ax5grid-page=\"status\"></div>\n                </div>\n            </div>\n            <div data-ax5grid-container=\"scroller\">\n                <div data-ax5grid-scroller=\"vertical\">\n                    <div data-ax5grid-scroller=\"vertical-bar\"></div>    \n                </div>\n                <div data-ax5grid-scroller=\"horizontal\">\n                    <div data-ax5grid-scroller=\"horizontal-bar\"></div>\n                </div>\n                <div data-ax5grid-scroller=\"corner\"></div>\n            </div>\n            <div data-ax5grid-resizer=\"vertical\"></div>\n            <div data-ax5grid-resizer=\"horizontal\"></div>\n        </div>";
+    };
 
-    var page_navigation = "<div data-ax5grid-page-navigation=\"holder\">\n            {{#hasPage}}\n            <div data-ax5grid-page-navigation=\"cell\">    \n                {{#firstIcon}}<button data-ax5grid-page-move=\"first\">{{{firstIcon}}}</button>{{/firstIcon}}\n                <button data-ax5grid-page-move=\"prev\">{{{prevIcon}}}</button>\n            </div>\n            <div data-ax5grid-page-navigation=\"cell-paging\">\n                {{#@paging}}\n                <button data-ax5grid-page-move=\"{{pageNo}}\" data-ax5grid-page-selected=\"{{selected}}\">{{pageNo}}</button>\n                {{/@paging}}\n            </div>\n            <div data-ax5grid-page-navigation=\"cell\">\n                <button data-ax5grid-page-move=\"next\">{{{nextIcon}}}</button>\n                {{#lastIcon}}<button data-ax5grid-page-move=\"last\">{{{lastIcon}}}</button>{{/lastIcon}}\n            </div>\n            {{/hasPage}}\n        </div>";
+    var page_navigation = function page_navigation() {
+        return "<div data-ax5grid-page-navigation=\"holder\">\n            {{#hasPage}}\n            <div data-ax5grid-page-navigation=\"cell\">    \n                {{#firstIcon}}<button data-ax5grid-page-move=\"first\">{{{firstIcon}}}</button>{{/firstIcon}}\n                <button data-ax5grid-page-move=\"prev\">{{{prevIcon}}}</button>\n            </div>\n            <div data-ax5grid-page-navigation=\"cell-paging\">\n                {{#@paging}}\n                <button data-ax5grid-page-move=\"{{pageNo}}\" data-ax5grid-page-selected=\"{{selected}}\">{{pageNo}}</button>\n                {{/@paging}}\n            </div>\n            <div data-ax5grid-page-navigation=\"cell\">\n                <button data-ax5grid-page-move=\"next\">{{{nextIcon}}}</button>\n                {{#lastIcon}}<button data-ax5grid-page-move=\"last\">{{{lastIcon}}}</button>{{/lastIcon}}\n            </div>\n            {{/hasPage}}\n        </div>";
+    };
 
-    var page_status = "<span>{{fromRowIndex}} - {{toRowIndex}} of {{totalElements}}</span>";
+    var page_status = function page_status() {
+        return "<span>{{fromRowIndex}} - {{toRowIndex}} of {{totalElements}}</span>";
+    };
 
     GRID.tmpl = {
         "main": main,
         "page_navigation": page_navigation,
         "page_status": page_status,
 
-        get: function get(tmplName, data) {
-            return ax5.mustache.render(GRID.tmpl[tmplName], data);
+        get: function get(tmplName, data, columnKeys) {
+            return ax5.mustache.render(GRID.tmpl[tmplName].call(this, columnKeys), data);
         }
     };
 })();
@@ -30089,8 +30132,7 @@ jQuery.fn.ax5combobox = function () {
                     }
                 };
 
-                return function (queIdx, callBack, windowResize) {
-
+                return function (queIdx, callback, windowResize) {
                     var item = this.queue[queIdx];
 
                     // 레이아웃 타겟의 CSS속성을 미리 저장해 둡니다. 왜? 패널별로 크기 계산 할 때 쓰려고
@@ -30109,8 +30151,8 @@ jQuery.fn.ax5combobox = function () {
                             this.onResize.call(this, this);
                         }.bind(item), 1);
                     }
-                    if (callBack) {
-                        callBack.call(item, item);
+                    if (callback) {
+                        callback.call(item, item);
                     }
                 };
             }(),
@@ -30568,7 +30610,7 @@ jQuery.fn.ax5combobox = function () {
             /**
              * @method ax5layout.align
              * @param boundID
-             * @param {Function} [callBack]
+             * @param {Function} [callback]
              * @param {String} [windowResize]
              * @returns {ax5layout}
              */
@@ -30603,7 +30645,7 @@ jQuery.fn.ax5combobox = function () {
              * @method ax5layout.resize
              * @param boundID
              * @param {Object} resizeOption
-             * @param {Function} [callBack]
+             * @param {Function} [callback]
              * @returns {ax5layout}
              */
             this.resize = function () {
@@ -30624,7 +30666,7 @@ jQuery.fn.ax5combobox = function () {
                     "tab-panel": function tabPanel() {}
                 };
 
-                return function (boundID, resizeOption, callBack) {
+                return function (boundID, resizeOption, callback) {
                     var queIdx = U.isNumber(boundID) ? boundID : getQueIdx.call(this, boundID);
                     if (queIdx === -1) {
                         console.log(ax5.info.getError("ax5layout", "402", "resize"));
@@ -30632,7 +30674,7 @@ jQuery.fn.ax5combobox = function () {
                     }
 
                     resizeLayoutPanel[this.queue[queIdx].layout].call(this, this.queue[queIdx], resizeOption);
-                    alignLayout.call(this, queIdx, callBack);
+                    alignLayout.call(this, queIdx, callback);
                     return this;
                 };
             }();
@@ -30655,7 +30697,7 @@ jQuery.fn.ax5combobox = function () {
                     "tab-panel": function tabPanel() {}
                 };
 
-                return function (boundID, callBack) {
+                return function (boundID, callback) {
                     var queIdx = U.isNumber(boundID) ? boundID : getQueIdx.call(this, boundID);
                     if (queIdx === -1) {
                         console.log(ax5.info.getError("ax5layout", "402", "reset"));
@@ -30663,7 +30705,7 @@ jQuery.fn.ax5combobox = function () {
                     }
 
                     resetLayoutPanel[this.queue[queIdx].layout].call(this, this.queue[queIdx]);
-                    alignLayout.call(this, queIdx, callBack);
+                    alignLayout.call(this, queIdx, callback);
                     return this;
                 };
             }();
@@ -31691,7 +31733,7 @@ jQuery.fn.ax5layout = function () {
 
     UI.addClass({
         className: "autocomplete",
-        version: "0.0.4"
+        version: "0.0.5"
     }, function () {
         /**
          * @class ax5autocomplete
@@ -31935,7 +31977,7 @@ jQuery.fn.ax5layout = function () {
                 data.selected = item.selected;
                 data.hasSelected = data.selected && data.selected.length > 0;
                 data.removeIcon = item.removeIcon;
-                return ax5.mustache.render(AUTOCOMPLETE.tmpl["label"].call(this, item.columnKeys), data) + "&nbsp;";
+                return AUTOCOMPLETE.tmpl.get.call(this, "label", data, item.columnKeys) + "&nbsp;";
             },
                 syncLabel = function syncLabel(queIdx) {
                 var item = this.queue[queIdx],
@@ -31949,9 +31991,9 @@ jQuery.fn.ax5layout = function () {
                     n["@index"] = nindex;
                 });
 
-                item.$select.html(ax5.mustache.render(AUTOCOMPLETE.tmpl["formSelectOptions"].call(this, item.columnKeys), {
+                item.$select.html(AUTOCOMPLETE.tmpl.get.call(this, "formSelectOptions", {
                     selected: item.selected
-                }));
+                }, item.columnKeys));
 
                 item.$displayLabel.html(getLabel.call(this, queIdx));
                 item.$target.height('');
@@ -32017,7 +32059,7 @@ jQuery.fn.ax5layout = function () {
                     data.multiple = item.multiple;
                     data.lang = item.lang;
                     data.options = item.options;
-                    this.activeautocompleteOptionGroup.find('[data-els="content"]').html(jQuery(ax5.mustache.render(AUTOCOMPLETE.tmpl.options.call(this, item.columnKeys), data)));
+                    this.activeautocompleteOptionGroup.find('[data-els="content"]').html(jQuery(AUTOCOMPLETE.tmpl.get.call(this, "options", data, item.columnKeys)));
 
                     focusWord.call(this, this.activeautocompleteQueueIndex, searchWord);
                 }.bind(this));
@@ -32076,9 +32118,9 @@ jQuery.fn.ax5layout = function () {
                             _focusIndex = 0;
                             //_focusIndex = (direction > 0) ? 0 : item.optionItemLength - 1; // 맨 끝으로 보낼것인가 말 것인가.
                         } else {
-                            _focusIndex = _prevFocusIndex + direction;
-                            if (_focusIndex < 0) _focusIndex = 0;else if (_focusIndex > item.optionItemLength - 1) _focusIndex = item.optionItemLength - 1;
-                        }
+                                _focusIndex = _prevFocusIndex + direction;
+                                if (_focusIndex < 0) _focusIndex = 0;else if (_focusIndex > item.optionItemLength - 1) _focusIndex = item.optionItemLength - 1;
+                            }
                     }
 
                     item.optionFocusIndex = _focusIndex;
@@ -32446,25 +32488,25 @@ jQuery.fn.ax5layout = function () {
                                 if (typeof value === "undefined") {
                                     //
                                 } else if (U.isString(value)) {
-                                    searchWord = value;
-                                } else {
-                                    if (value.removeSelectedIndex) {
-                                        resetSelected = true;
+                                        searchWord = value;
+                                    } else {
+                                        if (value.removeSelectedIndex) {
+                                            resetSelected = true;
+                                        }
+                                        values.push(value);
                                     }
-                                    values.push(value);
-                                }
                             }
                         }
 
                         if (childNodes.length == 0) {
                             setSelected.call(this, item.id, null, undefined, "internal"); // clear value
                         } else if (searchWord != "") {
-                            onSearch.call(self, queIdx, searchWord);
-                        } else if (resetSelected) {
-                            setSelected.call(this, item.id, values, undefined, "internal"); // set Value
-                            U.selectRange(item.$displayLabel, "end"); // label focus end
-                            self.close();
-                        }
+                                onSearch.call(self, queIdx, searchWord);
+                            } else if (resetSelected) {
+                                setSelected.call(this, item.id, values, undefined, "internal"); // set Value
+                                U.selectRange(item.$displayLabel, "end"); // label focus end
+                                self.close();
+                            }
                     }, 150);
 
                     var blurLabel = function blurLabel(queIdx) {
@@ -32480,11 +32522,11 @@ jQuery.fn.ax5layout = function () {
                                 if (typeof value === "undefined") {
                                     //
                                 } else if (U.isString(value)) {
-                                    //editingText = value;
-                                    //values.push(value);
-                                } else {
-                                    values.push(value);
-                                }
+                                        //editingText = value;
+                                        //values.push(value);
+                                    } else {
+                                            values.push(value);
+                                        }
                             }
                         }
 
@@ -32593,7 +32635,7 @@ jQuery.fn.ax5layout = function () {
                                 return item.size ? "input-" + item.size : "";
                             }();
 
-                            item.$display = jQuery(ax5.mustache.render(AUTOCOMPLETE.tmpl["autocompleteDisplay"].call(this, queIdx), data));
+                            item.$display = jQuery(AUTOCOMPLETE.tmpl.get.call(this, "autocompleteDisplay", data, item.columnKeys));
                             item.$displayTable = item.$display.find('[data-els="display-table"]');
                             item.$displayLabel = item.$display.find('[data-ax5autocomplete-display="label"]');
 
@@ -32606,7 +32648,7 @@ jQuery.fn.ax5layout = function () {
                                 }
                                 item.$select.attr("multiple", "multiple");
                             } else {
-                                item.$select = jQuery(ax5.mustache.render(AUTOCOMPLETE.tmpl["formSelect"].call(this, queIdx), data));
+                                item.$select = jQuery(AUTOCOMPLETE.tmpl.get.call(this, "formSelect", data, item.columnKeys));
                                 item.$target.append(item.$select);
                             }
 
@@ -32622,7 +32664,6 @@ jQuery.fn.ax5layout = function () {
                         item.$display.unbind('click.ax5autocomplete').bind('click.ax5autocomplete', autocompleteEvent.click.bind(this, queIdx));
 
                         // autocomplete 태그에 대한 이벤트 감시
-
 
                         item.$displayLabel.unbind("focus.ax5autocomplete").bind("focus.ax5autocomplete", autocompleteEvent.focus.bind(this, queIdx)).unbind("blur.ax5autocomplete").bind("blur.ax5autocomplete", autocompleteEvent.blur.bind(this, queIdx)).unbind('keyup.ax5autocomplete').bind('keyup.ax5autocomplete', autocompleteEvent.keyUp.bind(this, queIdx)).unbind("keydown.ax5autocomplete").bind("keydown.ax5autocomplete", autocompleteEvent.keyDown.bind(this, queIdx));
 
@@ -32737,8 +32778,8 @@ jQuery.fn.ax5layout = function () {
                     data.waitOptions = true;
                     data.options = [];
 
-                    this.activeautocompleteOptionGroup = jQuery(ax5.mustache.render(AUTOCOMPLETE.tmpl["optionGroup"].call(this, item.columnKeys), data));
-                    this.activeautocompleteOptionGroup.find('[data-els="content"]').html(jQuery(ax5.mustache.render(AUTOCOMPLETE.tmpl["options"].call(this, item.columnKeys), data)));
+                    this.activeautocompleteOptionGroup = jQuery(AUTOCOMPLETE.tmpl.get.call(this, "optionGroup", data, item.columnKeys));
+                    this.activeautocompleteOptionGroup.find('[data-els="content"]').html(jQuery(AUTOCOMPLETE.tmpl.get.call(this, "options", data, item.columnKeys)));
                     this.activeautocompleteQueueIndex = queIdx;
 
                     alignAutocompleteOptionGroup.call(this, "append"); // alignAutocompleteOptionGroup 에서 body append
@@ -33058,7 +33099,11 @@ jQuery.fn.ax5autocomplete = function () {
         "formSelectOptions": formSelectOptions,
         "optionGroup": optionGroup,
         "options": options,
-        "label": label
+        "label": label,
+
+        get: function get(tmplName, data, columnKeys) {
+            return ax5.mustache.render(AUTOCOMPLETE.tmpl[tmplName].call(this, columnKeys), data);
+        }
     };
 })();
 // ax5.ui.autocomplete.util

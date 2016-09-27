@@ -124,7 +124,7 @@
 
                     return ax5.mustache.render(getContentTmpl(), data);
                 },
-                open = function (opts, callBack) {
+                open = function (opts, callback) {
                     var that;
                     jQuery(document.body).append(getContent.call(this, opts.id, opts));
 
@@ -178,7 +178,7 @@
                         this.$["iframe-form"].submit();
                     }
 
-                    if (callBack) callBack.call(that);
+                    if (callback) callback.call(that);
                     onStateChanged.call(this, opts, that);
 
                     // bind key event
@@ -205,7 +205,7 @@
                             return false;
                         });
                 },
-                btnOnClick = function (e, opts, callBack, target, k) {
+                btnOnClick = function (e, opts, callback, target, k) {
                     var that;
                     if (e.srcElement) e.target = e.srcElement;
 
@@ -232,7 +232,7 @@
 
                     that = null;
                     opts = null;
-                    callBack = null;
+                    callback = null;
                     target = null;
                     k = null;
                 },
@@ -388,10 +388,10 @@
              * my_modal.open();
              * ```
              */
-            this.open = function (opts, callBack) {
+            this.open = function (opts, callback) {
                 if (!this.activeModal) {
                     opts = self.modalConfig = jQuery.extend(true, {}, cfg, opts);
-                    open.call(this, opts, callBack);
+                    open.call(this, opts, callback);
                 }
                 return this;
             };

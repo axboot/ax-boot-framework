@@ -13,7 +13,7 @@
 
     UI.addClass({
         className: "autocomplete",
-        version: "0.0.4"
+        version: "0.0.5"
     }, (function () {
         /**
          * @class ax5autocomplete
@@ -269,7 +269,7 @@
                     data.selected = item.selected;
                     data.hasSelected = (data.selected && data.selected.length > 0);
                     data.removeIcon = item.removeIcon;
-                    return (ax5.mustache.render(AUTOCOMPLETE.tmpl["label"].call(this, item.columnKeys), data) + "&nbsp;");
+                    return AUTOCOMPLETE.tmpl.get.call(this, "label", data, item.columnKeys) + "&nbsp;";
                 },
                 syncLabel = function (queIdx) {
                     var item = this.queue[queIdx], displayTableHeight;
@@ -282,9 +282,9 @@
                         n["@index"] = nindex;
                     });
 
-                    item.$select.html(ax5.mustache.render(AUTOCOMPLETE.tmpl["formSelectOptions"].call(this, item.columnKeys), {
-                        selected: item.selected
-                    }));
+                    item.$select.html(AUTOCOMPLETE.tmpl.get.call(this, "formSelectOptions", {
+                            selected: item.selected
+                        }, item.columnKeys));
 
                     item.$displayLabel
                         .html(getLabel.call(this, queIdx));
@@ -351,7 +351,7 @@
                         data.multiple = item.multiple;
                         data.lang = item.lang;
                         data.options = item.options;
-                        this.activeautocompleteOptionGroup.find('[data-els="content"]').html(jQuery(ax5.mustache.render(AUTOCOMPLETE.tmpl.options.call(this, item.columnKeys), data)));
+                        this.activeautocompleteOptionGroup.find('[data-els="content"]').html(jQuery(AUTOCOMPLETE.tmpl.get.call(this, "options", data, item.columnKeys)));
 
                         focusWord.call(this, this.activeautocompleteQueueIndex, searchWord);
 
@@ -972,7 +972,7 @@
                                 return (item.size) ? "input-" + item.size : "";
                             })();
 
-                            item.$display = jQuery(ax5.mustache.render(AUTOCOMPLETE.tmpl["autocompleteDisplay"].call(this, queIdx), data));
+                            item.$display = jQuery(AUTOCOMPLETE.tmpl.get.call(this, "autocompleteDisplay", data, item.columnKeys));
                             item.$displayTable = item.$display.find('[data-els="display-table"]');
                             item.$displayLabel = item.$display.find('[data-ax5autocomplete-display="label"]');
 
@@ -988,7 +988,7 @@
                                 item.$select.attr("multiple", "multiple");
                             }
                             else {
-                                item.$select = jQuery(ax5.mustache.render(AUTOCOMPLETE.tmpl["formSelect"].call(this, queIdx), data));
+                                item.$select = jQuery(AUTOCOMPLETE.tmpl.get.call(this, "formSelect", data, item.columnKeys));
                                 item.$target.append(item.$select);
                             }
 
@@ -1133,8 +1133,8 @@
                     data.waitOptions = true;
                     data.options = [];
 
-                    this.activeautocompleteOptionGroup = jQuery(ax5.mustache.render(AUTOCOMPLETE.tmpl["optionGroup"].call(this, item.columnKeys), data));
-                    this.activeautocompleteOptionGroup.find('[data-els="content"]').html(jQuery(ax5.mustache.render(AUTOCOMPLETE.tmpl["options"].call(this, item.columnKeys), data)));
+                    this.activeautocompleteOptionGroup = jQuery(AUTOCOMPLETE.tmpl.get.call(this, "optionGroup", data, item.columnKeys));
+                    this.activeautocompleteOptionGroup.find('[data-els="content"]').html(jQuery(AUTOCOMPLETE.tmpl.get.call(this, "options", data, item.columnKeys)));
                     this.activeautocompleteQueueIndex = queIdx;
 
                     alignAutocompleteOptionGroup.call(this, "append"); // alignAutocompleteOptionGroup 에서 body append
