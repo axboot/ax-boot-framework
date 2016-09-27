@@ -78,15 +78,12 @@
                 <h2><i class="cqc-checkmark"></i> ax커스텀 태그</h2>
             </div>
         </div>
-        <ax:markdown>
-            ```
-            // AXBOOT JSP페이지는 JSTL2.0 스펙을 이용한 커스텀태그를 지원합니다.
-            // 커스텀 태그는 WEB-INF > tags 아래에 *.tag 파일들로 원하는 태그를 직접 만들어 사용할 수 있습니다.
-            // AXBOOT에서는 웹 애플리케이션 개발에 필요한 커스텀 태그를 미리 만들어 제공하고 있습니다. AXBOOT의 커스텀 태그를 이용하여 개발에 날개를 달아보세요.
-            // 다음은 몇가지 커스텀 태그 샘플을 소개 하겠습니다.
-            ```
-        </ax:markdown>
-
+        <div class="alert alert-info">
+            AXBOOT JSP페이지는 JSTL2.0 스펙을 이용한 커스텀태그를 지원합니다.<br/>
+            커스텀 태그는 WEB-INF > tags 아래에 *.tag 파일들로 원하는 태그를 직접 만들어 사용할 수 있습니다.<br/>
+            AXBOOT에서는 웹 애플리케이션 개발에 필요한 커스텀 태그를 미리 만들어 제공하고 있습니다. AXBOOT의 커스텀 태그를 이용하여 개발에 날개를 달아보세요.
+            다음은 몇가지 커스텀 태그 샘플을 소개 하겠습니다.
+        </div>
 
         <div class="ax-button-group">
             <div class="left">
@@ -94,13 +91,65 @@
             </div>
         </div>
 
-
+<pre>
+&lt;ax:form name="formView01">
+    &lt;input type="hidden" name="hiddenValue" value=""/>
+    &lt;ax:tbl clazz="ax-form-tbl" minWidth="500px">
+        &lt;ax:tr>
+            &lt;ax:td label="이름" width="300px">
+                &lt;input type="text" name="userNm" data-ax-path="userNm" maxlength="15" title="이름" class="av-required form-control W120" value=""/>
+            &lt;/ax:td>
+            &lt;ax:td label="아이디" width="220px">
+                &lt;input type="text" name="userCd" data-ax-path="userCd" maxlength="100" title="아이디" class="av-required form-control W150" value=""/>
+            &lt;/ax:td>
+        &lt;/ax:tr>
+        &lt;ax:tr>
+            &lt;ax:td label="내용" width="100%">
+                &lt;input type="password" name="userPs" data-ax-path="userPs" maxlength="128" class="form-control W120" value="" readonly="readonly"/>
+            &lt;/ax:td>
+        &lt;/ax:tr>
+    &lt;/ax:tbl>
+&lt;/ax:form>
+</pre>
+        <div class="alert alert-info">
+            태그의 랜더링 되는 내용은 WEB-INF아래의 파일을 직접열어서 구조를 파악하고 퍼블리싱하는게 중요합니다. 구조를 이해하고 확장해 나가면 유연하면서도 빠른 퍼블리싱이 가능합니다.<br/>
+            ax:table은 반응형 테이블 퍼블리싱을 지원합니다. ax:td의 width는 라벨을 포함한 너비값이 되고 라벨의 너비를 조정해야 할 때엔 labelWidth 속성을 부여해야 합니다.
+            라벨의 너비는 ax:table이 사용하는 CSS클래스에 정의되어 있으며 [data-ax-tbl] 으로 찾을 수 있습니다.
+        </div>
+        <div class="alert alert-info">
+            반드시 ax:form은 ax:table의 부모일 필요가 없습니다 각각 독립적으로 작용하고 필요에 따라 표준 form 태그를 사용할 수 있습니다.
+        </div>
 
         <div class="ax-button-group">
             <div class="left">
                 <h2><i class="cqc-checkmark"></i> ax:split-layout, ax:split-panel</h2>
             </div>
         </div>
+
+
+<pre>
+&lt;ax:split-layout name="ax1" oriental="vertical">
+    &lt;ax:split-panel width="300" style="padding-right: 10px;">
+
+    &lt;/ax:split-panel>
+    &lt;ax:splitter>&lt;/ax:splitter>
+    &lt;ax:split-panel width="*" style="padding-left: 10px;" id="split-panel-form">
+
+    &lt;/ax:split-panel>
+&lt;/ax:split-layout>
+</pre>
+
+<pre>
+&lt;ax:split-layout name="ax1" oriental="horizontal">
+    &lt;ax:split-panel height="300" style="padding-bottom: 10px;">
+
+    &lt;/ax:split-panel>
+    &lt;ax:splitter>&lt;/ax:splitter>
+    &lt;ax:split-panel height="*" style="padding-top: 10px;" id="split-panel-form">
+
+    &lt;/ax:split-panel>
+&lt;/ax:split-layout>
+</pre>
 
     </jsp:body>
 </ax:layout>
