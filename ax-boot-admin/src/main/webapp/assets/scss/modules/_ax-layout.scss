@@ -42,6 +42,12 @@
         text-align: right;
     }
 
+    &.ax-button-group-bottom{
+        .left, .right {
+            padding: 7px 5px 3px 5px;
+        }
+    }
+
     &.sm{
         min-height: 30px;
         .left, .right {

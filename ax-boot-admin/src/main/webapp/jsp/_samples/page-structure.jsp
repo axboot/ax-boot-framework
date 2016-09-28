@@ -12,7 +12,15 @@
     <script src="/assets/plugins/prettify/lang-css.js"></script>
     </jsp:attribute>
     <jsp:attribute name="css">
-    <link rel="stylesheet" type="text/css" href="/assets/plugins/prettify/skins/github.css"/>
+        <link rel="stylesheet" type="text/css" href="/assets/plugins/prettify/skins/github.css"/>
+        <style>
+            .sample-img-preview{
+                padding: 10px;border: 1px solid #888; background: #fff; border-radius: 5px;text-align: center;margin-bottom: 10px;position: relative;
+            }
+            .sample-img-preview .badge{
+                position: absolute;left: 10px;top: 10px;
+            }
+        </style>
     </jsp:attribute>
     <jsp:attribute name="script">
         <script type="text/javascript" src="<c:url value='js/page-structure.js' />"></script>
@@ -27,7 +35,7 @@
                 <h2><i class="cqc-checkmark"></i> 기본 페이지 구성 </h2>
             </div>
         </div>
-<pre>
+        <pre>
 &lt;%@ page contentType="text/html; charset=UTF-8" %>
 &lt;%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 &lt;%@ taglib prefix="ax" tagdir="/WEB-INF/tags" %>
@@ -91,7 +99,7 @@
             </div>
         </div>
 
-<pre>
+        <pre>
 &lt;ax:form name="formView01">
     &lt;input type="hidden" name="hiddenValue" value=""/>
     &lt;ax:tbl clazz="ax-form-tbl" minWidth="500px">
@@ -111,12 +119,19 @@
     &lt;/ax:tbl>
 &lt;/ax:form>
 </pre>
+
+        <div class="sample-img-preview">
+            <div class="badge">
+                ax:table 출력결과 예
+            </div>
+            <img src="assets/ax-table.png" width="600"/>
+        </div>
         <div class="alert alert-info">
             태그의 랜더링 되는 내용은 WEB-INF아래의 파일을 직접열어서 구조를 파악하고 퍼블리싱하는게 중요합니다. 구조를 이해하고 확장해 나가면 유연하면서도 빠른 퍼블리싱이 가능합니다.<br/>
             ax:table은 반응형 테이블 퍼블리싱을 지원합니다. ax:td의 width는 라벨을 포함한 너비값이 되고 라벨의 너비를 조정해야 할 때엔 labelWidth 속성을 부여해야 합니다.
             라벨의 너비는 ax:table이 사용하는 CSS클래스에 정의되어 있으며 [data-ax-tbl] 으로 찾을 수 있습니다.
         </div>
-        <div class="alert alert-info">
+        <div class="alert alert-warning">
             반드시 ax:form은 ax:table의 부모일 필요가 없습니다 각각 독립적으로 작용하고 필요에 따라 표준 form 태그를 사용할 수 있습니다.
         </div>
 
@@ -127,29 +142,33 @@
         </div>
 
 
-<pre>
+        <pre>
 &lt;ax:split-layout name="ax1" oriental="vertical">
     &lt;ax:split-panel width="300" style="padding-right: 10px;">
-
+        너비가 300인 왼쪽 패널
     &lt;/ax:split-panel>
+    &lt;!-- splitter -->
     &lt;ax:splitter>&lt;/ax:splitter>
-    &lt;ax:split-panel width="*" style="padding-left: 10px;" id="split-panel-form">
-
+    &lt;ax:split-panel width="*" style="padding-left: 10px;" id="split-panel-form" scroll="true">
+        너비가 나머지인 오른쪽 패널 (건텐츠의 높이가 넘칠 경우 스크롤)
     &lt;/ax:split-panel>
 &lt;/ax:split-layout>
 </pre>
 
-<pre>
+        <pre>
 &lt;ax:split-layout name="ax1" oriental="horizontal">
     &lt;ax:split-panel height="300" style="padding-bottom: 10px;">
-
+        높이가 300인 상단 패널
     &lt;/ax:split-panel>
+    &lt;!-- splitter -->
     &lt;ax:splitter>&lt;/ax:splitter>
-    &lt;ax:split-panel height="*" style="padding-top: 10px;" id="split-panel-form">
-
+    &lt;ax:split-panel height="*" style="padding-top: 10px;" id="split-panel-form" scroll="true">
+        높이가 나머지인 하단 패널 (건텐츠의 높이가 넘칠 경우 스크롤)
     &lt;/ax:split-panel>
 &lt;/ax:split-layout>
 </pre>
-
+        <div class="alert alert-info">
+            리사이즈가 가능한 레이아웃 시스템을 사용할 수 있습니다. 좌우/상하 레이아웃이 구현된 샘플은 [좌우레이아웃][상하레이아웃] 을 확인하세요.
+        </div>
     </jsp:body>
 </ax:layout>
