@@ -282,9 +282,21 @@ fnObj.formView01 = axboot.viewExtend(axboot.formView, {
     prettify: function () {
         this.target.find(".for-prettify").each(function () {
             var $this = $(this);
+            var path = $this.attr("data-ax-path");
+
             var po = [];
-            po.push('<pre class="prettyprint linenums" style="margin:0;">');
-            po.push($this.html());
+
+            if(path == "parameterMap" || path == "headerMap" || path == "userInfo") {
+                po.push('<pre class="prettyprint linenums lang-js" style="margin:0;">');
+                try {
+                    po.push(JSON.stringify(JSON.parse($this.text()), null, '    '));
+                }catch(e){
+
+                }
+            }else{
+                po.push('<pre class="prettyprint linenums" style="margin:0;">');
+                po.push($this.html());
+            }
             po.push('</pre>');
             $this.html(po.join(''));
         });
