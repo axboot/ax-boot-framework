@@ -29,10 +29,18 @@ var ACTIONS = axboot.actionExtend(fnObj, {
             case ACTIONS.ITEM_CLICK:
                 _this.formView01.setData(data);
 
+                axboot.ajax({
+                    type: "GET",
+                    url: "/api/v1/samples/child",
+                    data: "parentKey=" + data.key,
+                    callback: function (res) {
+                        _this.gridView02.setData(res);
+                    }
+                });
+
                 break;
             case ACTIONS.PAGE_SAVE:
                 if (this.formView01.validate()) {
-
 
                     var parentData = this.formView01.getData();
                     var childList = [].concat(this.gridView02.getData("modified"));
