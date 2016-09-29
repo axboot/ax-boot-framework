@@ -42,43 +42,43 @@ public class Program extends BaseJpaModel<String> {
 
     @Column(name = "AUTH_CHECK", length = 1)
     @ColumnPosition(5)
-    private String authCheck;
+    private String authCheck = "Y";
 
     @Column(name = "SCH_AH", length = 1)
     @ColumnPosition(6)
-    private String schAh;
+    private String schAh = "N";
 
     @Column(name = "SAV_AH", length = 1)
     @ColumnPosition(7)
-    private String savAh;
+    private String savAh = "N";
 
     @Column(name = "EXL_AH", length = 1)
     @ColumnPosition(8)
-    private String exlAh;
+    private String exlAh = "N";
 
     @Column(name = "DEL_AH", length = 1)
     @ColumnPosition(9)
-    private String delAh;
+    private String delAh = "N";
 
     @Column(name = "FN1_AH", length = 1)
     @ColumnPosition(10)
-    private String fn1Ah;
+    private String fn1Ah = "N";
 
     @Column(name = "FN2_AH", length = 1)
     @ColumnPosition(11)
-    private String fn2Ah;
+    private String fn2Ah = "N";
 
     @Column(name = "FN3_AH", length = 1)
     @ColumnPosition(12)
-    private String fn3Ah;
+    private String fn3Ah = "N";
 
     @Column(name = "FN4_AH", length = 1)
     @ColumnPosition(13)
-    private String fn4Ah;
+    private String fn4Ah = "N";
 
     @Column(name = "FN5_AH", length = 1)
     @ColumnPosition(14)
-    private String fn5Ah;
+    private String fn5Ah = "N";
 
     @Column(name = "REMARK", length = 200)
     @ColumnPosition(15)
