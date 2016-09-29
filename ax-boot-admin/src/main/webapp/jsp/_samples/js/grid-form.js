@@ -77,6 +77,7 @@ var ACTIONS = axboot.actionExtend(fnObj, {
                 }, function () {
                     if (this.key == "ok") {
                         _this.formView01.clear();
+                        _this.gridView02.clear();
                     }
                 });
 
