@@ -250,6 +250,7 @@ fnObj.formView01 = axboot.viewExtend(axboot.formView, {
         this.model.setModel(this.getDefaultData(), this.target);
         this.modelFormatter = new axboot.modelFormatter(this.model); // 모델 포메터 시작
         this.initEvent();
+        this.prettify();
     },
     initEvent: function () {
 
@@ -264,6 +265,7 @@ fnObj.formView01 = axboot.viewExtend(axboot.formView, {
 
         this.model.setModel(data);
         this.modelFormatter.formatting(); // 입력된 값을 포메팅 된 값으로 변경
+        this.prettify();
     },
     validate: function () {
         var rs = this.model.validate();
@@ -276,5 +278,16 @@ fnObj.formView01 = axboot.viewExtend(axboot.formView, {
     },
     clear: function () {
         this.model.setModel(this.getDefaultData());
+    },
+    prettify: function () {
+        this.target.find(".for-prettify").each(function () {
+            var $this = $(this);
+            var po = [];
+            po.push('<pre class="prettyprint linenums" style="margin:0;">');
+            po.push($this.html());
+            po.push('</pre>');
+            $this.html(po.join(''));
+        });
+        if (window["prettyPrint"]) window["prettyPrint"]();
     }
 });

@@ -8,6 +8,13 @@
 <ax:set key="page_auto_height" value="true"/>
 
 <ax:layout name="base">
+    <jsp:attribute name="js">
+        <script src="/assets/plugins/prettify/prettify.js"></script>
+        <script src="/assets/plugins/prettify/lang-css.js"></script>
+    </jsp:attribute>
+    <jsp:attribute name="css">
+        <link rel="stylesheet" type="text/css" href="/assets/plugins/prettify/skins/github.css"/>
+    </jsp:attribute>
     <jsp:attribute name="script">
         <script type="text/javascript">
             var __fnObj = {
@@ -294,7 +301,7 @@
                 <div data-ax5grid="grid-view-01" data-fit-height-content="grid-view-01" style="height: 300px;"></div>
             </ax:split-panel>
             <ax:splitter></ax:splitter>
-            <ax:split-panel height="*" style="padding-top: 10px;" scroll="scroll">
+            <ax:split-panel height="*" style="padding-top: 10px;padding-right: 5px;" scroll="scroll">
 
                 <ax:form name="formView01">
                     <div class="ax-button-group">
@@ -303,7 +310,7 @@
                         </div>
                     </div>
 
-                    <div class="form-control" data-ax-path="trace" style="height:auto;"></div>
+                    <div class="form-control for-prettify" style="height:auto;padding: 0;" data-ax-path="trace"></div>
 
                     <div class="ax-button-group">
                         <div class="left">
@@ -311,8 +318,7 @@
                         </div>
                     </div>
 
-                    <textarea class="form-control" data-ax-path="message"
-                              style="width:100%;box-sizing: border-box;height:50px;font-size: 12px;line-height: 1.6;font-family:'Monaco', 'Consolas';padding:10px;"></textarea>
+                    <pre class="form-control for-prettify" style="height:auto;padding: 0;" data-ax-path="message"></pre>
 
                     <div class="ax-button-group">
                         <div class="left">
@@ -320,8 +326,7 @@
                         </div>
                     </div>
 
-                    <textarea class="form-control" data-ax-path="parameterMap"
-                              style="width:100%;box-sizing: border-box;height:150px;font-size: 12px;line-height: 1.3;font-family:'Monaco', 'Consolas';padding:10px;"></textarea>
+                    <pre class="form-control for-prettify" style="height:auto;padding: 0;" data-ax-path="parameterMap"></pre>
 
                     <div class="ax-button-group">
                         <div class="left">
@@ -332,8 +337,7 @@
                         </div>
                     </div>
 
-                    <textarea class="form-control" data-ax-path="headerMap"
-                              style="width:100%;box-sizing: border-box;height:150px;font-size: 12px;line-height: 1.3;font-family:'Monaco', 'Consolas';padding:10px;"></textarea>
+                    <pre class="form-control for-prettify" style="height:auto;padding: 0;" data-ax-path="headerMap"></pre>
 
                     <div class="ax-button-group">
                         <div class="left">
@@ -341,8 +345,8 @@
                         </div>
                     </div>
 
-                    <textarea class="form-control" data-ax-path="userInfo"
-                              style="width:100%;box-sizing: border-box;height:150px;font-size: 12px;line-height: 1.3;font-family:'Monaco', 'Consolas';padding:10px;"></textarea>
+                    <pre class="form-control for-prettify" style="height:auto;padding: 0;" data-ax-path="userInfo"></pre>
+
                 </ax:form>
 
 

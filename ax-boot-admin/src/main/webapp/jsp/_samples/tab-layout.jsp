@@ -8,8 +8,8 @@
 
 <ax:layout name="base">
     <jsp:attribute name="js">
-    <script src="/assets/plugins/prettify/prettify.js"></script>
-    <script src="/assets/plugins/prettify/lang-css.js"></script>
+        <script src="/assets/plugins/prettify/prettify.js"></script>
+        <script src="/assets/plugins/prettify/lang-css.js"></script>
     </jsp:attribute>
     <jsp:attribute name="css">
         <link rel="stylesheet" type="text/css" href="/assets/plugins/prettify/skins/github.css"/>
