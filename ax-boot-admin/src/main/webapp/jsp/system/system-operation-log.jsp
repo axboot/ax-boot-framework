@@ -278,7 +278,7 @@
         </div>
 
 
-        <ax:split-layout name="ax1" oriental="vertical">
+        <ax:split-layout name="ax1" oriental="horizontal">
             <ax:split-panel height="300" style="padding-bottom: 10px;">
                 <div class="ax-button-group" data-fit-height-aside="grid-view-01">
                     <div class="left">
