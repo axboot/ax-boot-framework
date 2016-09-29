@@ -379,7 +379,7 @@ fnObj.formView01 = axboot.viewExtend(axboot.formView, {
 
         this.editor = CKEDITOR.replace('editor1', {
             language: 'korean',
-            extraPlugins: 'uploadimage,filemanager',
+            extraPlugins: 'uploadimage,filemanager,notification',
             filebrowserBrowseUrl: CONTEXT_PATH + '/ckeditor/fileBrowser?targetType=CKEDITOR&targetId=' + menuId,
             filebrowserWindowWidth: '960',
             filebrowserWindowHeight: '600',
@@ -400,6 +400,17 @@ fnObj.formView01 = axboot.viewExtend(axboot.formView, {
                 { name: 'styles', groups: [ 'styles' ] },
                 { name: 'colors', groups: [ 'colors' ] }
             ]
+        });
+
+        this.editor.once('instanceReady', function () {
+        });
+
+        this.editor.on('notificationShow', function (evt) {
+            evt.cancel();
+        });
+
+        this.editor.on('notificationUpdate', function (evt) {
+            evt.cancel();
         });
 
         this.resize();

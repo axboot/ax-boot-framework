@@ -1,5 +1,6 @@
 package com.chequer.axboot.core.domain.sample.parent;
 
+import com.chequer.axboot.core.domain.CrudModel;
 import com.chequer.axboot.core.utils.ModelMapperUtils;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -9,7 +10,7 @@ import java.util.List;
 
 @Data
 @NoArgsConstructor
-public class ParentSampleVO {
+public class ParentSampleVO extends CrudModel {
 
     private String key;
 
