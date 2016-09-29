@@ -16,6 +16,7 @@ var ACTIONS = axboot.actionExtend(fnObj, {
                 }, function (res) {
                     _this.gridView01.setData(res);
                 }, {
+                    // axboot.ajax 함수에 2번째 인자는 필수가 아닙니다. ajax의 옵션을 전달하고자 할때 사용합니다.
                     onError: function (err) {
                         console.log(err);
                     }
