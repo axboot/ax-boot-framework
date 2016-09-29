@@ -16,20 +16,21 @@ var ACTIONS = axboot.actionExtend(fnObj, {
                 axboot.ajax({
                     type: "GET",
                     url: "/api/v2/menu",
-                    data: this.searchView.getData()
-                }, function (res) {
-                    _this.treeView01.setData(searchData, res.list);
-
-                }, {
-                    onError: function (err) {
-                        console.log(err);
+                    data: this.searchView.getData(),
+                    callback: function (res) {
+                        _this.treeView01.setData(searchData, res.list);
+                    },
+                    options: {
+                        onError: function (err) {
+                            console.log(err);
+                        }
                     }
                 });
                 break;
             case ACTIONS.TREEITEM_CLICK:
                 if (typeof data.menuId === "undefined") {
                     this.formView01.clear();
-                    if(confirm("신규 생성된 메뉴는 저장 후 편집 할수 있습니다. 지금 저장 하시겠습니까?")){
+                    if (confirm("신규 생성된 메뉴는 저장 후 편집 할수 있습니다. 지금 저장 하시겠습니까?")) {
                         ACTIONS.dispatch(ACTIONS.PAGE_SAVE);
                     }
                     return;
@@ -92,16 +93,16 @@ var ACTIONS = axboot.actionExtend(fnObj, {
                 axboot.ajax({
                     type: "PUT",
                     url: "/api/v2/menu",
-                    data: JSON.stringify(obj)
-                }, function (res) {
+                    data: JSON.stringify(obj),
+                    callback: function (res) {
+                        _this.treeView01.clearDeletedList();
+                        axToast.push("메뉴 카테고리가 저장 되었습니다");
 
-                    _this.treeView01.clearDeletedList();
-                    axToast.push("메뉴 카테고리가 저장 되었습니다");
-
-                    if (data && data.callback) {
-                        data.callback();
-                    } else {
-                        ACTIONS.dispatch(ACTIONS.PAGE_SEARCH);
+                        if (data && data.callback) {
+                            data.callback();
+                        } else {
+                            ACTIONS.dispatch(ACTIONS.PAGE_SEARCH);
+                        }
                     }
                 });
 
@@ -114,10 +115,11 @@ var ACTIONS = axboot.actionExtend(fnObj, {
                         axboot.ajax({
                             type: "PUT",
                             url: "/api/v2/menu/auth",
-                            data: JSON.stringify(this.gridView01.getData())
-                        }, function (res) {
-                            axToast.push("메뉴 권한그룹 정보가 저장 되었습니다");
-                            ACTIONS.dispatch(ACTIONS.SEARCH_AUTH, {menuId: _this.formView01.getData().menuId});
+                            data: JSON.stringify(this.gridView01.getData()),
+                            callback: function (res) {
+                                axToast.push("메뉴 권한그룹 정보가 저장 되었습니다");
+                                ACTIONS.dispatch(ACTIONS.SEARCH_AUTH, {menuId: _this.formView01.getData().menuId});
+                            }
                         });
                     } else {
 
@@ -140,12 +142,10 @@ var ACTIONS = axboot.actionExtend(fnObj, {
                 break;
             case ACTIONS.SEARCH_AUTH:
                 axboot.ajax({
-                        type: "GET",
-                        url: "/api/v2/menu/auth",
-                        data: data
-                    },
-                    function (res) {
-
+                    type: "GET",
+                    url: "/api/v2/menu/auth",
+                    data: data,
+                    callback: function (res) {
                         var list = [];
                         if (res.program) {
                             _this.formView01.authGroup.forEach(function (g) {
@@ -199,12 +199,13 @@ var ACTIONS = axboot.actionExtend(fnObj, {
                             });
                         }
                         _this.gridView01.setData(list);
-
-                    }, {
+                    },
+                    options: {
                         onError: function (err) {
                             console.log(err);
                         }
-                    });
+                    }
+                });
                 break;
             default:
                 return false;

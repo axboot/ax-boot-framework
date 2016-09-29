@@ -12,12 +12,14 @@ var ACTIONS = axboot.actionExtend(fnObj, {
                 axboot.ajax({
                     type: "GET",
                     url: "/api/v1/commonCodes",
-                    data: this.searchView.getData()
-                }, function (res) {
-                    _this.gridView01.setData(res);
-                }, {
-                    onError: function (err) {
-                        console.log(err);
+                    data: this.searchView.getData(),
+                    callback: function (res) {
+                        _this.gridView01.setData(res);
+                    },
+                    options: {
+                        onError: function (err) {
+                            console.log(err);
+                        }
                     }
                 });
                 break;
@@ -38,10 +40,11 @@ var ACTIONS = axboot.actionExtend(fnObj, {
                 axboot.ajax({
                     type: "PUT",
                     url: "/api/v1/commonCodes",
-                    data: JSON.stringify(saveList)
-                }, function (res) {
-                    ACTIONS.dispatch(ACTIONS.PAGE_SEARCH);
-                    axToast.push("저장 되었습니다");
+                    data: JSON.stringify(saveList),
+                    callback: function (res) {
+                        ACTIONS.dispatch(ACTIONS.PAGE_SEARCH);
+                        axToast.push("저장 되었습니다");
+                    }
                 });
                 break;
 

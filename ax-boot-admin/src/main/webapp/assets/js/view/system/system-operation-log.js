@@ -12,12 +12,14 @@ var ACTIONS = axboot.actionExtend(fnObj, {
                 axboot.ajax({
                     type: "GET",
                     url: "/api/v1/errorLogs",
-                    data: this.searchView.getData()
-                }, function (res) {
-                    _this.gridView01.setData(res);
-                }, {
-                    onError: function (err) {
-                        console.log(err);
+                    data: this.searchView.getData(),
+                    callback: function (res) {
+                        _this.gridView01.setData(res);
+                    },
+                    options: {
+                        onError: function (err) {
+                            console.log(err);
+                        }
                     }
                 });
                 break;
@@ -39,13 +41,15 @@ var ACTIONS = axboot.actionExtend(fnObj, {
                         axboot.ajax({
                             type: "DELETE",
                             url: "/api/v1/errorLogs/" + pars.id,
-                            data: ""
-                        }, function (res) {
-                            delQueue();
-                        }, {
-                            onError: function (err) {
-                                alert("삭제작업에 실패하였습니다.");
-                                ACTIONS.dispatch(ACTIONS.PAGE_SEARCH);
+                            data: "",
+                            callback: function (res) {
+                                delQueue();
+                            },
+                            options: {
+                                onError: function (err) {
+                                    alert("삭제작업에 실패하였습니다.");
+                                    ACTIONS.dispatch(ACTIONS.PAGE_SEARCH);
+                                }
                             }
                         });
                     } else {
@@ -61,14 +65,14 @@ var ACTIONS = axboot.actionExtend(fnObj, {
 
                 if (!confirm("정말 삭제하시겠습니까?")) return;
                 axboot.ajax({
-                        type: "DELETE",
-                        url: "/api/v1/errorLogs/events/all",
-                        data: ""
-                    },
-                    function (res) {
+                    type: "DELETE",
+                    url: "/api/v1/errorLogs/events/all",
+                    data: "",
+                    callback: function (res) {
                         axToast.push("삭제 처리 되었습니다.");
                         ACTIONS.dispatch(ACTIONS.PAGE_SEARCH);
-                    });
+                    }
+                });
 
                 break;
             case ACTIONS.ITEM_DEL:
@@ -81,10 +85,11 @@ var ACTIONS = axboot.actionExtend(fnObj, {
                 axboot.ajax({
                     type: "PUT",
                     url: "/api/v1/programs",
-                    data: JSON.stringify(saveList)
-                }, function (res) {
-                    ACTIONS.dispatch(ACTIONS.PAGE_SEARCH);
-                    axToast.push("저장 되었습니다");
+                    data: JSON.stringify(saveList),
+                    callback: function (res) {
+                        ACTIONS.dispatch(ACTIONS.PAGE_SEARCH);
+                        axToast.push("저장 되었습니다");
+                    }
                 });
                 break;
             case ACTIONS.FORM_CLEAR:
@@ -286,14 +291,14 @@ fnObj.formView01 = axboot.viewExtend(axboot.formView, {
 
             var po = [];
 
-            if(path == "parameterMap" || path == "headerMap" || path == "userInfo") {
+            if (path == "parameterMap" || path == "headerMap" || path == "userInfo") {
                 po.push('<pre class="prettyprint linenums lang-js" style="margin:0;">');
                 try {
                     po.push(JSON.stringify(JSON.parse($this.text()), null, '    '));
-                }catch(e){
+                } catch (e) {
 
                 }
-            }else{
+            } else {
                 po.push('<pre class="prettyprint linenums" style="margin:0;">');
                 po.push($this.html());
             }

@@ -42,7 +42,7 @@
     * [.pageStart()](#axboot.pageStart)
     * [.pageResize()](#axboot.pageResize)
     * [.layoutResize()](#axboot.layoutResize)
-    * [.ajax(http, callBack, [options])](#axboot.ajax)
+    * [.ajax(http)](#axboot.ajax)
     * [.gridBuilder(_config)](#axboot.gridBuilder)
     * [.extend(_obj1, _obj2)](#axboot.extend)
     * [.actionExtend([_actionThis], _action)](#axboot.actionExtend)
@@ -65,7 +65,7 @@ axboot.def.menuHeight = 20;
 <a name="axboot.call"></a>
 
 ### axboot.call : <code>Object</code>
-여러개의 AJAX콜을 순차적으로 해야 하는 경우 callBack 지옥에 빠지기 쉽다. `axboot.call & done`은 이런 상황에서 코드가 보기 어려워지는 문제를 해결 하기 위해 개발된 오브젝트 입니다
+여러개의 AJAX콜을 순차적으로 해야 하는 경우 callback 지옥에 빠지기 쉽다. `axboot.call & done`은 이런 상황에서 코드가 보기 어려워지는 문제를 해결 하기 위해 개발된 오브젝트 입니다
 
 **Kind**: static property of <code>[axboot](#axboot)</code>  
 **Example**  
@@ -73,7 +73,7 @@ axboot.def.menuHeight = 20;
   axboot
       .call({
           type: "GET", url: "/api/v1/programs", data: "",
-          callBack: function (res) {
+          callback: function (res) {
               var programList = [];
               res.list.forEach(function (n) {
                   programList.push({
@@ -90,7 +90,7 @@ axboot.def.menuHeight = 20;
       })
       .call({
           type: "GET", url: "/api/v1/commonCodes", data: {groupCd: "AUTH_GROUP", useYn: "Y"},
-          callBack: function (res) {
+          callback: function (res) {
               var authGroup = [];
               res.list.forEach(function (n) {
                   authGroup.push({
@@ -162,17 +162,20 @@ js가 실행되는 타임. 페이지 레디 전에 미리 선언 하는 경우
 **Kind**: static method of <code>[axboot](#axboot)</code>  
 <a name="axboot.ajax"></a>
 
-### axboot.ajax(http, callBack, [options])
+### axboot.ajax(http)
 **Kind**: static method of <code>[axboot](#axboot)</code>  
 
 | Param | Type |
 | --- | --- |
 | http | <code>Object</code> | 
-| callBack | <code>function</code> | 
-| [options] | <code>Object</code> | 
-| [options.onError] | <code>Fundtion</code> | 
-| [options.contentType] | <code>String</code> | 
-| [options.apiType] | <code>String</code> | 
+| http.type | <code>String</code> | 
+| http.url | <code>String</code> | 
+| http.data | <code>Object</code> &#124; <code>String</code> | 
+| http.callback | <code>function</code> | 
+| [http.options] | <code>Object</code> | 
+| [http.options.onError] | <code>function</code> | 
+| [http.options.contentType] | <code>String</code> | 
+| [http.options.apiType] | <code>String</code> | 
 
 **Example**  
 ```js
@@ -180,21 +183,24 @@ js가 실행되는 타임. 페이지 레디 전에 미리 선언 하는 경우
  axboot.ajax({
      type: "GET",
      url: "/api/v1/users",
-     data : {}
- }, function(response){
-     // do something
+     data : {},
+     callback: function(response){
+         // do something
+     }
  });
 
  // onError 지정
  axboot.ajax({
      type: "GET",
      url: "/api/v1/users",
-     data : {}
- }, function(response){
-     // do something
- }, {
-     onError: function(err){
-         // console.log(err);
+     data : {},
+     callback: function(response){
+         // do something
+     },
+     options: {
+         onError: function(err){
+             // console.log(err);
+         }
      }
  });
 ```

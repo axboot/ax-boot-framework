@@ -12,12 +12,14 @@ var ACTIONS = axboot.actionExtend(fnObj, {
                 axboot.ajax({
                     type: "GET",
                     url: "/api/v1/companies",
-                    data: this.searchView.getData()
-                }, function (res) {
-                    _this.gridView01.setData(res);
-                }, {
-                    onError: function (err) {
-                        console.log(err);
+                    data: this.searchView.getData(),
+                    callback: function (res) {
+                        _this.gridView01.setData(res);
+                    },
+                    options: {
+                        onError: function (err) {
+                            console.log(err);
+                        }
                     }
                 });
                 break;
@@ -29,11 +31,12 @@ var ACTIONS = axboot.actionExtend(fnObj, {
                     axboot.ajax({
                         type: "PUT",
                         url: "/api/v1/companies",
-                        data: JSON.stringify(this.formView01.getData())
-                    }, function (res) {
-                        ACTIONS.dispatch(ACTIONS.PAGE_SEARCH);
-                        ACTIONS.dispatch(ACTIONS.FORM_CLEAR);
-                        axToast.push("저장 되었습니다.")
+                        data: JSON.stringify(this.formView01.getData()),
+                        callback: function (res) {
+                            ACTIONS.dispatch(ACTIONS.PAGE_SEARCH);
+                            ACTIONS.dispatch(ACTIONS.FORM_CLEAR);
+                            axToast.push("저장 되었습니다.")
+                        }
                     });
                 }
                 break;
@@ -48,11 +51,12 @@ var ACTIONS = axboot.actionExtend(fnObj, {
                         axboot.ajax({
                             type: "PUT",
                             url: "/api/v1/companies",
-                            data: JSON.stringify($.extend({}, _this.formView01.getData(), {delYn: "Y"}))
-                        }, function (res) {
-                            ACTIONS.dispatch(ACTIONS.PAGE_SEARCH);
-                            ACTIONS.dispatch(ACTIONS.FORM_CLEAR);
-                            axToast.push("삭제 되었습니다.");
+                            data: JSON.stringify($.extend({}, _this.formView01.getData(), {delYn: "Y"})),
+                            callback: function (res) {
+                                ACTIONS.dispatch(ACTIONS.PAGE_SEARCH);
+                                ACTIONS.dispatch(ACTIONS.FORM_CLEAR);
+                                axToast.push("삭제 되었습니다.");
+                            }
                         });
 
                     }

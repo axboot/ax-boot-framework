@@ -19,9 +19,10 @@ var ACTIONS = axboot.actionExtend(fnObj, {
                 axboot.ajax({
                     type: "GET",
                     url: "/api/v1/files",
-                    data: this.searchView.getData()
-                }, function (res) {
-                    _this.gridView01.setData(res);
+                    data: this.searchView.getData(),
+                    callback: function (res) {
+                        _this.gridView01.setData(res);
+                    }
                 });
 
                 break;
@@ -49,9 +50,10 @@ var ACTIONS = axboot.actionExtend(fnObj, {
                 axboot.ajax({
                     type: "PUT",
                     url: "/api/v1/files",
-                    data: JSON.stringify(list)
-                }, function (res) {
-                    ACTIONS.dispatch(ACTIONS.PAGE_SEARCH);
+                    data: JSON.stringify(list),
+                    callback: function (res) {
+                        ACTIONS.dispatch(ACTIONS.PAGE_SEARCH);
+                    }
                 });
 
                 break;

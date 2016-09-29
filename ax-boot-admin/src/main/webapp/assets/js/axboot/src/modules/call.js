@@ -63,11 +63,13 @@ axboot.call = (function () {
                 axboot.ajax({
                     type: item.type,
                     url: item.url,
-                    data: item.data
-                }, (function (res) {
-                    item.callback.call(this, res);
-                    processor.call(this, callback);
-                }).bind(this), {nomask: false});
+                    data: item.data,
+                    callback: (function(res){
+                        item.callback.call(this, res);
+                        processor.call(this, callback);
+                    }).bind(this),
+                    options: {nomask: false}
+                });
             } else {
                 callback.call(this);
             }

@@ -12,13 +12,15 @@ var ACTIONS = axboot.actionExtend(fnObj, {
                 axboot.ajax({
                     type: "GET",
                     url: "/api/v1/samples/parent",
-                    data: this.searchView.getData()
-                }, function (res) {
-                    _this.gridView01.setData(res);
-                }, {
-                    // axboot.ajax 함수에 2번째 인자는 필수가 아닙니다. ajax의 옵션을 전달하고자 할때 사용합니다.
-                    onError: function (err) {
-                        console.log(err);
+                    data: this.searchView.getData(),
+                    callback: function (res) {
+                        _this.gridView01.setData(res);
+                    },
+                    options: {
+                        // axboot.ajax 함수에 2번째 인자는 필수가 아닙니다. ajax의 옵션을 전달하고자 할때 사용합니다.
+                        onError: function (err) {
+                            console.log(err);
+                        }
                     }
                 });
                 break;
@@ -38,10 +40,11 @@ var ACTIONS = axboot.actionExtend(fnObj, {
                 axboot.ajax({
                     type: "PUT",
                     url: "/api/v1/samples/parent",
-                    data: JSON.stringify(saveList)
-                }, function (res) {
-                    ACTIONS.dispatch(ACTIONS.PAGE_SEARCH);
-                    axToast.push("저장 되었습니다");
+                    data: JSON.stringify(saveList),
+                    callback: function (res) {
+                        ACTIONS.dispatch(ACTIONS.PAGE_SEARCH);
+                        axToast.push("저장 되었습니다");
+                    }
                 });
                 break;
             case ACTIONS.FORM_CLEAR:

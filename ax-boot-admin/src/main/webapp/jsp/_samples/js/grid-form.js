@@ -13,7 +13,7 @@ var ACTIONS = axboot.actionExtend(fnObj, {
             case ACTIONS.PAGE_SEARCH:
                 axboot.ajax({
                     type: "GET",
-                    url: "/api/v1/users",
+                    url: "/api/v1/samples/parent",
                     data: this.searchView.getData(),
                     callback: function (res) {
                         _this.gridView01.setData(res);
@@ -24,31 +24,43 @@ var ACTIONS = axboot.actionExtend(fnObj, {
                         }
                     }
                 });
+
                 break;
             case ACTIONS.ITEM_CLICK:
-
-                axboot.ajax({
-                    type: "GET",
-                    url: "/api/v1/users",
-                    data: {userCd: data.userCd},
-                    callback: function (res) {
-                        //ACTIONS.dispatch(ACTIONS.PAGE_SEARCH);
-                        _this.formView01.setData(res);
-                    }
-                });
+                _this.formView01.setData(data);
 
                 break;
             case ACTIONS.PAGE_SAVE:
                 if (this.formView01.validate()) {
-                    axboot.ajax({
-                        type: "PUT",
-                        url: "/api/v1/users",
-                        data: JSON.stringify([this.formView01.getData()]),
-                        callback: function (res) {
-                            ACTIONS.dispatch(ACTIONS.PAGE_SEARCH);
-                        }
+
+
+                    var parentData = this.formView01.getData();
+                    var childList = [].concat(this.gridView02.getData("modified"));
+                    childList = childList.concat(this.gridView02.getData("deleted"));
+
+                    // childList에 parentKey 삽입
+                    childList.forEach(function (n) {
+                        n.parentKey = parentData.key;
                     });
+
+                    axboot
+                        .call({
+                            type: "PUT", url: "/api/v1/samples/parent", data: JSON.stringify([parentData]),
+                            callback: function (res) {
+
+                            }
+                        })
+                        .call({
+                            type: "PUT", url: "/api/v1/samples/child", data: JSON.stringify(childList),
+                            callback: function (res) {
+
+                            }
+                        })
+                        .done(function () {
+                            ACTIONS.dispatch(ACTIONS.PAGE_SEARCH);
+                        });
                 }
+
                 break;
             case ACTIONS.FORM_CLEAR:
                 var _this = this;
@@ -59,29 +71,6 @@ var ACTIONS = axboot.actionExtend(fnObj, {
                         _this.formView01.clear();
                     }
                 });
-                break;
-            case ACTIONS.ROLE_GRID_DATA_INIT:
-
-                var list = [];
-                CODE.userRole.forEach(function (n) {
-                    var item = {roleCd: n.roleCd, roleNm: n.roleNm, hasYn: "N", userCd: data.userCd};
-
-                    if (data && data.roleList) {
-                        data.roleList.forEach(function (r) {
-                            if (item.roleCd == r.roleCd) {
-                                item.hasYn = "Y";
-                            }
-                        });
-                    }
-                    list.push(item);
-                });
-                
-                this.gridView02.setData(list);
-
-                break;
-            case ACTIONS.ROLE_GRID_DATA_GET:
-
-                return this.gridView02.getData("Y");
 
                 break;
             default:
@@ -187,56 +176,56 @@ fnObj.searchView = axboot.viewExtend(axboot.searchView, {
  * gridView
  */
 fnObj.gridView01 = axboot.viewExtend(axboot.gridView, {
-    useYn: {
-        Y: "사용",
-        N: "사용안함"
-    },
     initView: function () {
-
         var _this = this;
+
+        $('[data-grid-view-01-btn]').click(function () {
+            var _act = this.getAttribute("data-grid-view-01-btn");
+            switch (_act) {
+                case "add":
+                    ACTIONS.dispatch(ACTIONS.ITEM_ADD);
+                    break;
+                case "delete":
+                    ACTIONS.dispatch(ACTIONS.ITEM_DEL);
+                    break;
+            }
+        });
+
         this.target = axboot.gridBuilder({
+            showRowSelector: true,
+            frozenColumnIndex: 0,
             target: $('[data-ax5grid="grid-view-01"]'),
             columns: [
-                {
-                    key: "userCd",
-                    label: "아이디",
-                    width: 120
-                },
-                {
-                    key: "userNm",
-                    label: "이름",
-                    width: 120
-                },
-                {
-                    key: "locale",
-                    label: "국가",
-                    width: 120
-                },
-                {
-                    key: "useYn",
-                    label: "사용여부",
-                    width: 80,
-                    formatter: function () {
-                        return _this.useYn[this.value];
-                    }
-                }
+                {key: "key", label: "KEY", width: 80, align: "left"},
+                {key: "value", label: "VALUE", width: 120, align: "left"},
+                {key: "etc1", label: "ETC1", width: 70, align: "center"},
+                {key: "ect2", label: "ETC2", width: 70, align: "center"},
+                {key: "ect3", label: "ETC3", width: 70, align: "center"},
+                {key: "ect4", label: "ETC4", width: 70, align: "center"}
             ],
             body: {
                 onClick: function () {
                     this.self.select(this.dindex);
-                    ACTIONS.dispatch(ACTIONS.ITEM_CLICK, this.list[this.dindex]);
+                    ACTIONS.dispatch(ACTIONS.ITEM_CLICK, this.item);
                 }
             }
         });
     },
-    setData: function (_data) {
-        this.target.setData(_data);
+    getData: function (_type) {
+        var list = [];
+        var _list = this.target.getList(_type);
+
+        if (_type == "modified" || _type == "deleted") {
+            list = ax5.util.filter(_list, function () {
+                return this.key;
+            });
+        } else {
+            list = _list;
+        }
+        return list;
     },
-    getData: function () {
-        return this.target.getData();
-    },
-    align: function () {
-        this.target.align();
+    addRow: function () {
+        this.target.addRow({__created__: true}, "last");
     }
 });
 
@@ -246,11 +235,7 @@ fnObj.gridView01 = axboot.viewExtend(axboot.gridView, {
  */
 fnObj.formView01 = axboot.viewExtend(axboot.formView, {
     getDefaultData: function () {
-        return $.extend({}, axboot.formView.defaultData, {
-            "compCd": "S0001",
-            roleList: [],
-            authList: []
-        });
+        return $.extend({}, axboot.formView.defaultData, {});
     },
     initView: function () {
         this.target = $("#formView01");
@@ -267,36 +252,12 @@ fnObj.formView01 = axboot.viewExtend(axboot.formView, {
                     break;
             }
         });
-
-        ACTIONS.dispatch(ACTIONS.ROLE_GRID_DATA_INIT, {});
     },
     initEvent: function () {
         var _this = this;
-        this.model.onChange("password_change", function () {
-            if (this.value == "Y") {
-                _this.target.find('[data-ax-path="userPs"]').removeAttr("readonly");
-                _this.target.find('[data-ax-path="userPs_chk"]').removeAttr("readonly");
-            } else {
-                _this.target.find('[data-ax-path="userPs"]').attr("readonly", "readonly");
-                _this.target.find('[data-ax-path="userPs_chk"]').attr("readonly", "readonly");
-            }
-        });
     },
     getData: function () {
         var data = this.modelFormatter.getClearData(this.model.get()); // 모델의 값을 포멧팅 전 값으로 치환.
-
-        data.authList = [];
-        if (data.grpAuthCd) {
-            data.grpAuthCd.forEach(function (n) {
-                data.authList.push({
-                    userCd: data.userCd,
-                    grpAuthCd: n
-                });
-            });
-        }
-
-        data.roleList = ACTIONS.dispatch(ACTIONS.ROLE_GRID_DATA_GET);
-
         return $.extend({}, data);
     },
     setData: function (data) {
@@ -304,22 +265,10 @@ fnObj.formView01 = axboot.viewExtend(axboot.formView, {
         if (typeof data === "undefined") data = this.getDefaultData();
         data = $.extend({}, data);
 
-        if (data.authList) {
-            data.grpAuthCd = [];
-            data.authList.forEach(function (n) {
-                data.grpAuthCd.push(n.grpAuthCd);
-            });
-        }
-        ACTIONS.dispatch(ACTIONS.ROLE_GRID_DATA_INIT, {userCd: data.userCd, roleList: data.roleList});
+        this.target.find('[data-ax-path="key"]').attr("readonly", "readonly");
 
-        data.userPs = "";
-        data.password_change = "";
-        this.target.find('[data-ax-path="userPs"]').attr("readonly", "readonly");
-        this.target.find('[data-ax-path="userPs_chk"]').attr("readonly", "readonly");
         this.model.setModel(data);
         this.modelFormatter.formatting(); // 입력된 값을 포메팅 된 값으로 변경
-
-
     },
     validate: function () {
         var rs = this.model.validate();
@@ -332,6 +281,7 @@ fnObj.formView01 = axboot.viewExtend(axboot.formView, {
     },
     clear: function () {
         this.model.setModel(this.getDefaultData());
+        this.target.find('[data-ax-path="key"]').removeAttr("readonly");
     }
 });
 
@@ -343,13 +293,30 @@ fnObj.gridView02 = axboot.viewExtend(axboot.gridView, {
     initView: function () {
 
         var _this = this;
+
+        $('[data-grid-view-02-btn]').click(function () {
+            var _root = fnObj;
+            switch (this.getAttribute("data-grid-view-02-btn")) {
+                case "item-add":
+                    _this.addRow();
+                    break;
+                case "item-remove":
+                    _this.delRow();
+                    break;
+            }
+        });
+
         this.target = axboot.gridBuilder({
             showLineNumber: false,
+            showRowSelector: true,
             target: $('[data-ax5grid="grid-view-02"]'),
             columns: [
-                {key: "hasYn", label: "선택", width: 50, align: "center", editor: "checkYn"},
-                {key: "roleCd", label: "역할코드", width: 150},
-                {key: "roleNm", label: "역할명", width: 180},
+                {key: "key", label: "KEY", width: 80, align: "left", editor: "text"},
+                {key: "value", label: "VALUE", width: 120, align: "left", editor: "text"},
+                {key: "etc1", label: "ETC1", width: 70, align: "center", editor: "text"},
+                {key: "ect2", label: "ETC2", width: 70, align: "center", editor: "text"},
+                {key: "ect3", label: "ETC3", width: 70, align: "center", editor: "text"},
+                {key: "ect4", label: "ETC4", width: 70, align: "center", editor: "text"}
             ],
             body: {
                 onClick: function () {
@@ -362,11 +329,17 @@ fnObj.gridView02 = axboot.viewExtend(axboot.gridView, {
     setData: function (_data) {
         this.target.setData(_data);
     },
-    getData: function (hasYn) {
-        hasYn = hasYn || "Y";
-        var list = ax5.util.filter(this.target.getList(), function () {
-            return this.hasYn == hasYn;
-        });
+    getData: function (_type) {
+        var list = [];
+        var _list = this.target.getList(_type);
+
+        if (_type == "modified" || _type == "deleted") {
+            list = ax5.util.filter(_list, function () {
+                return this.key;
+            });
+        } else {
+            list = _list;
+        }
         return list;
     },
     align: function () {

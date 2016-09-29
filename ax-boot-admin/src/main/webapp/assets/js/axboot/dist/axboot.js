@@ -153,32 +153,38 @@ $(document.body).ready(function () {
 /**
  * @method axboot.ajax
  * @param {Object} http
- * @param {Function} callback
- * @param {Object} [options]
- * @param {Fundtion} [options.onError]
- * @param {String} [options.contentType]
- * @param {String} [options.apiType]
+ * @param {String} http.type
+ * @param {String} http.url
+ * @param {Object|String} http.data
+ * @param {Function} http.callback
+ * @param {Object} [http.options]
+ * @param {Function} [http.options.onError]
+ * @param {String} [http.options.contentType]
+ * @param {String} [http.options.apiType]
  * @example
  * ```js
  *  // 기본 에러가 나면 알어서 처리 함.
  *  axboot.ajax({
  *      type: "GET",
  *      url: "/api/v1/users",
- *      data : {}
- *  }, function(response){
- *      // do something
+ *      data : {},
+ *      callback: function(response){
+ *          // do something
+ *      }
  *  });
  *
  *  // onError 지정
  *  axboot.ajax({
  *      type: "GET",
  *      url: "/api/v1/users",
- *      data : {}
- *  }, function(response){
- *      // do something
- *  }, {
- *      onError: function(err){
- *          // console.log(err);
+ *      data : {},
+ *      callback: function(response){
+ *          // do something
+ *      },
+ *      options: {
+ *          onError: function(err){
+ *              // console.log(err);
+ *          }
  *      }
  *  });
  * ```
@@ -191,18 +197,21 @@ axboot.ajax = function () {
         contentType: 'application/json'
     };
 
-    return function (http, callback, options) {
-        options = $.extend(true, {}, defaultOption, options);
+    return function (http) {
+        var jqxhr, httpOpts, callback;
+        var options = $.extend(true, {}, defaultOption, http.options);
         if (!options.nomask) axAJAXMask.open();
 
         queue.push("1");
 
-        var jqxhr,
-            httpOpts = {
+        httpOpts = {
             contentType: options.contentType
         };
         http.url = CONTEXT_PATH + http.url;
         $.extend(http, httpOpts);
+
+        callback = http.callback;
+
         jqxhr = $.ajax(http);
         jqxhr.done(function (data, textStatus, jqXHR) {
             if (typeof data == "string") arguments[0] = data == "" ? {} : data.object();
@@ -1236,11 +1245,13 @@ axboot.call = function () {
                 axboot.ajax({
                     type: item.type,
                     url: item.url,
-                    data: item.data
-                }, function (res) {
-                    item.callback.call(this, res);
-                    processor.call(this, callback);
-                }.bind(this), { nomask: false });
+                    data: item.data,
+                    callback: function (res) {
+                        item.callback.call(this, res);
+                        processor.call(this, callback);
+                    }.bind(this),
+                    options: { nomask: false }
+                });
             } else {
                 callback.call(this);
             }

@@ -12,13 +12,15 @@ var ACTIONS = axboot.actionExtend(fnObj, {
                 axboot.ajax({
                     type: "GET",
                     url: "/api/v1/manual",
-                    data: this.searchView.getData()
-                }, function (res) {
-                    _this.treeView01.setData(searchData, res.list);
+                    data: this.searchView.getData(),
+                    callback: function (res) {
+                        _this.treeView01.setData(searchData, res.list);
 
-                }, {
-                    onError: function (err) {
-                        console.log(err);
+                    },
+                    options: {
+                        onError: function (err) {
+                            console.log(err);
+                        }
                     }
                 });
                 break;
@@ -35,9 +37,10 @@ var ACTIONS = axboot.actionExtend(fnObj, {
                 axboot.ajax({
                     type: "GET",
                     url: "/api/v1/manual/" + data.manualId,
-                    data: ""
-                }, function (res) {
-                    _this.formView01.setData(res);
+                    data: "",
+                    callback: function (res) {
+                        _this.formView01.setData(res);
+                    }
                 });
 
                 break;
@@ -72,10 +75,11 @@ var ACTIONS = axboot.actionExtend(fnObj, {
                             axboot.ajax({
                                 type: "PUT",
                                 url: "/api/v1/manual/detail",
-                                data: JSON.stringify(data)
-                            }, function (res) {
-                                axToast.push("매뉴얼 내용이 저장 되었습니다");
-                                ACTIONS.dispatch(ACTIONS.PAGE_SEARCH);
+                                data: JSON.stringify(data),
+                                callback: function (res) {
+                                    axToast.push("매뉴얼 내용이 저장 되었습니다");
+                                    ACTIONS.dispatch(ACTIONS.PAGE_SEARCH);
+                                }
                             });
                         } else {
                             ACTIONS.dispatch(ACTIONS.PAGE_SEARCH);
@@ -387,18 +391,18 @@ fnObj.formView01 = axboot.viewExtend(axboot.formView, {
             removePlugins: 'resize',
             removeButtons: 'Underline,Subscript,Superscript,About',
             toolbarGroups: [
-                { name: 'clipboard', groups: [ 'undo', 'clipboard' ] },
-                { name: 'editing', groups: [ 'find', 'selection', 'spellchecker', 'editing' ] },
-                { name: 'links', groups: [ 'links' ] },
-                { name: 'insert', groups: [ 'others', 'insert' ] },
-                { name: 'forms', groups: [ 'forms' ] },
-                { name: 'tools', groups: [ 'tools' ] },
-                { name: 'document', groups: [ 'mode', 'document', 'doctools' ] },
+                {name: 'clipboard', groups: ['undo', 'clipboard']},
+                {name: 'editing', groups: ['find', 'selection', 'spellchecker', 'editing']},
+                {name: 'links', groups: ['links']},
+                {name: 'insert', groups: ['others', 'insert']},
+                {name: 'forms', groups: ['forms']},
+                {name: 'tools', groups: ['tools']},
+                {name: 'document', groups: ['mode', 'document', 'doctools']},
                 '/',
-                { name: 'basicstyles', groups: [ 'basicstyles', 'cleanup' ] },
-                { name: 'paragraph', groups: [ 'list', 'indent', 'blocks', 'align', 'bidi', 'paragraph' ] },
-                { name: 'styles', groups: [ 'styles' ] },
-                { name: 'colors', groups: [ 'colors' ] }
+                {name: 'basicstyles', groups: ['basicstyles', 'cleanup']},
+                {name: 'paragraph', groups: ['list', 'indent', 'blocks', 'align', 'bidi', 'paragraph']},
+                {name: 'styles', groups: ['styles']},
+                {name: 'colors', groups: ['colors']}
             ]
         });
 
