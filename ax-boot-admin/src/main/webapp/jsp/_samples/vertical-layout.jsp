@@ -58,6 +58,7 @@
                 <div data-fit-height-content="left-view-01" style="height: 300px;border: 1px solid #D8D8D8;background: #fff;">
 
 <pre>
+// ax:split-panel 안에 들어가는 컨텐츠를 핏 하게 집어넣기 위한 소스코드 입니다.
 &lt;div data-fit-height-aside="left-view-01">&lt;/div>
 &lt;div data-fit-height-content="left-view-01">&lt;/div>
 &lt;div data-fit-height-aside="left-view-01">&lt;/div>

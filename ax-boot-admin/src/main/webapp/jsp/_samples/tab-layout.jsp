@@ -103,6 +103,7 @@
                         <div data-fit-height-content="right-view-01" style="height: 300px;border: 1px solid #D8D8D8;background: #fff;">
 
 <pre>
+// 탭 레이아웃을 손쉽게 태그만으로 만들 수 있습니다.
 // ax:tab-layout 태그를 만드세요. name을 반드시 부모 layout과 다르게 설정해야 하는 것을 잊지 마세요.
 &lt;ax:tab-layout name="ax2" data_fit_height_content="layout-view-01" style="height:100%;">
     &lt;ax:tab-panel label="기본정보" scroll="scroll">
