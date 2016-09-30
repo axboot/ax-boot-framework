@@ -2,14 +2,14 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="ax" tagdir="/WEB-INF/tags" %>
 
-
+<ax:set key="system-common-code-version" value="1.0.0"/>
 <ax:set key="title" value="${pageName}"/>
 <ax:set key="page_desc" value="${PAGE_REMARK}"/>
 <ax:set key="page_auto_height" value="true"/>
 
 <ax:layout name="base">
     <jsp:attribute name="script">
-        <script type="text/javascript" src="<c:url value='/assets/js/view/system/system-config-common-code.js' />"></script>
+        <script type="text/javascript" src="<c:url value='/assets/js/axboot/system/system-config-common-code.js' />"></script>
     </jsp:attribute>
     <jsp:body>
 

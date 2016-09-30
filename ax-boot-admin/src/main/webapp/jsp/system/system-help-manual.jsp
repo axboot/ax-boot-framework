@@ -8,6 +8,7 @@
     request.setAttribute("menuId", menuId);
 %>
 
+<ax:set key="system-help-manual-version" value="1.0.0"/>
 <ax:set key="title" value="${pageName}"/>
 <ax:set key="page_desc" value="${PAGE_REMARK}"/>
 <ax:set key="page_auto_height" value="true"/>
@@ -23,7 +24,7 @@
         <script src="/assets/plugins/ckeditor/ckeditor.js"></script>
     </jsp:attribute>
     <jsp:attribute name="script">
-        <script type="text/javascript" src="<c:url value='/assets/js/view/system/system-help-manual.js' />"></script>
+        <script type="text/javascript" src="<c:url value='/assets/js/axboot/system/system-help-manual.js' />"></script>
     </jsp:attribute>
     <jsp:body>
 

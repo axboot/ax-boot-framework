@@ -18,7 +18,7 @@
         <script>
             var CKEditorFuncNum = ${CKEditorFuncNum};
         </script>
-        <script type="text/javascript" src="<c:url value='/assets/js/view/common/fileBrowser.js' />"></script>
+        <script type="text/javascript" src="<c:url value='/assets/js/axboot/common/fileBrowser.js' />"></script>
     </jsp:attribute>
     <jsp:attribute name="header">
         <h1 class="title">
