@@ -42,28 +42,30 @@
                 },
                 login: function () {
                     axboot.ajax({
-                                method: "POST",
-                                url: "/api/login",
-                                data: JSON.stringify({
-                                    "userCd": $("#userCd").val(),
-                                    "userPs": $("#userPs").val()
-                                })
-                            }, function (res) {
-                                if (res && res.error) {
-                                    if (res.error.message == "Unauthorized") {
-                                        alert("로그인에 실패 하였습니다. 계정정보를 확인하세요");
-                                    }
-                                    else {
-                                        alert(res.error.message);
-                                    }
-                                    return;
+                        method: "POST",
+                        url: "/api/login",
+                        data: JSON.stringify({
+                            "userCd": $("#userCd").val(),
+                            "userPs": $("#userPs").val()
+                        }),
+                        callback: function (res) {
+                            if (res && res.error) {
+                                if (res.error.message == "Unauthorized") {
+                                    alert("로그인에 실패 하였습니다. 계정정보를 확인하세요");
                                 }
                                 else {
-
-                                    location.reload();
+                                    alert(res.error.message);
                                 }
-                            },
-                            {nomask: false, apiType: "login"});
+                                return;
+                            }
+                            else {
+                                location.reload();
+                            }
+                        },
+                        options: {
+                            nomask: false, apiType: "login"
+                        }
+                    });
                     return false;
                 }
             };
