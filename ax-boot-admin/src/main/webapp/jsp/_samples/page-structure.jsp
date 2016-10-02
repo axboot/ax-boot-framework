@@ -170,5 +170,31 @@
         <div class="alert alert-info">
             리사이즈가 가능한 레이아웃 시스템을 사용할 수 있습니다. 좌우/상하 레이아웃이 구현된 샘플은 [좌우레이아웃][상하레이아웃] 을 확인하세요.
         </div>
+
+
+        <div class="ax-button-group">
+            <div class="left">
+                <h2><i class="cqc-checkmark"></i> ax:tab-layout</h2>
+            </div>
+        </div>
+
+        <pre>
+&lt;ax:tab-layout name="ax2" data_fit_height_content="layout-view-01" style="height:100%;">
+    &lt;ax:tab-panel label="기본정보" scroll="scroll">
+        &lt;p>
+            기본정보
+        &lt;/p>
+    &lt;/ax:tab-panel>
+    &lt;ax:tab-panel label="일반정보" scroll="scroll" active="true">
+    	&lt;p>
+            일반정보
+        &lt;/p>
+    &lt;/ax:tab-panel>
+&lt;/ax:tab-layout>
+</pre>
+
+        <div class="alert alert-info">
+            페이지의 컨텐츠를 탭으로 분리하여 표현하고 싶을 때 사용하는 레이아웃 입니다. AXBOOT로는 간단하게 태그만으로 탭 레이아웃을 사용할 수 있습니다.
+        </div>
     </jsp:body>
 </ax:layout>
