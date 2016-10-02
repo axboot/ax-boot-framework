@@ -18,7 +18,7 @@
     }
 
     if (StringUtils.isEmpty(style)) {
-        style = "padding:10px 0;";
+        style = "padding:10px 0 0 0;";
     }
 %>
 <div data-tab-panel='{label: "${label}", active: <%=active%>}'>
