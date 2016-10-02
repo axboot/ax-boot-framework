@@ -7,8 +7,8 @@ var ACTIONS = axboot.actionExtend(fnObj, {
         switch (act) {
             case ACTIONS.PAGE_SEARCH:
 
-                console.log("PAGE_SEARCH");
-                console.log(arguments);
+                //console.log("PAGE_SEARCH");
+                //console.log(arguments);
 
                 break;
             case ACTIONS.TOGGLE_ASIDE:
@@ -168,9 +168,8 @@ fnObj.frameView = axboot.viewExtend({
                             onClick: function (event, treeId, treeNode, clickFlag) {
                                 var zTree = $.fn.zTree.getZTreeObj(treeTargetId);
                                 zTree.expandNode(treeNode);
-
                                 if (treeNode.program) {
-                                    ACTIONS.dispatch(ACTIONS.MENU_OPEN, $.extend({}, treeNode.program, {menuId: treeNode.menuId}));
+                                    ACTIONS.dispatch(ACTIONS.MENU_OPEN, $.extend({}, treeNode.program, {menuId: treeNode.menuId, menuNm: treeNode.menuNm}));
                                 }
                             }
                         }
@@ -238,7 +237,7 @@ fnObj.tabView = axboot.viewExtend({
     frameTarget: null,
     limitCount: 10,
     list: [
-        {menuId: "00-dashboard", id: "dashboard", progNm: '홈', progPh: '/jsp/dashboard.jsp', url: CONTEXT_PATH + '/jsp/dashboard.jsp?progCd=dashboard', status: "on", fixed: true}
+        {menuId: "00-dashboard", id: "dashboard", progNm: '홈', menuNm: '홈', progPh: '/jsp/dashboard.jsp', url: CONTEXT_PATH + '/jsp/dashboard.jsp?progCd=dashboard', status: "on", fixed: true}
     ],
     initView: function () {
         this.target = $("#ax-frame-header-tab-container");
@@ -305,8 +304,8 @@ fnObj.tabView = axboot.viewExtend({
     },
     _getItem: function (item) {
         var po = [];
-        po.push('<div class="tab-item ' + item.status + '" data-tab-id="' + item.menuId + '" data-toggle="tooltip" data-placement="bottom" title=\'' + item.progNm + '\'>');
-        po.push(item.progNm);
+        po.push('<div class="tab-item ' + item.status + '" data-tab-id="' + item.menuId + '" data-toggle="tooltip" data-placement="bottom" title=\'' + item.menuNm + '\'>');
+        po.push(item.menuNm);
         if (!item.fixed) po.push('<i class="cqc-cancel3" data-tab-close="true" data-tab-id="' + item.menuId + '"></i>');
         po.push('</div>');
         return po.join('');
@@ -358,6 +357,7 @@ fnObj.tabView = axboot.viewExtend({
                 menuId: item.menuId,
                 id: item.id,
                 progNm: item.progNm,
+                menuNm: item.menuNm,
                 progPh: item.progPh,
                 url: CONTEXT_PATH + item.progPh + "?menuId=" + item.menuId,
                 status: "on"
