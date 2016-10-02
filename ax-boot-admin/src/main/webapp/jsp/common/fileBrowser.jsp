@@ -35,7 +35,7 @@
             <button type="button" class="btn btn-fn1" data-page-btn="fn1">삭제</button>
         </ax:page-buttons>
 
-        <ax:split-layout name="ax1" oriental="horizontal">
+        <ax:split-layout name="ax1" oriental="vertical">
             <ax:split-panel width="*" style="padding-right: 10px;">
 
                 <div data-fit-height-aside="grid-view-01">
