@@ -13,6 +13,7 @@ import com.chequer.axboot.core.session.JWTSessionHandler;
 import com.chequer.axboot.core.utils.*;
 import com.chequer.axboot.core.vo.ScriptSessionVO;
 import org.apache.commons.io.FilenameUtils;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
@@ -92,7 +93,7 @@ public class AdminTokenAuthenticationService {
                     if (program.getAuthCheck().equals(Types.Used.YES.getLabel())) {
                         AuthGroupMenu authGroupMenu = authGroupMenuService.getCurrentAuthGroupMenu(menuId, user);
                         if (authGroupMenu == null) {
-                            //response.sendRedirect(request.getContextPath() + "/jsp/common/not-authorized.jsp");
+                            throw new AccessDeniedException("Access is denied");
                         }
                         requestUtils.setAttribute("authGroupMenu", authGroupMenu);
                     }

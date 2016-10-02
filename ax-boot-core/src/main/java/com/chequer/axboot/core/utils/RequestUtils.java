@@ -220,5 +220,10 @@ public class RequestUtils {
     public String getRequestUri() {
         return request.getRequestURI();
     }
+
+    public boolean isAjax() {
+        String requestedWithHeader = request.getHeader("X-Requested-With");
+        return "XMLHttpRequest".equals(requestedWithHeader);
+    }
 }
 
