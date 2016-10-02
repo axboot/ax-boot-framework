@@ -16,9 +16,6 @@
             var isHeadless = true;
         </script>
         <script type="text/javascript" src="<c:url value='/assets/js/axboot/common/brokebot.min.js' />"></script>
-        <script>
-            determineErrorTxt(401);
-        </script>
     </jsp:attribute>
     <jsp:body>
 
@@ -67,28 +64,98 @@
                         <path class="robot_hands_feet" d="M231.3,238.9c0-8.2-6.7-14.9-14.9-14.9c-8.2,0-14.9,6.7-14.9,14.9H231.3z"/>
                         <circle id="leftKnee" class="robot_joints_and_belly" cx="216.4" cy="203.1" r="5.1"/>
 
-						<!-- @@@@@@@@@@@@@@@@@@@@@@ header end   @@@@@@@@@@@@@@@@@@@@@@ -->
-					</div>
-					<div class="ax-clear"></div>
-				</div>
+                        <g id="upperBody">
 
-				<div class="ax-layer cx-content-layer">
-					<div class="ax-col-12 ax-content expand">
-						<!-- s.CXPage -->
-						<div id="CXPage">
+                            <rect x="146" y="143" transform="matrix(-0.968 -0.2511 0.2511 -0.968 362.8447 338.4026)" class="robot_limbs_and_ears" width="114" height="6.1"/>
+                            <g id="leftArm">
+                                <path id="leftOuterClaw" class="robot_hands_feet" d="M247.7,212.6l21.1,21.1c5.8-5.8,5.8-15.3,0-21.1C262.9,206.7,253.5,206.7,247.7,212.6
+									z"/>
+                                <path id="leftInnerClaw" class="robot_hands_feet" d="M247.7,212.6c-5.8,5.8-5.8,15.3,0,21.1l21.1-21.1
+									C262.9,206.7,253.5,206.7,247.7,212.6z"/>
+                                <rect x="254.7" y="161.1" class="robot_limbs_and_ears" width="7" height="25"/>
+                                <path class="robot_limbs_and_ears" d="M263,217.5l-9.7,0c-2.8,0-5-2.3-5-5l0-22.7c0-2.8,2.3-5,5-5l9.7,0c2.7,0,5,2.3,5,5l0,22.7
+									C268,215.3,265.7,217.5,263,217.5z"/>
+                                <circle class="robot_joints_and_belly" cx="258.2" cy="186.5" r="5.1"/>
+                            </g>
+                            <path class="robot_body" d="M270.4,163.5c1.7-6.7-2.3-13.6-9-15.4c-6.7-1.7-13.6,2.3-15.4,9c-1.7,6.7,2.3,13.6,9,15.4
+								C261.8,174.3,268.7,170.3,270.4,163.5z"/>
+
+                            <rect x="130" y="138.3" transform="matrix(0.8845 0.4666 -0.4666 0.8845 83.8309 -45.3494)" class="robot_limbs_and_ears" width="7" height="16.7"/>
+                            <g id="rightLowerArm">
+                                <path id="rightInnerClaw" class="robot_hands_feet" d="M119,181.3l21.1,21.1c5.8-5.8,5.8-15.3,0-21.1C134.2,175.5,124.8,175.5,119,181.3z"
+                                />
+                                <path id="rightOuterClaw" class="robot_hands_feet" d="M119,181.3c-5.8,5.8-5.8,15.3,0,21.1l21.1-21.1C134.2,175.5,124.8,175.5,119,181.3z"
+                                />
+                                <path class="robot_limbs_and_ears" d="M134.5,186.2l-9.7,0.1c-2.7,0-5-2.2-5-5l-0.2-22.7c0-2.7,2.2-5,5-5l9.7-0.1c2.7,0,5,2.2,5,5l0.2,22.7
+									C139.5,183.9,137.3,186.2,134.5,186.2z"/>
+                            </g>
+                            <circle class="robot_joints_and_belly" cx="129.4" cy="154.3" r="5.1"/>
+                            <path class="robot_body" d="M154.3,133.4c1.7-6.7-2.3-13.6-9-15.4c-6.7-1.7-13.6,2.3-15.4,9c-1.7,6.7,2.3,13.6,9,15.4
+								C145.7,144.2,152.6,140.2,154.3,133.4z"/>
+                            <path class="robot_hands_feet" d="M210.2,119.6l-1.4-1.5c0.1-0.1,9.1-8.7,7.2-15.5l1.9-0.5C220.2,110,210.6,119.2,210.2,119.6z"/>
+                            <path class="robot_hands_feet" d="M215.9,117.4l-1.3-1.5c0.4-0.3,9.3-7.5,17.2-7.7l0,2C224.6,110.3,216,117.3,215.9,117.4z"/>
+                            <path class="robot_body" d="M210,116l-0.7-1.9c0.1,0,11.8-4.5,12.6-11.5l2,0.3C222.9,111.1,210.5,115.8,210,116z"/>
+
+                            <rect x="203.8" y="108.1" transform="matrix(0.7809 0.6246 -0.6246 0.7809 121.0947 -105.8214)" class="robot_limbs_and_ears" width="15.2" height="23.2"/>
+                            <path class="robot_body" d="M217.3,207.9l-62.6-16.2c-5.3-1.4-8.5-6.9-7.2-12.2l19.6-58.3c1.4-5.3,6.4-8.7,11.2-7.4l56.2,14.6
+								c4.8,1.2,7.6,6.6,6.2,11.9l-11.2,60.5C228.1,206,222.6,209.3,217.3,207.9z"/>
+                            <path class="robot_joints_and_belly" d="M211.5,184.8l-40.4-10.5c-3.4-0.9-5.5-4.4-4.6-7.9l12.7-37.6c0.9-3.4,4.1-5.6,7.2-4.8l36.3,9.4
+								c3.1,0.8,4.9,4.3,4,7.7l-7.2,39.1C218.5,183.6,214.9,185.6,211.5,184.8z"/>
+                        </g>
+                    </g>
+				</svg>
+            </div>
+        </div>
+
+        <div class="robotpage-bottom-half">
+
+            <div>
+                <p id="robot-text">PAGE NOT FOUND</p>
+                <p>TO RETURN TO THE PREVIOUS PAGE, PLEASE CLICK BUTTON.</p>
+                <div class="robot-buttons">
+                    <a class="robot-buttons" onclick="history.back();">BACK</a>
+                    <!--
+                    <a class="robot-buttons" href="#">CONTACT</a>
+                    -->
+                </div>
+
+                <div style="margin-top: 150px;">
+                    <?xml version="1.0" encoding="iso-8859-1"?>
+                    <!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+                    <svg version="1.1" id="chequer-logo" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+                         width="60px" height="60px" viewBox="-329 206.863 181.417 181.417" style="enable-background:new -329 206.863 181.417 181.417;" xml:space="preserve">
+				<g>
+                    <path style="fill:#ffffff;" d="M-290.135,284.137c-6.976-6.975-18.285-6.975-25.261,0l-2.21,2.21
+						c-6.976,6.975-6.976,18.285,0,25.261c6.975,6.975,18.285,6.975,25.261,0l2.21-2.21
+						C-283.159,302.422-283.159,291.112-290.135,284.137z"/>
+                    <path style="fill:#ffffff;" d="M-230.562,289.163c-6.976-6.975-18.285-6.975-25.261,0l-29.483,29.483
+						c-6.976,6.976-6.976,18.285,0,25.261c6.976,6.976,18.285,6.976,25.261,0l29.483-29.483
+						C-223.586,307.449-223.586,296.139-230.562,289.163z"/>
+                    <path style="fill:#ffffff;" d="M-200.433,326.067c-6.976-6.975-18.285-6.975-25.261,0l-26.096,26.096
+						c-6.976,6.975-6.976,18.285,0,25.261c6.975,6.975,18.285,6.975,25.261,0l26.096-26.096
+						C-193.457,344.352-193.457,333.043-200.433,326.067L-200.433,326.067z"/>
+                    <path style="fill:#ffffff;" d="M-258.099,277.362l33.727-33.726c6.975-6.976,6.975-18.285,0-25.261
+						c-6.976-6.975-18.285-6.975-25.261,0l-33.727,33.727c-6.976,6.976-6.976,18.285,0,25.261
+						C-276.385,284.338-265.075,284.338-258.099,277.362z"/>
+                    <path style="fill:#ffffff;" d="M-223.787,282.389c6.976,6.976,18.285,6.976,25.261,0l6.453-6.453
+						c6.976-6.976,6.976-18.285,0-25.261c-6.975-6.976-18.285-6.976-25.261,0l-6.453,6.453
+						C-230.763,264.104-230.763,275.413-223.787,282.389z"/>
+                    <path style="fill:#ffffff;" d="M-158.556,284.191L-158.556,284.191c-6.976-6.976-18.285-6.976-25.261,0l-9.841,9.841
+						c-6.976,6.976-6.976,18.285,0,25.261c6.976,6.976,18.285,6.976,25.261,0l9.841-9.84
+						C-151.581,302.476-151.581,291.167-158.556,284.191z"/>
+                </g>
+				</svg>
 
 
-							<h2>요청하신 페이지에 대한 접근권한이 없습니다.</h2>
+                    <div style="padding-top: 10px;">
+                        AXBOOT
+                    </div>
 
-							<p>이전 페이지로 돌아가시려면 "돌아가기" 버튼을 클릭하세요</p>
-							<button class="AXButton Blue" onclick="history.go(-1);"><i class="axi axi-history2"></i> 이전
-								페이지로 돌아가기
-							</button>
+                </div>
+            </div>
 
-						</div>
-					</div>
-				</div>
-			</div>
-		</div>
-	</ax:div>
+            <div class="clear"></div>
+        </div>
+
+    </jsp:body>
 </ax:layout>
