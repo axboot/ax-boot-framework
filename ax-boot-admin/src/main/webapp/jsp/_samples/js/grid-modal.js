@@ -74,7 +74,6 @@ var ACTIONS = axboot.actionExtend(fnObj, {
 
                 break;
             case ACTIONS.FORM_CLEAR:
-                var _this = this;
                 axDialog.confirm({
                     msg: "정말 양식을 초기화 하시겠습니까?"
                 }, function () {
@@ -93,15 +92,34 @@ var ACTIONS = axboot.actionExtend(fnObj, {
                         url: "/jsp/common/zipcode.jsp"
                     },
                     header: {
-                        title: "우편번호 찾기"
+                        title: '<i class="cqc-magnifier"></i> 우편번호 찾기'
                     },
-                    callback: function () {
-                        console.log(this);
+                    callback: function (data) {
+                        //{zipcodeData: data, zipcode: data.zonecode || data.postcode, roadAddress: fullRoadAddr, jibunAddress: data.jibunAddress}
+                        _this.formView01.setEtc1Value({
+                            zipcode: data.zipcode, roadAddress: data.roadAddress, jibunAddress: data.jibunAddress
+                        });
+                        this.close();
                     }
                 });
 
                 break;
             case ACTIONS.ETC3FIND:
+                axboot.modal.open({
+                    width: 600,
+                    height: 400,
+                    iframe: {
+                        url: "modal.jsp"
+                    },
+                    header: false,
+                    callback: function (data) {
+                        _this.formView01.setEtc3Value({
+                            key: data.key,
+                            value: data.value
+                        });
+                        this.close();
+                    }
+                });
 
                 break;
             default:
@@ -305,6 +323,16 @@ fnObj.formView01 = axboot.viewExtend(axboot.formView, {
 
         this.model.setModel(data);
         this.modelFormatter.formatting(); // 입력된 값을 포메팅 된 값으로 변경
+    },
+    setEtc1Value: function (data) {
+        this.model.set("etc1", data.zipcode);
+        this.model.set("etc2", data.roadAddress);
+
+    },
+    setEtc3Value: function (data) {
+        this.model.set("etc3", data.key);
+        this.model.set("etc4", data.value);
+
     },
     validate: function () {
         var rs = this.model.validate();

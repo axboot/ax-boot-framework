@@ -38,7 +38,7 @@ axboot.modal = (function () {
                 title: "",
                 btns: {
                     close: {
-                        label: '<i class="cqc-cancel2"></i>', onClick: function(){
+                        label: '<i class="cqc-cancel cqc-15x"></i>', onClick: function(){
                             window.axModal.close();
                         }
                     }

@@ -29,10 +29,8 @@
                             break;
 
                         case ACTIONS.CLOSE_ADDRESS:
-                            try {
+                            if (parent && parent.axboot && parent.axboot.modal) {
                                 parent.axboot.modal.callback(data);
-                            } catch (e) {
-                                console.log(e);
                             }
                             break;
 
@@ -42,13 +40,13 @@
                 }
             });
 
-            fnObj.pageStart = function() {
+            fnObj.pageStart = function () {
                 //window.resizeTo(630, 700);
                 this.zipcodeView.initView();
             };
 
             fnObj.zipcodeView = axboot.viewExtend({}, {
-                initView: function(){
+                initView: function () {
                     // 현재 scroll 위치를 저장해놓는다.
                     var currentScroll = Math.max(document.body.scrollTop, document.documentElement.scrollTop);
                     new daum.Postcode({
