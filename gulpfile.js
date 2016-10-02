@@ -65,6 +65,16 @@ gulp.task('plugin-js', function () {
         .pipe(gulp.dest(ASSETS + '/js'));
 });
 
+gulp.task('errorpage-js', function () {
+    var jss = [ASSETS_SRC + '/js/axboot/common/brokebot/*.js'];
+
+    gulp.src(jss)
+        .pipe(plumber({errorHandler: errorAlert}))
+        .pipe(concat('brokebot.min.js'))
+        .pipe(uglify())
+        .pipe(gulp.dest(ASSETS_SRC + '/js/axboot/common'));
+});
+
 gulp.task('axboot-js', function () {
     var jss = [ASSETS_SRC + '/js/axboot/src/_axboot.js', ASSETS_SRC + '/js/axboot/src/modules/*.js'];
 

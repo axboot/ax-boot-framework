@@ -1,0 +1,173 @@
+&.error-page {
+    background-color: #66bbf5;
+    font-family: 'Unica One', cursive;
+    margin: 0;
+    padding: 0;
+    text-align: center;
+    color: #fff;
+
+    p {
+        margin: 0;
+        margin-bottom: 1.5em;
+    }
+
+    .robotpage-top-half {
+        background-color: #eee;
+        overflow: hidden;
+    }
+
+    #errorCodeTxt {
+        color: #CEDDD1;
+    }
+
+    #robot_holder {
+    }
+
+    #brokebotSVG {
+        height: 259px;
+        margin-left: auto;
+        margin-right: auto;
+        margin-top: 111px;
+        font-family: 'Unica One', cursive;
+        font-weight: bold;
+        width: 100%;
+    }
+
+    #robot-text {
+        color: #e54560;
+        text-align: center;
+        font-size: 3em;
+        margin-top: .5em;
+        margin-bottom: .2em;
+        padding: 0;
+    }
+
+    #robotpage-bottom-half {
+        font-family: 'Unica One', cursive;
+    }
+
+    .robot-buttons {
+
+        margin-left: auto;
+        margin-right: auto;
+    }
+
+    a.robot-buttons {
+        font-size: 1em;
+        background-color: #26B0AA;
+        padding: .5em 1.5em;
+        margin: .5em .2em 0em .2em;
+        text-align: center;
+        border-radius: .3em;
+        text-decoration: none;
+        color: #F2ECBA;
+    }
+
+    a.robot-buttons:hover {
+        cursor: pointer;
+        background-color: #8BC99A;
+        color: #F2ECBA;
+    }
+
+    .search-robot-form {
+
+    }
+
+    .search-robot {
+        width: 480px;
+        margin-left: auto;
+        margin-right: auto;
+    }
+
+    .search-robot-box {
+        width: 305px;
+        float: left;
+        padding: .5em;
+        border-radius: .3em;
+        font-size: 1em;
+        margin: 0;
+        border: 0;
+    }
+
+    .search-robot-buttons {
+        font-size: 1em;
+        background-color: #55BF9B;
+        padding: .5em;
+        border-radius: .3em;
+        text-decoration: none;
+        color: #F2ECBA;
+        width: 150px;
+        float: right;
+        margin: 0;
+        border: 0;
+    }
+
+    .clear {
+        clear: both;
+    }
+
+    .search-robot-buttons:hover {
+        cursor: pointer;
+        background-color: #8BC99A;
+        color: #F2ECBA;
+    }
+
+    .robot-links {
+        text-align: center;
+        color: #F2ECBA;
+        margin-top: 1em;
+    }
+
+    .robot-links a {
+        color: #8BCA9B;
+        text-decoration: none;
+        padding: .5em;
+    }
+
+    .robot-links a:hover {
+        color: #F2ECBA;
+        text-decoration: none;
+    }
+
+    /* robot_styles.css */
+    .robot_limbs_and_ears {
+        fill: #503643;
+    }
+
+    .robot_joints_and_belly {
+        fill: #8BCA9B;
+    }
+
+    .error_code {
+        fill: #CEDDD1;
+        font-size: 322px;
+    }
+
+    .robot_body {
+        fill: #56BF9B;
+    }
+
+    .robot_eye_whites {
+        fill: #F3ECBA;
+    }
+
+    .robot_hands_feet {
+        fill: #E64661;
+    }
+
+    .robot_antenna {
+        fill: #E64661;
+    }
+
+    .robot_antenna_highlight {
+        fill: #F2748D;
+    }
+
+    .robot_eyes {
+        fill: #E64661;
+    }
+
+    .robot_eyes_highlight {
+        fill: #F2748D;
+    }
+}
