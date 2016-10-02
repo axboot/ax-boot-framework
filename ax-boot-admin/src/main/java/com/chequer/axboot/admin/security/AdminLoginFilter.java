@@ -1,7 +1,5 @@
 package com.chequer.axboot.admin.security;
 
-import com.chequer.axboot.core.api.response.ApiResponse;
-import com.chequer.axboot.core.code.ApiStatus;
 import com.chequer.axboot.core.domain.user.SessionUser;
 import com.chequer.axboot.core.domain.user.User;
 import com.chequer.axboot.core.domain.user.UserService;
@@ -9,7 +7,6 @@ import com.chequer.axboot.core.utils.HttpUtils;
 import com.chequer.axboot.core.utils.JsonUtils;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
@@ -28,13 +25,15 @@ import java.time.Instant;
 public class AdminLoginFilter extends AbstractAuthenticationProcessingFilter {
 
     private final AdminTokenAuthenticationService adminTokenAuthenticationService;
+    private final AdminAuthenticationEntryPoint adminAuthenticationEntryPoint;
     private final UserService userService;
 
-    public AdminLoginFilter(String urlMapping, AdminTokenAuthenticationService adminTokenAuthenticationService, UserService userService, AuthenticationManager authenticationManager) {
+    public AdminLoginFilter(String urlMapping, AdminTokenAuthenticationService adminTokenAuthenticationService, UserService userService, AuthenticationManager authenticationManager, AdminAuthenticationEntryPoint adminAuthenticationEntryPoint) {
         super(new AntPathRequestMatcher(urlMapping));
 
         this.adminTokenAuthenticationService = adminTokenAuthenticationService;
         this.userService = userService;
+        this.adminAuthenticationEntryPoint = adminAuthenticationEntryPoint;
         this.setAuthenticationFailureHandler(new LoginFailureHandler());
         setAuthenticationManager(authenticationManager);
     }
@@ -65,14 +64,7 @@ public class AdminLoginFilter extends AbstractAuthenticationProcessingFilter {
     private class LoginFailureHandler implements AuthenticationFailureHandler {
         @Override
         public void onAuthenticationFailure(HttpServletRequest request, HttpServletResponse response, AuthenticationException exception) throws IOException, ServletException {
-            String message = exception.getMessage();
-
-            if (exception instanceof BadCredentialsException) {
-                message = "계정정보를 확인하세요";
-            }
-
-            ApiResponse apiResponse = ApiResponse.error(ApiStatus.SYSTEM_ERROR, message);
-            AdminAuthenticationEntryPoint.jsonExceptionResponse(request, response, apiResponse);
+            adminAuthenticationEntryPoint.commence(request, response, exception);
         }
     }
 }
