@@ -78,24 +78,26 @@ public class AdminTokenAuthenticationService {
             return deleteCookieAndReturnNullAuthentication(request, response);
         }
 
-        if (!requestUri.startsWith(ContextUtil.getBaseApiPath()) && menuId != null) {
+        if (!requestUri.startsWith(ContextUtil.getBaseApiPath())) {
             Menu menu = menuService.findOne(menuId);
-            Program program = menu.getProgram();
 
-            if (program != null) {
-                requestUtils.setAttribute("program", program);
-                requestUtils.setAttribute("pageName", menu.getMenuNm());
-                requestUtils.setAttribute("pageRemark", program.getRemark());
+            if (menu != null) {
+                Program program = menu.getProgram();
 
-                if (program.getAuthCheck().equals(Types.Used.YES.getLabel())) {
-                    AuthGroupMenu authGroupMenu = authGroupMenuService.getCurrentAuthGroupMenu(menuId, user);
-                    if (authGroupMenu == null) {
-                        //response.sendRedirect(request.getContextPath() + "/jsp/common/not-authorized.jsp");
+                if (program != null) {
+                    requestUtils.setAttribute("program", program);
+                    requestUtils.setAttribute("pageName", menu.getMenuNm());
+                    requestUtils.setAttribute("pageRemark", program.getRemark());
+
+                    if (program.getAuthCheck().equals(Types.Used.YES.getLabel())) {
+                        AuthGroupMenu authGroupMenu = authGroupMenuService.getCurrentAuthGroupMenu(menuId, user);
+                        if (authGroupMenu == null) {
+                            //response.sendRedirect(request.getContextPath() + "/jsp/common/not-authorized.jsp");
+                        }
+                        requestUtils.setAttribute("authGroupMenu", authGroupMenu);
                     }
-                    requestUtils.setAttribute("authGroupMenu", authGroupMenu);
                 }
             }
-
 
             ScriptSessionVO scriptSessionVO = ModelMapperUtils.map(user, ScriptSessionVO.class);
             scriptSessionVO.setDateFormat(scriptSessionVO.getDateFormat().toUpperCase());
