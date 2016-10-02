@@ -78,12 +78,13 @@ public class AdminTokenAuthenticationService {
             return deleteCookieAndReturnNullAuthentication(request, response);
         }
 
-        if (!requestUri.startsWith(ContextUtil.getBaseApiPath())) {
-            Program program = programService.findOne(progCd);
+        if (!requestUri.startsWith(ContextUtil.getBaseApiPath()) && menuId != null) {
+            Menu menu = menuService.findOne(menuId);
+            Program program = menu.getProgram();
 
             if (program != null) {
                 requestUtils.setAttribute("program", program);
-                requestUtils.setAttribute("pageName", program.getProgNm());
+                requestUtils.setAttribute("pageName", menu.getMenuNm());
                 requestUtils.setAttribute("pageRemark", program.getRemark());
 
                 if (program.getAuthCheck().equals(Types.Used.YES.getLabel())) {
