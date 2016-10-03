@@ -14,7 +14,7 @@ $(document).ready(function(){
     
     // Init navigation toggle for small screens   
     if(window_width <= 991){
-        lbd.initRightMenu();   
+        //lbd.initRightMenu();
     }
      
     //  Activate the tooltips   
@@ -40,7 +40,7 @@ $(document).ready(function(){
 // activate collapse right menu when the windows is resized 
 $(window).resize(function(){
     if($(window).width() <= 991){
-        lbd.initRightMenu();   
+        //lbd.initRightMenu();
     }
 });
     

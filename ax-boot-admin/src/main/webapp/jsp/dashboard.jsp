@@ -11,9 +11,9 @@
         <link rel="stylesheet" type="text/css" href="<c:url value='/assets/plugins/light-bootstrap-dashboard/css/light-bootstrap-dashboard.css'/>"/>
     </jsp:attribute>
     <jsp:attribute name="script">
-        <script src="<c:url value='/assets/plugins/light-bootstrap-dashboard/js/light-bootstrap-dashboard.js'/>"></script>
         <script src="<c:url value='/assets/plugins/light-bootstrap-dashboard/js/chartist.min.js'/>"></script>
         <script src="<c:url value='/assets/plugins/light-bootstrap-dashboard/js/bootstrap-checkbox-radio-switch.js'/>"></script>
+        <script src="<c:url value='/assets/plugins/light-bootstrap-dashboard/js/light-bootstrap-dashboard.js'/>"></script>
         <script src="<c:url value='/assets/plugins/light-bootstrap-dashboard/js/demo.js'/>"></script>
         <!--  Google Maps Plugin    -->
         <script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?sensor=false"></script>
