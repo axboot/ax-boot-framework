@@ -15,8 +15,7 @@
         <script src="<c:url value='/assets/plugins/light-bootstrap-dashboard/js/bootstrap-checkbox-radio-switch.js'/>"></script>
         <script src="<c:url value='/assets/plugins/light-bootstrap-dashboard/js/light-bootstrap-dashboard.js'/>"></script>
         <script src="<c:url value='/assets/plugins/light-bootstrap-dashboard/js/demo.js'/>"></script>
-        <!--  Google Maps Plugin    -->
-        <script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?sensor=false"></script>
+
         <script type="text/javascript">
             $(document).ready(function () {
                 demo.initChartist();
