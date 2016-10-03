@@ -1,14 +1,4 @@
 <%@ tag language="java" pageEncoding="UTF-8" body-content="scriptless" %>
-<%
-    /*
-    PageContextVO pageContextVO = SessionUtils.getPageContext(request);
-    String menuJson = JsonUtils.toJson(SessionUtils.getUserMenuContext(request).getMenu());
-
-    if (!pageContextVO.isAuthorized()) {
-        //response.sendRedirect("/jsp/common/not-authorized.jsp");
-    }
-    */
-%>
 <!DOCTYPE html>
 <html>
 <head>
@@ -25,6 +15,7 @@
     <link rel="stylesheet" type="text/css" href="<c:url value='/assets/css/lang-kor.css'/>"/>
     <script type="text/javascript">
         var CONTEXT_PATH = "<%=ContextUtil.getContext()%>";
+        var SCRIPT_SESSION = (function(json){return json;})(${scriptSession});
     </script>
     <script type="text/javascript" src="<c:url value='/assets/js/plugins.min.js' />"></script>
     <script type="text/javascript" src="<c:url value='/assets/js/axboot/dist/axboot.js' />"></script>

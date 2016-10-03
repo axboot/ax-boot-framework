@@ -23,6 +23,8 @@ public class ScriptSessionVO {
 
     protected String dateFormat;
 
+    protected boolean login = true;
+
     @Getter(AccessLevel.NONE)
     protected String dateTimeFormat;
 
@@ -30,5 +32,11 @@ public class ScriptSessionVO {
 
     public String getDateTimeFormat() {
         return dateFormat + " " + timeFormat;
+    }
+
+    public static ScriptSessionVO noLoginSession() {
+        ScriptSessionVO scriptSessionVO = new ScriptSessionVO();
+        scriptSessionVO.setLogin(false);
+        return scriptSessionVO;
     }
 }

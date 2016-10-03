@@ -21,6 +21,7 @@
         var CONTEXT_PATH = "<%=ContextUtil.getContext()%>";
         var TOP_MENU_DATA = (function(json){return json;})(${menuJson});
         var COMMON_CODE = (function(json){return json;})(<%=commonCodeJson%>);
+        var SCRIPT_SESSION = (function(json){return json;})(${scriptSession});
     </script>
 
     <script type="text/javascript" src="<c:url value='/assets/js/plugins.min.js' />"></script>

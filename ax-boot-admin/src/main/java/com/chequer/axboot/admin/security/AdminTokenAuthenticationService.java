@@ -118,6 +118,8 @@ public class AdminTokenAuthenticationService {
 
     private Authentication deleteCookieAndReturnNullAuthentication(HttpServletRequest request, HttpServletResponse response) {
         CookieUtils.deleteCookie(request, response, GlobalConstants.ADMIN_AUTH_TOKEN_KEY);
+        ScriptSessionVO scriptSessionVO = ScriptSessionVO.noLoginSession();
+        request.setAttribute("scriptSession", JsonUtils.toJson(scriptSessionVO));
         return null;
     }
 }

@@ -15,6 +15,7 @@
     <link rel="stylesheet" type="text/css" href="<c:url value='/assets/css/lang-kor.css'/>"/>
     <script type="text/javascript">
         var CONTEXT_PATH = "<%=ContextUtil.getContext()%>";
+        var SCRIPT_SESSION = (function(json){return json;})(${scriptSession});
     </script>
     <script type="text/javascript" src="<c:url value='/assets/js/plugins.min.js' />"></script>
     <script type="text/javascript" src="<c:url value='/assets/js/axboot/dist/axboot.js' />"></script>
