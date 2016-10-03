@@ -1,7 +1,7 @@
 package com.chequer.axboot.admin.controllers;
 
 import com.chequer.axboot.core.api.response.ApiResponse;
-import com.chequer.axboot.core.api.response.GeneralResponse;
+import com.chequer.axboot.core.api.response.Responses;
 import com.chequer.axboot.core.controllers.BaseController;
 import com.chequer.axboot.core.domain.manual.Manual;
 import com.chequer.axboot.core.domain.manual.ManualListVO;
@@ -26,9 +26,9 @@ public class ManualController extends BaseController {
     private ManualService manualService;
 
     @RequestMapping(method = RequestMethod.GET, produces = APPLICATION_JSON)
-    public GeneralResponse.ListResponse manualList(RequestParams requestParams) {
+    public Responses.ListResponse manualList(RequestParams requestParams) {
         List<Manual> list = manualService.get(requestParams);
-        return GeneralResponse.ListResponse.of(ModelMapperUtils.mapList(list, ManualListVO.class));
+        return Responses.ListResponse.of(ModelMapperUtils.mapList(list, ManualListVO.class));
     }
 
     @RequestMapping(value = "/{id}", method = RequestMethod.GET, produces = APPLICATION_JSON)

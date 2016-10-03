@@ -1,6 +1,6 @@
 package com.chequer.axboot.admin.controllers;
 
-import com.chequer.axboot.core.api.response.PageableResponse;
+import com.chequer.axboot.core.api.response.Responses;
 import com.chequer.axboot.core.controllers.BaseController;
 import com.chequer.axboot.core.domain.file.CommonFile;
 import com.chequer.axboot.core.domain.file.CommonFileService;
@@ -54,9 +54,9 @@ public class FileUploadController extends BaseController {
     }
 
     @RequestMapping(method = RequestMethod.GET, produces = APPLICATION_JSON)
-    public PageableResponse.PageResponse list(RequestParams<CommonFile> requestParams) {
+    public Responses.PageResponse list(RequestParams<CommonFile> requestParams) {
         Page<CommonFile> files = commonFileService.getList(requestParams);
-        return PageableResponse.PageResponse.of(files);
+        return Responses.PageResponse.of(files);
     }
 
     @RequestMapping(method = RequestMethod.PUT, produces = APPLICATION_JSON)

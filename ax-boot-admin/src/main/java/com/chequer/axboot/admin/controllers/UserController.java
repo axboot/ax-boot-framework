@@ -1,7 +1,7 @@
 package com.chequer.axboot.admin.controllers;
 
 import com.chequer.axboot.core.api.response.ApiResponse;
-import com.chequer.axboot.core.api.response.GeneralResponse;
+import com.chequer.axboot.core.api.response.Responses;
 import com.chequer.axboot.core.controllers.BaseController;
 import com.chequer.axboot.core.domain.user.User;
 import com.chequer.axboot.core.domain.user.UserService;
@@ -23,9 +23,9 @@ public class UserController extends BaseController {
     private UserService userService;
 
     @RequestMapping(method = RequestMethod.GET, produces = APPLICATION_JSON)
-    public GeneralResponse.ListResponse list(RequestParams<User> requestParams) {
+    public Responses.ListResponse list(RequestParams<User> requestParams) {
         List<User> users = userService.get(requestParams);
-        return GeneralResponse.ListResponse.of(users);
+        return Responses.ListResponse.of(users);
     }
 
     @RequestMapping(method = RequestMethod.GET, produces = APPLICATION_JSON, params = "userCd")

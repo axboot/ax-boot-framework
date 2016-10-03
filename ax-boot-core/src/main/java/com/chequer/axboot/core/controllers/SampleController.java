@@ -1,7 +1,7 @@
 package com.chequer.axboot.core.controllers;
 
 import com.chequer.axboot.core.api.response.ApiResponse;
-import com.chequer.axboot.core.api.response.PageableResponse;
+import com.chequer.axboot.core.api.response.Responses;
 import com.chequer.axboot.core.domain.sample.child.ChildSample;
 import com.chequer.axboot.core.domain.sample.child.ChildSampleService;
 import com.chequer.axboot.core.domain.sample.child.ChildSampleVO;
@@ -31,9 +31,9 @@ public class SampleController extends BaseController {
     private ChildSampleService childService;
 
     @RequestMapping(value = "/parent", method = RequestMethod.GET, produces = APPLICATION_JSON)
-    public PageableResponse.PageResponse parentList(Pageable pageable) {
+    public Responses.PageResponse parentList(Pageable pageable) {
         Page<ParentSample> pages = parentService.findAll(pageable);
-        return PageableResponse.PageResponse.of(ParentSampleVO.of(pages.getContent()), pages);
+        return Responses.PageResponse.of(ParentSampleVO.of(pages.getContent()), pages);
     }
 
     @RequestMapping(value = "/parent", method = {RequestMethod.POST, RequestMethod.PUT}, produces = APPLICATION_JSON)
@@ -50,9 +50,9 @@ public class SampleController extends BaseController {
     }
 
     @RequestMapping(value = "/child", method = RequestMethod.GET, produces = APPLICATION_JSON)
-    public PageableResponse.PageResponse childList(@RequestParam(defaultValue = "") String parentKey, Pageable pageable) {
+    public Responses.PageResponse childList(@RequestParam(defaultValue = "") String parentKey, Pageable pageable) {
         Page<ChildSample> pages = childService.findByParentKeyWithPaging(parentKey, pageable);
-        return PageableResponse.PageResponse.of(ChildSampleVO.of(pages.getContent()), pages);
+        return Responses.PageResponse.of(ChildSampleVO.of(pages.getContent()), pages);
     }
 
     @RequestMapping(value = "/child", method = {RequestMethod.POST, RequestMethod.PUT}, produces = APPLICATION_JSON)

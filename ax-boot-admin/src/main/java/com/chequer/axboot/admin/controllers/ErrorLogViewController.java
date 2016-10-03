@@ -1,7 +1,7 @@
 package com.chequer.axboot.admin.controllers;
 
 import com.chequer.axboot.core.api.response.ApiResponse;
-import com.chequer.axboot.core.api.response.PageableResponse;
+import com.chequer.axboot.core.api.response.Responses;
 import com.chequer.axboot.core.controllers.BaseController;
 import com.chequer.axboot.core.domain.log.ErrorLog;
 import com.chequer.axboot.core.domain.log.ErrorLogService;
@@ -23,9 +23,9 @@ public class ErrorLogViewController extends BaseController {
     private ErrorLogService errorLogService;
 
     @RequestMapping(method = RequestMethod.GET, produces = APPLICATION_JSON)
-    public PageableResponse.PageResponse list(Pageable pageable, @RequestParam(required = false) String searchParams) {
+    public Responses.PageResponse list(Pageable pageable, @RequestParam(required = false) String searchParams) {
         Page<ErrorLog> errorLogPage = errorLogService.findAll(pageable, searchParams);
-        return PageableResponse.PageResponse.of(errorLogPage);
+        return Responses.PageResponse.of(errorLogPage);
     }
 
     @RequestMapping(value = "/{id}", method = RequestMethod.DELETE, produces = APPLICATION_JSON)

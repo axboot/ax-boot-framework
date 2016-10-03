@@ -1,7 +1,7 @@
 package com.chequer.axboot.admin.controllers;
 
 import com.chequer.axboot.core.api.response.ApiResponse;
-import com.chequer.axboot.core.api.response.GeneralResponse;
+import com.chequer.axboot.core.api.response.Responses;
 import com.chequer.axboot.core.controllers.BaseController;
 import com.chequer.axboot.core.domain.program.menu.Menu;
 import com.chequer.axboot.core.domain.program.menu.MenuRequestVO;
@@ -30,9 +30,9 @@ public class MenuController extends BaseController {
     private AuthGroupMenuService authGroupMenuService;
 
     @RequestMapping(method = RequestMethod.GET, produces = APPLICATION_JSON)
-    public GeneralResponse.ListResponse menuList(RequestParams requestParams) {
+    public Responses.ListResponse menuList(RequestParams requestParams) {
         List<Menu> list = menuService.get(requestParams);
-        return GeneralResponse.ListResponse.of(list);
+        return Responses.ListResponse.of(list);
     }
 
     @RequestMapping(method = {RequestMethod.PUT}, produces = APPLICATION_JSON)

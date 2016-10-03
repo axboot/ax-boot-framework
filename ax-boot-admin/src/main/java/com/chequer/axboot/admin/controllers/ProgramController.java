@@ -1,7 +1,7 @@
 package com.chequer.axboot.admin.controllers;
 
 import com.chequer.axboot.core.api.response.ApiResponse;
-import com.chequer.axboot.core.api.response.GeneralResponse;
+import com.chequer.axboot.core.api.response.Responses;
 import com.chequer.axboot.core.controllers.BaseController;
 import com.chequer.axboot.core.domain.program.Program;
 import com.chequer.axboot.core.domain.program.ProgramService;
@@ -23,9 +23,9 @@ public class ProgramController extends BaseController {
     private ProgramService programService;
 
     @RequestMapping(method = RequestMethod.GET, produces = APPLICATION_JSON)
-    public GeneralResponse.ListResponse list(RequestParams<Program> requestParams) {
+    public Responses.ListResponse list(RequestParams<Program> requestParams) {
         List<Program> programs = programService.get(requestParams);
-        return GeneralResponse.ListResponse.of(programs);
+        return Responses.ListResponse.of(programs);
     }
 
     @RequestMapping(method = RequestMethod.PUT, produces = APPLICATION_JSON)
