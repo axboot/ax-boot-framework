@@ -6,10 +6,8 @@ var ACTIONS = axboot.actionExtend(fnObj, {
     dispatch: function (caller, act, data) {
         switch (act) {
             case ACTIONS.PAGE_SEARCH:
-
                 //console.log("PAGE_SEARCH");
                 //console.log(arguments);
-
                 break;
             case ACTIONS.TOGGLE_ASIDE:
                 this.frameView.toggleAside();
@@ -223,7 +221,7 @@ fnObj.topMenuView = axboot.viewExtend({
         this.menu.attach(this.target);
         this.menu.onClick = function () {
             if (this.program) {
-                ACTIONS.dispatch(ACTIONS.MENU_OPEN, $.extend({}, this.program, {menuId: this.menuId}));
+                ACTIONS.dispatch(ACTIONS.MENU_OPEN, $.extend({}, this.program, {menuId: this.menuId, menuNm: this.menuNm}));
             }
         };
     }
