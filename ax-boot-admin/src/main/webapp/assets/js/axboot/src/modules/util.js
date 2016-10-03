@@ -17,3 +17,24 @@ axboot.viewExtend = function (_obj1, _obj2) {
         return $.extend({}, _obj1, _obj2);
     }
 };
+
+axboot.addressPopup = {
+    open: function(cb){
+        //alert("open");
+        var modalConfig = {
+            width:500,
+            height:600,
+            iframe: {
+                url: "/jsp/common/zipcode.jsp"
+            },
+            header: {
+                title: "우편번호 찾기"
+            },
+            callback: cb
+        } ;
+        axboot.modal.open(modalConfig);
+    },
+    close: function(){
+        axboot.modal.close();
+    }
+};
