@@ -21,7 +21,7 @@ axboot.convertCode = (function () {
 
         for (var k in codes) {
             if (codes.hasOwnProperty(k)) {
-                return_code[k] = codes[k]; 
+                return_code[k] = codes[k];
                 return_code[k].map = (function () {
                     var i = this.length,
                         map = {};

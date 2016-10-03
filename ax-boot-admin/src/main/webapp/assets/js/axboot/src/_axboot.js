@@ -74,7 +74,7 @@ axboot.init = function () {
         }
     }); // 레이아웃 플러그인 실행
 
-    if (typeof parent.COMMON_CODE === "undefined") {
+    if (typeof parent.COMMON_CODE === "undefined" && (window.SCRIPT_SESSION && SCRIPT_SESSION.login)) {
         // API : /api/v1/commonCodes/getAllByMap
         axboot.ajax({
             url: "/api/v1/commonCodes/getAllByMap",

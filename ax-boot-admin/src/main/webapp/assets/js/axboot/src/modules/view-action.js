@@ -4,12 +4,6 @@
  */
 axboot.commonView = {};
 axboot.searchView = {
-    pageNumber: 0,
-    pageSize: 9999,
-    setPageNumber: function(pageNumber){
-        this.pageNumber = pageNumber;
-
-    },
     setData: function (_obj) {
         for (var k in _obj) {
             if (k in this) {
@@ -67,20 +61,6 @@ axboot.gridView = {
     }
 };
 axboot.formView = {
-    initEvent: function () {
-        var _this = this;
-
-    },
-    getData: function () {
-        var data = this.modelFormatter.getClearData(this.model.get()); // 모델의 값을 포멧팅 전 값으로 치환.
-        return $.extend({}, data);
-    },
-    setData: function (data) {
-        data = $.extend(true, {}, this.getDefaultData(), data);
-
-        this.model.setModel(data);
-        this.modelFormatter.formatting(); // 입력된 값을 포메팅 된 값으로 변경
-    },
     clear: function () {
         this.model.setModel(this.getDefaultData());
         $('[data-ax5formatter]').ax5formatter("formatting");
@@ -96,7 +76,7 @@ axboot.formView = {
     }
 };
 axboot.formView.defaultData = {
-    masterCompCd: "AXBOOT"
+    masterCompCd: "ACN"
 };
 
 /**
