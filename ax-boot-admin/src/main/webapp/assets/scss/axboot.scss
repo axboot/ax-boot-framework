@@ -19,8 +19,9 @@
 @import "modules/ax-form";
 @import "modules/ax-btns";
 @import "modules/ax-tabs";
-@import "modules/ztree";
 @import "modules/ax-markdown";
+
+@import "plugins/ztree";
 
 //== pages
 .ax-body {
@@ -29,4 +30,5 @@
     @import "pages/base";
     @import "pages/modal-base";
     @import "pages/error-page";
+    @import "pages/dashboard";
 }

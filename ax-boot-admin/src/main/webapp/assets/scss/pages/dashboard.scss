@@ -1,0 +1,17 @@
+&.dashboard {
+    margin: 0;
+    padding: 0;
+    #ax-base-root{
+        padding: 0;
+        .ax-base-title{
+            margin: 0 15px;
+        }
+    }
+
+    .row{
+        margin:0 -10px;
+        .card{
+            margin-bottom: 15px;
+        }
+    }
+}

@@ -102,6 +102,14 @@ gulp.task('scss', function () {
         .pipe(gulp.dest(ASSETS + '/css'));
 });
 
+gulp.task('dashboard-scss', function () {
+    gulp.src(ASSETS_SRC + '/plugins/light-bootstrap-dashboard/scss/light-bootstrap-dashboard.scss')
+        .pipe(plumber({errorHandler: errorAlert}))
+        .pipe(sass({outputStyle: 'compressed'}))
+        //.pipe(sass({outputStyle: 'nested'}))
+        .pipe(gulp.dest(ASSETS + '/plugins/css/light-bootstrap-dashboard'));
+});
+
 gulp.task('import-ax5ui-file', function () {
     /*
      ax5ui 소스를 로컬에서 직접 복붙하는 타스크

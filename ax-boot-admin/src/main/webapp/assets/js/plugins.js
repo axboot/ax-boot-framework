@@ -18281,7 +18281,7 @@ ax5.ui = function () {
 
     UI.addClass({
         className: "mask",
-        version: "0.7.5"
+        version: "0.7.6"
     }, function () {
         /**
          * @class ax5mask
@@ -18948,7 +18948,7 @@ ax5.ui = function () {
 
     UI.addClass({
         className: "modal",
-        version: "0.8.0"
+        version: "0.8.1"
     }, function () {
         /**
          * @class ax5modal
@@ -19205,6 +19205,7 @@ ax5.ui = function () {
             },
                 moveModal = {
                 "on": function on() {
+                    var modalZIndex = this.activeModal.css("z-index");
                     var modalOffset = this.activeModal.position();
                     var modalBox = {
                         width: this.activeModal.outerWidth(), height: this.activeModal.outerHeight()
@@ -19248,11 +19249,13 @@ ax5.ui = function () {
                             // self.resizerBg : body 가 window보다 작을 때 문제 해결을 위한 DIV
                             self.resizerBg = jQuery('<div class="ax5modal-resizer-background" ondragstart="return false;"></div>');
                             self.resizer = jQuery('<div class="ax5modal-resizer" ondragstart="return false;"></div>');
+                            self.resizerBg.css({ zIndex: modalZIndex });
                             self.resizer.css({
                                 left: modalOffset.left,
                                 top: modalOffset.top,
                                 width: modalBox.width,
-                                height: modalBox.height
+                                height: modalBox.height,
+                                zIndex: modalZIndex + 1
                             });
                             jQuery(document.body).append(self.resizerBg).append(self.resizer);
                             self.activeModal.addClass("draged");
