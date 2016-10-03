@@ -35,6 +35,7 @@ public class SessionUtils {
 
         if (userDetails != null) {
             SessionUser sessionUser = (SessionUser) userDetails;
+            sessionUser.setUserPs(null);
             MDCLoginUser mdcLoginUser = new MDCLoginUser();
             mdcLoginUser.setSessionUser(sessionUser);
             mdcLoginUser.setUserAgent(AgentUtils.getUserAgent(request));
