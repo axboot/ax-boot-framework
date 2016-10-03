@@ -254,7 +254,7 @@ public class DatabaseInitService {
         menuService.save(Menu.of(14L, "SYSTEM_MANAGER", "그리드&폼 템플릿", 8L, 1, 5, "grid-form"));
         menuService.save(Menu.of(15L, "SYSTEM_MANAGER", "그리드&탭폼 템플릿", 8L, 1, 6, "grid-tabform"));
         menuService.save(Menu.of(16L, "SYSTEM_MANAGER", "그리드&모달 템플릿", 8L, 1, 7, "grid-modal"));
-        menuService.save(Menu.of(17L, "SYSTEM_MANAGER", "텝레이아웃", 8L, 1, 3, "tab-layout"));
+        menuService.save(Menu.of(17L, "SYSTEM_MANAGER", "탭레이아웃", 8L, 1, 3, "tab-layout"));
         menuService.save(Menu.of(18L, "SYSTEM_MANAGER", "AXBOOT.js", 9L, 1, 0, "axboot-js"));
         menuService.save(Menu.of(19L, "SYSTEM_MANAGER", "AXBOOT.css", 9L, 1, 1, null));
         menuService.save(Menu.of(20L, "SYSTEM_MANAGER", "AXBOOT.jsp", 9L, 1, 2, null));
