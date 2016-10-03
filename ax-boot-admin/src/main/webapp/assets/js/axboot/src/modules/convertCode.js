@@ -1,10 +1,8 @@
-
-
-
-axboot.CODE_map = {key: "CD", value: "NM"};
-axboot.CODE = (function () {
+axboot.convertCode = (function () {
     var BASIC_CODE = {};
-
+    var mapKeys = {
+        key: "code", value: "name"
+    };
     return function () {
         var
             codes,
@@ -20,16 +18,16 @@ axboot.CODE = (function () {
         }
 
         codes = $.extend(true, BASIC_CODE, codes);
+
         for (var k in codes) {
             if (codes.hasOwnProperty(k)) {
-                return_code[k] = codes[k];
+                return_code[k] = codes[k]; 
                 return_code[k].map = (function () {
-                    var
-                        i = this.length,
-                        map = {}
-                        ;
+                    var i = this.length,
+                        map = {};
+
                     while (i--) {
-                        map[this[i][app.CODE_map.key]] = this[i][app.CODE_map.value];
+                        map[this[i][mapKeys.key]] = this[i][mapKeys.value];
                     }
                     return map;
                 }).call(return_code[k]);

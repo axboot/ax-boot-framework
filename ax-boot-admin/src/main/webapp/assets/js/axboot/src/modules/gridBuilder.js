@@ -56,8 +56,21 @@ axboot.gridBuilder = (function () {
         "storCd": {width: 100, label: "매장코드", align: "center"},
         "storNm": {width: 200, label: "매장명", align: "left"},
         "userNm": {width: 100, label: "이름", align: "center"},
-        "delYn": {width: 50, label: "삭제", align: "center"},
-        "useYn": {width: 70, label: "사용여부", align: "center"},
+        "delYn": {
+            width: 50, label: "삭제", align: "center", formatter: function () {
+                return parent.COMMON_CODE["DEL_YN"].map[this.value];
+            }
+        },
+        "useYn": {
+            width: 70, label: "사용여부", align: "center", formatter: function () {
+                return parent.COMMON_CODE["USE_YN"].map[this.value];
+            }
+        },
+        "posUseYn": {
+            width: 90, label: "포스사용여부", align: "center", formatter: function () {
+                return parent.COMMON_CODE["USE_YN"].map[this.value];
+            }
+        },
         "sort": {width: 50, label: "정렬", align: "center"},
         "companyJson.대표자명": {width: 100, label: "대표자명", align: "center"},
         "companyJson.사업자등록번호": {
@@ -92,6 +105,11 @@ axboot.gridBuilder = (function () {
             label: "연락처",
             width: 100,
             align: "center"
+        },
+        "locale": {
+            width: 120, label: "국가", align: "center", formatter: function () {
+                return parent.COMMON_CODE["LOCALE"].map[this.value];
+            }
         }
     };
     var preDefineEditor = {
@@ -152,9 +170,7 @@ axboot.gridBuilder = (function () {
             return columns;
         };
         myGridConfig.columns = convertColumn(myGridConfig.columns);
-        myGridConfig.page.onChange = function () {
-            myGridConfig.onPageChange(this.page.selectPage);
-        };
+
         return new ax5.ui.grid(myGridConfig);
     }
 })();

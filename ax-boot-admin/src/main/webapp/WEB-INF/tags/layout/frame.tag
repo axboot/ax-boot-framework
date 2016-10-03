@@ -1,13 +1,7 @@
+<%@ tag import="com.chequer.axboot.core.utils.CommonCodeUtils" %>
 <%@ tag language="java" pageEncoding="UTF-8" body-content="scriptless" %>
 <%
-    /*
-    PageContextVO pageContextVO = SessionUtils.getPageContext(request);
-    String menuJson = JsonUtils.toJson(SessionUtils.getUserMenuContext(request).getMenu());
-
-    if (!pageContextVO.isAuthorized()) {
-        //response.sendRedirect("/jsp/common/not-authorized.jsp");
-    }
-    */
+    String commonCodeJson = CommonCodeUtils.getAllByJson();
 %>
 <!DOCTYPE html>
 <html>
@@ -25,7 +19,8 @@
     <link rel="stylesheet" type="text/css" href="<c:url value='/assets/css/lang-kor.css'/>"/>
     <script type="text/javascript">
         var CONTEXT_PATH = "<%=ContextUtil.getContext()%>";
-        var TOP_MENU_DATA = ${menuJson};
+        var TOP_MENU_DATA = (function(json){return json;})(${menuJson});
+        var COMMON_CODE = (function(json){return json;})(<%=commonCodeJson%>);
     </script>
 
     <script type="text/javascript" src="<c:url value='/assets/js/plugins.min.js' />"></script>

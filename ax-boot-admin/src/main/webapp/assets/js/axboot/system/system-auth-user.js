@@ -187,10 +187,6 @@ fnObj.searchView = axboot.viewExtend(axboot.searchView, {
  * gridView
  */
 fnObj.gridView01 = axboot.viewExtend(axboot.gridView, {
-    useYn: {
-        Y: "사용",
-        N: "사용안함"
-    },
     initView: function () {
 
         var _this = this;
@@ -207,19 +203,8 @@ fnObj.gridView01 = axboot.viewExtend(axboot.gridView, {
                     label: "이름",
                     width: 120
                 },
-                {
-                    key: "locale",
-                    label: "국가",
-                    width: 120
-                },
-                {
-                    key: "useYn",
-                    label: "사용여부",
-                    width: 80,
-                    formatter: function () {
-                        return _this.useYn[this.value];
-                    }
-                }
+                {key: "locale"},
+                {key: "useYn"}
             ],
             body: {
                 onClick: function () {

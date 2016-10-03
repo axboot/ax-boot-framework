@@ -41,7 +41,7 @@ axboot.init = function () {
                 });
                 $this.css({height: _pHeight - _asideHeight});
             });
-            if(ax5.ui.grid_instance) {
+            if (ax5.ui.grid_instance) {
                 ax5.ui.grid_instance.forEach(function (g) {
                     g.setHeight(g.$target.height());
                 });
@@ -61,7 +61,7 @@ axboot.init = function () {
                 $this.css({height: _pHeight - _asideHeight});
             });
 
-            if(ax5.ui.grid_instance) {
+            if (ax5.ui.grid_instance) {
                 for (var gi = 0, gl = ax5.ui.grid_instance.length; gi < gl; gi++) {
                     var target = ax5.util.findParentNode(ax5.ui.grid_instance[gi].$target.get(0), function (_el) {
                         return activeTabPanel == _el;
@@ -74,7 +74,20 @@ axboot.init = function () {
         }
     }); // 레이아웃 플러그인 실행
 
-    axboot.pageStart();
+    if (typeof parent.COMMON_CODE === "undefined") {
+        // API : /api/v1/commonCodes/getAllByMap
+        axboot.ajax({
+            url: "/api/v1/commonCodes/getAllByMap",
+            callback: function(res){
+                parent.COMMON_CODE = axboot.convertCode(res);
+                axboot.pageStart();
+            },
+            options: {nomask: true}
+        });
+    }else{
+        parent.COMMON_CODE = axboot.convertCode(parent.COMMON_CODE);
+        axboot.pageStart();
+    }
 
     $(window).resize(function () {
         axboot.pageResize();

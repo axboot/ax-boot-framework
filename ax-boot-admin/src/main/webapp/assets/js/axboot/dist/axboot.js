@@ -77,7 +77,20 @@ axboot.init = function () {
         }
     }); // 레이아웃 플러그인 실행
 
-    axboot.pageStart();
+    if (typeof parent.COMMON_CODE === "undefined") {
+        // API : /api/v1/commonCodes/getAllByMap
+        axboot.ajax({
+            url: "/api/v1/commonCodes/getAllByMap",
+            callback: function callback(res) {
+                parent.COMMON_CODE = axboot.convertCode(res);
+                axboot.pageStart();
+            },
+            options: { nomask: true }
+        });
+    } else {
+        parent.COMMON_CODE = axboot.convertCode(parent.COMMON_CODE);
+        axboot.pageStart();
+    }
 
     $(window).resize(function () {
         axboot.pageResize();
@@ -1271,11 +1284,11 @@ axboot.call = function () {
         return new callClass(obj);
     };
 }();
-
-axboot.CODE_map = { key: "CD", value: "NM" };
-axboot.CODE = function () {
+axboot.convertCode = function () {
     var BASIC_CODE = {};
-
+    var mapKeys = {
+        key: "code", value: "name"
+    };
     return function () {
         var codes,
             return_code = {};
@@ -1288,14 +1301,16 @@ axboot.CODE = function () {
         }
 
         codes = $.extend(true, BASIC_CODE, codes);
+
         for (var k in codes) {
             if (codes.hasOwnProperty(k)) {
                 return_code[k] = codes[k];
                 return_code[k].map = function () {
                     var i = this.length,
                         map = {};
+
                     while (i--) {
-                        map[this[i][app.CODE_map.key]] = this[i][app.CODE_map.value];
+                        map[this[i][mapKeys.key]] = this[i][mapKeys.value];
                     }
                     return map;
                 }.call(return_code[k]);
@@ -1363,8 +1378,21 @@ axboot.gridBuilder = function () {
         "storCd": { width: 100, label: "매장코드", align: "center" },
         "storNm": { width: 200, label: "매장명", align: "left" },
         "userNm": { width: 100, label: "이름", align: "center" },
-        "delYn": { width: 50, label: "삭제", align: "center" },
-        "useYn": { width: 70, label: "사용여부", align: "center" },
+        "delYn": {
+            width: 50, label: "삭제", align: "center", formatter: function formatter() {
+                return parent.COMMON_CODE["DEL_YN"].map[this.value];
+            }
+        },
+        "useYn": {
+            width: 70, label: "사용여부", align: "center", formatter: function formatter() {
+                return parent.COMMON_CODE["USE_YN"].map[this.value];
+            }
+        },
+        "posUseYn": {
+            width: 90, label: "포스사용여부", align: "center", formatter: function formatter() {
+                return parent.COMMON_CODE["USE_YN"].map[this.value];
+            }
+        },
         "sort": { width: 50, label: "정렬", align: "center" },
         "companyJson.대표자명": { width: 100, label: "대표자명", align: "center" },
         "companyJson.사업자등록번호": {
@@ -1399,6 +1427,11 @@ axboot.gridBuilder = function () {
             label: "연락처",
             width: 100,
             align: "center"
+        },
+        "locale": {
+            width: 120, label: "국가", align: "center", formatter: function formatter() {
+                return parent.COMMON_CODE["LOCALE"].map[this.value];
+            }
         }
     };
     var preDefineEditor = {
@@ -1456,9 +1489,7 @@ axboot.gridBuilder = function () {
             return columns;
         };
         myGridConfig.columns = convertColumn(myGridConfig.columns);
-        myGridConfig.page.onChange = function () {
-            myGridConfig.onPageChange(this.page.selectPage);
-        };
+
         return new ax5.ui.grid(myGridConfig);
     };
 }();
