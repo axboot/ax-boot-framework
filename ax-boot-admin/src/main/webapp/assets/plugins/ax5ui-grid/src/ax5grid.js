@@ -13,7 +13,7 @@
 
     UI.addClass({
         className: "grid",
-        version: "0.2.21"
+        version: "0.3.0"
     }, (function () {
         /**
          * @class ax5grid
@@ -46,6 +46,7 @@
                 lineNumberColumnWidth: 30,
                 rowSelectorColumnWidth: 26,
                 sortable: undefined,
+                remoteSort: false,
 
                 header: {
                     align: false,
@@ -121,7 +122,6 @@
             this.leftFootSumData = {}; // frozenColumnIndex 를 기준으로 나누어진 출력 레이아웃 왼쪽
             this.footSumData = {}; // frozenColumnIndex 를 기준으로 나누어진 출력 레이아웃 오른쪽
             this.needToPaintSum = true; // 데이터 셋이 변경되어 summary 변경 필요여부
-
 
             cfg = this.config;
 
@@ -538,25 +538,40 @@
                 sortColumns = function (_sortInfo) {
                     GRID.header.repaint.call(this);
 
-                    if (this.config.body.grouping) {
-                        this.list = GRID.data.initData.call(this,
-                            GRID.data.sort.call(this,
-                                _sortInfo,
+                    if (U.isFunction(this.config.remoteSort)) {
+                        var that = {sortInfo: []};
+                        for (var k in _sortInfo) {
+                            that.sortInfo.push({
+                                key: k,
+                                orderBy: _sortInfo[k].orderBy,
+                                seq: _sortInfo[k].seq
+                            });
+                        }
+                        that.sortInfo.sort(function (a, b) {
+                            return a.seq > b.seq;
+                        });
+                        this.config.remoteSort.call(that, that);
+                    } else {
+                        if (this.config.body.grouping) {
+                            this.list = GRID.data.initData.call(this,
+                                GRID.data.sort.call(this,
+                                    _sortInfo,
+                                    GRID.data.clearGroupingData.call(this,
+                                        this.list
+                                    )
+                                )
+                            );
+                        }
+                        else {
+                            this.list = GRID.data.sort.call(this, _sortInfo,
                                 GRID.data.clearGroupingData.call(this,
                                     this.list
                                 )
-                            )
-                        );
+                            );
+                        }
+                        GRID.body.repaint.call(this, true);
+                        GRID.scroller.resize.call(this);
                     }
-                    else {
-                        this.list = GRID.data.sort.call(this, _sortInfo,
-                            GRID.data.clearGroupingData.call(this,
-                                this.list
-                            )
-                        );
-                    }
-                    GRID.body.repaint.call(this, true);
-                    GRID.scroller.resize.call(this);
                 };
 
             /// private end
@@ -576,7 +591,7 @@
              * @param {Number} [_config.rowSelectorColumnWidth=25]
              * @param {Boolean} [_config.sortable=false]
              * @param {Boolean} [_config.multiSort=false]
-             * @param {Boolean} [_config.remoteSort=false]
+             * @param {Function} [_config.remoteSort=false]
              * @param {Object} [_config.header]
              * @param {String} [_config.header.align]
              * @param {Number} [_config.header.columnHeight=25]
@@ -615,18 +630,82 @@
              * @param {Array} _config.columns[].editor.updateWith
              * @returns {ax5grid}
              * @example
-             * ```
+             * ```js
+             * var firstGrid = new ax5.ui.grid();
+             *
+             * ax5.ui.grid.formatter["myType"] = function () {
+             *     return "myType" + (this.value || "");
+             * };
+             * ax5.ui.grid.formatter["capital"] = function(){
+             *     return (''+this.value).toUpperCase();
+             * };
+             *
+             * ax5.ui.grid.collector["myType"] = function () {
+             *     return "myType" + (this.value || "");
+             * };
+             *
+             * var sampleData = [
+             *     {a: "A", b: "A01", price: 1000, amount: 12, cost: 12000, saleDt: "2016-08-29", customer: "장기영", saleType: "A"},
+             *     {companyJson: {"대표자명":"abcd"}, a: "A", b: "B01", price: 1100, amount: 11, cost: 12100, saleDt: "2016-08-28", customer: "장서우", saleType: "B"},
+             *     {companyJson: {"대표자명":"abcd"}, a: "A", b: "C01", price: 1200, amount: 10, cost: 12000, saleDt: "2016-08-27", customer: "이영희", saleType: "A"},
+             *     {companyJson: {"대표자명":"위세라"}, a: "A", b: "A01", price: 1300, amount: 8, cost: 10400, saleDt: "2016-08-25", customer: "황인서", saleType: "C"},
+             *     {companyJson: {"대표자명":"abcd"}, a: "A", b: "B01", price: 1400, amount: 5, cost: 7000, saleDt: "2016-08-29", customer: "황세진", saleType: "D"},
+             *     {companyJson: {"대표자명":"abcd"}, a: "A", b: "A01", price: 1500, amount: 2, cost: 3000, saleDt: "2016-08-26", customer: "이서연", saleType: "A"}
+             * ];
+             *
+             * var gridView = {
+             *     initView: function () {
+             *         firstGrid.setConfig({
+             *             target: $('[data-ax5grid="first-grid"]'),
+             *             columns: [
+             *                 {
+             *                     key: "companyJson['대표자명']",
+             *                     label: "필드A",
+             *                     width: 80,
+             *                     styleClass: function () {
+             *                         return "ABC";
+             *                     },
+             *                     enableFilter: true,
+             *                     align: "center",
+             *                     editor: {type:"text"}
+             *                 },
+             *                 {key: "b", label: "필드B", align: "center"},
+             *                 {
+             *                     key: undefined, label: "필드C", columns: [
+             *                         {key: "price", label: "단가", formatter: "money", align: "right"},
+             *                         {key: "amount", label: "수량", formatter: "money", align: "right"},
+             *                         {key: "cost", label: "금액", align: "right", formatter: "money"}
+             *                     ]
+             *                 },
+             *                 {key: "saleDt", label: "판매일자", align: "center"},
+             *                 {key: "customer", label: "고객명"},
+             *                 {key: "saleType", label: "판매타입"}
+             *             ]
+             *         });
+             *         return this;
+             *     },
+             *     setData: function (_pageNo) {
+             *
+             *         firstGrid.setData(sampleData);
+             *
+             *         return this;
+             *     }
+             * };
              * ```
              */
             this.init = function (_config) {
-                this.onStateChanged = cfg.onStateChanged;
-                this.onClick = cfg.onClick;
-
                 cfg = jQuery.extend(true, {}, cfg, _config);
                 if (!cfg.target) {
                     console.log(ax5.info.getError("ax5grid", "401", "init"));
                     return this;
                 }
+
+                // 그리드의 이벤트 정의 구간
+                this.onStateChanged = cfg.onStateChanged;
+                this.onClick = cfg.onClick;
+                this.onLoad = cfg.onLoad;
+                this.onDataChanged = cfg.body.onDataChanged;
+                // todo event에 대한 추가 정의 필요
 
                 this.$target = jQuery(cfg.target);
 
@@ -727,7 +806,7 @@
                                 U.stopEvent(e);
                             }
                             else if (e.which == ax5.info.eventKeys.UP) {
-                                self.keyDown("RETURN", {shiftKey:true});
+                                self.keyDown("RETURN", {shiftKey: true});
                             }
                             else if (e.which == ax5.info.eventKeys.DOWN) {
                                 self.keyDown("RETURN", {});
@@ -758,6 +837,15 @@
                         }
                     }
                 });
+
+                // 그리드 레이아웃이 모든 준비를 마친시점에 onLoad존재 여부를 확인하고 호출하여 줍니다.
+                setTimeout((function(){
+                    if(this.onLoad){
+                        this.onLoad.call({
+                            self: this
+                        })
+                    }
+                }).bind(this));
                 return this;
             };
 
@@ -824,7 +912,7 @@
                             GRID.body.inlineEdit.keydown.call(this, "RETURN");
                         }
                     },
-                    "TAB": function(_e){
+                    "TAB": function (_e) {
                         var activeEditLength = 0;
                         for (var columnKey in this.inlineEditing) {
                             activeEditLength++;
@@ -961,7 +1049,6 @@
              */
             this.setHeight = function (_height) {
                 //console.log(this.$target);
-
                 if (_height == "100%") {
                     _height = this.$target.offsetParent().innerHeight();
                 }
@@ -1040,7 +1127,7 @@
              * ax5Grid.deleteRow("selected");
              * ```
              */
-            this.deleteRow = function (_dindex){
+            this.deleteRow = function (_dindex) {
                 GRID.data.deleteRow.call(this, _dindex);
                 alignGrid.call(this);
                 GRID.body.repaint.call(this, "reset");
@@ -1130,8 +1217,9 @@
 
             /**
              * @method ax5grid.setColumnWidth
-             * @param _width
-             * @param _cindex
+             * @param {Number} _width
+             * @param {Number} _cindex
+             * @returns {ax5grid}
              */
             this.setColumnWidth = function (_width, _cindex) {
                 this.colGroup[this.xvar.columnResizerIndex]._width = _width;
@@ -1147,12 +1235,22 @@
             };
 
             /**
-             * @method ax5grid.getColumnSort
+             * @method ax5grid.getColumnSortInfo
              * @returns {Object} sortInfo
              */
-            this.getColumnSort = function () {
-
-                return {}
+            this.getColumnSortInfo = function () {
+                var that = {sortInfo: []};
+                for (var k in this.sortInfo) {
+                    that.sortInfo.push({
+                        key: k,
+                        orderBy: this.sortInfo[k].orderBy,
+                        seq: this.sortInfo[k].seq
+                    });
+                }
+                that.sortInfo.sort(function (a, b) {
+                    return a.seq > b.seq;
+                })
+                return that.sortInfo;
             };
 
             /**
@@ -1218,6 +1316,7 @@
 })();
 
 
+// todo : merge cells
 // todo : filter
 // todo : body menu
 // todo : column reorder

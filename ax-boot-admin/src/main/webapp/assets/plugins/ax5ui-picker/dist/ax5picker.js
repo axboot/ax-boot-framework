@@ -5,18 +5,39 @@
 
     var UI = ax5.ui;
     var U = ax5.util;
+    var PICKER;
 
     UI.addClass({
         className: "picker",
-        version: "0.7.13"
+        version: "0.8.0"
     }, function () {
         /**
          * @class ax5picker
          * @classdesc
          * @author tom@axisj.com
          * @example
-         * ```
-         * var myPicker = new ax5.ui.picker();
+         * ```js
+         * ax5.def.picker.date_leftArrow = '<i class="fa fa-chevron-left"></i>';
+         * ax5.def.picker.date_yearTmpl = '%s';
+         * ax5.def.picker.date_monthTmpl = '%s';
+         * def.picker.date_rightArrow = '<i class="fa fa-chevron-right"></i>';
+         *
+         * var picker = new ax5.ui.picker({
+         *     onStateChanged: function () {
+         *         console.log(this);
+         *     }
+         * });
+         *
+         * picker.bind({
+         *     target: $('[data-picker-date]'),
+         *     direction: "auto",
+         *     content: {
+         *         type: 'date',
+         *         formatter: {
+         *             pattern: 'date'
+         *         }
+         *     }
+         * });
          * ```
          */
         var ax5picker = function ax5picker() {
@@ -73,10 +94,8 @@
                 var pickerType = {
                     '@fn': function fn(queIdx, _input) {
                         var item = this.queue[queIdx],
-                            config = {},
-                            inputLength = _input.length;
-
-                        config = {
+                            inputLength = _input.length,
+                            config = {
                             inputLength: inputLength || 1
                         };
 
@@ -98,15 +117,10 @@
                         var item = this.queue[queIdx],
                             contentWidth = item.content ? item.content.width || 270 : 270,
                             contentMargin = item.content ? item.content.margin || 5 : 5,
-                            config = {},
-                            inputLength = _input.length;
-
-                        config = {
+                            inputLength = _input.length,
+                            config = {
                             contentWidth: contentWidth * inputLength + (inputLength - 1) * contentMargin,
-                            content: {
-                                width: contentWidth,
-                                margin: contentMargin
-                            },
+                            content: { width: contentWidth, margin: contentMargin },
                             inputLength: inputLength || 1
                         };
 
@@ -125,10 +139,8 @@
                     },
                     'secure-num': function secureNum(queIdx, _input) {
                         var item = this.queue[queIdx],
-                            config = {},
-                            inputLength = _input.length;
-
-                        config = {
+                            inputLength = _input.length,
+                            config = {
                             inputLength: inputLength || 1
                         };
 
@@ -139,10 +151,8 @@
                     },
                     'keyboard': function keyboard(queIdx, _input) {
                         var item = this.queue[queIdx],
-                            config = {},
-                            inputLength = _input.length;
-
-                        config = {
+                            inputLength = _input.length,
+                            config = {
                             inputLength: inputLength || 1
                         };
 
@@ -153,10 +163,8 @@
                     },
                     'numpad': function numpad(queIdx, _input) {
                         var item = this.queue[queIdx],
-                            config = {},
-                            inputLength = _input.length;
-
-                        config = {
+                            inputLength = _input.length,
+                            config = {
                             inputLength: inputLength || 1
                         };
 
@@ -204,9 +212,6 @@
                     return this;
                 };
             }(),
-                getTmpl = function getTmpl(queIdx) {
-                return "\n                    <div class=\"ax5-ui-picker {{theme}}\" id=\"{{id}}\" data-picker-els=\"root\">\n                        {{#title}}\n                            <div class=\"ax-picker-heading\">{{title}}</div>\n                        {{/title}}\n                        <div class=\"ax-picker-body\">\n                            <div class=\"ax-picker-content\" data-picker-els=\"content\" style=\"width:{{contentWidth}}px;\"></div>\n                            {{#btns}}\n                                <div class=\"ax-picker-buttons\">\n                                {{#btns}}\n                                    {{#@each}}\n                                    <button data-picker-btn=\"{{@key}}\" class=\"btn btn-default {{@value.theme}}\">{{@value.label}}</button>\n                                    {{/@each}}\n                                {{/btns}}\n                                </div>\n                            {{/btns}}\n                        </div>\n                        <div class=\"ax-picker-arrow\"></div>\n                    </div>\n                    ";
-            },
                 alignPicker = function alignPicker(append) {
                 if (!this.activePicker) return this;
 
@@ -742,7 +747,7 @@
                         return this;
                     }
 
-                    this.activePicker = jQuery(ax5.mustache.render(getTmpl.call(this, item, queIdx), item));
+                    this.activePicker = jQuery(PICKER.tmpl.get.call(this, "pickerTmpl", item));
                     this.activePickerArrow = this.activePicker.find(".ax-picker-arrow");
                     this.activePickerQueueIndex = queIdx;
                     item.pickerContent = this.activePicker.find('[data-picker-els="content"]');
@@ -831,6 +836,8 @@
         };
         return ax5picker;
     }());
+
+    PICKER = ax5.ui.picker;
 })();
 
 /**
@@ -877,3 +884,20 @@ jQuery.fn.ax5picker = function () {
         return this;
     };
 }();
+// ax5.ui.picker.tmpl
+(function () {
+    var PICKER = ax5.ui.picker;
+    var U = ax5.util;
+
+    var pickerTmpl = function pickerTmpl() {
+        return "\n<div class=\"ax5-ui-picker {{theme}}\" id=\"{{id}}\" data-picker-els=\"root\">\n    {{#title}}\n        <div class=\"ax-picker-heading\">{{title}}</div>\n    {{/title}}\n    <div class=\"ax-picker-body\">\n        <div class=\"ax-picker-content\" data-picker-els=\"content\" style=\"width:{{contentWidth}}px;\"></div>\n        {{#btns}}\n            <div class=\"ax-picker-buttons\">\n            {{#btns}}\n                {{#@each}}\n                <button data-picker-btn=\"{{@key}}\" class=\"btn btn-default {{@value.theme}}\">{{@value.label}}</button>\n                {{/@each}}\n            {{/btns}}\n            </div>\n        {{/btns}}\n    </div>\n    <div class=\"ax-picker-arrow\"></div>\n</div>\n";
+    };
+
+    PICKER.tmpl = {
+        "pickerTmpl": pickerTmpl,
+
+        get: function get(tmplName, data, columnKeys) {
+            return ax5.mustache.render(PICKER.tmpl[tmplName].call(this, columnKeys), data);
+        }
+    };
+})();

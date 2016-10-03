@@ -16,8 +16,42 @@
          * @classdesc
          * @author tom@axisj.com
          * @example
-         * ```
+         * ```js
+         * var obj = {
+         *     name: "Thomas Jang",
+         *     alias: "tom",
+         *     tel: "010-8881-9137",
+         *     email: "tom@axisj.com",
+         *     sex: "M",
+         *     hobby: ["sport"],
+         *     useYn: "N",
+         *     description: "http://www.axisj.com",
+         *     list: [
+         *         {
+         *             name: "thomas",
+         *             tel: "010-8881-9000",
+         *             email: "tom@axisj.com",
+         *             sex: "M",
+         *             description: "",
+         *             child: [{name:"값1"},{name:"값2"}],
+         *             qty: 10,
+         *             cost: 100
+         *         },
+         *         {
+         *             name: "thomas",
+         *             tel: "010-8881-9000",
+         *             email: "tom@axisj.com",
+         *             sex: "M",
+         *             description: "",
+         *             child: [{name:"값1"},{name:"값2"}],
+         *             qty: 20,
+         *             cost: 100
+         *         }
+         * ]
+         * };
+         *
          * var myBinder = new ax5.ui.binder();
+         * myBinder.setModel(obj, $('#form-target'));
          * ```
          */
         var ax5binder = function ax5binder() {
@@ -77,7 +111,7 @@
                 /*
                 var path = [];
                 var _path = [].concat(dataPath.split(/[\.\[\]]/g));
-                  _path.forEach(function (n) {
+                 _path.forEach(function (n) {
                     if (n !== "") path.push(n);
                 });
                 _path = null;
@@ -599,7 +633,7 @@
 
                     while (i--) {
                         vi = value.length;
-                        while (vi--) { 
+                        while (vi--) {
                             if (typeof value[vi] !== "undefined" && options[i].value === value[vi].toString()) {
                                 options[i].selected = true;
                                 option_matched = true;

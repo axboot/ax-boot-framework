@@ -19,8 +19,52 @@
          * @logs
          * 2014-06-21 tom : 시작
          * @example
-         * ```
-         * var my_pad = new ax5.ui.calendar();
+         * ```js
+         * ax5.info.weekNames = [
+         *     {label: "일"},
+         *     {label: "월"},
+         *     {label: "화"},
+         *     {label: "수"},
+         *     {label: "목"},
+         *     {label: "금"},
+         *     {label: "토"}
+         * ];
+         *
+         * var myCalendar = new ax5.ui.calendar({
+         *     control: {
+         *         left: '≪',
+         *         yearTmpl: '%s',
+         *         monthTmpl: '%s',
+         *         right: '≫',
+         *         yearFirst: true
+         *     },
+         *
+         *     dimensions: {
+         *         itemPadding: 1,
+         *         height: 200
+         *     },
+         *
+         *         target: document.getElementById("calendar-target"),
+         *         displayDate: (new Date()),
+         *         mode: "day",
+         *         selectMode: "day",
+         *
+         *         marker: (function () {
+         *             var marker = {};
+         *             marker[_c_date(today, {'return': 'yyyy-MM-dd', 'add': {d: -1}})] = true;
+         *             marker[_c_date(today, {'return': 'yyyy-MM-dd', 'add': {d: 0}})] = true;
+         *             marker[_c_date(today, {'return': 'yyyy-MM-dd', 'add': {d: 1}})] = true;
+         *
+        *             return marker;
+         *         })(),
+         *         onClick: function () {
+         *             console.log(myCalendar.getSelection());
+         *         },
+         *         onStateChanged: function () {
+         *             console.log(this);
+         *         }
+         *         , multipleSelect: 2
+         *     });
          * ```
          */
         var ax5calendar = function ax5calendar() {

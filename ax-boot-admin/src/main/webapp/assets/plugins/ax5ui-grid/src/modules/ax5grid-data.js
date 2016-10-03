@@ -99,13 +99,13 @@
         if (U.isArray(data)) {
             this.page = null;
             this.list = initData.call(this,
-                (Object.keys(this.sortInfo).length) ? sort.call(this, this.sortInfo, data) : data
+                (!this.config.remoteSort && Object.keys(this.sortInfo).length) ? sort.call(this, this.sortInfo, data) : data
             );
             this.deletedList = [];
         } else if ("page" in data) {
             this.page = jQuery.extend({}, data.page);
             this.list = initData.call(this,
-                (Object.keys(this.sortInfo).length) ? sort.call(this, this.sortInfo, data.list) : data.list
+                (!this.config.remoteSort && Object.keys(this.sortInfo).length) ? sort.call(this, this.sortInfo, data.list) : data.list
             );
             this.deletedList = [];
         }
@@ -338,6 +338,17 @@
         } else {
             this.list[_dindex][this.config.columnKeys.modified] = true;
             this.list[_dindex][_key] = _value;
+        }
+
+        if(this.onDataChanged){
+            this.onDataChanged.call({
+                self: this,
+                list: this.list,
+                dindex: _dindex,
+                item: this.list[_dindex],
+                key: _key,
+                value: _value
+            });
         }
         return true;
     };

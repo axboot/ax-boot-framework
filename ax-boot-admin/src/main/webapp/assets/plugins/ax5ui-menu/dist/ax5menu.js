@@ -15,8 +15,122 @@
          * @classdesc
          * @author tom@axisj.com
          * @example
-         * ```
-         * var menu = new ax5.ui.menu();
+         * ```js
+         * var menu = new ax5.ui.menu({
+         *     theme: 'primary',
+         *     iconWidth: 20,
+         *     acceleratorWidth: 100,
+         *     itemClickAndClose: false,
+         *     icons: {
+         *         'arrow': '<i class="fa fa-caret-right"></i>'
+         *     },
+         *     columnKeys: {
+         *         label: 'name',
+         *         items: 'chidren'
+         *     },
+         *     items: [
+         *         {
+         *             icon: '<i class="fa fa-archive"></i>',
+         *             name: "Menu Parent 0",
+         *             chidren: [
+         *                 {
+         *                     check: {
+         *                         type: 'checkbox',
+         *                         name: 'A',
+         *                         value: '0',
+         *                         checked: false
+         *                     },
+         *                     name: "Menu Z",
+         *                     data: {},
+         *                     role: "",
+         *                     accelerator: "CmdOrCtrl+Z"
+         *                 },
+         *                 {
+         *                     check: {
+         *                         type: 'checkbox',
+         *                         name: 'A',
+         *                         value: '1',
+         *                         checked: true
+         *                     },
+         *                     name: "Menu A",
+         *                     data: {},
+         *                     role: ""
+         *                 }
+         *             ],
+         *             filterType: "A"
+         *         },
+         *         {
+         *             divide: true,
+         *             filterType: "A"
+         *         },
+         *         {
+         *             icon: '<i class="fa fa-mixcloud"></i>',
+         *             name: "Menu Parent 1",
+         *             chidren: [
+         *                 {
+         *                     name: "Menu Z",
+         *                     data: {},
+         *                     role: "",
+         *                     chidren: [
+         *                         {
+         *                             name: "Menu Z",
+         *                             data: {},
+         *                             role: ""
+         *                         },
+         *                         {
+         *                             name: "Menu A",
+         *                             data: {},
+         *                             role: ""
+         *                         }
+         *                     ]
+         *                 },
+         *                 {
+         *                     name: "Menu A",
+         *                     data: {},
+         *                     role: ""
+         *                 }
+         *             ],
+         *             filterType: "A"
+         *         },
+         *         {
+         *             check: {
+         *                 type: 'radio',
+         *                 name: 'radioName',
+         *                 value: '1',
+         *                 checked: false
+         *             },
+         *             icon: '<i class="fa fa-bluetooth"></i>',
+         *             name: "Menu Parent 2"
+         *         },
+         *         {
+         *             check: {
+         *                 type: 'radio',
+         *                 name: 'radioName',
+         *                 value: '2',
+         *                 checked: false
+         *             },
+         *             name: "Menu Parent 3"
+         *         },
+         *         {
+         *             check: {
+         *                 type: 'radio',
+         *                 name: 'radioName',
+         *                 value: '3',
+         *                 checked: false
+         *             },
+         *             name: "Menu Parent 4"
+         *         },
+         *         {divide: true},
+         *         {
+         *             html: function () {
+         *                 return '<div style="text-align: center;">' +
+         *                     '<button class="btn btn-primary" data-menu-btn="OK">OK</button> ' +
+         *                     '<button class="btn btn-danger" data-menu-btn="CANCEL">CANCEL</button>' +
+         *                     '</div>';
+         *             }
+         *         }
+         *     ]
+         * });
          * ```
          */
         var ax5menu = function ax5menu() {

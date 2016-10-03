@@ -17,7 +17,27 @@
          * @author tom@axisj.com
          * @example
          * ```
-         * var my_toast = new ax5.ui.toast();
+         * ```js
+         * var toast = new ax5.ui.toast();
+         * toast.setConfig({
+         *     icon: '<i class="fa fa-bug"></i>',
+         *     containerPosition: "bottom-right",
+         *     closeIcon: '<i class="fa fa-times"></i>'
+         * });
+         *
+         * toast.onStateChanged = function(){
+         *     console.log(this);
+         * };
+         *
+         * toast.push({
+         *     icon: '<i class="fa fa-book"></i>',
+         *     msg:"999999"
+         * });
+         *
+         * toast.push({
+         *     theme: theme,
+         *     msg: 'toast message'
+         * });
          * ```
          */
         var ax5toast = function ax5toast() {
@@ -57,7 +77,19 @@
                 that = null;
                 return true;
             },
-                getContent = function getContent(toastId, opts) {
+
+            /**
+             * @method ax5toast.getContent
+             * @param {String} toastId
+             * @param {Object} opts
+             * @returns toastDisplay
+             * @example
+             * ```js
+             * ax5toast.getContent('ax5-toast-3-1', opts);
+             * ```
+             */
+            getContent = function getContent(toastId, opts) {
+
                 var data = {
                     toastId: toastId,
                     theme: opts.theme,
@@ -74,7 +106,14 @@
                     data = null;
                 }
             },
-                open = function open(opts, callBack) {
+
+            /**
+             * @method ax5toast.open
+             * @param opts
+             * @param callBack
+             * @returns {ax5toast}
+             */
+            open = function open(opts, callBack) {
                 if (toastSeqClear) clearTimeout(toastSeqClear);
 
                 var toastBox,

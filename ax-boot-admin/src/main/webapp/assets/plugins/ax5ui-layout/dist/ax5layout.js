@@ -14,8 +14,18 @@
          * @alias ax5.ui.layout
          * @author tom@axisj.com
          * @example
-         * ```
-         * var myLayout = new ax5.ui.layout();
+         * ```js
+         * jQuery('[data-ax5layout="ax1"]').ax5layout({
+         *     onResize: function () {
+         *     }
+         * });
+         *
+         * jQuery('[data-ax5layout="ax1"]').ax5layout("resize", {
+         *     top: {height: 100},
+         *     bottom: 100,
+         *     left: 100,
+         *     right: 100
+         * });
          * ```
          */
         var ax5layout = function ax5layout() {

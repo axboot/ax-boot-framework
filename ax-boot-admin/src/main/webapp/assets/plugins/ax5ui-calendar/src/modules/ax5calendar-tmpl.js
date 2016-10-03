@@ -121,7 +121,7 @@
         "dayTmpl": dayTmpl,
         "monthTmpl": monthTmpl,
         "yearTmpl": yearTmpl,
-
+        
         get: function (tmplName, data, columnKeys) {
             return ax5.mustache.render(CALENDAR.tmpl[tmplName].call(this, columnKeys), data);
         }

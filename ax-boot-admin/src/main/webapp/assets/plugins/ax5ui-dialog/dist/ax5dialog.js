@@ -16,8 +16,28 @@
          * @classdesc
          * @author tom@axisj.com
          * @example
-         * ```
-         * var myDialog = new ax5.ui.dialog();
+         * ```js
+         * var dialog = new ax5.ui.dialog();
+         * var mask = new ax5.ui.mask();
+         * dialog.setConfig({
+         *     zIndex: 5000,
+         *     onStateChanged: function () {
+         *         if (this.state === "open") {
+         *             mask.open();
+         *         }
+         *         else if (this.state === "close") {
+         *             mask.close();
+         *         }
+         *     }
+         * });
+         *
+         * dialog.alert({
+         *     theme: 'default',
+         *     title: 'Alert default',
+         *     msg: theme + ' color'
+         * }, function () {
+         *     console.log(this);
+         * });
          * ```
          */
         var ax5dialog = function ax5dialog() {
@@ -50,7 +70,14 @@
                 that = null;
                 return true;
             },
-                getContent = function getContent(dialogId, opts) {
+
+            /**
+             * @method ax5dialog.getContent
+             * @param {String} dialogId
+             * @param {Object} opts
+             * @returns dialogDisplay
+             */
+            getContent = function getContent(dialogId, opts) {
                 var data = {
                     dialogId: dialogId,
                     title: opts.title || cfg.title || "",
@@ -68,7 +95,13 @@
                     data = null;
                 }
             },
-                open = function open(opts, callback) {
+
+            /**
+             * @method ax5dialog.open
+             * @param {Object} opts
+             * @param callback
+             */
+            open = function open(opts, callback) {
                 var pos = {},
                     box;
 

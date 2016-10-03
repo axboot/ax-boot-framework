@@ -27,12 +27,14 @@
             right: 0px;
             top: 0px;
             padding: $ax5modal-header-addon-padding;
-            a{
+            [data-modal-header-btn]{
+                border: 0;
                 padding: $ax5modal-header-addon-btn-padding;
                 background: transparent;
                 display: inline-block;
                 text-align: center;
                 cursor: pointer;
+                outline: 0;
             }
         }
     }
@@ -61,6 +63,7 @@
         .ax-modal-header-addon{
             a{
                 color: $text-color;
+                outline: 0;
             }
         }
     }
@@ -275,6 +278,7 @@
     }
 }
 
+// resizer가 활성화 되면 리사이저 백그라운드도 함께 활성화 됩니다. 백그라운드는 페이지 전체를 투명 레이어로 덮어 리사이저가 자유롭게 활동 하도록 도와 줍니다.
 .ax5modal-resizer-background{
     position: fixed;
     left: 0px;
@@ -282,6 +286,8 @@
     width: 100%;
     height: 100%;
     background: transparent;
+    z-index: $ax5modal-z-index;
+    //opacity: 0.1;
 }
 .ax5modal-resizer{
     position: absolute;

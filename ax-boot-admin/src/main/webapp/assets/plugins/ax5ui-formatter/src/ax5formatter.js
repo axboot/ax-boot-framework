@@ -36,8 +36,28 @@
          * @classdesc
          * @author tom@axisj.com
          * @example
-         * ```
-         * var formatter = new ax5.ui.formatter();
+         * ```js
+         * $('#idInputTime').attr('data-ax5formatter', 'time').ax5formatter();
+         * $('#idInputMoney').attr('data-ax5formatter', 'money').ax5formatter();
+         * $('#idInputPhone').attr('data-ax5formatter', 'phone').ax5formatter();
+         * $('#idInputDate').attr('data-ax5formatter', 'date').ax5formatter();
+         *
+         * $('#ax5formatter-custom').ax5formatter({
+         *     pattern: "custom",
+         *     getEnterableKeyCodes: function(){
+         *         return {
+         *             '65':'a',
+         *             '66':'b',
+         *             '67':'c',
+         *             '68':'d',
+         *             '69':'e',
+         *             '70':'f'
+         *         };
+         *     },
+         *     getPatternValue: function(obj){
+         *         return obj.value.replace(/./g, "*");
+         *     }
+         * });
          * ```
          */
         var ax5formatter = function () {

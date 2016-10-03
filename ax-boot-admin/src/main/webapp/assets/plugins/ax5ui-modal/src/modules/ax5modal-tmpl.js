@@ -11,7 +11,7 @@
                 {{#btns}}
                     <div class="ax-modal-header-addon">
                     {{#@each}}
-                    <a tabindex="-1" data-modal-header-btn="{{@key}}" class="{{@value.theme}}">{{{@value.label}}}</a>
+                    <button tabindex="-1" data-modal-header-btn="{{@key}}" class="{{@value.theme}}">{{{@value.label}}}</button>
                     {{/@each}}
                     </div>
                 {{/btns}}
@@ -34,6 +34,7 @@
                 </form>
             {{/iframe}}
             </div>
+            <div class="ax-modal-body-mask"></div>
         </div>
         `;
     };

@@ -32,7 +32,7 @@ axboot.modal = (function () {
                 }
             },
             animateTime: 100,
-            zIndex: 5000,
+            //zIndex: 5000,
             fullScreen: false,
             header: {
                 title: "",
