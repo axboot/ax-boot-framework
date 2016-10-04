@@ -17,7 +17,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
 
     UI.addClass({
         className: "grid",
-        version: "0.3.0"
+        version: "0.3.1"
     }, function () {
         /**
          * @class ax5grid
@@ -1090,10 +1090,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
              */
             this.updateRow = function (_row, _dindex) {
                 GRID.data.update.call(this, _row, _dindex);
-                alignGrid.call(this);
-                GRID.body.repaint.call(this, "reset");
-                GRID.body.moveFocus.call(this, this.config.body.grouping ? "START" : _dindex);
-                GRID.scroller.resize.call(this);
+                GRID.body.repaintRow.call(this, _dindex);
                 return this;
             };
 
@@ -1297,7 +1294,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
     GRID = ax5.ui.grid;
 })();
 
-// todo : remote sort
+// todo : merge cells
 // todo : filter
 // todo : body menu
 // todo : column reorder
@@ -2294,7 +2291,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
             _elTarget.html(SS.join(''));
             return true;
         };
-        var replaceTr = function replaceTr(_elTargetKey, _colGroup, _groupRow, _list, _scrollConfig) {
+        var replaceGroupTr = function replaceGroupTr(_elTargetKey, _colGroup, _groupRow, _list, _scrollConfig) {
             var _elTarget = this.$.panel[_elTargetKey];
             var SS = [];
             var cgi, cgl;
@@ -2371,18 +2368,291 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
             if (this.xvar.frozenColumnIndex > 0) {
                 if (this.xvar.frozenRowIndex > 0) {
                     // 상단 행고정
-                    replaceTr.call(this, "top-left-body", this.leftHeaderColGroup, leftBodyGroupingData, list.slice(0, this.xvar.frozenRowIndex));
+                    replaceGroupTr.call(this, "top-left-body", this.leftHeaderColGroup, leftBodyGroupingData, list.slice(0, this.xvar.frozenRowIndex));
                 }
-                replaceTr.call(this, "left-body-scroll", this.leftHeaderColGroup, leftBodyGroupingData, list, scrollConfig);
+                replaceGroupTr.call(this, "left-body-scroll", this.leftHeaderColGroup, leftBodyGroupingData, list, scrollConfig);
             }
 
             // body
             if (this.xvar.frozenRowIndex > 0) {
                 // 상단 행고정
-                replaceTr.call(this, "top-body-scroll", this.headerColGroup, bodyGroupingData, list.slice(0, this.xvar.frozenRowIndex));
+                replaceGroupTr.call(this, "top-body-scroll", this.headerColGroup, bodyGroupingData, list.slice(0, this.xvar.frozenRowIndex));
             }
 
-            replaceTr.call(this, "body-scroll", this.headerColGroup, bodyGroupingData, list, scrollConfig);
+            replaceGroupTr.call(this, "body-scroll", this.headerColGroup, bodyGroupingData, list, scrollConfig);
+        }
+
+        if (this.xvar.frozenColumnIndex > 0) {
+            if (cfg.footSum && this.needToPaintSum) {
+                // 바닥 요약
+                repaintSum.call(this, "bottom-left-body", this.leftHeaderColGroup, leftFootSumData, list);
+            }
+        }
+
+        if (cfg.footSum && this.needToPaintSum) {
+            // 바닥 요약
+            repaintSum.call(this, "bottom-body-scroll", this.headerColGroup, footSumData, list, scrollConfig);
+        }
+    };
+
+    var repaintRow = function repaintRow(_dindex) {
+        var self = this;
+        var cfg = this.config;
+        var list = this.list;
+        /// ~~~~~~
+
+        var paintStartRowIndex = Math.floor(Math.abs(this.$.panel["body-scroll"].position().top) / this.xvar.bodyTrHeight) + this.xvar.frozenRowIndex;
+        var asideBodyRowData = this.asideBodyRowData;
+        var leftBodyRowData = this.leftBodyRowData;
+        var bodyRowData = this.bodyRowData;
+        var leftFootSumData = this.leftFootSumData;
+        var footSumData = this.footSumData;
+        var asideBodyGroupingData = this.asideBodyGroupingData;
+        var leftBodyGroupingData = this.leftBodyGroupingData;
+        var bodyGroupingData = this.bodyGroupingData;
+        var bodyAlign = cfg.body.align;
+        var paintRowCount = Math.ceil(this.$.panel["body"].height() / this.xvar.bodyTrHeight) + 1;
+        var scrollConfig = {
+            paintStartRowIndex: paintStartRowIndex,
+            paintRowCount: paintRowCount,
+            bodyTrHeight: this.xvar.bodyTrHeight
+        };
+
+        var repaintSum = function repaintSum(_elTargetKey, _colGroup, _bodyRow, _list) {
+            var _elTarget = this.$.panel[_elTargetKey];
+
+            var SS = [];
+            var cgi, cgl;
+            var tri, trl;
+            var ci, cl;
+            var col, cellHeight, colAlign;
+
+            SS.push('<table border="0" cellpadding="0" cellspacing="0">');
+            SS.push('<colgroup>');
+            for (cgi = 0, cgl = _colGroup.length; cgi < cgl; cgi++) {
+                SS.push('<col style="width:' + _colGroup[cgi]._width + 'px;"  />');
+            }
+            SS.push('<col  />');
+            SS.push('</colgroup>');
+
+            for (tri = 0, trl = _bodyRow.rows.length; tri < trl; tri++) {
+                SS.push('<tr class="tr-sum">');
+                for (ci = 0, cl = _bodyRow.rows[tri].cols.length; ci < cl; ci++) {
+                    col = _bodyRow.rows[tri].cols[ci];
+                    cellHeight = cfg.body.columnHeight * col.rowspan - cfg.body.columnBorderWidth;
+                    colAlign = col.align || bodyAlign;
+
+                    SS.push('<td ', 'data-ax5grid-panel-name="' + _elTargetKey + '" ', 'data-ax5grid-column-row="' + tri + '" ', 'data-ax5grid-column-col="' + ci + '" ', 'data-ax5grid-column-rowIndex="' + tri + '" ', 'data-ax5grid-column-colIndex="' + col.colIndex + '" ', 'data-ax5grid-column-attr="' + (col.columnAttr || "sum") + '" ', function (_focusedColumn, _selectedColumn) {
+                        var attrs = "";
+                        if (_focusedColumn) {
+                            attrs += 'data-ax5grid-column-focused="true" ';
+                        }
+                        if (_selectedColumn) {
+                            attrs += 'data-ax5grid-column-selected="true" ';
+                        }
+                        return attrs;
+                    }(this.focusedColumn["sum_" + col.colIndex + "_" + tri], this.selectedColumn["sum_" + col.colIndex + "_" + tri]), 'colspan="' + col.colspan + '" ', 'rowspan="' + col.rowspan + '" ', 'class="' + function (_col) {
+                        var tdCSS_class = "";
+                        if (_col.styleClass) {
+                            if (U.isFunction(_col.styleClass)) {
+                                tdCSS_class += _col.styleClass.call({
+                                    column: _col,
+                                    key: _col.key,
+                                    isFootSum: true
+                                }) + " ";
+                            } else {
+                                tdCSS_class += _col.styleClass + " ";
+                            }
+                        }
+                        if (cfg.body.columnBorderWidth) tdCSS_class += "hasBorder ";
+                        if (ci == cl - 1) tdCSS_class += "isLastColumn ";
+                        return tdCSS_class;
+                    }.call(this, col) + '" ', 'style="height: ' + cellHeight + 'px;min-height: 1px;">');
+
+                    SS.push(function (_cellHeight) {
+                        var lineHeight = cfg.body.columnHeight - cfg.body.columnPadding * 2 - cfg.body.columnBorderWidth;
+                        if (!col.multiLine) {
+                            _cellHeight = cfg.body.columnHeight - cfg.body.columnBorderWidth;
+                        }
+
+                        return '<span data-ax5grid-cellHolder="' + (col.multiLine ? 'multiLine' : '') + '" ' + (colAlign ? 'data-ax5grid-text-align="' + colAlign + '"' : '') + '" style="height:' + _cellHeight + 'px;line-height: ' + lineHeight + 'px;">';
+                    }(cellHeight), getSumFieldValue.call(this, _list, col), '</span>');
+
+                    SS.push('</td>');
+                }
+                SS.push('<td ', 'data-ax5grid-column-row="null" ', 'data-ax5grid-column-col="null" ', 'data-ax5grid-column-attr="' + "sum" + '" ', 'style="height: ' + cfg.body.columnHeight + 'px;min-height: 1px;" ', '></td>');
+                SS.push('</tr>');
+            }
+
+            SS.push('</table>');
+
+            _elTarget.html(SS.join(''));
+            return true;
+        };
+        var replaceGroupTr = function replaceGroupTr(_elTargetKey, _colGroup, _groupRow, _list, _scrollConfig) {
+            var _elTarget = this.$.panel[_elTargetKey];
+            var SS = [];
+            var cgi, cgl;
+            var di, dl;
+            var tri, trl;
+            var ci, cl;
+            var col, cellHeight, colAlign;
+            for (di = _scrollConfig.paintStartRowIndex, dl = function () {
+                var len;
+                len = _list.length;
+                if (_scrollConfig.paintRowCount + _scrollConfig.paintStartRowIndex < len) {
+                    len = _scrollConfig.paintRowCount + _scrollConfig.paintStartRowIndex;
+                }
+                return len;
+            }(); di < dl; di++) {
+                if (_groupRow && "__isGrouping" in _list[di]) {
+                    var rowTable = _groupRow;
+                    SS = [];
+                    for (tri = 0, trl = rowTable.rows.length; tri < trl; tri++) {
+                        for (ci = 0, cl = rowTable.rows[tri].cols.length; ci < cl; ci++) {
+                            col = rowTable.rows[tri].cols[ci];
+                            cellHeight = cfg.body.columnHeight * col.rowspan - cfg.body.columnBorderWidth;
+                            colAlign = col.align || bodyAlign;
+
+                            SS.push('<td ', 'data-ax5grid-panel-name="' + _elTargetKey + '" ', 'data-ax5grid-data-index="' + di + '" ', 'data-ax5grid-column-row="' + tri + '" ', 'data-ax5grid-column-col="' + ci + '" ', 'data-ax5grid-column-rowIndex="' + col.rowIndex + '" ', 'data-ax5grid-column-colIndex="' + col.colIndex + '" ', 'data-ax5grid-column-attr="' + (col.columnAttr || "default") + '" ', function (_focusedColumn, _selectedColumn) {
+                                var attrs = "";
+                                if (_focusedColumn) {
+                                    attrs += 'data-ax5grid-column-focused="true" ';
+                                }
+                                if (_selectedColumn) {
+                                    attrs += 'data-ax5grid-column-selected="true" ';
+                                }
+                                return attrs;
+                            }(this.focusedColumn[di + "_" + col.colIndex + "_" + col.rowIndex], this.selectedColumn[di + "_" + col.colIndex + "_" + col.rowIndex]), 'colspan="' + col.colspan + '" ', 'rowspan="' + col.rowspan + '" ', 'class="' + function (_col) {
+                                var tdCSS_class = "";
+                                if (_col.styleClass) {
+                                    if (U.isFunction(_col.styleClass)) {
+                                        tdCSS_class += _col.styleClass.call({
+                                            column: _col,
+                                            key: _col.key,
+                                            item: _list[di],
+                                            index: di
+                                        }) + " ";
+                                    } else {
+                                        tdCSS_class += _col.styleClass + " ";
+                                    }
+                                }
+                                if (cfg.body.columnBorderWidth) tdCSS_class += "hasBorder ";
+                                if (ci == cl - 1) tdCSS_class += "isLastColumn ";
+                                return tdCSS_class;
+                            }.call(this, col) + '" ', 'style="height: ' + cellHeight + 'px;min-height: 1px;">');
+
+                            SS.push(function (_cellHeight) {
+                                var lineHeight = cfg.body.columnHeight - cfg.body.columnPadding * 2 - cfg.body.columnBorderWidth;
+                                if (!col.multiLine) {
+                                    _cellHeight = cfg.body.columnHeight - cfg.body.columnBorderWidth;
+                                }
+
+                                return '<span data-ax5grid-cellHolder="' + (col.multiLine ? 'multiLine' : '') + '" ' + (colAlign ? 'data-ax5grid-text-align="' + colAlign + '"' : '') + '" style="height:' + _cellHeight + 'px;line-height: ' + lineHeight + 'px;">';
+                            }(cellHeight), getGroupingValue.call(this, _list[di], di, col), '</span>');
+
+                            SS.push('</td>');
+                        }
+                        SS.push('<td ', 'data-ax5grid-column-row="null" ', 'data-ax5grid-column-col="null" ', 'data-ax5grid-data-index="' + di + '" ', 'data-ax5grid-column-attr="' + "default" + '" ', 'style="height: ' + cfg.body.columnHeight + 'px;min-height: 1px;" ', '></td>');
+                    }
+                    _elTarget.find('tr[data-ax5grid-tr-data-index="' + di + '"]').html(SS.join(''));
+                }
+            }
+        };
+        var replaceTr = function replaceTr(_elTargetKey, _colGroup, _bodyRow, _list, di) {
+            var _elTarget = this.$.panel[_elTargetKey];
+            var SS = [];
+            var cgi, cgl;
+            var di, dl;
+            var tri, trl;
+            var ci, cl;
+            var col, cellHeight, colAlign;
+            var rowTable = _bodyRow;
+            for (tri = 0, trl = rowTable.rows.length; tri < trl; tri++) {
+                for (ci = 0, cl = rowTable.rows[tri].cols.length; ci < cl; ci++) {
+                    col = rowTable.rows[tri].cols[ci];
+                    cellHeight = cfg.body.columnHeight * col.rowspan - cfg.body.columnBorderWidth;
+                    colAlign = col.align || bodyAlign;
+
+                    SS.push('<td ', 'data-ax5grid-panel-name="' + _elTargetKey + '" ', 'data-ax5grid-data-index="' + di + '" ', 'data-ax5grid-column-row="' + tri + '" ', 'data-ax5grid-column-col="' + ci + '" ', 'data-ax5grid-column-rowIndex="' + col.rowIndex + '" ', 'data-ax5grid-column-colIndex="' + col.colIndex + '" ', 'data-ax5grid-column-attr="' + (col.columnAttr || "default") + '" ', function (_focusedColumn, _selectedColumn) {
+                        var attrs = "";
+                        if (_focusedColumn) {
+                            attrs += 'data-ax5grid-column-focused="true" ';
+                        }
+                        if (_selectedColumn) {
+                            attrs += 'data-ax5grid-column-selected="true" ';
+                        }
+                        return attrs;
+                    }(this.focusedColumn[di + "_" + col.colIndex + "_" + col.rowIndex], this.selectedColumn[di + "_" + col.colIndex + "_" + col.rowIndex]), 'colspan="' + col.colspan + '" ', 'rowspan="' + col.rowspan + '" ', 'class="' + function (_col) {
+                        var tdCSS_class = "";
+                        if (_col.styleClass) {
+                            if (U.isFunction(_col.styleClass)) {
+                                tdCSS_class += _col.styleClass.call({
+                                    column: _col,
+                                    key: _col.key,
+                                    item: _list[di],
+                                    index: di
+                                }) + " ";
+                            } else {
+                                tdCSS_class += _col.styleClass + " ";
+                            }
+                        }
+                        if (cfg.body.columnBorderWidth) tdCSS_class += "hasBorder ";
+                        if (ci == cl - 1) tdCSS_class += "isLastColumn ";
+                        return tdCSS_class;
+                    }.call(this, col) + '" ', 'style="height: ' + cellHeight + 'px;min-height: 1px;">');
+
+                    SS.push(function (_cellHeight) {
+                        var lineHeight = cfg.body.columnHeight - cfg.body.columnPadding * 2 - cfg.body.columnBorderWidth;
+                        if (!col.multiLine) {
+                            _cellHeight = cfg.body.columnHeight - cfg.body.columnBorderWidth;
+                        }
+
+                        return '<span data-ax5grid-cellHolder="' + (col.multiLine ? 'multiLine' : '') + '" ' + (colAlign ? 'data-ax5grid-text-align="' + colAlign + '"' : '') + '" style="height:' + _cellHeight + 'px;line-height: ' + lineHeight + 'px;">';
+                    }(cellHeight), getFieldValue.call(this, _list, _list[di], di, col), '</span>');
+                    SS.push('</td>');
+                }
+                SS.push('<td ', 'data-ax5grid-column-row="null" ', 'data-ax5grid-column-col="null" ', 'data-ax5grid-data-index="' + di + '" ', 'data-ax5grid-column-attr="' + "default" + '" ', 'style="height: ' + cfg.body.columnHeight + 'px;min-height: 1px;" ', '></td>');
+            }
+
+            _elTarget.find('tr[data-ax5grid-tr-data-index="' + di + '"]').html(SS.join(''));
+        };
+
+        // left
+        if (this.xvar.frozenColumnIndex > 0) {
+            if (this.xvar.frozenRowIndex > 0) {
+                // 상단 행고정
+                replaceTr.call(this, "top-left-body", this.leftHeaderColGroup, leftBodyRowData, list, _dindex);
+            }
+            replaceTr.call(this, "left-body-scroll", this.leftHeaderColGroup, leftBodyRowData, list, _dindex);
+        }
+
+        // body
+        if (this.xvar.frozenRowIndex > 0) {
+            // 상단 행고정
+            replaceTr.call(this, "top-body-scroll", this.headerColGroup, bodyRowData, list, _dindex);
+        }
+
+        replaceTr.call(this, "body-scroll", this.headerColGroup, bodyRowData, list, _dindex);
+
+        // body.grouping tr 다시 그리기..
+        if (cfg.body.grouping) {
+            // left
+            if (this.xvar.frozenColumnIndex > 0) {
+                if (this.xvar.frozenRowIndex > 0) {
+                    // 상단 행고정
+                    replaceGroupTr.call(this, "top-left-body", this.leftHeaderColGroup, leftBodyGroupingData, list.slice(0, this.xvar.frozenRowIndex));
+                }
+                replaceGroupTr.call(this, "left-body-scroll", this.leftHeaderColGroup, leftBodyGroupingData, list, scrollConfig);
+            }
+
+            // body
+            if (this.xvar.frozenRowIndex > 0) {
+                // 상단 행고정
+                replaceGroupTr.call(this, "top-body-scroll", this.headerColGroup, bodyGroupingData, list.slice(0, this.xvar.frozenRowIndex));
+            }
+
+            replaceGroupTr.call(this, "body-scroll", this.headerColGroup, bodyGroupingData, list, scrollConfig);
         }
 
         if (this.xvar.frozenColumnIndex > 0) {
@@ -2880,6 +3150,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
         init: init,
         repaint: repaint,
         repaintCell: repaintCell,
+        repaintRow: repaintRow,
         updateRowState: updateRowState,
         scrollTo: scrollTo,
         blur: blur,
