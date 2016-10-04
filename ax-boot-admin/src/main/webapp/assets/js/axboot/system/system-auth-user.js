@@ -49,16 +49,11 @@ var ACTIONS = axboot.actionExtend(fnObj, {
                         }
                     });
                 }
+
                 break;
             case ACTIONS.FORM_CLEAR:
-                var _this = this;
-                axDialog.confirm({
-                    msg: "정말 양식을 초기화 하시겠습니까?"
-                }, function () {
-                    if (this.key == "ok") {
-                        _this.formView01.clear();
-                    }
-                });
+                _this.formView01.clear();
+
                 break;
             case ACTIONS.ROLE_GRID_DATA_INIT:
 
@@ -75,7 +70,7 @@ var ACTIONS = axboot.actionExtend(fnObj, {
                     }
                     list.push(item);
                 });
-                
+
                 this.gridView02.setData(list);
 
                 break;
@@ -248,7 +243,14 @@ fnObj.formView01 = axboot.viewExtend(axboot.formView, {
             var _root = fnObj;
             switch (this.getAttribute("data-form-view-01-btn")) {
                 case "form-clear":
-                    ACTIONS.dispatch(ACTIONS.FORM_CLEAR);
+                    axDialog.confirm({
+                        msg: "정말 양식을 초기화 하시겠습니까?"
+                    }, function () {
+                        if (this.key == "ok") {
+                            ACTIONS.dispatch(ACTIONS.FORM_CLEAR);
+                        }
+                    });
+
                     break;
             }
         });
