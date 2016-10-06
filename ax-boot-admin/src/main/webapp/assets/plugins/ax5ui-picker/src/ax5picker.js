@@ -7,7 +7,7 @@
 
     UI.addClass({
         className: "picker",
-        version: "0.8.0"
+        version: "0.8.1"
     }, (function () {
         /**
          * @class ax5picker
@@ -394,6 +394,59 @@
                 this.onStateChanged = cfg.onStateChanged;
             };
 
+            /**
+             * bind picker UI
+             * @method ax5picker.bind
+             * @param {Object} item
+             * @param {Element} item.target
+             * @param {String} item.direction - top|left|right|bottom|auto
+             * @param {Number} item.contentWidth
+             * @param {Boolean} item.disableChangeTrigger
+             * @param {Function} item.onStateChanged
+             * @param {Object} item.btns
+             * @param {Object} item.content
+             * @param {Number} item.content.width
+             * @param {Number} item.content.margin
+             * @param {String} item.content.type
+             * @param {Object} item.content.config - binded UI config
+             * @param {Object} item.content.formatter
+             * @param {String} item.content.formatter.pattern
+             * @returns {ax5picker}
+             * @example
+             * ```js
+             * var picker = new ax5.ui.picker();
+             * $(document.body).ready(function () {
+             *   picker.bind({
+             *       target: $('[data-ax5picker="basic"]'),
+             *       direction: "top",
+             *       content: {
+             *           width: 270,
+             *           margin: 10,
+             *           type: 'date',
+             *           config: {
+             *               control: {
+             *                   left: '<i class="fa fa-chevron-left"></i>',
+             *                   yearTmpl: '%s',
+             *                   monthTmpl: '%s',
+             *                   right: '<i class="fa fa-chevron-right"></i>'
+             *               },
+             *               lang: {
+             *                   yearTmpl: "%s년",
+             *                   months: ['01', '02', '03', '04', '05', '06', '07', '08', '09', '10', '11', '12'],
+             *                   dayTmpl: "%s"
+             *               }
+             *           },
+             *           formatter: {
+             *               pattern: 'date'
+             *           }
+             *       },
+             *       onStateChanged: function () {
+             *
+             *       }
+             *   });
+             * });
+             * ```
+             */
             this.bind = function (item) {
                 var
                     pickerConfig = {},
@@ -452,6 +505,9 @@
 
                     _input = (item.$target.get(0).tagName.toUpperCase() == "INPUT") ? item.$target : jQuery(item.$target.find('input[type]').get(inputIndex));
                     _input.val(val);
+                    if (!item.disableChangeTrigger) {
+                        _input.trigger("change");
+                    }
 
                     onStateChanged.call(this, item, {
                         self: self,

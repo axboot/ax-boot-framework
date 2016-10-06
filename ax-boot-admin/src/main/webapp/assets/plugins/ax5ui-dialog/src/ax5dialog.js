@@ -7,7 +7,7 @@
 
     UI.addClass({
         className: "dialog",
-        version: "0.8.6"
+        version: "0.8.7"
     }, (function () {
         /**
          * @class ax5dialog
@@ -485,8 +485,10 @@
                     jQuery(window).unbind("resize.ax5dialog");
 
                     setTimeout((function () {
-                        this.activeDialog.remove();
-                        this.activeDialog = null;
+                        if(this.activeDialog) {
+                            this.activeDialog.remove();
+                            this.activeDialog = null;
+                        }
 
                         that = {
                             self: this,

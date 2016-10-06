@@ -13,7 +13,7 @@
 
     UI.addClass({
         className: "grid",
-        version: "0.3.0"
+        version: "0.3.1"
     }, (function () {
         /**
          * @class ax5grid
@@ -1108,10 +1108,7 @@
              */
             this.updateRow = function (_row, _dindex) {
                 GRID.data.update.call(this, _row, _dindex);
-                alignGrid.call(this);
-                GRID.body.repaint.call(this, "reset");
-                GRID.body.moveFocus.call(this, (this.config.body.grouping) ? "START" : _dindex);
-                GRID.scroller.resize.call(this);
+                GRID.body.repaintRow.call(this, _dindex);
                 return this;
             };
 
