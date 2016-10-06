@@ -1,6 +1,7 @@
 package com.chequer.axboot.core.domain;
 
 import com.chequer.axboot.core.code.Types;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;
 
@@ -11,15 +12,15 @@ public abstract class CrudModel {
 
     @Transient
     public Types.DataStatus getDataStatus() {
-        if (deleted) {
+        if (__deleted__) {
             return Types.DataStatus.DELETED;
         }
 
-        if (created) {
+        if (__created__) {
             return Types.DataStatus.CREATED;
         }
 
-        if (modified) {
+        if (__modified__) {
             return Types.DataStatus.MODIFIED;
         }
 
@@ -28,13 +29,31 @@ public abstract class CrudModel {
 
     @Transient
     @JsonProperty("__deleted__")
-    protected boolean deleted;
+    protected boolean __deleted__;
 
     @Transient
     @JsonProperty("__created__")
-    protected boolean created;
+    protected boolean __created__;
 
     @Transient
     @JsonProperty("__modified__")
-    protected boolean modified;
+    protected boolean __modified__;
+
+    @Transient
+    @JsonIgnore
+    public boolean isDeleted() {
+        return __deleted__;
+    }
+
+    @Transient
+    @JsonIgnore
+    public boolean isCreated() {
+        return __created__;
+    }
+
+    @Transient
+    @JsonIgnore
+    public boolean isModified() {
+        return __modified__;
+    }
 }
