@@ -269,6 +269,10 @@ fnObj.tabView = axboot.viewExtend({
                 case "close":
                     fnObj.tabView.list.forEach(function (_item, idx) {
                         if (_item.status == "on") {
+                            if(idx == 0){
+                                alert("홈 탭은 닫을 수 없습니다.");
+                                return false;
+                            }
                             fnObj.tabView.close(_item.menuId);
                             return false;
                         }
