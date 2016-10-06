@@ -170,7 +170,9 @@ axboot.gridBuilder = (function () {
             return columns;
         };
         myGridConfig.columns = convertColumn(myGridConfig.columns);
-
+        myGridConfig.page.onChange = function () {
+            myGridConfig.onPageChange(this.page.selectPage);
+        };
         return new ax5.ui.grid(myGridConfig);
     }
 })();
