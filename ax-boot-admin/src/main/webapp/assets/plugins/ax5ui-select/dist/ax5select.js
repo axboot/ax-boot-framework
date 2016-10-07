@@ -9,7 +9,7 @@
 
     UI.addClass({
         className: "select",
-        version: "0.4.4"
+        version: "0.4.6"
     }, function () {
         /**
          * @class ax5select
@@ -208,6 +208,7 @@
                             index: target.getAttribute("data-option-index")
                         }
                     }, undefined, "internal");
+                    item.$select.trigger("change");
                     item.$display.focus();
                     if (!item.multiple) this.close();
                 } else {
@@ -230,6 +231,7 @@
                                 index: $option.attr("data-option-index")
                             }
                         }, undefined, "internal");
+                        this.queue[this.activeSelectQueueIndex].$select.trigger("change");
                         if (!this.queue[this.activeSelectQueueIndex].multiple) this.close();
                     } else {
                         this.close();
@@ -514,6 +516,7 @@
                                 focusIndex++;
                             }
                         });
+
                         item.optionItemLength = focusIndex;
                         item.$select.html(po.join(''));
                     } else {
@@ -602,6 +605,7 @@
                     queIdx;
 
                 item = jQuery.extend(true, selectConfig, cfg, item);
+
                 if (!item.target) {
                     console.log(ax5.info.getError("ax5select", "401", "bind"));
                     return this;
@@ -615,6 +619,7 @@
                     item.$target.data("data-ax5select-id", item.id);
                 }
                 item.name = item.$target.attr("data-ax5select");
+
                 if (item.options) {
                     item.options = JSON.parse(JSON.stringify(item.options));
                 }
@@ -634,6 +639,8 @@
                     this.queue.push(item);
                     bindSelectTarget.call(this, this.queue.length - 1);
                 } else {
+                    this.queue[queIdx].selected = [];
+                    this.queue[queIdx].options = item.options;
                     this.queue[queIdx] = jQuery.extend(true, {}, this.queue[queIdx], item);
                     bindSelectTarget.call(this, queIdx);
                 }
@@ -689,7 +696,7 @@
                             data.multiple = item.multiple;
                             data.lang = item.lang;
                             data.options = item.options;
-                            this.activeSelectOptionGroup.find('[data-els="content"]').html(SELECT.tmpl.get.call(this, "optionsTmpl", data));
+                            this.activeSelectOptionGroup.find('[data-els="content"]').html(SELECT.tmpl.get.call(this, "optionsTmpl", data, item.columnKeys));
                         }
                     }.bind(this));
                 };
@@ -745,7 +752,7 @@
 
                     data.options = item.options;
                     this.activeSelectOptionGroup = SELECT.tmpl.get.call(this, "optionGroupTmpl", data);
-                    this.activeSelectOptionGroup.find('[data-els="content"]').html(SELECT.tmpl.get.call(this, "optionGroupTmpl", data));
+                    this.activeSelectOptionGroup.find('[data-els="content"]').html(SELECT.tmpl.get.call(this, "optionsTmpl", data, item.columnKeys));
                     this.activeSelectQueueIndex = queIdx;
 
                     alignSelectOptionGroup.call(this, "append"); // alignSelectOptionGroup 에서 body append
@@ -1099,16 +1106,16 @@ jQuery.fn.ax5select = function () {
     var SELECT = ax5.ui.select;
 
     var optionGroupTmpl = function optionGroupTmpl(columnKeys) {
-        return "\n                    <div class=\"ax5select-option-group {{theme}} {{size}}\" data-ax5select-option-group=\"{{id}}\">\n                        <div class=\"ax-select-body\">\n                            <div class=\"ax-select-option-group-content\" data-els=\"content\"></div>\n                        </div>\n                        <div class=\"ax-select-arrow\"></div> \n                    </div>\n                    ";
+        return "\n<div class=\"ax5select-option-group {{theme}} {{size}}\" data-ax5select-option-group=\"{{id}}\">\n    <div class=\"ax-select-body\">\n        <div class=\"ax-select-option-group-content\" data-els=\"content\"></div>\n    </div>\n    <div class=\"ax-select-arrow\"></div> \n</div>\n";
     };
     var tmpl = function tmpl(columnKeys) {
-        return "\n                    <a {{^tabIndex}}href=\"#ax5select-{{id}}\" {{/tabIndex}}{{#tabIndex}}tabindex=\"{{tabIndex}}\" {{/tabIndex}}class=\"form-control {{formSize}} ax5select-display {{theme}}\" \n                    data-ax5select-display=\"{{id}}\" data-ax5select-instance=\"{{instanceId}}\">\n                        <div class=\"ax5select-display-table\" data-els=\"display-table\">\n                            <div data-ax5select-display=\"label\">{{label}}</div>\n                            <div data-ax5select-display=\"addon\"> \n                                {{#multiple}}{{#reset}}\n                                <span class=\"addon-icon-reset\" data-selected-clear=\"true\">{{{.}}}</span>\n                                {{/reset}}{{/multiple}}\n                                {{#icons}}\n                                <span class=\"addon-icon-closed\">{{clesed}}</span>\n                                <span class=\"addon-icon-opened\">{{opened}}</span>\n                                {{/icons}}\n                                {{^icons}}\n                                <span class=\"addon-icon-closed\"><span class=\"addon-icon-arrow\"></span></span>\n                                <span class=\"addon-icon-opened\"><span class=\"addon-icon-arrow\"></span></span>\n                                {{/icons}}\n                            </div>\n                        </div>\n                        <input type=\"text\" tabindex=\"-1\" data-ax5select-display=\"input\" \n                        style=\"position:absolute;z-index:0;left:0px;top:0px;font-size:1px;opacity: 0;width:1px;border: 0px none;color : transparent;text-indent: -9999em;\" />\n                    </a>\n                    ";
+        return "\n<a {{^tabIndex}}href=\"#ax5select-{{id}}\" {{/tabIndex}}{{#tabIndex}}tabindex=\"{{tabIndex}}\" {{/tabIndex}}class=\"form-control {{formSize}} ax5select-display {{theme}}\" \ndata-ax5select-display=\"{{id}}\" data-ax5select-instance=\"{{instanceId}}\">\n    <div class=\"ax5select-display-table\" data-els=\"display-table\">\n        <div data-ax5select-display=\"label\">{{label}}</div>\n        <div data-ax5select-display=\"addon\"> \n            {{#multiple}}{{#reset}}\n            <span class=\"addon-icon-reset\" data-selected-clear=\"true\">{{{.}}}</span>\n            {{/reset}}{{/multiple}}\n            {{#icons}}\n            <span class=\"addon-icon-closed\">{{clesed}}</span>\n            <span class=\"addon-icon-opened\">{{opened}}</span>\n            {{/icons}}\n            {{^icons}}\n            <span class=\"addon-icon-closed\"><span class=\"addon-icon-arrow\"></span></span>\n            <span class=\"addon-icon-opened\"><span class=\"addon-icon-arrow\"></span></span>\n            {{/icons}}\n        </div>\n    </div>\n    <input type=\"text\" tabindex=\"-1\" data-ax5select-display=\"input\" \n    style=\"position:absolute;z-index:0;left:0px;top:0px;font-size:1px;opacity: 0;width:1px;border: 0px none;color : transparent;text-indent: -9999em;\" />\n</a>\n";
     };
     var selectTmpl = function selectTmpl(columnKeys) {
-        return "\n                    <select tabindex=\"-1\" class=\"form-control {{formSize}}\" name=\"{{name}}\" {{#multiple}}multiple=\"multiple\"{{/multiple}}></select>\n                    ";
+        return "\n<select tabindex=\"-1\" class=\"form-control {{formSize}}\" name=\"{{name}}\" {{#multiple}}multiple=\"multiple\"{{/multiple}}></select>\n";
     };
     var optionsTmpl = function optionsTmpl(columnKeys) {
-        return "\n                    {{#waitOptions}}\n                        <div class=\"ax-select-option-item\">\n                                <div class=\"ax-select-option-item-holder\">\n                                    <span class=\"ax-select-option-item-cell ax-select-option-item-label\">\n                                        {{{lang.loading}}}\n                                    </span>\n                                </div>\n                            </div>\n                    {{/waitOptions}}\n                    {{^waitOptions}}\n                        {{#options}}\n                            {{#optgroup}}\n                                <div class=\"ax-select-option-group\">\n                                    <div class=\"ax-select-option-item-holder\">\n                                        <span class=\"ax-select-option-group-label\">\n                                            {{{.}}}\n                                        </span>\n                                    </div>\n                                    {{#options}}\n                                    <div class=\"ax-select-option-item\" data-option-focus-index=\"{{@findex}}\" data-option-group-index=\"{{@gindex}}\" data-option-index=\"{{@index}}\" \n                                    data-option-value=\"{{" + columnKeys.optionValue + "}}\" \n                                    {{#" + columnKeys.optionSelected + "}}data-option-selected=\"true\"{{/" + columnKeys.optionSelected + "}}>\n                                        <div class=\"ax-select-option-item-holder\">\n                                            {{#multiple}}\n                                            <span class=\"ax-select-option-item-cell ax-select-option-item-checkbox\">\n                                                <span class=\"item-checkbox-wrap useCheckBox\" data-option-checkbox-index=\"{{@i}}\"></span>\n                                            </span>\n                                            {{/multiple}}\n                                            <span class=\"ax-select-option-item-cell ax-select-option-item-label\">{{" + columnKeys.optionText + "}}</span>\n                                        </div>\n                                    </div>\n                                    {{/options}}\n                                </div>                            \n                            {{/optgroup}}\n                            {{^optgroup}}\n                            <div class=\"ax-select-option-item\" data-option-focus-index=\"{{@findex}}\" data-option-index=\"{{@index}}\" data-option-value=\"{{" + columnKeys.optionValue + "}}\" {{#" + columnKeys.optionSelected + "}}data-option-selected=\"true\"{{/" + columnKeys.optionSelected + "}}>\n                                <div class=\"ax-select-option-item-holder\">\n                                    {{#multiple}}\n                                    <span class=\"ax-select-option-item-cell ax-select-option-item-checkbox\">\n                                        <span class=\"item-checkbox-wrap useCheckBox\" data-option-checkbox-index=\"{{@i}}\"></span>\n                                    </span>\n                                    {{/multiple}}\n                                    <span class=\"ax-select-option-item-cell ax-select-option-item-label\">{{" + columnKeys.optionText + "}}</span>\n                                </div>\n                            </div>\n                            {{/optgroup}}\n                        {{/options}}\n                        {{^options}}\n                            <div class=\"ax-select-option-item\">\n                                <div class=\"ax-select-option-item-holder\">\n                                    <span class=\"ax-select-option-item-cell ax-select-option-item-label\">\n                                        {{{lang.noOptions}}}\n                                    </span>\n                                </div>\n                            </div>\n                        {{/options}}\n                    {{/waitOptions}}\n                    ";
+        return "\n{{#waitOptions}}\n    <div class=\"ax-select-option-item\">\n            <div class=\"ax-select-option-item-holder\">\n                <span class=\"ax-select-option-item-cell ax-select-option-item-label\">\n                    {{{lang.loading}}}\n                </span>\n            </div>\n        </div>\n{{/waitOptions}}\n{{^waitOptions}}\n    {{#options}}\n        {{#optgroup}}\n            <div class=\"ax-select-option-group\">\n                <div class=\"ax-select-option-item-holder\">\n                    <span class=\"ax-select-option-group-label\">\n                        {{{.}}}\n                    </span>\n                </div>\n                {{#options}}\n                <div class=\"ax-select-option-item\" data-option-focus-index=\"{{@findex}}\" data-option-group-index=\"{{@gindex}}\" data-option-index=\"{{@index}}\" \n                data-option-value=\"{{" + columnKeys.optionValue + "}}\" \n                {{#" + columnKeys.optionSelected + "}}data-option-selected=\"true\"{{/" + columnKeys.optionSelected + "}}>\n                    <div class=\"ax-select-option-item-holder\">\n                        {{#multiple}}\n                        <span class=\"ax-select-option-item-cell ax-select-option-item-checkbox\">\n                            <span class=\"item-checkbox-wrap useCheckBox\" data-option-checkbox-index=\"{{@i}}\"></span>\n                        </span>\n                        {{/multiple}}\n                        <span class=\"ax-select-option-item-cell ax-select-option-item-label\">{{" + columnKeys.optionText + "}}</span>\n                    </div>\n                </div>\n                {{/options}}\n            </div>                            \n        {{/optgroup}}\n        {{^optgroup}}\n        <div class=\"ax-select-option-item\" data-option-focus-index=\"{{@findex}}\" data-option-index=\"{{@index}}\" data-option-value=\"{{" + columnKeys.optionValue + "}}\" {{#" + columnKeys.optionSelected + "}}data-option-selected=\"true\"{{/" + columnKeys.optionSelected + "}}>\n            <div class=\"ax-select-option-item-holder\">\n                {{#multiple}}\n                <span class=\"ax-select-option-item-cell ax-select-option-item-checkbox\">\n                    <span class=\"item-checkbox-wrap useCheckBox\" data-option-checkbox-index=\"{{@i}}\"></span>\n                </span>\n                {{/multiple}}\n                <span class=\"ax-select-option-item-cell ax-select-option-item-label\">{{" + columnKeys.optionText + "}}</span>\n            </div>\n        </div>\n        {{/optgroup}}\n    {{/options}}\n    {{^options}}\n        <div class=\"ax-select-option-item\">\n            <div class=\"ax-select-option-item-holder\">\n                <span class=\"ax-select-option-item-cell ax-select-option-item-label\">\n                    {{{lang.noOptions}}}\n                </span>\n            </div>\n        </div>\n    {{/options}}\n{{/waitOptions}}\n";
     };
 
     SELECT.tmpl = {

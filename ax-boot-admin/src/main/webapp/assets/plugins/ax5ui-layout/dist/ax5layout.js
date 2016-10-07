@@ -7,7 +7,7 @@
 
     UI.addClass({
         className: "layout",
-        version: "0.3.0"
+        version: "0.3.1"
     }, function () {
         /**
          * @class ax5layout
@@ -86,6 +86,15 @@
                 }
             },
                 alignLayout = function () {
+                var getPixel = function getPixel(size, parentSize) {
+                    if (size == "*") {
+                        return;
+                    } else if (U.right(size, 1) == "%") {
+                        return parentSize * U.number(size) / 100;
+                    } else {
+                        return Number(size);
+                    }
+                };
                 var beforeSetCSS = {
                     "split": {
                         "horizontal": function horizontal(item, panel, panelIndex) {
@@ -100,13 +109,17 @@
                                     } else {
                                         if (panel.height == "*") {
                                             item.splitPanel.asteriskLength++;
+                                        } else {
+                                            //panel.__height = getPixel(panel.height, item.targetDimension.height);
                                         }
                                     }
                                 } else {
-                                    if (panel.height == "*") {
-                                        item.splitPanel.asteriskLength++;
+                                        if (panel.height == "*") {
+                                            item.splitPanel.asteriskLength++;
+                                        } else {
+                                            //panel.__height = getPixel(panel.height, item.targetDimension.height);
+                                        }
                                     }
-                                }
                             }
                         },
                         "vertical": function vertical(item, panel, panelIndex) {
@@ -126,6 +139,8 @@
                                 } else {
                                     if (panel.width == "*") {
                                         item.splitPanel.asteriskLength++;
+                                    } else {
+                                        //panel.__width = getPixel(panel.width, item.targetDimension.width);
                                     }
                                 }
                             }
@@ -712,8 +727,8 @@
                     boundID = jQuery(boundID).data("data-ax5layout-id");
                 }
                 if (!U.isString(boundID)) {
-                    console.log(ax5.info.getError("ax5layout", "402", "getQueIdx"));
-                    return;
+                    //console.log(ax5.info.getError("ax5layout", "402", "getQueIdx"));
+                    return -1;
                 }
                 return U.search(this.queue, function () {
                     return this.id == boundID;
@@ -814,12 +829,15 @@
              */
             this.align = function (boundID, windowResize) {
                 var queIdx = U.isNumber(boundID) ? boundID : getQueIdx.call(this, boundID);
-                if (queIdx === -1) {
-                    console.log(ax5.info.getError("ax5layout", "402", "align"));
-                    return;
-                }
 
-                alignLayout.call(this, queIdx, null, windowResize);
+                if (queIdx === -1) {
+                    var i = this.queue.length;
+                    while (i--) {
+                        alignLayout.call(this, i, null, windowResize);
+                    }
+                } else {
+                    alignLayout.call(this, queIdx, null, windowResize);
+                }
                 return this;
             };
 
@@ -867,12 +885,18 @@
                 return function (boundID, resizeOption, callback) {
                     var queIdx = U.isNumber(boundID) ? boundID : getQueIdx.call(this, boundID);
                     if (queIdx === -1) {
-                        console.log(ax5.info.getError("ax5layout", "402", "resize"));
-                        return;
+                        var i = this.queue.length;
+                        while (i--) {
+                            resizeLayoutPanel[this.queue[i].layout].call(this, this.queue[i], resizeOption);
+                            alignLayout.call(this, i, callback);
+                        }
+                    } else {
+                        if (this.queue[queIdx]) {
+                            resizeLayoutPanel[this.queue[queIdx].layout].call(this, this.queue[queIdx], resizeOption);
+                            alignLayout.call(this, queIdx, callback);
+                        }
                     }
 
-                    resizeLayoutPanel[this.queue[queIdx].layout].call(this, this.queue[queIdx], resizeOption);
-                    alignLayout.call(this, queIdx, callback);
                     return this;
                 };
             }();
@@ -965,7 +989,7 @@ jQuery.fn.ax5layout = function () {
 
             switch (methodName) {
                 case "align":
-                    return ax5.ui.layout_instance.align(this, arguments[1], arguments[2]);
+                    return ax5.ui.layout_instance.align(this, arguments[1]);
                     break;
                 case "resize":
                     return ax5.ui.layout_instance.resize(this, arguments[1], arguments[2]);

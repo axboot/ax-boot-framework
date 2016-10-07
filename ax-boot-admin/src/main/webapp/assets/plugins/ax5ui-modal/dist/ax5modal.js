@@ -9,7 +9,7 @@
 
     UI.addClass({
         className: "modal",
-        version: "0.8.1"
+        version: "0.8.2"
     }, function () {
         /**
          * @class ax5modal
@@ -543,7 +543,10 @@
                         }
 
                         if (opts.header) {
-                            box.height += this.$.header.outerHeight();
+                            opts.headerHeight = this.$.header.outerHeight();
+                            box.height += opts.headerHeight;
+                        } else {
+                            opts.headerHeight = 0;
                         }
 
                         //- position 정렬
@@ -574,8 +577,8 @@
                     this.activeModal.css(box);
 
                     if (opts.iframe) {
-                        this.$["iframe-wrap"].css({ height: box.height });
-                        this.$["iframe"].css({ height: box.height });
+                        this.$["iframe-wrap"].css({ height: box.height - opts.headerHeight });
+                        this.$["iframe"].css({ height: box.height - opts.headerHeight });
                     }
                     return this;
                 };

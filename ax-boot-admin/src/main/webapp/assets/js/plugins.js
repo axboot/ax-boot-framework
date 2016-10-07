@@ -18948,7 +18948,7 @@ ax5.ui = function () {
 
     UI.addClass({
         className: "modal",
-        version: "0.8.1"
+        version: "0.8.2"
     }, function () {
         /**
          * @class ax5modal
@@ -19482,7 +19482,10 @@ ax5.ui = function () {
                         }
 
                         if (opts.header) {
-                            box.height += this.$.header.outerHeight();
+                            opts.headerHeight = this.$.header.outerHeight();
+                            box.height += opts.headerHeight;
+                        } else {
+                            opts.headerHeight = 0;
                         }
 
                         //- position 정렬
@@ -19513,8 +19516,8 @@ ax5.ui = function () {
                     this.activeModal.css(box);
 
                     if (opts.iframe) {
-                        this.$["iframe-wrap"].css({ height: box.height });
-                        this.$["iframe"].css({ height: box.height });
+                        this.$["iframe-wrap"].css({ height: box.height - opts.headerHeight });
+                        this.$["iframe"].css({ height: box.height - opts.headerHeight });
                     }
                     return this;
                 };
@@ -22991,7 +22994,7 @@ jQuery.fn.ax5formatter = function () {
 
     UI.addClass({
         className: "select",
-        version: "0.4.4"
+        version: "0.4.6"
     }, function () {
         /**
          * @class ax5select
@@ -23190,6 +23193,7 @@ jQuery.fn.ax5formatter = function () {
                             index: target.getAttribute("data-option-index")
                         }
                     }, undefined, "internal");
+                    item.$select.trigger("change");
                     item.$display.focus();
                     if (!item.multiple) this.close();
                 } else {
@@ -23212,6 +23216,7 @@ jQuery.fn.ax5formatter = function () {
                                 index: $option.attr("data-option-index")
                             }
                         }, undefined, "internal");
+                        this.queue[this.activeSelectQueueIndex].$select.trigger("change");
                         if (!this.queue[this.activeSelectQueueIndex].multiple) this.close();
                     } else {
                         this.close();
@@ -23496,6 +23501,7 @@ jQuery.fn.ax5formatter = function () {
                                 focusIndex++;
                             }
                         });
+
                         item.optionItemLength = focusIndex;
                         item.$select.html(po.join(''));
                     } else {
@@ -23584,6 +23590,7 @@ jQuery.fn.ax5formatter = function () {
                     queIdx;
 
                 item = jQuery.extend(true, selectConfig, cfg, item);
+
                 if (!item.target) {
                     console.log(ax5.info.getError("ax5select", "401", "bind"));
                     return this;
@@ -23597,6 +23604,7 @@ jQuery.fn.ax5formatter = function () {
                     item.$target.data("data-ax5select-id", item.id);
                 }
                 item.name = item.$target.attr("data-ax5select");
+
                 if (item.options) {
                     item.options = JSON.parse(JSON.stringify(item.options));
                 }
@@ -23616,6 +23624,8 @@ jQuery.fn.ax5formatter = function () {
                     this.queue.push(item);
                     bindSelectTarget.call(this, this.queue.length - 1);
                 } else {
+                    this.queue[queIdx].selected = [];
+                    this.queue[queIdx].options = item.options;
                     this.queue[queIdx] = jQuery.extend(true, {}, this.queue[queIdx], item);
                     bindSelectTarget.call(this, queIdx);
                 }
@@ -23671,7 +23681,7 @@ jQuery.fn.ax5formatter = function () {
                             data.multiple = item.multiple;
                             data.lang = item.lang;
                             data.options = item.options;
-                            this.activeSelectOptionGroup.find('[data-els="content"]').html(SELECT.tmpl.get.call(this, "optionsTmpl", data));
+                            this.activeSelectOptionGroup.find('[data-els="content"]').html(SELECT.tmpl.get.call(this, "optionsTmpl", data, item.columnKeys));
                         }
                     }.bind(this));
                 };
@@ -23727,7 +23737,7 @@ jQuery.fn.ax5formatter = function () {
 
                     data.options = item.options;
                     this.activeSelectOptionGroup = SELECT.tmpl.get.call(this, "optionGroupTmpl", data);
-                    this.activeSelectOptionGroup.find('[data-els="content"]').html(SELECT.tmpl.get.call(this, "optionGroupTmpl", data));
+                    this.activeSelectOptionGroup.find('[data-els="content"]').html(SELECT.tmpl.get.call(this, "optionsTmpl", data, item.columnKeys));
                     this.activeSelectQueueIndex = queIdx;
 
                     alignSelectOptionGroup.call(this, "append"); // alignSelectOptionGroup 에서 body append
@@ -24081,16 +24091,16 @@ jQuery.fn.ax5select = function () {
     var SELECT = ax5.ui.select;
 
     var optionGroupTmpl = function optionGroupTmpl(columnKeys) {
-        return "\n                    <div class=\"ax5select-option-group {{theme}} {{size}}\" data-ax5select-option-group=\"{{id}}\">\n                        <div class=\"ax-select-body\">\n                            <div class=\"ax-select-option-group-content\" data-els=\"content\"></div>\n                        </div>\n                        <div class=\"ax-select-arrow\"></div> \n                    </div>\n                    ";
+        return "\n<div class=\"ax5select-option-group {{theme}} {{size}}\" data-ax5select-option-group=\"{{id}}\">\n    <div class=\"ax-select-body\">\n        <div class=\"ax-select-option-group-content\" data-els=\"content\"></div>\n    </div>\n    <div class=\"ax-select-arrow\"></div> \n</div>\n";
     };
     var tmpl = function tmpl(columnKeys) {
-        return "\n                    <a {{^tabIndex}}href=\"#ax5select-{{id}}\" {{/tabIndex}}{{#tabIndex}}tabindex=\"{{tabIndex}}\" {{/tabIndex}}class=\"form-control {{formSize}} ax5select-display {{theme}}\" \n                    data-ax5select-display=\"{{id}}\" data-ax5select-instance=\"{{instanceId}}\">\n                        <div class=\"ax5select-display-table\" data-els=\"display-table\">\n                            <div data-ax5select-display=\"label\">{{label}}</div>\n                            <div data-ax5select-display=\"addon\"> \n                                {{#multiple}}{{#reset}}\n                                <span class=\"addon-icon-reset\" data-selected-clear=\"true\">{{{.}}}</span>\n                                {{/reset}}{{/multiple}}\n                                {{#icons}}\n                                <span class=\"addon-icon-closed\">{{clesed}}</span>\n                                <span class=\"addon-icon-opened\">{{opened}}</span>\n                                {{/icons}}\n                                {{^icons}}\n                                <span class=\"addon-icon-closed\"><span class=\"addon-icon-arrow\"></span></span>\n                                <span class=\"addon-icon-opened\"><span class=\"addon-icon-arrow\"></span></span>\n                                {{/icons}}\n                            </div>\n                        </div>\n                        <input type=\"text\" tabindex=\"-1\" data-ax5select-display=\"input\" \n                        style=\"position:absolute;z-index:0;left:0px;top:0px;font-size:1px;opacity: 0;width:1px;border: 0px none;color : transparent;text-indent: -9999em;\" />\n                    </a>\n                    ";
+        return "\n<a {{^tabIndex}}href=\"#ax5select-{{id}}\" {{/tabIndex}}{{#tabIndex}}tabindex=\"{{tabIndex}}\" {{/tabIndex}}class=\"form-control {{formSize}} ax5select-display {{theme}}\" \ndata-ax5select-display=\"{{id}}\" data-ax5select-instance=\"{{instanceId}}\">\n    <div class=\"ax5select-display-table\" data-els=\"display-table\">\n        <div data-ax5select-display=\"label\">{{label}}</div>\n        <div data-ax5select-display=\"addon\"> \n            {{#multiple}}{{#reset}}\n            <span class=\"addon-icon-reset\" data-selected-clear=\"true\">{{{.}}}</span>\n            {{/reset}}{{/multiple}}\n            {{#icons}}\n            <span class=\"addon-icon-closed\">{{clesed}}</span>\n            <span class=\"addon-icon-opened\">{{opened}}</span>\n            {{/icons}}\n            {{^icons}}\n            <span class=\"addon-icon-closed\"><span class=\"addon-icon-arrow\"></span></span>\n            <span class=\"addon-icon-opened\"><span class=\"addon-icon-arrow\"></span></span>\n            {{/icons}}\n        </div>\n    </div>\n    <input type=\"text\" tabindex=\"-1\" data-ax5select-display=\"input\" \n    style=\"position:absolute;z-index:0;left:0px;top:0px;font-size:1px;opacity: 0;width:1px;border: 0px none;color : transparent;text-indent: -9999em;\" />\n</a>\n";
     };
     var selectTmpl = function selectTmpl(columnKeys) {
-        return "\n                    <select tabindex=\"-1\" class=\"form-control {{formSize}}\" name=\"{{name}}\" {{#multiple}}multiple=\"multiple\"{{/multiple}}></select>\n                    ";
+        return "\n<select tabindex=\"-1\" class=\"form-control {{formSize}}\" name=\"{{name}}\" {{#multiple}}multiple=\"multiple\"{{/multiple}}></select>\n";
     };
     var optionsTmpl = function optionsTmpl(columnKeys) {
-        return "\n                    {{#waitOptions}}\n                        <div class=\"ax-select-option-item\">\n                                <div class=\"ax-select-option-item-holder\">\n                                    <span class=\"ax-select-option-item-cell ax-select-option-item-label\">\n                                        {{{lang.loading}}}\n                                    </span>\n                                </div>\n                            </div>\n                    {{/waitOptions}}\n                    {{^waitOptions}}\n                        {{#options}}\n                            {{#optgroup}}\n                                <div class=\"ax-select-option-group\">\n                                    <div class=\"ax-select-option-item-holder\">\n                                        <span class=\"ax-select-option-group-label\">\n                                            {{{.}}}\n                                        </span>\n                                    </div>\n                                    {{#options}}\n                                    <div class=\"ax-select-option-item\" data-option-focus-index=\"{{@findex}}\" data-option-group-index=\"{{@gindex}}\" data-option-index=\"{{@index}}\" \n                                    data-option-value=\"{{" + columnKeys.optionValue + "}}\" \n                                    {{#" + columnKeys.optionSelected + "}}data-option-selected=\"true\"{{/" + columnKeys.optionSelected + "}}>\n                                        <div class=\"ax-select-option-item-holder\">\n                                            {{#multiple}}\n                                            <span class=\"ax-select-option-item-cell ax-select-option-item-checkbox\">\n                                                <span class=\"item-checkbox-wrap useCheckBox\" data-option-checkbox-index=\"{{@i}}\"></span>\n                                            </span>\n                                            {{/multiple}}\n                                            <span class=\"ax-select-option-item-cell ax-select-option-item-label\">{{" + columnKeys.optionText + "}}</span>\n                                        </div>\n                                    </div>\n                                    {{/options}}\n                                </div>                            \n                            {{/optgroup}}\n                            {{^optgroup}}\n                            <div class=\"ax-select-option-item\" data-option-focus-index=\"{{@findex}}\" data-option-index=\"{{@index}}\" data-option-value=\"{{" + columnKeys.optionValue + "}}\" {{#" + columnKeys.optionSelected + "}}data-option-selected=\"true\"{{/" + columnKeys.optionSelected + "}}>\n                                <div class=\"ax-select-option-item-holder\">\n                                    {{#multiple}}\n                                    <span class=\"ax-select-option-item-cell ax-select-option-item-checkbox\">\n                                        <span class=\"item-checkbox-wrap useCheckBox\" data-option-checkbox-index=\"{{@i}}\"></span>\n                                    </span>\n                                    {{/multiple}}\n                                    <span class=\"ax-select-option-item-cell ax-select-option-item-label\">{{" + columnKeys.optionText + "}}</span>\n                                </div>\n                            </div>\n                            {{/optgroup}}\n                        {{/options}}\n                        {{^options}}\n                            <div class=\"ax-select-option-item\">\n                                <div class=\"ax-select-option-item-holder\">\n                                    <span class=\"ax-select-option-item-cell ax-select-option-item-label\">\n                                        {{{lang.noOptions}}}\n                                    </span>\n                                </div>\n                            </div>\n                        {{/options}}\n                    {{/waitOptions}}\n                    ";
+        return "\n{{#waitOptions}}\n    <div class=\"ax-select-option-item\">\n            <div class=\"ax-select-option-item-holder\">\n                <span class=\"ax-select-option-item-cell ax-select-option-item-label\">\n                    {{{lang.loading}}}\n                </span>\n            </div>\n        </div>\n{{/waitOptions}}\n{{^waitOptions}}\n    {{#options}}\n        {{#optgroup}}\n            <div class=\"ax-select-option-group\">\n                <div class=\"ax-select-option-item-holder\">\n                    <span class=\"ax-select-option-group-label\">\n                        {{{.}}}\n                    </span>\n                </div>\n                {{#options}}\n                <div class=\"ax-select-option-item\" data-option-focus-index=\"{{@findex}}\" data-option-group-index=\"{{@gindex}}\" data-option-index=\"{{@index}}\" \n                data-option-value=\"{{" + columnKeys.optionValue + "}}\" \n                {{#" + columnKeys.optionSelected + "}}data-option-selected=\"true\"{{/" + columnKeys.optionSelected + "}}>\n                    <div class=\"ax-select-option-item-holder\">\n                        {{#multiple}}\n                        <span class=\"ax-select-option-item-cell ax-select-option-item-checkbox\">\n                            <span class=\"item-checkbox-wrap useCheckBox\" data-option-checkbox-index=\"{{@i}}\"></span>\n                        </span>\n                        {{/multiple}}\n                        <span class=\"ax-select-option-item-cell ax-select-option-item-label\">{{" + columnKeys.optionText + "}}</span>\n                    </div>\n                </div>\n                {{/options}}\n            </div>                            \n        {{/optgroup}}\n        {{^optgroup}}\n        <div class=\"ax-select-option-item\" data-option-focus-index=\"{{@findex}}\" data-option-index=\"{{@index}}\" data-option-value=\"{{" + columnKeys.optionValue + "}}\" {{#" + columnKeys.optionSelected + "}}data-option-selected=\"true\"{{/" + columnKeys.optionSelected + "}}>\n            <div class=\"ax-select-option-item-holder\">\n                {{#multiple}}\n                <span class=\"ax-select-option-item-cell ax-select-option-item-checkbox\">\n                    <span class=\"item-checkbox-wrap useCheckBox\" data-option-checkbox-index=\"{{@i}}\"></span>\n                </span>\n                {{/multiple}}\n                <span class=\"ax-select-option-item-cell ax-select-option-item-label\">{{" + columnKeys.optionText + "}}</span>\n            </div>\n        </div>\n        {{/optgroup}}\n    {{/options}}\n    {{^options}}\n        <div class=\"ax-select-option-item\">\n            <div class=\"ax-select-option-item-holder\">\n                <span class=\"ax-select-option-item-cell ax-select-option-item-label\">\n                    {{{lang.noOptions}}}\n                </span>\n            </div>\n        </div>\n    {{/options}}\n{{/waitOptions}}\n";
     };
 
     SELECT.tmpl = {
@@ -24123,7 +24133,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
 
     UI.addClass({
         className: "grid",
-        version: "0.3.1"
+        version: "0.3.5"
     }, function () {
         /**
          * @class ax5grid
@@ -24148,7 +24158,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
                 frozenRowIndex: 0,
                 showLineNumber: false,
                 showRowSelector: false,
-                multipleSelect: false,
+                multipleSelect: true,
 
                 height: 0,
                 columnMinWidth: 100,
@@ -24244,6 +24254,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
             },
                 initGrid = function initGrid() {
                 // 그리드 템플릿에 전달하고자 하는 데이터를 정리합시다.
+
                 var data = {
                     instanceId: this.id
                 };
@@ -24677,7 +24688,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
              * @param {Number} [_config.frozenRowIndex=0]
              * @param {Boolean} [_config.showLineNumber=false]
              * @param {Boolean} [_config.showRowSelector=false]
-             * @param {Boolean} [_config.multipleSelect=false]
+             * @param {Boolean} [_config.multipleSelect=true]
              * @param {Number} [_config.columnMinWidth=100]
              * @param {Number} [_config.lineNumberColumnWidth=30]
              * @param {Number} [_config.rowSelectorColumnWidth=25]
@@ -24816,7 +24827,8 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
 
                 if (!this.id) this.id = this.$target.data("data-ax5grid-id");
                 if (!this.id) {
-                    this.id = 'ax5grid-' + ax5.getGuid();
+                    //this.id = 'ax5grid-' + ax5.getGuid();
+                    this.id = 'ax5grid-' + this.instanceId;
                     this.$target.data("data-ax5grid-id", grid.id);
                 }
 
@@ -24851,27 +24863,27 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
                 GRID.scroller.init.call(this);
                 GRID.scroller.resize.call(this);
 
-                jQuery(window).bind("resize.ax5grid-" + this.instanceId, function () {
+                jQuery(window).bind("resize.ax5grid-" + this.id, function () {
                     alignGrid.call(this);
                     GRID.scroller.resize.call(this);
                 }.bind(this));
 
-                jQuery(document.body).on("click.ax5grid-" + this.instanceId, function (e) {
+                jQuery(document.body).on("click.ax5grid-" + this.id, function (e) {
                     var isPickerClick = false;
                     var target = U.findParentNode(e.target, function (_target) {
                         if (isPickerClick = _target.getAttribute("data-ax5grid-inline-edit-picker")) {
                             return true;
                         }
-                        return _target.getAttribute("data-ax5grid-container");
+                        return _target.getAttribute("data-ax5grid-container") === "root";
                     });
 
-                    if (target) {
+                    if (target && target.getAttribute("data-ax5grid-instance") === this.id) {
                         self.focused = true;
                     } else {
                         self.focused = false;
-                        GRID.body.blur.call(self);
+                        GRID.body.blur.call(this);
                     }
-                });
+                }.bind(this));
 
                 var ctrlKeys = {
                     "33": "KEY_PAGEUP",
@@ -24885,8 +24897,8 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
                 };
                 jQuery(window).on("keydown.ax5grid-" + this.instanceId, function (e) {
                     if (self.focused) {
-
                         if (self.isInlineEditing) {
+
                             if (e.which == ax5.info.eventKeys.ESC) {
                                 self.keyDown("ESC", e.originalEvent);
                             } else if (e.which == ax5.info.eventKeys.RETURN) {
@@ -25669,7 +25681,15 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
                     }
                 },
                 "rowSelector": function rowSelector(_column) {
-                    GRID.data.select.call(self, _column.dindex);
+
+                    if (!self.config.multipleSelect && self.selectedDataIndexs[0] !== _column.dindex) {
+                        GRID.body.updateRowState.call(self, ["selectedClear"]);
+                        GRID.data.clearSelect.call(self);
+                    }
+
+                    GRID.data.select.call(self, _column.dindex, undefined, {
+                        internalCall: true
+                    });
                     updateRowState.call(self, ["selected"], _column.dindex);
                 },
                 "lineNumber": function lineNumber(_column) {}
@@ -26819,6 +26839,8 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
                     break;
                 }
 
+                if (!focusedColumn) return false;
+
                 originalColumn = this.bodyRowMap[focusedColumn.rowIndex + "_" + focusedColumn.colIndex];
                 columnSelect.focusClear.call(this);
                 columnSelect.clear.call(this);
@@ -26896,6 +26918,8 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
                     focusedColumn = jQuery.extend({}, this.focusedColumn[c], true);
                     break;
                 }
+                if (!focusedColumn) return false;
+
                 originalColumn = this.bodyRowMap[focusedColumn.rowIndex + "_" + focusedColumn.colIndex];
 
                 columnSelect.focusClear.call(this);
@@ -27638,7 +27662,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
         this.selectedDataIndexs = [];
     };
 
-    var select = function select(_dindex, _selected) {
+    var select = function select(_dindex, _selected, _options) {
         var cfg = this.config;
 
         if (this.list[_dindex].__isGrouping) return false;
@@ -27652,6 +27676,18 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
                 this.selectedDataIndexs.push(_dindex);
             }
         }
+
+        if (this.onDataChanged && _options && _options.internalCall) {
+            this.onDataChanged.call({
+                self: this,
+                list: this.list,
+                dindex: _dindex,
+                item: this.list[_dindex],
+                key: cfg.columnKeys.selected,
+                value: this.list[_dindex][cfg.columnKeys.selected]
+            });
+        }
+
         return this.list[_dindex][cfg.columnKeys.selected];
     };
 
@@ -30889,7 +30925,7 @@ jQuery.fn.ax5combobox = function () {
 
     UI.addClass({
         className: "layout",
-        version: "0.3.0"
+        version: "0.3.1"
     }, function () {
         /**
          * @class ax5layout
@@ -30968,6 +31004,15 @@ jQuery.fn.ax5combobox = function () {
                 }
             },
                 alignLayout = function () {
+                var getPixel = function getPixel(size, parentSize) {
+                    if (size == "*") {
+                        return;
+                    } else if (U.right(size, 1) == "%") {
+                        return parentSize * U.number(size) / 100;
+                    } else {
+                        return Number(size);
+                    }
+                };
                 var beforeSetCSS = {
                     "split": {
                         "horizontal": function horizontal(item, panel, panelIndex) {
@@ -30982,13 +31027,17 @@ jQuery.fn.ax5combobox = function () {
                                     } else {
                                         if (panel.height == "*") {
                                             item.splitPanel.asteriskLength++;
+                                        } else {
+                                            //panel.__height = getPixel(panel.height, item.targetDimension.height);
                                         }
                                     }
                                 } else {
-                                    if (panel.height == "*") {
-                                        item.splitPanel.asteriskLength++;
+                                        if (panel.height == "*") {
+                                            item.splitPanel.asteriskLength++;
+                                        } else {
+                                            //panel.__height = getPixel(panel.height, item.targetDimension.height);
+                                        }
                                     }
-                                }
                             }
                         },
                         "vertical": function vertical(item, panel, panelIndex) {
@@ -31008,6 +31057,8 @@ jQuery.fn.ax5combobox = function () {
                                 } else {
                                     if (panel.width == "*") {
                                         item.splitPanel.asteriskLength++;
+                                    } else {
+                                        //panel.__width = getPixel(panel.width, item.targetDimension.width);
                                     }
                                 }
                             }
@@ -31594,8 +31645,8 @@ jQuery.fn.ax5combobox = function () {
                     boundID = jQuery(boundID).data("data-ax5layout-id");
                 }
                 if (!U.isString(boundID)) {
-                    console.log(ax5.info.getError("ax5layout", "402", "getQueIdx"));
-                    return;
+                    //console.log(ax5.info.getError("ax5layout", "402", "getQueIdx"));
+                    return -1;
                 }
                 return U.search(this.queue, function () {
                     return this.id == boundID;
@@ -31696,12 +31747,15 @@ jQuery.fn.ax5combobox = function () {
              */
             this.align = function (boundID, windowResize) {
                 var queIdx = U.isNumber(boundID) ? boundID : getQueIdx.call(this, boundID);
-                if (queIdx === -1) {
-                    console.log(ax5.info.getError("ax5layout", "402", "align"));
-                    return;
-                }
 
-                alignLayout.call(this, queIdx, null, windowResize);
+                if (queIdx === -1) {
+                    var i = this.queue.length;
+                    while (i--) {
+                        alignLayout.call(this, i, null, windowResize);
+                    }
+                } else {
+                    alignLayout.call(this, queIdx, null, windowResize);
+                }
                 return this;
             };
 
@@ -31749,12 +31803,18 @@ jQuery.fn.ax5combobox = function () {
                 return function (boundID, resizeOption, callback) {
                     var queIdx = U.isNumber(boundID) ? boundID : getQueIdx.call(this, boundID);
                     if (queIdx === -1) {
-                        console.log(ax5.info.getError("ax5layout", "402", "resize"));
-                        return;
+                        var i = this.queue.length;
+                        while (i--) {
+                            resizeLayoutPanel[this.queue[i].layout].call(this, this.queue[i], resizeOption);
+                            alignLayout.call(this, i, callback);
+                        }
+                    } else {
+                        if (this.queue[queIdx]) {
+                            resizeLayoutPanel[this.queue[queIdx].layout].call(this, this.queue[queIdx], resizeOption);
+                            alignLayout.call(this, queIdx, callback);
+                        }
                     }
 
-                    resizeLayoutPanel[this.queue[queIdx].layout].call(this, this.queue[queIdx], resizeOption);
-                    alignLayout.call(this, queIdx, callback);
                     return this;
                 };
             }();
@@ -31847,7 +31907,7 @@ jQuery.fn.ax5layout = function () {
 
             switch (methodName) {
                 case "align":
-                    return ax5.ui.layout_instance.align(this, arguments[1], arguments[2]);
+                    return ax5.ui.layout_instance.align(this, arguments[1]);
                     break;
                 case "resize":
                     return ax5.ui.layout_instance.resize(this, arguments[1], arguments[2]);

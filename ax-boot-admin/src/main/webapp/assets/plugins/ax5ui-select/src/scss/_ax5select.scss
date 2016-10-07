@@ -18,7 +18,7 @@
 @include input-size('.input-lg', $input-height-large);
 
 .form-group-sm {
-    [data-ax5select]{
+    [data-ax5select] {
         select[multiple].form-control {
             height: $input-height-small;
         }
@@ -512,5 +512,35 @@ $hover-types: (
     }
     &.ax5select-option-group-xs {
         @include ax5select-option-group-size($ax5select-option-item-padding-xs, $ax5select-option-item-font-size-xs);
+    }
+}
+
+
+/// suport input-group
+.input-group {
+    [data-ax5select] {
+        display: table-cell;
+
+        select {
+            z-index: 1;
+            position: absolute;
+            opacity: 0;
+            @include user-select(none);
+        }
+        .ax5select-display {
+            @extend .ax5select-display;
+        }
+        &:first-child{
+            .ax5select-display {
+                border-top-right-radius: 0;
+                border-bottom-right-radius: 0;
+            }
+        }
+        &:last-child{
+            .ax5select-display {
+                border-top-left-radius: 0;
+                border-bottom-left-radius: 0;
+            }
+        }
     }
 }

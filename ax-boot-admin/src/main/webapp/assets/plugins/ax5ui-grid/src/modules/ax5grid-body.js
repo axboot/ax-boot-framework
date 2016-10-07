@@ -296,7 +296,15 @@
                     }
                 },
                 "rowSelector": function (_column) {
-                    GRID.data.select.call(self, _column.dindex);
+
+                    if (!self.config.multipleSelect && self.selectedDataIndexs[0] !== _column.dindex) {
+                        GRID.body.updateRowState.call(self, ["selectedClear"]);
+                        GRID.data.clearSelect.call(self);
+                    }
+
+                    GRID.data.select.call(self, _column.dindex, undefined, {
+                        internalCall : true
+                    });
                     updateRowState.call(self, ["selected"], _column.dindex);
                 },
                 "lineNumber": function (_column) {
@@ -1610,6 +1618,8 @@
                     break;
                 }
 
+                if(!focusedColumn) return false;
+                
                 originalColumn = this.bodyRowMap[focusedColumn.rowIndex + "_" + focusedColumn.colIndex];
                 columnSelect.focusClear.call(this);
                 columnSelect.clear.call(this);
@@ -1693,6 +1703,8 @@
                     focusedColumn = jQuery.extend({}, this.focusedColumn[c], true);
                     break;
                 }
+                if(!focusedColumn) return false;
+
                 originalColumn = this.bodyRowMap[focusedColumn.rowIndex + "_" + focusedColumn.colIndex];
 
                 columnSelect.focusClear.call(this);

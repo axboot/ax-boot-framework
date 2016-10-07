@@ -258,7 +258,7 @@
      */
     var deleteRow = function (_dindex) {
         var list = (this.config.body.grouping) ? clearGroupingData.call(this, this.list) : this.list;
-        
+
         var processor = {
             "first": function () {
                 list[0][this.config.columnKeys.deleted] = true;
@@ -268,8 +268,8 @@
             },
             "selected": function () {
                 var i = list.length;
-                while(i--){
-                    if(list[i][this.config.columnKeys.selected]){
+                while (i--) {
+                    if (list[i][this.config.columnKeys.selected]) {
                         list[i][this.config.columnKeys.deleted] = true;
                     }
                 }
@@ -300,7 +300,7 @@
                     list
                 )
             );
-        } else{
+        } else {
             list = initData.call(this, list);
         }
 
@@ -340,7 +340,7 @@
             this.list[_dindex][_key] = _value;
         }
 
-        if(this.onDataChanged){
+        if (this.onDataChanged) {
             this.onDataChanged.call({
                 self: this,
                 list: this.list,
@@ -370,7 +370,7 @@
         this.selectedDataIndexs = [];
     };
 
-    var select = function (_dindex, _selected) {
+    var select = function (_dindex, _selected, _options) {
         var cfg = this.config;
 
         if (this.list[_dindex].__isGrouping) return false;
@@ -384,6 +384,18 @@
                 this.selectedDataIndexs.push(_dindex);
             }
         }
+
+        if (this.onDataChanged && _options && _options.internalCall) {
+            this.onDataChanged.call({
+                self: this,
+                list: this.list,
+                dindex: _dindex,
+                item: this.list[_dindex],
+                key: cfg.columnKeys.selected,
+                value: this.list[_dindex][cfg.columnKeys.selected]
+            });
+        }
+
         return this.list[_dindex][cfg.columnKeys.selected];
     };
 

@@ -1,12 +1,17 @@
-[data-page-auto-height="true"]{
+&[data-page-auto-height="true"]{
+    overflow: hidden;
     #ax-base-root {
         overflow: hidden;
         height: 100%;
     }
 }
-[data-page-auto-height="false"]{
+&[data-page-auto-height="false"]{
     overflow: auto;
+    #ax-base-root {
+        overflow: auto;
+    }
 }
+
 
 #ax-base-root{
     padding: 0 15px;

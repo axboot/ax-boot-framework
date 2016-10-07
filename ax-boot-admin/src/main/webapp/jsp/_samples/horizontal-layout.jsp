@@ -21,7 +21,6 @@
 
         <ax:page-buttons></ax:page-buttons>
 
-
         <div role="page-header">
             <ax:form name="searchView0">
                 <ax:tbl clazz="ax-search-tbl" minWidth="500px">
