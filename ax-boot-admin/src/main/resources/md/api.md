@@ -3,25 +3,25 @@
 <dl>
 <dt><a href="#axboot">axboot</a> : <code>Object</code></dt>
 <dd></dd>
-<dt><a href="#axMask">axMask</a></dt>
+<dt><a href="#axMask">axMask</a> : <code>ax5ui</code></dt>
 <dd><p>기본 마스크</p>
 </dd>
-<dt><a href="#axDialogMask">axDialogMask</a></dt>
+<dt><a href="#axDialogMask">axDialogMask</a> : <code>ax5ui</code></dt>
 <dd><p>다이얼로그용 마스크</p>
 </dd>
-<dt><a href="#axAJAXMask">axAJAXMask</a></dt>
+<dt><a href="#axAJAXMask">axAJAXMask</a> : <code>ax5ui</code></dt>
 <dd><p>ajax용 마스크</p>
 </dd>
-<dt><a href="#axModal">axModal</a></dt>
+<dt><a href="#axModal">axModal</a> : <code>ax5ui</code></dt>
 <dd><p>기본 모달</p>
 </dd>
-<dt><a href="#axDialog">axDialog</a></dt>
+<dt><a href="#axDialog">axDialog</a> : <code>ax5ui</code></dt>
 <dd></dd>
-<dt><a href="#axWarningDialog">axWarningDialog</a></dt>
+<dt><a href="#axWarningDialog">axWarningDialog</a> : <code>ax5ui</code></dt>
 <dd></dd>
-<dt><a href="#axToast">axToast</a></dt>
+<dt><a href="#axToast">axToast</a> : <code>ax5ui</code></dt>
 <dd></dd>
-<dt><a href="#axWarningToast">axWarningToast</a></dt>
+<dt><a href="#axWarningToast">axWarningToast</a> : <code>ax5ui</code></dt>
 <dd></dd>
 </dl>
 
@@ -33,8 +33,14 @@
 * [axboot](#axboot) : <code>Object</code>
     * [.def](#axboot.def) : <code>Object</code>
     * [.pageAutoHeight](#axboot.pageAutoHeight) : <code>Object</code>
-    * [.call](#axboot.call) : <code>Object</code>
-    * [.preparePlugin](#axboot.preparePlugin) : <code>Object</code>
+    * [.modal](#axboot.modal)
+        * [.open(modalConfig)](#axboot.modal.open)
+        * [.css(modalCss)](#axboot.modal.css)
+        * [.align(modalAlign)](#axboot.modal.align)
+        * [.close()](#axboot.modal.close)
+        * [.minimize()](#axboot.modal.minimize)
+        * [.callback(data)](#axboot.modal.callback)
+    * [.preparePlugin](#axboot.preparePlugin)
         * [.define()](#axboot.preparePlugin.define)
         * [.pageStart()](#axboot.preparePlugin.pageStart)
     * [.commonView](#axboot.commonView) : <code>Object</code>
@@ -62,66 +68,117 @@ axboot.def.menuHeight = 20;
 
 ### axboot.pageAutoHeight : <code>Object</code>
 **Kind**: static property of <code>[axboot](#axboot)</code>  
-<a name="axboot.call"></a>
+<a name="axboot.modal"></a>
 
-### axboot.call : <code>Object</code>
-여러개의 AJAX콜을 순차적으로 해야 하는 경우 callback 지옥에 빠지기 쉽다. `axboot.call & done`은 이런 상황에서 코드가 보기 어려워지는 문제를 해결 하기 위해 개발된 오브젝트 입니다
-
+### axboot.modal
 **Kind**: static property of <code>[axboot](#axboot)</code>  
+**Object**: <code>Object</code> axboot.modal  
+
+* [.modal](#axboot.modal)
+    * [.open(modalConfig)](#axboot.modal.open)
+    * [.css(modalCss)](#axboot.modal.css)
+    * [.align(modalAlign)](#axboot.modal.align)
+    * [.close()](#axboot.modal.close)
+    * [.minimize()](#axboot.modal.minimize)
+    * [.callback(data)](#axboot.modal.callback)
+
+<a name="axboot.modal.open"></a>
+
+#### modal.open(modalConfig)
+지정한 조건으로 ax5 modal을 엽니다. modalConfig 를 넘기지 않으면 지정된 기본값으로 엽니다.
+
+**Kind**: static method of <code>[modal](#axboot.modal)</code>  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| modalConfig | <code>Object</code> |  |
+| modalConfig.width | <code>Number</code> |  |
+| modalConfig.height | <code>Number</code> |  |
+| modalConfig.position | <code>Object</code> |  |
+| modalConfig.position.left | <code>String</code> |  |
+| modalConfig.position.top | <code>String</code> |  |
+| modalConfig.iframeLoadingMsg | <code>String</code> |  |
+| modalConfig.iframe.method | <code>String</code> |  |
+| modalConfig.iframe.url | <code>String</code> |  |
+| modalConfig.closeToEsc | <code>Boolean</code> |  |
+| modalConfig.animateTime | <code>Number</code> |  |
+| modalConfig.zIndex | <code>Number</code> |  |
+| modalConfig.fullScreen | <code>Boolean</code> |  |
+| modalConfig.header | <code>Object</code> |  |
+| modalConfig.header.title | <code>String</code> |  |
+| modalConfig.sendData | <code>function</code> | 모달창에서 parent.axboot.modal.getData() 하여 호출합니다. 전달하고 싶은 변수를 return 하면 됩니다 |
+| modalConfig.callback | <code>function</code> | 모달창에서 parant.axboot.modal.callback() 으로 호출합니다. |
+
 **Example**  
 ```js
-  axboot
-      .call({
-          type: "GET", url: "/api/v1/programs", data: "",
-          callback: function (res) {
-              var programList = [];
-              res.list.forEach(function (n) {
-                  programList.push({
-                      value: n.progCd, text: n.progNm + "(" + n.progCd + ")",
-                      progCd: n.progCd, progNm: n.progNm,
-                      data: n
-                  });
-              });
-              this.programList = programList;
-          }
-      })
-      .call(function () {
-          this.something = 1;
-      })
-      .call({
-          type: "GET", url: "/api/v1/commonCodes", data: {groupCd: "AUTH_GROUP", useYn: "Y"},
-          callback: function (res) {
-              var authGroup = [];
-              res.list.forEach(function (n) {
-                  authGroup.push({
-                      value: n.code, text: n.name + "(" + n.code + ")",
-                      grpAuthCd: n.code, grpAuthNm: n.name,
-                      data: n
-                  });
-              });
-              this.authGroup = authGroup;
-          }
-      })
-      .done(function () {
-          CODE = this; // this는 call을 통해 수집된 데이터들.
+ axboot.modal.open({
+     width: 400,
+     height: 400,
+     header: false,
+     iframe: {
+         url: "open url"
+         param: "param"
+     },
+     sendData: function(){
 
-          _this.pageButtonView.initView();
-          _this.searchView.initView();
-          _this.treeView01.initView();
-          _this.formView01.initView();
-          _this.gridView01.initView();
-
-          ACTIONS.dispatch(ACTIONS.PAGE_SEARCH);
-      });
+     },
+     callback: function(){
+         axboot.modal.close();
+     }
+ });
 ```
+<a name="axboot.modal.css"></a>
+
+#### modal.css(modalCss)
+ax5 modal css 를 적용합니다.
+
+**Kind**: static method of <code>[modal](#axboot.modal)</code>  
+
+| Param |
+| --- |
+| modalCss | 
+
+<a name="axboot.modal.align"></a>
+
+#### modal.align(modalAlign)
+ax5 modal을 정렬합니다.
+
+**Kind**: static method of <code>[modal](#axboot.modal)</code>  
+
+| Param |
+| --- |
+| modalAlign | 
+
+<a name="axboot.modal.close"></a>
+
+#### modal.close()
+ax5 modal을 닫습니다.
+
+**Kind**: static method of <code>[modal](#axboot.modal)</code>  
+<a name="axboot.modal.minimize"></a>
+
+#### modal.minimize()
+ax5 modal을 최소화 합니다.
+
+**Kind**: static method of <code>[modal](#axboot.modal)</code>  
+<a name="axboot.modal.callback"></a>
+
+#### modal.callback(data)
+callback 으로 정의된 함수에 전달된 파라메터를 넘겨줍니다.
+
+**Kind**: static method of <code>[modal](#axboot.modal)</code>  
+
+| Param | Type |
+| --- | --- |
+| data | <code>Object</code> &#124; <code>String</code> | 
+
 <a name="axboot.preparePlugin"></a>
 
-### axboot.preparePlugin : <code>Object</code>
-axboot.preparePlugin
-
+### axboot.preparePlugin
 **Kind**: static property of <code>[axboot](#axboot)</code>  
+**Object**: <code>Object</code> axboot.preparePlugin  
 
-* [.preparePlugin](#axboot.preparePlugin) : <code>Object</code>
+* [.preparePlugin](#axboot.preparePlugin)
     * [.define()](#axboot.preparePlugin.define)
     * [.pageStart()](#axboot.preparePlugin.pageStart)
 
@@ -283,7 +340,7 @@ fnObj.sampleView = axboot.viewExtend({
 ```
 <a name="axMask"></a>
 
-## axMask
+## axMask : <code>ax5ui</code>
 기본 마스크
 
 **Kind**: global variable  
@@ -295,33 +352,33 @@ appMask.close(1000); // 1초 지연 후 마스크 닫기
 ```
 <a name="axDialogMask"></a>
 
-## axDialogMask
+## axDialogMask : <code>ax5ui</code>
 다이얼로그용 마스크
 
 **Kind**: global variable  
 <a name="axAJAXMask"></a>
 
-## axAJAXMask
+## axAJAXMask : <code>ax5ui</code>
 ajax용 마스크
 
 **Kind**: global variable  
 <a name="axModal"></a>
 
-## axModal
+## axModal : <code>ax5ui</code>
 기본 모달
 
 **Kind**: global variable  
 <a name="axDialog"></a>
 
-## axDialog
+## axDialog : <code>ax5ui</code>
 **Kind**: global variable  
 <a name="axWarningDialog"></a>
 
-## axWarningDialog
+## axWarningDialog : <code>ax5ui</code>
 **Kind**: global variable  
 <a name="axToast"></a>
 
-## axToast
+## axToast : <code>ax5ui</code>
 **Kind**: global variable  
 **Example**  
 ```js
@@ -332,5 +389,5 @@ toast.push('Toast message', function () {
 ```
 <a name="axWarningToast"></a>
 
-## axWarningToast
+## axWarningToast : <code>ax5ui</code>
 **Kind**: global variable  

@@ -159,7 +159,11 @@ axboot.gridBuilder = (function () {
                 }
                 if (ax5.util.isString(columns[i].editor)) {
                     if (columns[i].editor in preDefineEditor) {
-                        columns[i].editor = $.extend({}, preDefineEditor[columns[i].editor]);
+                        if(ax5.util.isFunction(preDefineEditor[columns[i].editor])){
+                            columns[i].editor = preDefineEditor[columns[i].editor]();
+                        }else {
+                            columns[i].editor = $.extend({}, preDefineEditor[columns[i].editor]);
+                        }
                     }
                 }
 

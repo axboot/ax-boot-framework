@@ -1,5 +1,5 @@
 /**
- * @type {Object} axboot.preparePlugin
+ * @object {Object} axboot.preparePlugin
  */
 axboot.preparePlugin = (function () {
     /**
@@ -10,7 +10,7 @@ axboot.preparePlugin = (function () {
 
         /**
          * 기본 마스크
-         * @global {ax5ui} axMask
+         * @var {ax5ui} axMask
          * @example
          * ```js
          * appMask.open();
@@ -21,19 +21,19 @@ axboot.preparePlugin = (function () {
         window.axMask = new ax5.ui.mask();
         /**
          * 다이얼로그용 마스크
-         * @global {ax5ui} axDialogMask
+         * @var {ax5ui} axDialogMask
          */
         window.axDialogMask = new ax5.ui.mask();
         /**
          * ajax용 마스크
-         * @global {ax5ui} axAJAXMask
+         * @var {ax5ui} axAJAXMask
          */
         window.axAJAXMask = new ax5.ui.mask({
             content: '<i class="cqc-chequer cqc-50x cqc-zoom-in-out" style="color: #ccc;"></i>',
         });
         /**
          * 기본 모달
-         * @global {ax5ui} axModal
+         * @var {ax5ui} axModal
          */
         window.axModal = new ax5.ui.modal({
             iframeLoadingMsg: '<i class="cqc-chequer ax-loading-icon lg"></i>'
@@ -76,7 +76,7 @@ axboot.preparePlugin = (function () {
 
         /**
          *
-         * @global {ax5ui} axDialog
+         * @var {ax5ui} axDialog
          */
         window.axDialog = new ax5.ui.dialog({
             title: axboot.def.dialogTitle,
@@ -94,7 +94,7 @@ axboot.preparePlugin = (function () {
         });
         /**
          *
-         * @global {ax5ui} axWarningDialog
+         * @var {ax5ui} axWarningDialog
          */
         window.axWarningDialog = new ax5.ui.dialog({
             title: axboot.def.dialogTitle,
@@ -113,7 +113,7 @@ axboot.preparePlugin = (function () {
         });
         /**
          *
-         * @global {ax5ui} axToast
+         * @var {ax5ui} axToast
          * @example
          * ```js
          * toast.push('Toast message', function () {
@@ -130,7 +130,7 @@ axboot.preparePlugin = (function () {
             }
         });
         /**
-         * @global {ax5ui} axWarningToast
+         * @var {ax5ui} axWarningToast
          *
          */
         window.axWarningToast = new ax5.ui.toast({

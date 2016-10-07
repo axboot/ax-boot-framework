@@ -1202,7 +1202,7 @@ axboot.ajax = function () {
 }(jQuery);
 /**
  * 여러개의 AJAX콜을 순차적으로 해야 하는 경우 callback 지옥에 빠지기 쉽다. `axboot.call & done`은 이런 상황에서 코드가 보기 어려워지는 문제를 해결 하기 위해 개발된 오브젝트 입니다
- * @type {Object} axboot.call
+ * @method {Object} axboot.call
  * @example
  * ```js
  *   axboot
@@ -1485,7 +1485,11 @@ axboot.gridBuilder = function () {
                 }
                 if (ax5.util.isString(columns[i].editor)) {
                     if (columns[i].editor in preDefineEditor) {
-                        columns[i].editor = $.extend({}, preDefineEditor[columns[i].editor]);
+                        if (ax5.util.isFunction(preDefineEditor[columns[i].editor])) {
+                            columns[i].editor = preDefineEditor[columns[i].editor]();
+                        } else {
+                            columns[i].editor = $.extend({}, preDefineEditor[columns[i].editor]);
+                        }
                     }
                 }
 
@@ -1529,8 +1533,7 @@ ax5.ui.grid.formatter["phone"] = function () {
     return returnValue;
 };
 /**
- *
- * @type {Object} axboot.modal
+ * @Object {Object} axboot.modal
  */
 axboot.modal = function () {
     var modalCallback = {};
@@ -1566,7 +1569,7 @@ axboot.modal = function () {
             title: "",
             btns: {
                 close: {
-                    label: '<i class="cqc-cancel2"></i>', onClick: function onClick() {
+                    label: '<i class="cqc-circle-with-cross"></i>', onClick: function onClick() {
                         window.axModal.close();
                     }
                 }
@@ -1592,25 +1595,32 @@ axboot.modal = function () {
      * @param {Boolean} modalConfig.fullScreen
      * @param {Object} modalConfig.header
      * @param {String} modalConfig.header.title
+     * @param {Function} modalConfig.sendData - 모달창에서 parent.axboot.modal.getData() 하여 호출합니다. 전달하고 싶은 변수를 return 하면 됩니다
+     * @param {Function} modalConfig.callback - 모달창에서 parant.axboot.modal.callback() 으로 호출합니다.
      *
      * @example
      * ```js
      *  axboot.modal.open({
      *      width: 400,
      *      height: 400,
-     *      position: {
-     *          left: "center",
-     *          top: "middle"
-     *      }
-     *  }, function(){
-     *      // do something
-     *  });
+     *      header: false,
+     *      iframe: {
+     *          url: "open url"
+     *          param: "param"
+     *      },
+     *      sendData: function(){
      *
+     *      },
+     *      callback: function(){
+     *          axboot.modal.close();
+     *      }
+     *  });
      * ```
      */
     var open = function open(modalConfig) {
         modalConfig = $.extend(true, {}, defaultOption, modalConfig);
         this.modalCallback = modalConfig.callback;
+        this.modalSendData = modalConfig.sendData;
         window.axModal.open(modalConfig);
     };
 
@@ -1632,7 +1642,7 @@ axboot.modal = function () {
         window.axModal.align(modalAlign);
     };
     /**
-     * ax5 modal을 닫습니다. 
+     * ax5 modal을 닫습니다.
      * @method axboot.modal.close
      */
     var close = function close(data) {
@@ -1657,11 +1667,17 @@ axboot.modal = function () {
     /**
      * callback 으로 정의된 함수에 전달된 파라메터를 넘겨줍니다.
      * @method axboot.modal.callback
-     * @param {Object || String} data
+     * @param {Object|String} data
      */
     var callback = function callback(data) {
         if (this.modalCallback) {
             this.modalCallback(data);
+        }
+    };
+
+    var getData = function getData() {
+        if (this.modalSendData) {
+            return this.modalSendData();
         }
     };
 
@@ -1673,7 +1689,8 @@ axboot.modal = function () {
         "minimize": minimize,
         "maximize": maximize,
         "callback": callback,
-        "modalCallback": modalCallback
+        "modalCallback": modalCallback,
+        "getData": getData
     };
 }();
 axboot.modelFormatter = function () {
@@ -1761,7 +1778,7 @@ ax5.ui.formatter.formatter["chequer"] = {
     }
 };
 /**
- * @type {Object} axboot.preparePlugin
+ * @object {Object} axboot.preparePlugin
  */
 axboot.preparePlugin = function () {
     /**
@@ -1772,7 +1789,7 @@ axboot.preparePlugin = function () {
 
         /**
          * 기본 마스크
-         * @global {ax5ui} axMask
+         * @var {ax5ui} axMask
          * @example
          * ```js
          * appMask.open();
@@ -1783,19 +1800,19 @@ axboot.preparePlugin = function () {
         window.axMask = new ax5.ui.mask();
         /**
          * 다이얼로그용 마스크
-         * @global {ax5ui} axDialogMask
+         * @var {ax5ui} axDialogMask
          */
         window.axDialogMask = new ax5.ui.mask();
         /**
          * ajax용 마스크
-         * @global {ax5ui} axAJAXMask
+         * @var {ax5ui} axAJAXMask
          */
         window.axAJAXMask = new ax5.ui.mask({
             content: '<i class="cqc-chequer cqc-50x cqc-zoom-in-out" style="color: #ccc;"></i>'
         });
         /**
          * 기본 모달
-         * @global {ax5ui} axModal
+         * @var {ax5ui} axModal
          */
         window.axModal = new ax5.ui.modal({
             iframeLoadingMsg: '<i class="cqc-chequer ax-loading-icon lg"></i>'
@@ -1838,7 +1855,7 @@ axboot.preparePlugin = function () {
 
         /**
          *
-         * @global {ax5ui} axDialog
+         * @var {ax5ui} axDialog
          */
         window.axDialog = new ax5.ui.dialog({
             title: axboot.def.dialogTitle,
@@ -1855,7 +1872,7 @@ axboot.preparePlugin = function () {
         });
         /**
          *
-         * @global {ax5ui} axWarningDialog
+         * @var {ax5ui} axWarningDialog
          */
         window.axWarningDialog = new ax5.ui.dialog({
             title: axboot.def.dialogTitle,
@@ -1873,7 +1890,7 @@ axboot.preparePlugin = function () {
         });
         /**
          *
-         * @global {ax5ui} axToast
+         * @var {ax5ui} axToast
          * @example
          * ```js
          * toast.push('Toast message', function () {
@@ -1888,7 +1905,7 @@ axboot.preparePlugin = function () {
             onStateChanged: function onStateChanged() {}
         });
         /**
-         * @global {ax5ui} axWarningToast
+         * @var {ax5ui} axWarningToast
          *
          */
         window.axWarningToast = new ax5.ui.toast({

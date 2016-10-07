@@ -1,10 +1,9 @@
 /**
- *
- * @type {Object} axboot.modal
+ * @Object {Object} axboot.modal
  */
 axboot.modal = (function () {
     var modalCallback = {};
-    
+
     var defaultCss = {
         width: 400,
         height: 400,
@@ -38,7 +37,7 @@ axboot.modal = (function () {
                 title: "",
                 btns: {
                     close: {
-                        label: '<i class="cqc-cancel2"></i>', onClick: function(){
+                        label: '<i class="cqc-circle-with-cross"></i>', onClick: function () {
                             window.axModal.close();
                         }
                     }
@@ -65,25 +64,32 @@ axboot.modal = (function () {
      * @param {Boolean} modalConfig.fullScreen
      * @param {Object} modalConfig.header
      * @param {String} modalConfig.header.title
+     * @param {Function} modalConfig.sendData - 모달창에서 parent.axboot.modal.getData() 하여 호출합니다. 전달하고 싶은 변수를 return 하면 됩니다
+     * @param {Function} modalConfig.callback - 모달창에서 parant.axboot.modal.callback() 으로 호출합니다.
      *
      * @example
      * ```js
      *  axboot.modal.open({
      *      width: 400,
      *      height: 400,
-     *      position: {
-     *          left: "center",
-     *          top: "middle"
-     *      }
-     *  }, function(){
-     *      // do something
-     *  });
+     *      header: false,
+     *      iframe: {
+     *          url: "open url"
+     *          param: "param"
+     *      },
+     *      sendData: function(){
      *
+     *      },
+     *      callback: function(){
+     *          axboot.modal.close();
+     *      }
+     *  });
      * ```
      */
-    var open = function(modalConfig){
-        modalConfig = $.extend(true, {}, defaultOption, modalConfig );
+    var open = function (modalConfig) {
+        modalConfig = $.extend(true, {}, defaultOption, modalConfig);
         this.modalCallback = modalConfig.callback;
+        this.modalSendData = modalConfig.sendData;
         window.axModal.open(modalConfig);
     };
 
@@ -92,8 +98,8 @@ axboot.modal = (function () {
      * @method axboot.modal.css
      * @param modalCss
      */
-    var css = function(modalCss){
-        modalCss = $.extend(true, {}, defaultCss, modalCss );
+    var css = function (modalCss) {
+        modalCss = $.extend(true, {}, defaultCss, modalCss);
         window.axModal.css(modalCss);
     };
     /**
@@ -101,14 +107,14 @@ axboot.modal = (function () {
      * @method axboot.modal.align
      * @param modalAlign
      */
-    var align = function(modalAlign){
+    var align = function (modalAlign) {
         window.axModal.align(modalAlign);
     };
     /**
-     * ax5 modal을 닫습니다. 
+     * ax5 modal을 닫습니다.
      * @method axboot.modal.close
      */
-    var close = function(data){
+    var close = function (data) {
 
         window.axModal.close();
     };
@@ -116,25 +122,31 @@ axboot.modal = (function () {
      * ax5 modal을 최소화 합니다.
      * @method axboot.modal.minimize
      */
-    var minimize = function(){
+    var minimize = function () {
         window.axModal.minimize();
     };
     /**
      * ax5 modal을 최대화 합니다.
      * @methid axboot.modal.maximize
      */
-    var maximize = function(){
+    var maximize = function () {
         window.axModal.maximize();
     };
 
     /**
      * callback 으로 정의된 함수에 전달된 파라메터를 넘겨줍니다.
      * @method axboot.modal.callback
-     * @param {Object || String} data
+     * @param {Object|String} data
      */
-    var callback = function(data){
-        if(this.modalCallback) {
+    var callback = function (data) {
+        if (this.modalCallback) {
             this.modalCallback(data);
+        }
+    };
+
+    var getData = function () {
+        if (this.modalSendData) {
+            return this.modalSendData();
         }
     };
 
@@ -146,6 +158,7 @@ axboot.modal = (function () {
         "minimize": minimize,
         "maximize": maximize,
         "callback": callback,
-        "modalCallback": modalCallback
+        "modalCallback": modalCallback,
+        "getData": getData
     };
 })();
