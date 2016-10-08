@@ -1,11 +1,12 @@
 /**
- * @type {Object}
+ * axboot 오브젝트 axboot 애플리케이션을 편리하게 사용하기 위한 오브젝트 입니다.
+ * @var {Object} axboot
  */
 var axboot = {};
 
 /**
  * axboot의 환경 변수 저장 공간
- * @type {Object}
+ * @type {Object} axboot.def
  * @example
  * ```js
  * axboot.def.menuHeight = 20;
@@ -20,6 +21,7 @@ axboot.def = {
 
 
 /**
+ * document ready 상태가 되었을 때 실행됩니다. 애플리케이션 초기화를 담당합니다.
  * @method axboot.init
  */
 axboot.init = function () {
@@ -103,10 +105,10 @@ axboot.init = function () {
             }
         });
     });
-
 };
 
 /**
+ * axboot.def.pageFunctionName의 pageStart를 실행해 줍니다.
  * @method axboot.pageStart
  *
  */
@@ -116,6 +118,7 @@ axboot.pageStart = function () {
     }
 };
 /**
+ * axboot.def.pageFunctionName의 pageResize를 실행해 줍니다.
  * @method axboot.pageResize
  */
 axboot.pageResize = function () {
@@ -126,6 +129,7 @@ axboot.pageResize = function () {
     }
 };
 /**
+ * 페이지내부에 선언된 ax5layout이 리사이즈 되었을 때. axboot.def.pageFunctionName의 layoutResize를 실행해 줍니다.
  * @method axboot.layoutResize
  */
 axboot.layoutResize = function () {
@@ -135,13 +139,19 @@ axboot.layoutResize = function () {
 };
 
 /**
- *
- * @type {{init: axboot.pageAutoHeight.init, align: axboot.pageAutoHeight.align}}
+ * 페이지안에 [role="page-content"] 과 그 외의 부분의 높이를 계산하여 페이지 안에 컨텐츠의 높이들을 꽉 차게 해줍니다.
+ * @Object {Object} axboot.pageAutoHeight
  */
 axboot.pageAutoHeight = {
+    /**
+     * @method axboot.pageAutoHeight.init
+     */
     init: function () {
         this.active = $(document.body).attr("data-page-auto-height");
     },
+    /**
+     * @method axboot.pageAutoHeight.align
+     */
     align: function () {
         if (!this.active) return false;
         // page-content-auto-height

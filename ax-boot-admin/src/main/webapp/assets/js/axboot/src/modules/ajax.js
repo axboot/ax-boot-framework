@@ -6,6 +6,7 @@
  * @param {Object|String} http.data
  * @param {Function} http.callback
  * @param {Object} [http.options]
+ * @param {Boolean} [http.options.nomask = false]
  * @param {Function} [http.options.onError]
  * @param {String} [http.options.contentType]
  * @param {String} [http.options.apiType]

@@ -3,13 +3,14 @@
 var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol ? "symbol" : typeof obj; };
 
 /**
- * @type {Object}
+ * axboot 오브젝트 axboot 애플리케이션을 편리하게 사용하기 위한 오브젝트 입니다.
+ * @var {Object} axboot
  */
 var axboot = {};
 
 /**
  * axboot의 환경 변수 저장 공간
- * @type {Object}
+ * @type {Object} axboot.def
  * @example
  * ```js
  * axboot.def.menuHeight = 20;
@@ -23,6 +24,7 @@ axboot.def = {
 };
 
 /**
+ * document ready 상태가 되었을 때 실행됩니다. 애플리케이션 초기화를 담당합니다.
  * @method axboot.init
  */
 axboot.init = function () {
@@ -109,6 +111,7 @@ axboot.init = function () {
 };
 
 /**
+ * axboot.def.pageFunctionName의 pageStart를 실행해 줍니다.
  * @method axboot.pageStart
  *
  */
@@ -118,6 +121,7 @@ axboot.pageStart = function () {
     }
 };
 /**
+ * axboot.def.pageFunctionName의 pageResize를 실행해 줍니다.
  * @method axboot.pageResize
  */
 axboot.pageResize = function () {
@@ -128,6 +132,7 @@ axboot.pageResize = function () {
     }
 };
 /**
+ * 페이지내부에 선언된 ax5layout이 리사이즈 되었을 때. axboot.def.pageFunctionName의 layoutResize를 실행해 줍니다.
  * @method axboot.layoutResize
  */
 axboot.layoutResize = function () {
@@ -137,13 +142,19 @@ axboot.layoutResize = function () {
 };
 
 /**
- *
- * @type {{init: axboot.pageAutoHeight.init, align: axboot.pageAutoHeight.align}}
+ * 페이지안에 [role="page-content"] 과 그 외의 부분의 높이를 계산하여 페이지 안에 컨텐츠의 높이들을 꽉 차게 해줍니다.
+ * @Object {Object} axboot.pageAutoHeight
  */
 axboot.pageAutoHeight = {
+    /**
+     * @method axboot.pageAutoHeight.init
+     */
     init: function init() {
         this.active = $(document.body).attr("data-page-auto-height");
     },
+    /**
+     * @method axboot.pageAutoHeight.align
+     */
     align: function align() {
         if (!this.active) return false;
         // page-content-auto-height
@@ -178,6 +189,7 @@ $(document.body).ready(function () {
  * @param {Object|String} http.data
  * @param {Function} http.callback
  * @param {Object} [http.options]
+ * @param {Boolean} [http.options.nomask = false]
  * @param {Function} [http.options.onError]
  * @param {String} [http.options.contentType]
  * @param {String} [http.options.apiType]
@@ -1201,8 +1213,12 @@ axboot.ajax = function () {
     };
 }(jQuery);
 /**
+ * @Object {Object} axboot.call
+*/
+
+/**
  * 여러개의 AJAX콜을 순차적으로 해야 하는 경우 callback 지옥에 빠지기 쉽다. `axboot.call & done`은 이런 상황에서 코드가 보기 어려워지는 문제를 해결 하기 위해 개발된 오브젝트 입니다
- * @method {Object} axboot.call
+ * @method axboot.call
  * @example
  * ```js
  *   axboot
@@ -1249,6 +1265,11 @@ axboot.ajax = function () {
  *           ACTIONS.dispatch(ACTIONS.PAGE_SEARCH);
  *       });
  * ```
+ */
+
+/**
+ * axboot.call 참조
+ * @method axboot.call.done
  */
 axboot.call = function () {
 
@@ -1358,6 +1379,7 @@ axboot.gridBuilder = function () {
         showLineNumber: true,
         lineNumberColumnWidth: 50,
         rowSelectorColumnWidth: 28,
+        multipleSelect: false,
         header: {
             align: "center",
             columnHeight: 28
@@ -1380,11 +1402,14 @@ axboot.gridBuilder = function () {
     };
     var preDefineColumns = {
         "insDt": { width: 100, label: "등록일", align: "center" },
-        "compCd": { width: 100, label: "업체코드", align: "center" },
-        "compNm": { width: 100, label: "업체명", align: "center" },
-        "storCd": { width: 100, label: "매장코드", align: "center" },
+        "compCd": { width: 70, label: "업체코드", align: "center" },
+        "compNm": { width: 110, label: "업체명", align: "left" },
+        "storCd": { width: 70, label: "매장코드", align: "center" },
         "storNm": { width: 200, label: "매장명", align: "left" },
         "userNm": { width: 100, label: "이름", align: "center" },
+        "itemCd": { width: 80, label: "품목코드", align: "center" },
+        "itemNm": { width: 150, label: "품목명", align: "left" },
+        "posItemNm": { width: 150, label: "POS단축명", align: "left" },
         "delYn": {
             width: 50, label: "삭제", align: "center", formatter: function formatter() {
                 return parent.COMMON_CODE["DEL_YN"].map[this.value];
@@ -1439,6 +1464,13 @@ axboot.gridBuilder = function () {
             width: 120, label: "국가", align: "center", formatter: function formatter() {
                 return parent.COMMON_CODE["LOCALE"].map[this.value];
             }
+        },
+
+        "printerType": {
+            width: 100, label: "프린터 타입", align: "center",
+            formatter: function formatter() {
+                return parent.COMMON_CODE["PRINTER_TYPE"].map[this.value];
+            }
         }
     };
     var preDefineEditor = {
@@ -1464,6 +1496,16 @@ axboot.gridBuilder = function () {
         },
         "text": {
             type: "text"
+        },
+        "PRINTER_TYPE": function PRINTER_TYPE() {
+            return {
+                type: "select", config: {
+                    columnKeys: {
+                        optionValue: "code", optionText: "name"
+                    },
+                    options: parent.COMMON_CODE["PRINTER_TYPE"]
+                }
+            };
         }
     };
     var preDefineEditorDisabled = {
@@ -1503,6 +1545,7 @@ axboot.gridBuilder = function () {
         myGridConfig.page.onChange = function () {
             myGridConfig.onPageChange(this.page.selectPage);
         };
+
         return new ax5.ui.grid(myGridConfig);
     };
 }();
@@ -1693,6 +1736,9 @@ axboot.modal = function () {
         "getData": getData
     };
 }();
+/**
+ * @Object {Object} axboot.modelFormatter
+ */
 axboot.modelFormatter = function () {
     var get_real_path = function get_real_path(dataPath) {
         var path = [];
@@ -1703,6 +1749,17 @@ axboot.modelFormatter = function () {
         _path = null;
         return "'" + path.join("']['") + "'";
     };
+
+    /**
+     * @class ax5ModelFormatter
+     * @param _model
+     * @example
+     * ```js
+     * this.model = new ax5.ui.binder();
+     * this.model.setModel(this.getDefaultData(), this.target);
+     * this.modelFormatter = new axboot.modelFormatter(this.model); // 모델 포메터 시작
+     * ```
+     */
     var ax5ModelFormatter = function ax5ModelFormatter(_model) {
         this.target = _model.view_target;
 
@@ -1711,9 +1768,26 @@ axboot.modelFormatter = function () {
             return;
         }
 
+        /**
+         * @method ax5ModelFormatter.formatting
+         * @example
+         * ```js
+         * this.modelFormatter.formatting(); // 입력된 값을 포메팅 된 값으로 변경
+         * ```
+         */
         this.formatting = function () {
             this.target.find('[data-ax-path][data-ax5formatter]').ax5formatter();
         };
+
+        /**
+         * @method ax5ModelFormatter.getClearData
+         * @param _data
+         * @example
+         * ```js
+         * var data = this.modelFormatter.getClearData(this.model.get()); // 모델의 값을 포멧팅 전 값으로 치환.
+         * return data;
+         * ```
+         */
         this.getClearData = function (_data) {
             var myData = $.extend({}, _data);
             this.target.find('[data-ax-path]').each(function () {
@@ -2099,10 +2173,15 @@ axboot.addressPopup = {
 };
 
 /**
- * 각 뷰에 원형
- * @type {Object}
+ * commonView
+ * @Object {Object} axboot.commonView
  */
 axboot.commonView = {};
+
+/**
+ * searchView
+ * @Object {Object} axboot.searchView
+ */
 axboot.searchView = {
     setData: function setData(_obj) {
         for (var k in _obj) {
@@ -2122,7 +2201,17 @@ axboot.searchView = {
      }).call(this),
      */
 };
+
+/**
+ * treeView
+ * @Object {Object} axboot.treeView
+ */
 axboot.treeView = {};
+
+/**
+ * gridView
+ * @Object {Object} axboot.gridView
+ */
 axboot.gridView = {
     setData: function setData(_data) {
         this.target.setData(_data);
@@ -2160,6 +2249,11 @@ axboot.gridView = {
         });
     }
 };
+
+/**
+ * formView
+ * @Object {Object} axboot.formView
+ */
 axboot.formView = {
     clear: function clear() {
         this.model.setModel(this.getDefaultData());
@@ -2175,6 +2269,11 @@ axboot.formView = {
         return true;
     }
 };
+
+/**
+ * formView.defaultData
+ * @Object {Object} axboot.formView.defaultData
+ */
 axboot.formView.defaultData = {
     masterCompCd: "ACN"
 };

@@ -1,8 +1,13 @@
 /**
- * 각 뷰에 원형
- * @type {Object}
+ * commonView
+ * @Object {Object} axboot.commonView
  */
 axboot.commonView = {};
+
+/**
+ * searchView
+ * @Object {Object} axboot.searchView
+ */
 axboot.searchView = {
     setData: function (_obj) {
         for (var k in _obj) {
@@ -22,7 +27,17 @@ axboot.searchView = {
      }).call(this),
      */
 };
+
+/**
+ * treeView
+ * @Object {Object} axboot.treeView
+ */
 axboot.treeView = {};
+
+/**
+ * gridView
+ * @Object {Object} axboot.gridView
+ */
 axboot.gridView = {
     setData: function (_data) {
         this.target.setData(_data);
@@ -60,6 +75,11 @@ axboot.gridView = {
         });
     }
 };
+
+/**
+ * formView
+ * @Object {Object} axboot.formView
+ */
 axboot.formView = {
     clear: function () {
         this.model.setModel(this.getDefaultData());
@@ -75,6 +95,11 @@ axboot.formView = {
         return true;
     }
 };
+
+/**
+ * formView.defaultData
+ * @Object {Object} axboot.formView.defaultData
+ */
 axboot.formView.defaultData = {
     masterCompCd: "ACN"
 };

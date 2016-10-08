@@ -29,6 +29,7 @@ axboot.gridBuilder = (function () {
         showLineNumber: true,
         lineNumberColumnWidth: 50,
         rowSelectorColumnWidth: 28,
+        multipleSelect: false,
         header: {
             align: "center",
             columnHeight: 28
@@ -51,11 +52,14 @@ axboot.gridBuilder = (function () {
     };
     var preDefineColumns = {
         "insDt": {width: 100, label: "등록일", align: "center"},
-        "compCd": {width: 100, label: "업체코드", align: "center"},
-        "compNm": {width: 100, label: "업체명", align: "center"},
-        "storCd": {width: 100, label: "매장코드", align: "center"},
+        "compCd": {width: 70, label: "업체코드", align: "center"},
+        "compNm": {width: 110, label: "업체명", align: "left"},
+        "storCd": {width: 70, label: "매장코드", align: "center"},
         "storNm": {width: 200, label: "매장명", align: "left"},
         "userNm": {width: 100, label: "이름", align: "center"},
+        "itemCd": {width: 80, label: "품목코드", align: "center"},
+        "itemNm": {width: 150, label: "품목명", align: "left"},
+        "posItemNm": {width: 150, label: "POS단축명", align: "left"},
         "delYn": {
             width: 50, label: "삭제", align: "center", formatter: function () {
                 return parent.COMMON_CODE["DEL_YN"].map[this.value];
@@ -110,6 +114,13 @@ axboot.gridBuilder = (function () {
             width: 120, label: "국가", align: "center", formatter: function () {
                 return parent.COMMON_CODE["LOCALE"].map[this.value];
             }
+        },
+
+        "printerType": {
+            width: 100, label: "프린터 타입", align: "center",
+            formatter: function () {
+                return parent.COMMON_CODE["PRINTER_TYPE"].map[this.value];
+            }
         }
     };
     var preDefineEditor = {
@@ -138,6 +149,16 @@ axboot.gridBuilder = (function () {
         },
         "text": {
             type: "text"
+        },
+        "PRINTER_TYPE": function () {
+            return {
+                type: "select", config: {
+                    columnKeys: {
+                        optionValue: "code", optionText: "name"
+                    },
+                    options: parent.COMMON_CODE["PRINTER_TYPE"]
+                }
+            };
         }
     };
     var preDefineEditorDisabled = {
@@ -177,6 +198,7 @@ axboot.gridBuilder = (function () {
         myGridConfig.page.onChange = function () {
             myGridConfig.onPageChange(this.page.selectPage);
         };
+
         return new ax5.ui.grid(myGridConfig);
     }
 })();

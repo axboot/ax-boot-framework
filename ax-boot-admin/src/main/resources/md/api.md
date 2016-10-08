@@ -1,8 +1,16 @@
+## Classes
+
+<dl>
+<dt><a href="#ax5ModelFormatter">ax5ModelFormatter</a></dt>
+<dd></dd>
+</dl>
+
 ## Members
 
 <dl>
 <dt><a href="#axboot">axboot</a> : <code>Object</code></dt>
-<dd></dd>
+<dd><p>axboot 오브젝트 axboot 애플리케이션을 편리하게 사용하기 위한 오브젝트 입니다.</p>
+</dd>
 <dt><a href="#axMask">axMask</a> : <code>ax5ui</code></dt>
 <dd><p>기본 마스크</p>
 </dd>
@@ -25,14 +33,64 @@
 <dd></dd>
 </dl>
 
+<a name="ax5ModelFormatter"></a>
+
+## ax5ModelFormatter
+**Kind**: global class  
+
+* [ax5ModelFormatter](#ax5ModelFormatter)
+    * [new ax5ModelFormatter(_model)](#new_ax5ModelFormatter_new)
+    * [.formatting()](#ax5ModelFormatter.formatting)
+    * [.getClearData(_data)](#ax5ModelFormatter.getClearData)
+
+<a name="new_ax5ModelFormatter_new"></a>
+
+### new ax5ModelFormatter(_model)
+
+| Param |
+| --- |
+| _model | 
+
+**Example**  
+```js
+this.model = new ax5.ui.binder();
+this.model.setModel(this.getDefaultData(), this.target);
+this.modelFormatter = new axboot.modelFormatter(this.model); // 모델 포메터 시작
+```
+<a name="ax5ModelFormatter.formatting"></a>
+
+### ax5ModelFormatter.formatting()
+**Kind**: static method of <code>[ax5ModelFormatter](#ax5ModelFormatter)</code>  
+**Example**  
+```js
+this.modelFormatter.formatting(); // 입력된 값을 포메팅 된 값으로 변경
+```
+<a name="ax5ModelFormatter.getClearData"></a>
+
+### ax5ModelFormatter.getClearData(_data)
+**Kind**: static method of <code>[ax5ModelFormatter](#ax5ModelFormatter)</code>  
+
+| Param |
+| --- |
+| _data | 
+
+**Example**  
+```js
+var data = this.modelFormatter.getClearData(this.model.get()); // 모델의 값을 포멧팅 전 값으로 치환.
+return data;
+```
 <a name="axboot"></a>
 
 ## axboot : <code>Object</code>
+axboot 오브젝트 axboot 애플리케이션을 편리하게 사용하기 위한 오브젝트 입니다.
+
 **Kind**: global variable  
 
 * [axboot](#axboot) : <code>Object</code>
     * [.def](#axboot.def) : <code>Object</code>
-    * [.pageAutoHeight](#axboot.pageAutoHeight) : <code>Object</code>
+    * [.pageAutoHeight](#axboot.pageAutoHeight)
+        * [.init()](#axboot.pageAutoHeight.init)
+        * [.align()](#axboot.pageAutoHeight.align)
     * [.modal](#axboot.modal)
         * [.open(modalConfig)](#axboot.modal.open)
         * [.css(modalCss)](#axboot.modal.css)
@@ -40,15 +98,23 @@
         * [.close()](#axboot.modal.close)
         * [.minimize()](#axboot.modal.minimize)
         * [.callback(data)](#axboot.modal.callback)
+    * [.modelFormatter](#axboot.modelFormatter)
     * [.preparePlugin](#axboot.preparePlugin)
         * [.define()](#axboot.preparePlugin.define)
         * [.pageStart()](#axboot.preparePlugin.pageStart)
-    * [.commonView](#axboot.commonView) : <code>Object</code>
+    * [.commonView](#axboot.commonView)
+    * [.searchView](#axboot.searchView)
+    * [.treeView](#axboot.treeView)
+    * [.gridView](#axboot.gridView)
+    * [.formView](#axboot.formView)
+        * [.defaultData](#axboot.formView.defaultData)
     * [.init()](#axboot.init)
     * [.pageStart()](#axboot.pageStart)
     * [.pageResize()](#axboot.pageResize)
     * [.layoutResize()](#axboot.layoutResize)
     * [.ajax(http)](#axboot.ajax)
+    * [.call()](#axboot.call)
+        * [.done()](#axboot.call.done)
     * [.gridBuilder(_config)](#axboot.gridBuilder)
     * [.extend(_obj1, _obj2)](#axboot.extend)
     * [.actionExtend([_actionThis], _action)](#axboot.actionExtend)
@@ -66,8 +132,24 @@ axboot.def.menuHeight = 20;
 ```
 <a name="axboot.pageAutoHeight"></a>
 
-### axboot.pageAutoHeight : <code>Object</code>
+### axboot.pageAutoHeight
+페이지안에 [role="page-content"] 과 그 외의 부분의 높이를 계산하여 페이지 안에 컨텐츠의 높이들을 꽉 차게 해줍니다.
+
 **Kind**: static property of <code>[axboot](#axboot)</code>  
+**Object**: <code>Object</code> axboot.pageAutoHeight  
+
+* [.pageAutoHeight](#axboot.pageAutoHeight)
+    * [.init()](#axboot.pageAutoHeight.init)
+    * [.align()](#axboot.pageAutoHeight.align)
+
+<a name="axboot.pageAutoHeight.init"></a>
+
+#### pageAutoHeight.init()
+**Kind**: static method of <code>[pageAutoHeight](#axboot.pageAutoHeight)</code>  
+<a name="axboot.pageAutoHeight.align"></a>
+
+#### pageAutoHeight.align()
+**Kind**: static method of <code>[pageAutoHeight](#axboot.pageAutoHeight)</code>  
 <a name="axboot.modal"></a>
 
 ### axboot.modal
@@ -172,6 +254,11 @@ callback 으로 정의된 함수에 전달된 파라메터를 넘겨줍니다.
 | --- | --- |
 | data | <code>Object</code> &#124; <code>String</code> | 
 
+<a name="axboot.modelFormatter"></a>
+
+### axboot.modelFormatter
+**Kind**: static property of <code>[axboot](#axboot)</code>  
+**Object**: <code>Object</code> axboot.modelFormatter  
 <a name="axboot.preparePlugin"></a>
 
 ### axboot.preparePlugin
@@ -197,42 +284,87 @@ js가 실행되는 타임. 페이지 레디 전에 미리 선언 하는 경우
 **Kind**: static method of <code>[preparePlugin](#axboot.preparePlugin)</code>  
 <a name="axboot.commonView"></a>
 
-### axboot.commonView : <code>Object</code>
-각 뷰에 원형
+### axboot.commonView
+commonView
 
 **Kind**: static property of <code>[axboot](#axboot)</code>  
+**Object**: <code>Object</code> axboot.commonView  
+<a name="axboot.searchView"></a>
+
+### axboot.searchView
+searchView
+
+**Kind**: static property of <code>[axboot](#axboot)</code>  
+**Object**: <code>Object</code> axboot.searchView  
+<a name="axboot.treeView"></a>
+
+### axboot.treeView
+treeView
+
+**Kind**: static property of <code>[axboot](#axboot)</code>  
+**Object**: <code>Object</code> axboot.treeView  
+<a name="axboot.gridView"></a>
+
+### axboot.gridView
+gridView
+
+**Kind**: static property of <code>[axboot](#axboot)</code>  
+**Object**: <code>Object</code> axboot.gridView  
+<a name="axboot.formView"></a>
+
+### axboot.formView
+formView
+
+**Kind**: static property of <code>[axboot](#axboot)</code>  
+**Object**: <code>Object</code> axboot.formView  
+<a name="axboot.formView.defaultData"></a>
+
+#### formView.defaultData
+formView.defaultData
+
+**Kind**: static property of <code>[formView](#axboot.formView)</code>  
+**Object**: <code>Object</code> axboot.formView.defaultData  
 <a name="axboot.init"></a>
 
 ### axboot.init()
+document ready 상태가 되었을 때 실행됩니다. 애플리케이션 초기화를 담당합니다.
+
 **Kind**: static method of <code>[axboot](#axboot)</code>  
 <a name="axboot.pageStart"></a>
 
 ### axboot.pageStart()
+axboot.def.pageFunctionName의 pageStart를 실행해 줍니다.
+
 **Kind**: static method of <code>[axboot](#axboot)</code>  
 <a name="axboot.pageResize"></a>
 
 ### axboot.pageResize()
+axboot.def.pageFunctionName의 pageResize를 실행해 줍니다.
+
 **Kind**: static method of <code>[axboot](#axboot)</code>  
 <a name="axboot.layoutResize"></a>
 
 ### axboot.layoutResize()
+페이지내부에 선언된 ax5layout이 리사이즈 되었을 때. axboot.def.pageFunctionName의 layoutResize를 실행해 줍니다.
+
 **Kind**: static method of <code>[axboot](#axboot)</code>  
 <a name="axboot.ajax"></a>
 
 ### axboot.ajax(http)
 **Kind**: static method of <code>[axboot](#axboot)</code>  
 
-| Param | Type |
-| --- | --- |
-| http | <code>Object</code> | 
-| http.type | <code>String</code> | 
-| http.url | <code>String</code> | 
-| http.data | <code>Object</code> &#124; <code>String</code> | 
-| http.callback | <code>function</code> | 
-| [http.options] | <code>Object</code> | 
-| [http.options.onError] | <code>function</code> | 
-| [http.options.contentType] | <code>String</code> | 
-| [http.options.apiType] | <code>String</code> | 
+| Param | Type | Default |
+| --- | --- | --- |
+| http | <code>Object</code> |  | 
+| http.type | <code>String</code> |  | 
+| http.url | <code>String</code> |  | 
+| http.data | <code>Object</code> &#124; <code>String</code> |  | 
+| http.callback | <code>function</code> |  | 
+| [http.options] | <code>Object</code> |  | 
+| [http.options.nomask] | <code>Boolean</code> | <code>false</code> | 
+| [http.options.onError] | <code>function</code> |  | 
+| [http.options.contentType] | <code>String</code> |  | 
+| [http.options.apiType] | <code>String</code> |  | 
 
 **Example**  
 ```js
@@ -261,6 +393,64 @@ js가 실행되는 타임. 페이지 레디 전에 미리 선언 하는 경우
      }
  });
 ```
+<a name="axboot.call"></a>
+
+### axboot.call()
+여러개의 AJAX콜을 순차적으로 해야 하는 경우 callback 지옥에 빠지기 쉽다. `axboot.call & done`은 이런 상황에서 코드가 보기 어려워지는 문제를 해결 하기 위해 개발된 오브젝트 입니다
+
+**Kind**: static method of <code>[axboot](#axboot)</code>  
+**Example**  
+```js
+  axboot
+      .call({
+          type: "GET", url: "/api/v1/programs", data: "",
+          callback: function (res) {
+              var programList = [];
+              res.list.forEach(function (n) {
+                  programList.push({
+                      value: n.progCd, text: n.progNm + "(" + n.progCd + ")",
+                      progCd: n.progCd, progNm: n.progNm,
+                      data: n
+                  });
+              });
+              this.programList = programList;
+          }
+      })
+      .call(function () {
+          this.something = 1;
+      })
+      .call({
+          type: "GET", url: "/api/v1/commonCodes", data: {groupCd: "AUTH_GROUP", useYn: "Y"},
+          callback: function (res) {
+              var authGroup = [];
+              res.list.forEach(function (n) {
+                  authGroup.push({
+                      value: n.code, text: n.name + "(" + n.code + ")",
+                      grpAuthCd: n.code, grpAuthNm: n.name,
+                      data: n
+                  });
+              });
+              this.authGroup = authGroup;
+          }
+      })
+      .done(function () {
+          CODE = this; // this는 call을 통해 수집된 데이터들.
+
+          _this.pageButtonView.initView();
+          _this.searchView.initView();
+          _this.treeView01.initView();
+          _this.formView01.initView();
+          _this.gridView01.initView();
+
+          ACTIONS.dispatch(ACTIONS.PAGE_SEARCH);
+      });
+```
+<a name="axboot.call.done"></a>
+
+#### call.done()
+axboot.call 참조
+
+**Kind**: static method of <code>[call](#axboot.call)</code>  
 <a name="axboot.gridBuilder"></a>
 
 ### axboot.gridBuilder(_config)

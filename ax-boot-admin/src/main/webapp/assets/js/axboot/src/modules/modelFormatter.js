@@ -1,3 +1,6 @@
+/**
+ * @Object {Object} axboot.modelFormatter
+ */
 axboot.modelFormatter = (function () {
     var get_real_path = function (dataPath) {
         var path = [];
@@ -8,6 +11,17 @@ axboot.modelFormatter = (function () {
         _path = null;
         return "'" + path.join("']['") + "'";
     };
+
+    /**
+     * @class ax5ModelFormatter
+     * @param _model
+     * @example
+     * ```js
+     * this.model = new ax5.ui.binder();
+     * this.model.setModel(this.getDefaultData(), this.target);
+     * this.modelFormatter = new axboot.modelFormatter(this.model); // 모델 포메터 시작
+     * ```
+     */
     var ax5ModelFormatter = function (_model) {
         this.target = _model.view_target;
 
@@ -16,9 +30,26 @@ axboot.modelFormatter = (function () {
             return;
         }
 
+        /**
+         * @method ax5ModelFormatter.formatting
+         * @example
+         * ```js
+         * this.modelFormatter.formatting(); // 입력된 값을 포메팅 된 값으로 변경
+         * ```
+         */
         this.formatting = function () {
             this.target.find('[data-ax-path][data-ax5formatter]').ax5formatter();
         };
+
+        /**
+         * @method ax5ModelFormatter.getClearData
+         * @param _data
+         * @example
+         * ```js
+         * var data = this.modelFormatter.getClearData(this.model.get()); // 모델의 값을 포멧팅 전 값으로 치환.
+         * return data;
+         * ```
+         */
         this.getClearData = function (_data) {
             var myData = $.extend({}, _data);
             this.target.find('[data-ax-path]').each(function () {

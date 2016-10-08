@@ -1,6 +1,10 @@
 /**
+ * @Object {Object} axboot.call
+*/
+
+/**
  * 여러개의 AJAX콜을 순차적으로 해야 하는 경우 callback 지옥에 빠지기 쉽다. `axboot.call & done`은 이런 상황에서 코드가 보기 어려워지는 문제를 해결 하기 위해 개발된 오브젝트 입니다
- * @method {Object} axboot.call
+ * @method axboot.call
  * @example
  * ```js
  *   axboot
@@ -47,6 +51,11 @@
  *           ACTIONS.dispatch(ACTIONS.PAGE_SEARCH);
  *       });
  * ```
+ */
+
+/**
+ * axboot.call 참조
+ * @method axboot.call.done
  */
 axboot.call = (function () {
 
