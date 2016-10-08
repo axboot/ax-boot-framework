@@ -415,18 +415,6 @@
             <artifactId>thumbnailator</artifactId>
         </dependency>
 
-        <dependency>
-            <groupId>org.docx4j</groupId>
-            <artifactId>docx4j</artifactId>
-            <version>3.3.1</version>
-        </dependency>
-
-        <dependency>
-            <groupId>org.docx4j</groupId>
-            <artifactId>docx4j-export-fo</artifactId>
-            <version>3.3.0</version>
-        </dependency>
-
     </dependencies>
 
     <build>
