@@ -30,7 +30,7 @@
     <jsp:invoke fragment="js"/>
 </head>
 <body class="ax-body ${axbody_class}" onselectstart="return false;">
-<div id="ax-frame-root" class="show-aside">
+<div id="ax-frame-root" class="show-aside" data-root-container="true">
     <jsp:doBody/>
 
     <div class="ax-frame-header-tool">

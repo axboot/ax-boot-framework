@@ -9,7 +9,7 @@
 
     UI.addClass({
         className: "modal",
-        version: "0.8.2"
+        version: "0.8.3"
     }, function () {
         /**
          * @class ax5modal
@@ -109,14 +109,18 @@
                     theme: opts.theme,
                     header: opts.header,
                     fullScreen: opts.fullScreen ? "fullscreen" : "",
-                    styles: [],
+                    styles: "",
                     iframe: opts.iframe,
                     iframeLoadingMsg: opts.iframeLoadingMsg
                 };
 
                 if (opts.zIndex) {
-                    data.styles.push("z-index:" + opts.zIndex);
+                    data.styles += "z-index:" + opts.zIndex + ";";
                 }
+                if (opts.absolute) {
+                    data.styles += "position:absolute;";
+                }
+
                 if (data.iframe && typeof data.iframe.param === "string") {
                     data.iframe.param = ax5.util.param(data.iframe.param);
                 }
@@ -361,6 +365,8 @@
              * Preferences of modal UI
              * @method ax5modal.setConfig
              * @param {Object} config - 클래스 속성값
+             * @param {Number} [config.zIndex]
+             * @param {Boolean} [config.absolute=false]
              * @returns {ax5modal}
              * @example
              * ```

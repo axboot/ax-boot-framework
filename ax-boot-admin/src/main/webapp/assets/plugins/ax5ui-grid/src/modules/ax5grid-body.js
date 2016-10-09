@@ -2062,7 +2062,11 @@
                                     value = GRID.data.getValue.call(this, dindex, column.key);
                                 }
                             }
-                            GRID.body.inlineEdit.active.call(this, this.focusedColumn, null, value);
+
+                            var col = this.colGroup[_column.colIndex];
+                            if(GRID.inlineEditor[col.editor.type].editMode !== "inline") {
+                                GRID.body.inlineEdit.active.call(this, this.focusedColumn, null, value);
+                            }
                         }
                     }
                 }

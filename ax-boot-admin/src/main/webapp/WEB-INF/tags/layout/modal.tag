@@ -23,7 +23,7 @@
     <jsp:invoke fragment="js"/>
 </head>
 <body class="ax-body ${axbody_class}" data-page-auto-height="${page_auto_height}">
-<div id="ax-modal-base-root">
+<div id="ax-modal-base-root" data-root-container="true">
     <jsp:invoke var="headerContent" fragment="header"/>
     <c:if test="${!empty headerContent}">
         <div class="ax-base-title" role="page-title"> ${headerContent} </div>

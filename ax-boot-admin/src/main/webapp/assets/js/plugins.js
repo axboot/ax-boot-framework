@@ -17751,7 +17751,7 @@ ax5.ui = function () {
 
     UI.addClass({
         className: "dialog",
-        version: "0.8.6"
+        version: "0.8.8"
     }, function () {
         /**
          * @class ax5dialog
@@ -17959,10 +17959,10 @@ ax5.ui = function () {
                         opts.btns[k].onClick.call(that, k);
                     } else if (opts.dialogType === "alert") {
                         if (callback) callback.call(that, k);
-                        this.close();
+                        this.close({ doNotCallback: true });
                     } else if (opts.dialogType === "confirm") {
                         if (callback) callback.call(that, k);
-                        this.close();
+                        this.close({ doNotCallback: true });
                     } else if (opts.dialogType === "prompt") {
                         if (k === 'ok') {
                             if (emptyKey) {
@@ -17971,7 +17971,7 @@ ax5.ui = function () {
                             }
                         }
                         if (callback) callback.call(that, k);
-                        this.close();
+                        this.close({ doNotCallback: true });
                     }
                 }
 
@@ -18010,7 +18010,7 @@ ax5.ui = function () {
                             return false;
                         }
                         if (callback) callback.call(that, k);
-                        this.close();
+                        this.close({ doNotCallback: true });
                     }
                 }
 
@@ -18078,6 +18078,9 @@ ax5.ui = function () {
                 opts = self.dialogConfig;
 
                 opts.dialogType = "alert";
+                opts.theme = opts.theme || cfg.theme || "";
+                opts.callback = callback;
+
                 if (typeof opts.btns === "undefined") {
                     opts.btns = {
                         ok: { label: cfg.lang["ok"], theme: opts.theme }
@@ -18085,8 +18088,6 @@ ax5.ui = function () {
                 }
                 open.call(this, opts, callback);
 
-                opts = null;
-                callback = null;
                 return this;
             };
 
@@ -18130,6 +18131,8 @@ ax5.ui = function () {
 
                 opts.dialogType = "confirm";
                 opts.theme = opts.theme || cfg.theme || "";
+                opts.callback = callback;
+
                 if (typeof opts.btns === "undefined") {
                     opts.btns = {
                         ok: { label: cfg.lang["ok"], theme: opts.theme },
@@ -18138,8 +18141,6 @@ ax5.ui = function () {
                 }
                 open.call(this, opts, callback);
 
-                opts = null;
-                callback = null;
                 return this;
             };
 
@@ -18182,6 +18183,7 @@ ax5.ui = function () {
                 opts = self.dialogConfig;
                 opts.dialogType = "prompt";
                 opts.theme = opts.theme || cfg.theme || "";
+                opts.callback = callback;
 
                 if (typeof opts.input === "undefined") {
                     opts.input = {
@@ -18196,8 +18198,6 @@ ax5.ui = function () {
                 }
                 open.call(this, opts, callback);
 
-                opts = null;
-                callback = null;
                 return this;
             };
 
@@ -18210,7 +18210,8 @@ ax5.ui = function () {
              * myDialog.close();
              * ```
              */
-            this.close = function (opts, that) {
+            this.close = function (_option) {
+                var opts, that;
                 if (this.activeDialog) {
                     opts = self.dialogConfig;
                     this.activeDialog.addClass("destroy");
@@ -18218,13 +18219,21 @@ ax5.ui = function () {
                     jQuery(window).unbind("resize.ax5dialog");
 
                     setTimeout(function () {
-                        this.activeDialog.remove();
-                        this.activeDialog = null;
+                        if (this.activeDialog) {
+                            this.activeDialog.remove();
+                            this.activeDialog = null;
+                        }
 
                         that = {
                             self: this,
-                            state: "close"
+                            state: "close",
+                            dialogId: opts.id
                         };
+
+                        if (opts.callback && (!_option || !_option.doNotCallback)) {
+                            opts.callback.call(that);
+                        }
+
                         if (opts && opts.onStateChanged) {
                             opts.onStateChanged.call(that, that);
                         } else if (this.onStateChanged) {
@@ -18948,7 +18957,7 @@ ax5.ui = function () {
 
     UI.addClass({
         className: "modal",
-        version: "0.8.2"
+        version: "0.8.3"
     }, function () {
         /**
          * @class ax5modal
@@ -19048,14 +19057,18 @@ ax5.ui = function () {
                     theme: opts.theme,
                     header: opts.header,
                     fullScreen: opts.fullScreen ? "fullscreen" : "",
-                    styles: [],
+                    styles: "",
                     iframe: opts.iframe,
                     iframeLoadingMsg: opts.iframeLoadingMsg
                 };
 
                 if (opts.zIndex) {
-                    data.styles.push("z-index:" + opts.zIndex);
+                    data.styles += "z-index:" + opts.zIndex + ";";
                 }
+                if (opts.absolute) {
+                    data.styles += "position:absolute;";
+                }
+
                 if (data.iframe && typeof data.iframe.param === "string") {
                     data.iframe.param = ax5.util.param(data.iframe.param);
                 }
@@ -19300,6 +19313,8 @@ ax5.ui = function () {
              * Preferences of modal UI
              * @method ax5modal.setConfig
              * @param {Object} config - 클래스 속성값
+             * @param {Number} [config.zIndex]
+             * @param {Boolean} [config.absolute=false]
              * @returns {ax5modal}
              * @example
              * ```
@@ -24133,7 +24148,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
 
     UI.addClass({
         className: "grid",
-        version: "0.3.5"
+        version: "0.3.7"
     }, function () {
         /**
          * @class ax5grid
@@ -24203,6 +24218,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
                 scrollContentWidth: 0, // 스크롤 될 내용물의 너비 (스크롤 될 내용물 : panel['body-scroll'] 안에 컬럼이 있는)
                 scrollContentHeight: 0 // 스크롤 된 내용물의 높이
             };
+
             // 그리드 데이터셋
             this.columns = []; // config.columns에서 복제된 오브젝트
             this.colGroup = []; // columns를 table태그로 출력하기 좋게 변환한 오브젝트
@@ -24211,6 +24227,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
 
             this.list = []; // 그리드의 데이터
             this.page = {}; // 그리드의 페이지 정보
+            this.selectedDataIndexs = [];
             this.deletedList = [];
             this.sortInfo = {}; // 그리드의 헤더 정렬 정보
             this.focusedColumn = {}; // 그리드 바디의 포커스된 셀 정보
@@ -24929,7 +24946,8 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
                                 } else if (e.which == ax5.info.eventKeys.RETURN) {
                                     self.keyDown("RETURN", e.originalEvent);
                                 } else if (e.which == ax5.info.eventKeys.TAB) {
-                                    self.keyDown("RETURN", e.originalEvent);
+                                    //self.keyDown("RETURN", e.originalEvent);
+                                    U.stopEvent(e);
                                 } else if (e.which != ax5.info.eventKeys.SPACE && Object.keys(self.focusedColumn).length) {
                                     self.keyDown("INLINE_EDIT", e.originalEvent);
                                 }
@@ -27264,7 +27282,11 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
                                     value = GRID.data.getValue.call(this, dindex, column.key);
                                 }
                             }
-                            GRID.body.inlineEdit.active.call(this, this.focusedColumn, null, value);
+
+                            var col = this.colGroup[_column.colIndex];
+                            if (GRID.inlineEditor[col.editor.type].editMode !== "inline") {
+                                GRID.body.inlineEdit.active.call(this, this.focusedColumn, null, value);
+                            }
                         }
                     }
                 }

@@ -1181,3 +1181,7 @@ jQuery.fn.ax5select = (function () {
     }
 
 })();
+
+
+// muliple 속성이 없는 select의 기본 선택 해제 방법.. 결정 필요..
+// onExpand 가 있으면..?

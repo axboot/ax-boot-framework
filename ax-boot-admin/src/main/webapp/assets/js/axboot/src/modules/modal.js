@@ -88,6 +88,9 @@ axboot.modal = (function () {
      */
     var open = function (modalConfig) {
         modalConfig = $.extend(true, {}, defaultOption, modalConfig);
+
+        $(document.body).addClass("modalOpened");
+
         this.modalCallback = modalConfig.callback;
         this.modalSendData = modalConfig.sendData;
         window.axModal.open(modalConfig);
@@ -115,7 +118,7 @@ axboot.modal = (function () {
      * @method axboot.modal.close
      */
     var close = function (data) {
-
+        $(document.body).removeClass("modalOpened");
         window.axModal.close();
     };
     /**
