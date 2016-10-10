@@ -7,7 +7,7 @@
 
     UI.addClass({
         className: "layout",
-        version: "0.3.1"
+        version: "0.3.2"
     }, function () {
         /**
          * @class ax5layout
@@ -266,7 +266,9 @@
                     },
                     "split": {
                         "horizontal": function horizontal(item, panel, panelIndex, withoutAsteriskSize, windowResize) {
-                            var css = {};
+                            var css = {
+                                display: "block"
+                            };
                             var prevPosition = panelIndex ? Number(item.splitPanel[panelIndex - 1].offsetEnd) : 0;
                             if (panel.splitter) {
                                 css.height = item.splitter.size;
@@ -284,7 +286,9 @@
                             panel.$target.css(css);
                         },
                         "vertical": function vertical(item, panel, panelIndex, withoutAsteriskSize, windowResize) {
-                            var css = {};
+                            var css = {
+                                display: "block"
+                            };
                             var prevPosition = panelIndex ? Number(item.splitPanel[panelIndex - 1].offsetEnd) : 0;
 
                             if (panel.splitter) {

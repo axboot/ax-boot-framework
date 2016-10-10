@@ -69,6 +69,7 @@
         }
     }
     > [data-split-panel] {
+        display: none;
         position: absolute;
         border: 0px none;
         z-index: 2;

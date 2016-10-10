@@ -1,6 +1,6 @@
 {
 	"name": "ax5ui-layout",
-	"version": "0.3.1",
+	"version": "0.3.2",
 	"description": "A mediaViewer plugin that works with Bootstrap & jQuery",
 	"authors": [
 		"ThomasJ <tom@axisj.com>"

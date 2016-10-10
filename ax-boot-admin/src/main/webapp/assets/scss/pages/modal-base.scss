@@ -13,6 +13,7 @@
 
 #ax-modal-base-root{
     padding: 0;
+    @include animation(BODY_FADE_IN 0.5s $ease-out-back forwards);
 
     .ax-base-title{
         display: table;
