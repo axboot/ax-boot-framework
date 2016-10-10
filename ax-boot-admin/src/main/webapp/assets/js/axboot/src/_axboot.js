@@ -95,6 +95,7 @@ axboot.init = function () {
 
         $(window).resize(function () {
             axboot.pageResize();
+            axboot.pageAutoHeight.align();
             setTimeout(function(){
                 $('[data-ax5layout]').ax5layout("align", true);
             });
@@ -125,7 +126,6 @@ axboot.pageResize = function () {
 
     if (window[axboot.def.pageFunctionName] && window[axboot.def.pageFunctionName].pageResize) {
         window[axboot.def.pageFunctionName].pageResize();
-        axboot.pageAutoHeight.align();
     }
 };
 /**

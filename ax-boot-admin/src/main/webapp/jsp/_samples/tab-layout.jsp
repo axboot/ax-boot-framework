@@ -41,7 +41,6 @@
             <div class="H10"></div>
         </div>
 
-
         <ax:split-layout name="ax1" oriental="horizontal">
             <ax:split-panel height="250" style="padding-bottom: 10px;">
 
