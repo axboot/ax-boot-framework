@@ -99,7 +99,7 @@ axboot.init = function () {
         $(window).resize(function () {
             axboot.pageResize();
             setTimeout(function () {
-                $('[data-ax5layout]').ax5layout("resize");
+                $('[data-ax5layout]').ax5layout("align", true);
             });
         });
         $(document.body).on("click", function () {
