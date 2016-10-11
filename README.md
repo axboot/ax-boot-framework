@@ -29,4 +29,6 @@
 - Official Site : http://www.axboot.com
 - Demo Site : http://demo.axboot.com
 
-## Documentation will be updated (as soon as possible)
+## Documentation
+- API Documentation : http://api.axboot.com
+- UI Framework Documentation : http://ax5.io
