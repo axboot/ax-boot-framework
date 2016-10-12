@@ -69,8 +69,8 @@
         }
     }
     > [data-split-panel] {
-        display: none;
-        position: absolute;
+        //display: none;
+
         border: 0px none;
         z-index: 2;
         overflow: hidden;
@@ -78,10 +78,14 @@
         height: 100%;
 
         &.split-panel-vertical {
+            position: absolute;
             height: 100%;
+            //display: block;
         }
         &.split-panel-horizontal {
+            position: absolute;
             width: 100%;
+            //display: block;
         }
     }
     > [data-splitter] {
