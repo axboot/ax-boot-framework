@@ -2138,22 +2138,6 @@ axboot.treeBuilder = function () {
  * Created by tom on 2016. 9. 2..
  */
 
-/**
- * 1, 2를 믹스한 새로운 오브젝트를 반환
- * @param _obj1
- * @param _obj2
- */
-axboot.extend = function (_obj1, _obj2) {
-    return $.extend({}, _obj1, _obj2);
-};
-axboot.viewExtend = function (_obj1, _obj2) {
-    if (typeof _obj2 === "undefined") {
-        return $.extend({}, axboot.commonView, _obj1);
-    } else {
-        return $.extend({}, _obj1, _obj2);
-    }
-};
-
 axboot.addressPopup = {
     open: function open(cb) {
         //alert("open");
@@ -2175,6 +2159,31 @@ axboot.addressPopup = {
     }
 };
 
+axboot.util = function () {
+    var setSelectionRange = function setSelectionRange(input, pos) {
+        if (typeof pos == "undefined") {
+            pos = input.value.length;
+        }
+        if (input.setSelectionRange) {
+            input.focus();
+            input.setSelectionRange(pos, pos);
+        } else if (input.createTextRange) {
+            var range = input.createTextRange();
+            range.collapse(true);
+            range.moveEnd('character', pos);
+            range.moveStart('character', pos);
+            range.select();
+        } else if (input.selectionStart) {
+            input.focus();
+            input.selectionStart = pos;
+            input.selectionEnd = pos;
+        }
+    };
+
+    return {
+        setFocusPosition: setSelectionRange
+    };
+}();
 /**
  * commonView
  * @Object {Object} axboot.commonView
@@ -2282,6 +2291,22 @@ axboot.formView.defaultData = {
 };
 
 /**
+ * 1, 2를 믹스한 새로운 오브젝트를 반환
+ * @param _obj1
+ * @param _obj2
+ */
+axboot.extend = function (_obj1, _obj2) {
+    return $.extend({}, _obj1, _obj2);
+};
+axboot.viewExtend = function (_obj1, _obj2) {
+    if (typeof _obj2 === "undefined") {
+        return $.extend({}, axboot.commonView, _obj1);
+    } else {
+        return $.extend({}, _obj1, _obj2);
+    }
+};
+
+/**
  * 페이지에서 사용하는
  * @method axboot.actionExtend
  * @param {Object} [_actionThis]
@@ -2317,6 +2342,9 @@ axboot.actionExtend = function () {
         for (var k in _action) {
             if (ax5.util.isString(_action[k])) {
                 myAction[k] = _action[k];
+            } else if (ax5.util.isFunction(_action[k])) {
+                myAction[k] = k;
+                myAction["__EXEC__" + k] = _action[k];
             }
         }
 
@@ -2325,6 +2353,13 @@ axboot.actionExtend = function () {
             myAction["page_dispatch"] = _action["dispatch"];
         }
 
+        myAction["exec"] = function (caller, act, data) {
+            if (_action[act]) {
+                return _action[act].call(caller, caller, act, data);
+            } else {
+                return "error";
+            }
+        };
         myAction["dispatch"] = function () {
             var fnArgs = [];
 

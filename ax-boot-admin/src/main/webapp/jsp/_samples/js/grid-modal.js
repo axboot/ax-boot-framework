@@ -1,122 +1,102 @@
 var fnObj = {};
 var ACTIONS = axboot.actionExtend(fnObj, {
-    PAGE_SEARCH: "PAGE_SEARCH",
-    PAGE_SAVE: "PAGE_SAVE",
-    FORM_CLEAR: "FORM_CLEAR",
-    ITEM_CLICK: "ITEM_CLICK",
-
-    ROLE_GRID_DATA_INIT: "ROLE_GRID_DATA_INIT",
-    ROLE_GRID_DATA_GET: "ROLE_GRID_DATA_GET",
-    ETC1FIND: "ETC1FIND",
-    ETC3FIND: "ETC3FIND",
-
-    dispatch: function (caller, act, data) {
-        var _this = this;
-        switch (act) {
-            case ACTIONS.PAGE_SEARCH:
-                axboot.ajax({
-                    type: "GET",
-                    url: "/api/v1/samples/parent",
-                    data: this.searchView.getData(),
-                    callback: function (res) {
-                        _this.gridView01.setData(res);
-                    },
-                    options: {
-                        onError: function (err) {
-                            console.log(err);
-                        }
-                    }
-                });
-
-                break;
-            case ACTIONS.ITEM_CLICK:
-                _this.formView01.setData(data);
-
-                break;
-            case ACTIONS.PAGE_SAVE:
-                if (this.formView01.validate()) {
-
-                    var parentData = this.formView01.getData();
-                    var childList = [].concat(this.gridView02.getData("modified"));
-                    childList = childList.concat(this.gridView02.getData("deleted"));
-
-                    // childList에 parentKey 삽입
-                    childList.forEach(function (n) {
-                        n.parentKey = parentData.key;
-                    });
-
-                    axboot
-                        .call({
-                            type: "PUT", url: "/api/v1/samples/parent", data: JSON.stringify([parentData]),
-                            callback: function (res) {
-
-                            }
-                        })
-                        .call({
-                            type: "PUT", url: "/api/v1/samples/child", data: JSON.stringify(childList),
-                            callback: function (res) {
-
-                            }
-                        })
-                        .done(function () {
-                            ACTIONS.dispatch(ACTIONS.PAGE_SEARCH);
-                        });
-                }
-
-                break;
-            case ACTIONS.FORM_CLEAR:
-                axDialog.confirm({
-                    msg: "정말 양식을 초기화 하시겠습니까?"
-                }, function () {
-                    if (this.key == "ok") {
-                        _this.formView01.clear();
-                        _this.gridView02.clear();
-                    }
-                });
-
-                break;
-            case ACTIONS.ETC1FIND:
-                axboot.modal.open({
-                    width: 500,
-                    height: 600,
-                    iframe: {
-                        url: "/jsp/common/zipcode.jsp"
-                    },
-                    header: {
-                        title: '<i class="cqc-magnifier"></i> 우편번호 찾기'
-                    },
-                    callback: function (data) {
-                        //{zipcodeData: data, zipcode: data.zonecode || data.postcode, roadAddress: fullRoadAddr, jibunAddress: data.jibunAddress}
-                        _this.formView01.setEtc1Value({
-                            zipcode: data.zipcode, roadAddress: data.roadAddress, jibunAddress: data.jibunAddress
-                        });
-                        this.close();
-                    }
-                });
-
-                break;
-            case ACTIONS.ETC3FIND:
-                axboot.modal.open({
-                    width: 600,
-                    height: 400,
-                    iframe: {
-                        url: "modal.jsp"
-                    },
-                    header: false,
-                    callback: function (data) {
-                        _this.formView01.setEtc3Value({
-                            key: data.key,
-                            value: data.value
-                        });
-                        this.close();
-                    }
-                });
-
-                break;
-            default:
-                return false;
-        }
+    PAGE_SEARCH: function (caller, act, data) {
+        axboot.ajax({
+            type: "GET",
+            url: "/api/v1/samples/parent",
+            data: caller.searchView.getData(),
+            callback: function (res) {
+                caller.gridView01.setData(res);
+            }
+        });
         return false;
+    },
+    PAGE_SAVE: function (caller, act, data) {
+        if (this.formView01.validate()) {
+
+            var parentData = this.formView01.getData();
+            var childList = [].concat(this.gridView02.getData("modified"));
+            childList = childList.concat(this.gridView02.getData("deleted"));
+
+            // childList에 parentKey 삽입
+            childList.forEach(function (n) {
+                n.parentKey = parentData.key;
+            });
+
+            axboot
+                .call({
+                    type: "PUT", url: "/api/v1/samples/parent", data: JSON.stringify([parentData]),
+                    callback: function (res) {
+
+                    }
+                })
+                .call({
+                    type: "PUT", url: "/api/v1/samples/child", data: JSON.stringify(childList),
+                    callback: function (res) {
+
+                    }
+                })
+                .done(function () {
+                    ACTIONS.dispatch(ACTIONS.PAGE_SEARCH);
+                });
+        }
+    },
+    FORM_CLEAR: function (caller, act, data) {
+        axDialog.confirm({
+            msg: "정말 양식을 초기화 하시겠습니까?"
+        }, function () {
+            if (this.key == "ok") {
+                caller.formView01.clear();
+            }
+        });
+    },
+    ITEM_CLICK: function (caller, act, data) {
+        caller.formView01.setData(data);
+    },
+    ETC1FIND: function (caller, act, data) {
+        axboot.modal.open({
+            width: 500,
+            height: 600,
+            iframe: {
+                url: "/jsp/common/zipcode.jsp"
+            },
+            header: {
+                title: '<i class="cqc-magnifier"></i> 우편번호 찾기'
+            },
+            callback: function (data) {
+                //{zipcodeData: data, zipcode: data.zonecode || data.postcode, roadAddress: fullRoadAddr, jibunAddress: data.jibunAddress}
+                caller.formView01.setEtc1Value({
+                    zipcode: data.zipcode, roadAddress: data.roadAddress, jibunAddress: data.jibunAddress
+                });
+                this.close();
+            }
+        });
+    },
+    ETC3FIND: function (caller, act, data) {
+        axboot.modal.open({
+            width: 600,
+            height: 400,
+            iframe: {
+                url: "modal.jsp"
+            },
+            header: false,
+            callback: function (data) {
+                caller.formView01.setEtc3Value({
+                    key: data.key,
+                    value: data.value
+                });
+                this.close();
+            }
+        });
+    },
+    dispatch: function (caller, act, data) {
+        var result = ACTIONS.exec(caller, act, data);
+        if (result != "error") {
+            return result;
+        } else {
+            // 직접코딩
+            return false;
+        }
     }
 });
 
