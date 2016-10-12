@@ -1,107 +1,86 @@
 var fnObj = {};
 var ACTIONS = axboot.actionExtend(fnObj, {
-    PAGE_SEARCH: "PAGE_SEARCH",
-    PAGE_SAVE: "PAGE_SAVE",
-    TREEITEM_CLICK: "TREEITEM_CLICK",
-    TREE_ROOTNODE_ADD: "TREE_ROOTNODE_ADD",
-    dispatch: function (caller, act, data) {
-        var _this = this;
-        switch (act) {
-            case ACTIONS.PAGE_SEARCH:
-                var searchData = this.searchView.getData();
-                axboot.ajax({
-                    type: "GET",
-                    url: "/api/v1/manual",
-                    data: this.searchView.getData(),
-                    callback: function (res) {
-                        _this.treeView01.setData(searchData, res.list);
+    PAGE_SEARCH: function (caller, act, data) {
+        var searchData = this.searchView.getData();
+        axboot.ajax({
+            type: "GET",
+            url: "/api/v1/manual",
+            data: this.searchView.getData(),
+            callback: function (res) {
+                caller.treeView01.setData(searchData, res.list);
+            }
+        });
+        return false;
+    },
+    PAGE_SAVE: function (caller, act, data) {
 
-                    },
-                    options: {
-                        onError: function (err) {
-                            console.log(err);
-                        }
-                    }
-                });
-                break;
-            case ACTIONS.TREEITEM_CLICK:
+        var obj = {
+            list: this.treeView01.getData(),
+            deletedList: this.treeView01.getDeletedList()
+        };
 
-                if (typeof data.manualId === "undefined") {
-                    this.formView01.clear();
-                    if (confirm("신규 생성된 목차는 저장 후 편집 할수 있습니다. 지금 저장 하시겠습니까? (저장 후에 다시 선택해주세요)")) {
-                        ACTIONS.dispatch(ACTIONS.PAGE_SAVE);
-                    }
-                    return;
+        axboot
+            .call({
+                type: "PUT",
+                url: "/api/v1/manual",
+                data: JSON.stringify(obj),
+                callback: function () {
+                    caller.treeView01.clearDeletedList();
+                    axToast.push("목차가 저장 되었습니다");
                 }
+            })
+            .done(function () {
+                var data = caller.formView01.getData();
 
-                axboot.ajax({
-                    type: "GET",
-                    url: "/api/v1/manual/" + data.manualId,
-                    data: "",
-                    callback: function (res) {
-                        _this.formView01.setData(res);
-                    }
-                });
-
-                break;
-            case ACTIONS.TREEITEM_DESELECTE:
-                this.formView01.clear();
-                break;
-
-            case ACTIONS.TREE_ROOTNODE_ADD:
-                this.treeView01.addRootNode();
-                break;
-            case ACTIONS.PAGE_SAVE:
-
-                var obj = {
-                    list: this.treeView01.getData(),
-                    deletedList: this.treeView01.getDeletedList()
-                };
-
-                axboot
-                    .call({
+                if (data.manualId) {
+                    axboot.ajax({
                         type: "PUT",
-                        url: "/api/v1/manual",
-                        data: JSON.stringify(obj),
-                        callback: function () {
-                            _this.treeView01.clearDeletedList();
-                            axToast.push("목차가 저장 되었습니다");
-                        }
-                    })
-                    .done(function () {
-                        var data = _this.formView01.getData();
-
-                        if (data.manualId) {
-                            axboot.ajax({
-                                type: "PUT",
-                                url: "/api/v1/manual/detail",
-                                data: JSON.stringify(data),
-                                callback: function (res) {
-                                    axToast.push("매뉴얼 내용이 저장 되었습니다");
-                                    ACTIONS.dispatch(ACTIONS.PAGE_SEARCH);
-                                }
-                            });
-                        } else {
+                        url: "/api/v1/manual/detail",
+                        data: JSON.stringify(data),
+                        callback: function (res) {
+                            axToast.push("매뉴얼 내용이 저장 되었습니다");
                             ACTIONS.dispatch(ACTIONS.PAGE_SEARCH);
                         }
-
                     });
+                } else {
+                    ACTIONS.dispatch(ACTIONS.PAGE_SEARCH);
+                }
 
-                break;
-            case ACTIONS.FORM_CLEAR:
-                var _this = this;
-                axDialog.confirm({
-                    msg: "정말 양식을 초기화 하시겠습니까?"
-                }, function () {
-                    if (this.key == "ok") {
-                        _this.formView01.clear();
-                    }
-                });
-                break;
-            default:
-                return false;
+            });
+
+    },
+    TREEITEM_CLICK: function (caller, act, data) {
+        if (typeof data.manualId === "undefined") {
+            this.formView01.clear();
+            if (confirm("신규 생성된 목차는 저장 후 편집 할수 있습니다. 지금 저장 하시겠습니까? (저장 후에 다시 선택해주세요)")) {
+                ACTIONS.dispatch(ACTIONS.PAGE_SAVE);
+            }
+            return;
         }
-        return false;
+
+        axboot.ajax({
+            type: "GET",
+            url: "/api/v1/manual/" + data.manualId,
+            data: "",
+            callback: function (res) {
+                caller.formView01.setData(res);
+            }
+        });
+    },
+    TREEITEM_DESELECTE: function (caller, act, data) {
+
+    },
+    TREE_ROOTNODE_ADD: function (caller, act, data) {
+        this.treeView01.addRootNode();
+    },
+    dispatch: function (caller, act, data) {
+        var result = ACTIONS.exec(caller, act, data);
+        if (result != "error") {
+            return result;
+        } else {
+            // 직접코딩
+            return false;
+        }
     }
 });
 var CODE = {};

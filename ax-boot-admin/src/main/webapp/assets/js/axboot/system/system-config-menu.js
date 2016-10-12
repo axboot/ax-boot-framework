@@ -1,216 +1,181 @@
 var fnObj = {};
 var ACTIONS = axboot.actionExtend(fnObj, {
-    PAGE_SEARCH: "PAGE_SEARCH",
-    PAGE_SAVE: "PAGE_SAVE",
-    TREEITEM_CLICK: "TREEITEM_CLICK",
-    TREEITEM_DESELECTE: "TREEITEM_DESELECTE",
-    TREE_ROOTNODE_ADD: "TREE_ROOTNODE_ADD",
-    SELECT_PROG: "SELECT_PROG",
-    SEARCH_AUTH: "SEARCH_AUTH",
-    MENU_AUTH_CLEAR: "MENU_AUTH_CLEAR",
-    dispatch: function (caller, act, data) {
-        var _this = this;
-        switch (act) {
-            case ACTIONS.PAGE_SEARCH:
-                var searchData = this.searchView.getData();
-                axboot.ajax({
-                    type: "GET",
-                    url: "/api/v2/menu",
-                    data: this.searchView.getData(),
-                    callback: function (res) {
-                        _this.treeView01.setData(searchData, res.list);
-                    },
-                    options: {
-                        onError: function (err) {
-                            console.log(err);
-                        }
-                    }
-                });
-                break;
-            case ACTIONS.TREEITEM_CLICK:
-                if (typeof data.menuId === "undefined") {
-                    this.formView01.clear();
-                    if (confirm("신규 생성된 메뉴는 저장 후 편집 할수 있습니다. 지금 저장 하시겠습니까?")) {
-                        ACTIONS.dispatch(ACTIONS.PAGE_SAVE);
-                    }
-                    return;
-                }
+    PAGE_SEARCH: function (caller, act, data) {
+        var searchData = this.searchView.getData();
+        axboot.ajax({
+            type: "GET",
+            url: "/api/v2/menu",
+            data: this.searchView.getData(),
+            callback: function (res) {
+                caller.treeView01.setData(searchData, res.list);
+            }
+        });
 
-                this.formView01.setData(data);
-                break;
-            case ACTIONS.TREEITEM_DESELECTE:
-                this.formView01.clear();
-                break;
-            case ACTIONS.ITEM_ADD:
-                this.gridView01.addRow();
-                break;
-            case ACTIONS.ITEM_DEL:
-                this.gridView01.delRow("selected");
-                break;
-            case ACTIONS.TREE_ROOTNODE_ADD:
-                this.treeView01.addRootNode();
-                break;
-            case ACTIONS.SELECT_PROG:
-                this.treeView01.updateNode(data);
-
-                var _data = this.formView01.getData();
-                var obj = {
-                    list: this.treeView01.getData(),
-                    deletedList: this.treeView01.getDeletedList()
-                };
-
-                axboot
-                    .call({
-                        type: "PUT",
-                        url: "/api/v2/menu",
-                        data: JSON.stringify(obj),
-                        callback: function (res) {
-                            _this.treeView01.clearDeletedList();
-                            axToast.push("메뉴 카테고리가 저장 되었습니다");
-                        }
-                    })
-                    .call({
-                        type: "GET",
-                        url: "/api/v2/menu",
-                        data: this.searchView.getData(),
-                        callback: function (res) {
-                            _this.treeView01.setData(searchData, res.list);
-                        }
-                    })
-                    .done(function () {
-                        //console.log(_data);
-                        ACTIONS.dispatch(ACTIONS.SEARCH_AUTH, {menuId: _data.menuId});
-                    });
-
-                break;
-            case ACTIONS.PAGE_SAVE:
-
-                var obj = {
-                    list: this.treeView01.getData(),
-                    deletedList: this.treeView01.getDeletedList()
-                };
-
-                axboot.ajax({
-                    type: "PUT",
-                    url: "/api/v2/menu",
-                    data: JSON.stringify(obj),
-                    callback: function (res) {
-                        _this.treeView01.clearDeletedList();
-                        axToast.push("메뉴 카테고리가 저장 되었습니다");
-
-                        if (data && data.callback) {
-                            data.callback();
-                        } else {
-                            ACTIONS.dispatch(ACTIONS.PAGE_SEARCH);
-                        }
-                    }
-                });
+        return false;
+    },
+    PAGE_SAVE: function (caller, act, data) {
+        var obj = {
+            list: this.treeView01.getData(),
+            deletedList: this.treeView01.getDeletedList()
+        };
+        axboot.ajax({
+            type: "PUT",
+            url: "/api/v2/menu",
+            data: JSON.stringify(obj),
+            callback: function (res) {
+                caller.treeView01.clearDeletedList();
+                axToast.push("메뉴 카테고리가 저장 되었습니다");
 
                 if (data && data.callback) {
-
+                    data.callback();
                 } else {
+                    ACTIONS.dispatch(ACTIONS.PAGE_SEARCH);
+                }
+            }
+        });
 
-                    var formData = this.formView01.getData();
-                    if (formData.progCd) {
-                        axboot.ajax({
-                            type: "PUT",
-                            url: "/api/v2/menu/auth",
-                            data: JSON.stringify(this.gridView01.getData()),
-                            callback: function (res) {
-                                axToast.push("메뉴 권한그룹 정보가 저장 되었습니다");
-                                ACTIONS.dispatch(ACTIONS.SEARCH_AUTH, {menuId: _this.formView01.getData().menuId});
+        if (data && data.callback) {
+
+        } else {
+
+            var formData = this.formView01.getData();
+            if (formData.progCd) {
+                axboot.ajax({
+                    type: "PUT",
+                    url: "/api/v2/menu/auth",
+                    data: JSON.stringify(this.gridView01.getData()),
+                    callback: function (res) {
+                        axToast.push("메뉴 권한그룹 정보가 저장 되었습니다");
+                        ACTIONS.dispatch(ACTIONS.SEARCH_AUTH, {menuId: caller.formView01.getData().menuId});
+                    }
+                });
+            } else {
+
+            }
+        }
+    },
+    TREEITEM_CLICK: function (caller, act, data) {
+        if (typeof data.menuId === "undefined") {
+            this.formView01.clear();
+            if (confirm("신규 생성된 메뉴는 저장 후 편집 할수 있습니다. 지금 저장 하시겠습니까?")) {
+                ACTIONS.dispatch(ACTIONS.PAGE_SAVE);
+            }
+            return;
+        }
+
+        this.formView01.setData(data);
+    },
+    TREEITEM_DESELECTE: function (caller, act, data) {
+        this.formView01.clear();
+    },
+    TREE_ROOTNODE_ADD: function (caller, act, data) {
+        this.treeView01.addRootNode();
+    },
+    SELECT_PROG: function (caller, act, data) {
+        this.treeView01.updateNode(data);
+
+        var _data = this.formView01.getData();
+        var obj = {
+            list: this.treeView01.getData(),
+            deletedList: this.treeView01.getDeletedList()
+        };
+
+        axboot
+            .call({
+                type: "PUT",
+                url: "/api/v2/menu",
+                data: JSON.stringify(obj),
+                callback: function (res) {
+                    caller.treeView01.clearDeletedList();
+                    axToast.push("메뉴 카테고리가 저장 되었습니다");
+                }
+            })
+            .call({
+                type: "GET",
+                url: "/api/v2/menu",
+                data: this.searchView.getData(),
+                callback: function (res) {
+                    caller.treeView01.setData(searchData, res.list);
+                }
+            })
+            .done(function () {
+                //console.log(_data);
+                ACTIONS.dispatch(ACTIONS.SEARCH_AUTH, {menuId: _data.menuId});
+            });
+    },
+    SEARCH_AUTH: function (caller, act, data) {
+        axboot.ajax({
+            type: "GET",
+            url: "/api/v2/menu/auth",
+            data: data,
+            callback: function (res) {
+                var list = [];
+                if (res.program) {
+                    caller.formView01.authGroup.forEach(function (g) {
+                        var item = {
+                            grpAuthCd: g.grpAuthCd,
+                            grpAuthNm: g.grpAuthNm,
+                            useYn: "N",
+                            schAh: "N",
+                            savAh: "N",
+                            exlAh: "N",
+                            delAh: "N",
+                            fn1Ah: "N",
+                            fn2Ah: "N",
+                            fn3Ah: "N",
+                            fn4Ah: "N",
+                            fn5Ah: "N",
+                            menuId: data.menuId
+                        };
+
+                        res.list.forEach(function (n) {
+                            if (n.grpAuthCd == item.grpAuthCd) {
+                                $.extend(item, {
+                                    useYn: "Y",
+                                    schAh: n.schAh || "N",
+                                    savAh: n.savAh || "N",
+                                    exlAh: n.exlAh || "N",
+                                    delAh: n.delAh || "N",
+                                    fn1Ah: n.fn1Ah || "N",
+                                    fn2Ah: n.fn2Ah || "N",
+                                    fn3Ah: n.fn3Ah || "N",
+                                    fn4Ah: n.fn4Ah || "N",
+                                    fn5Ah: n.fn5Ah || "N"
+                                });
                             }
                         });
-                    } else {
 
-                    }
-                }
-
-                break;
-            case ACTIONS.FORM_CLEAR:
-                var _this = this;
-                axDialog.confirm({
-                    msg: "정말 양식을 초기화 하시겠습니까?"
-                }, function () {
-                    if (this.key == "ok") {
-                        _this.formView01.clear();
-                    }
-                });
-                break;
-            case ACTIONS.MENU_AUTH_CLEAR:
-                this.gridView01.clear();
-                break;
-            case ACTIONS.SEARCH_AUTH:
-                axboot.ajax({
-                    type: "GET",
-                    url: "/api/v2/menu/auth",
-                    data: data,
-                    callback: function (res) {
-                        var list = [];
                         if (res.program) {
-                            _this.formView01.authGroup.forEach(function (g) {
-                                var item = {
-                                    grpAuthCd: g.grpAuthCd,
-                                    grpAuthNm: g.grpAuthNm,
-                                    useYn: "N",
-                                    schAh: "N",
-                                    savAh: "N",
-                                    exlAh: "N",
-                                    delAh: "N",
-                                    fn1Ah: "N",
-                                    fn2Ah: "N",
-                                    fn3Ah: "N",
-                                    fn4Ah: "N",
-                                    fn5Ah: "N",
-                                    menuId: data.menuId
-                                };
-
-                                res.list.forEach(function (n) {
-                                    if (n.grpAuthCd == item.grpAuthCd) {
-                                        $.extend(item, {
-                                            useYn: "Y",
-                                            schAh: n.schAh || "N",
-                                            savAh: n.savAh || "N",
-                                            exlAh: n.exlAh || "N",
-                                            delAh: n.delAh || "N",
-                                            fn1Ah: n.fn1Ah || "N",
-                                            fn2Ah: n.fn2Ah || "N",
-                                            fn3Ah: n.fn3Ah || "N",
-                                            fn4Ah: n.fn4Ah || "N",
-                                            fn5Ah: n.fn5Ah || "N"
-                                        });
-                                    }
-                                });
-
-                                if (res.program) {
-                                    $.extend(item, {
-                                        program_schAh: res.program.schAh || "N",
-                                        program_savAh: res.program.savAh || "N",
-                                        program_exlAh: res.program.exlAh || "N",
-                                        program_delAh: res.program.delAh || "N",
-                                        program_fn1Ah: res.program.fn1Ah || "N",
-                                        program_fn2Ah: res.program.fn2Ah || "N",
-                                        program_fn3Ah: res.program.fn3Ah || "N",
-                                        program_fn4Ah: res.program.fn4Ah || "N",
-                                        program_fn5Ah: res.program.fn5Ah || "N"
-                                    });
-                                }
-                                list.push(item);
+                            $.extend(item, {
+                                program_schAh: res.program.schAh || "N",
+                                program_savAh: res.program.savAh || "N",
+                                program_exlAh: res.program.exlAh || "N",
+                                program_delAh: res.program.delAh || "N",
+                                program_fn1Ah: res.program.fn1Ah || "N",
+                                program_fn2Ah: res.program.fn2Ah || "N",
+                                program_fn3Ah: res.program.fn3Ah || "N",
+                                program_fn4Ah: res.program.fn4Ah || "N",
+                                program_fn5Ah: res.program.fn5Ah || "N"
                             });
                         }
-                        _this.gridView01.setData(list);
-                    },
-                    options: {
-                        onError: function (err) {
-                            console.log(err);
-                        }
-                    }
-                });
-                break;
-            default:
-                return false;
+                        list.push(item);
+                    });
+                }
+                caller.gridView01.setData(list);
+            }
+        });
+    },
+    MENU_AUTH_CLEAR: function (caller, act, data) {
+        this.gridView01.clear();
+    },
+    dispatch: function (caller, act, data) {
+        var result = ACTIONS.exec(caller, act, data);
+        if (result != "error") {
+            return result;
+        } else {
+            // 직접코딩
+            return false;
         }
-        return false;
     }
 });
 var CODE = {};

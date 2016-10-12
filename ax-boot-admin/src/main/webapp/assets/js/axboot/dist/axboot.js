@@ -2313,6 +2313,8 @@ axboot.viewExtend = function (_obj1, _obj2) {
  * @param {Object} _action
  * @example
  * ```js
+ *
+ * // ACTION 이름은 키로 사용하고 dispatch에서 처리하는 방식.
  * var ACTION = axboot.actionExtend(fnObj, {
  *  PAGE_SEARCH: "PAGE_SEARCH",
  *  dispatch: function(caller, act, data){
@@ -2322,6 +2324,21 @@ axboot.viewExtend = function (_obj1, _obj2) {
  *          break;
  *          default
  *              return false;
+ *      }
+ *  }
+ * });
+ *
+ * // ACTION 이름에 함수를 구현하는 방식
+ * var ACTION = axboot.actionExtend(fnObj, {
+ *  PAGE_SEARCH: function(caller, act, data){
+ *
+ *  },
+ *  dispatch: function(caller, act, data){
+ *      var result = ACTIONS.exec(caller, act, data);
+ *      if(result != "error"){
+ *          return result;
+ *      } else {
+ *          return false;
  *      }
  *  }
  * });

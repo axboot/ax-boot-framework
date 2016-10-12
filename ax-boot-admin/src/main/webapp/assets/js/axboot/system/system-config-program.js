@@ -1,65 +1,43 @@
 var fnObj = {};
 var ACTIONS = axboot.actionExtend(fnObj, {
-    PAGE_SEARCH: "PAGE_SEARCH",
-    PAGE_SAVE: "PAGE_SAVE",
-    ITEM_CLICK: "ITEM_CLICK",
-    ITEM_ADD: "ITEM_ADD",
-    ITEM_DEL: "ITEM_DEL",
+    PAGE_SEARCH: function (caller, act, data) {
+        axboot.ajax({
+            type: "GET",
+            url: "/api/v1/programs",
+            data: this.searchView.getData(),
+            callback: function (res) {
+                caller.gridView01.setData(res);
+            }
+        });
+    },
+    PAGE_SAVE: function (caller, act, data) {
+        var saveList = [].concat(this.gridView01.getData("modified"));
+        saveList = saveList.concat(this.gridView01.getData("deleted"));
+
+        axboot.ajax({
+            type: "PUT",
+            url: "/api/v1/programs",
+            data: JSON.stringify(saveList),
+            callback: function (res) {
+                ACTIONS.dispatch(ACTIONS.PAGE_SEARCH);
+                axToast.push("저장 되었습니다");
+            }
+        });
+    },
+    ITEM_ADD: function (caller, act, data) {
+        this.gridView01.addRow();
+    },
+    ITEM_DEL: function (caller, act, data) {
+        this.gridView01.delRow("selected");
+    },
     dispatch: function (caller, act, data) {
-        var _this = this;
-        switch (act) {
-            case ACTIONS.PAGE_SEARCH:
-                axboot.ajax({
-                    type: "GET",
-                    url: "/api/v1/programs",
-                    data: this.searchView.getData(),
-                    callback: function (res) {
-                        _this.gridView01.setData(res);
-                    },
-                    options: {
-                        onError: function (err) {
-                            console.log(err);
-                        }
-                    }
-                });
-                break;
-            case ACTIONS.ITEM_CLICK:
-
-                break;
-            case ACTIONS.ITEM_ADD:
-                this.gridView01.addRow();
-                break;
-            case ACTIONS.ITEM_DEL:
-                this.gridView01.delRow("selected");
-                break;
-            case ACTIONS.PAGE_SAVE:
-                var saveList = [].concat(this.gridView01.getData("modified"));
-                saveList = saveList.concat(this.gridView01.getData("deleted"));
-
-                axboot.ajax({
-                    type: "PUT",
-                    url: "/api/v1/programs",
-                    data: JSON.stringify(saveList),
-                    callback: function (res) {
-                        ACTIONS.dispatch(ACTIONS.PAGE_SEARCH);
-                        axToast.push("저장 되었습니다");
-                    }
-                });
-                break;
-            case ACTIONS.FORM_CLEAR:
-                var _this = this;
-                axDialog.confirm({
-                    msg: "정말 양식을 초기화 하시겠습니까?"
-                }, function () {
-                    if (this.key == "ok") {
-                        _this.formView01.clear();
-                    }
-                });
-                break;
-            default:
-                return false;
+        var result = ACTIONS.exec(caller, act, data);
+        if (result != "error") {
+            return result;
+        } else {
+            // 직접코딩
+            return false;
         }
-        return false;
     }
 });
 
@@ -151,6 +129,7 @@ fnObj.gridView01 = axboot.viewExtend(axboot.gridView, {
         this.target = axboot.gridBuilder({
             showRowSelector: true,
             frozenColumnIndex: 2,
+            multipleSelect: true,
             target: $('[data-ax5grid="grid-view-01"]'),
             columns: [
                 {key: "progNm", label: "프로그램명", width: 160, align: "left", editor: "text"},

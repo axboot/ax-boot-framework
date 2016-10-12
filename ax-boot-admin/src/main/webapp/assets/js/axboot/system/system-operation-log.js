@@ -1,111 +1,86 @@
 var fnObj = {};
 var ACTIONS = axboot.actionExtend(fnObj, {
-    PAGE_SEARCH: "PAGE_SEARCH",
-    PAGE_SAVE: "PAGE_SAVE",
-    ITEM_CLICK: "ITEM_CLICK",
-    ITEM_REMOVE: "ITEM_REMOVE",
-    ITEM_REMOVEALL: "ITEM_REMOVEALL",
-    dispatch: function (caller, act, data) {
-        var _this = this;
-        switch (act) {
-            case ACTIONS.PAGE_SEARCH:
+    PAGE_SEARCH: function (caller, act, data) {
+        axboot.ajax({
+            type: "GET",
+            url: "/api/v1/errorLogs",
+            data: this.searchView.getData(),
+            callback: function (res) {
+                caller.gridView01.setData(res);
+            }
+        });
+        return false;
+    },
+    PAGE_SAVE: function (caller, act, data) {
+        var saveList = [].concat(this.gridView01.getData("modified"));
+        saveList = saveList.concat(this.gridView01.getData("deleted"));
+
+        axboot.ajax({
+            type: "PUT",
+            url: "/api/v1/programs",
+            data: JSON.stringify(saveList),
+            callback: function (res) {
+                ACTIONS.dispatch(ACTIONS.PAGE_SEARCH);
+                axToast.push("저장 되었습니다");
+            }
+        });
+    },
+    ITEM_CLICK: function (caller, act, data) {
+        this.formView01.setData(data);
+    },
+    ITEM_REMOVE: function (caller, act, data) {
+        var delete_queue = this.gridView01.getData("selected");
+        if (delete_queue.length == 0) {
+            alert("삭제할 목록을 선택해주세요");
+            return;
+        }
+        if (!confirm("정말 삭제하시겠습니까?")) return;
+
+        var delQueue = function () {
+            var pars;
+            if (pars = delete_queue.shift()) {
                 axboot.ajax({
-                    type: "GET",
-                    url: "/api/v1/errorLogs",
-                    data: this.searchView.getData(),
+                    type: "DELETE",
+                    url: "/api/v1/errorLogs/" + pars.id,
+                    data: "",
                     callback: function (res) {
-                        _this.gridView01.setData(res);
+                        delQueue();
                     },
                     options: {
                         onError: function (err) {
-                            console.log(err);
+                            alert("삭제작업에 실패하였습니다.");
+                            ACTIONS.dispatch(ACTIONS.PAGE_SEARCH);
                         }
                     }
                 });
-                break;
-            case ACTIONS.ITEM_CLICK:
-                this.formView01.setData(data);
-                break;
-            case ACTIONS.ITEM_REMOVE:
-                var _this = this;
-                var delete_queue = this.gridView01.getData("selected");
-                if (delete_queue.length == 0) {
-                    alert("삭제할 목록을 선택해주세요");
-                    return;
-                }
-                if (!confirm("정말 삭제하시겠습니까?")) return;
+            } else {
+                axToast.push("삭제 처리 되었습니다.");
+                ACTIONS.dispatch(ACTIONS.PAGE_SEARCH);
+            }
+        };
 
-                var delQueue = function () {
-                    var pars;
-                    if (pars = delete_queue.shift()) {
-                        axboot.ajax({
-                            type: "DELETE",
-                            url: "/api/v1/errorLogs/" + pars.id,
-                            data: "",
-                            callback: function (res) {
-                                delQueue();
-                            },
-                            options: {
-                                onError: function (err) {
-                                    alert("삭제작업에 실패하였습니다.");
-                                    ACTIONS.dispatch(ACTIONS.PAGE_SEARCH);
-                                }
-                            }
-                        });
-                    } else {
-                        axToast.push("삭제 처리 되었습니다.");
-                        ACTIONS.dispatch(ACTIONS.PAGE_SEARCH);
-                    }
-                };
-
-                delQueue();
-
-                break;
-            case ACTIONS.ITEM_REMOVEALL:
-
-                if (!confirm("정말 삭제하시겠습니까?")) return;
-                axboot.ajax({
-                    type: "DELETE",
-                    url: "/api/v1/errorLogs/events/all",
-                    data: "",
-                    callback: function (res) {
-                        axToast.push("삭제 처리 되었습니다.");
-                        ACTIONS.dispatch(ACTIONS.PAGE_SEARCH);
-                    }
-                });
-
-                break;
-            case ACTIONS.ITEM_DEL:
-                this.gridView01.delRow("selected");
-                break;
-            case ACTIONS.PAGE_SAVE:
-                var saveList = [].concat(this.gridView01.getData("modified"));
-                saveList = saveList.concat(this.gridView01.getData("deleted"));
-
-                axboot.ajax({
-                    type: "PUT",
-                    url: "/api/v1/programs",
-                    data: JSON.stringify(saveList),
-                    callback: function (res) {
-                        ACTIONS.dispatch(ACTIONS.PAGE_SEARCH);
-                        axToast.push("저장 되었습니다");
-                    }
-                });
-                break;
-            case ACTIONS.FORM_CLEAR:
-                var _this = this;
-                axDialog.confirm({
-                    msg: "정말 양식을 초기화 하시겠습니까?"
-                }, function () {
-                    if (this.key == "ok") {
-                        _this.formView01.clear();
-                    }
-                });
-                break;
-            default:
-                return false;
+        delQueue();
+    },
+    ITEM_REMOVEALL: function (caller, act, data) {
+        if (!confirm("정말 삭제하시겠습니까?")) return;
+        axboot.ajax({
+            type: "DELETE",
+            url: "/api/v1/errorLogs/events/all",
+            data: "",
+            callback: function (res) {
+                axToast.push("삭제 처리 되었습니다.");
+                ACTIONS.dispatch(ACTIONS.PAGE_SEARCH);
+            }
+        });
+    },
+    dispatch: function (caller, act, data) {
+        var result = ACTIONS.exec(caller, act, data);
+        if (result != "error") {
+            return result;
+        } else {
+            // 직접코딩
+            return false;
         }
-        return false;
     }
 });
 
@@ -199,6 +174,7 @@ fnObj.gridView01 = axboot.viewExtend(axboot.gridView, {
         this.target = axboot.gridBuilder({
             showRowSelector: true,
             frozenColumnIndex: 0,
+            multipleSelect: true,
             target: $('[data-ax5grid="grid-view-01"]'),
             columns: [
                 {key: "id", label: "ID", width: 60, align: "center"},

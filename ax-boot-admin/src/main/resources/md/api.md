@@ -102,6 +102,7 @@ axboot 오브젝트 axboot 애플리케이션을 편리하게 사용하기 위�
     * [.preparePlugin](#axboot.preparePlugin)
         * [.define()](#axboot.preparePlugin.define)
         * [.pageStart()](#axboot.preparePlugin.pageStart)
+    * [.addressPopup](#axboot.addressPopup)
     * [.commonView](#axboot.commonView)
     * [.searchView](#axboot.searchView)
     * [.treeView](#axboot.treeView)
@@ -282,6 +283,12 @@ js가 실행되는 타임. 페이지 레디 전에 미리 선언 하는 경우
 경우에 따라 페이지가 준비완료 상태일 때 선언해야하는 플러그인을 위해.
 
 **Kind**: static method of <code>[preparePlugin](#axboot.preparePlugin)</code>  
+<a name="axboot.addressPopup"></a>
+
+### axboot.addressPopup
+Created by tom on 2016. 9. 2..
+
+**Kind**: static property of <code>[axboot](#axboot)</code>  
 <a name="axboot.commonView"></a>
 
 ### axboot.commonView
@@ -508,6 +515,8 @@ this.target = axboot.gridBuilder({
 
 **Example**  
 ```js
+
+// ACTION 이름은 키로 사용하고 dispatch에서 처리하는 방식.
 var ACTION = axboot.actionExtend(fnObj, {
  PAGE_SEARCH: "PAGE_SEARCH",
  dispatch: function(caller, act, data){
@@ -517,6 +526,21 @@ var ACTION = axboot.actionExtend(fnObj, {
          break;
          default
              return false;
+     }
+ }
+});
+
+// ACTION 이름에 함수를 구현하는 방식
+var ACTION = axboot.actionExtend(fnObj, {
+ PAGE_SEARCH: function(caller, act, data){
+
+ },
+ dispatch: function(caller, act, data){
+     var result = ACTIONS.exec(caller, act, data);
+     if(result != "error"){
+         return result;
+     } else {
+         return false;
      }
  }
 });
