@@ -1,77 +1,62 @@
 var fnObj = {};
 var ACTIONS = axboot.actionExtend(fnObj, {
-    PAGE_CLOSE: "PAGE_CLOSE",
-    PAGE_SEARCH: "PAGE_SEARCH",
-    PAGE_CHOICE: "PAGE_CHOICE",
-    PAGE_DEL: "PAGE_DEL",
-    FORM_CLEAR: "FORM_CLEAR",
-    ITEM_CLICK: "ITEM_CLICK",
-    GRID_0_PAGING: "GRID_0_PAGING",
-
-    dispatch: function (caller, act, data) {
-        var _this = this;
-        switch (act) {
-            case ACTIONS.PAGE_CLOSE:
-                window.close();
-
-                break;
-            case ACTIONS.PAGE_SEARCH:
-                axboot.ajax({
-                    type: "GET",
-                    url: "/api/v1/files",
-                    data: this.searchView.getData(),
-                    callback: function (res) {
-                        _this.gridView01.setData(res);
-                    }
-                });
-
-                break;
-            case ACTIONS.PAGE_CHOICE:
-                data = this.formView01.getData();
-
-                if(data.id){
-                    var image_tag="<img src=\"" + data.preview +"\"/>";
-                    var doctarget = opener.CKEDITOR.instances.editor1;
-                    doctarget.insertHtml(image_tag);
-                    window.close();
-                }else{
-                    alert("선택된 파일이 없습니다.");
-                }
-
-                break;
-            case ACTIONS.PAGE_DEL:
-                if(!confirm("정말 삭제 하시겠습니까?")) return;
-
-                var list = this.gridView01.getData("selected");
-                list.forEach(function(n){
-                   n.__deleted__ = true;
-                });
-
-                axboot.ajax({
-                    type: "PUT",
-                    url: "/api/v1/files",
-                    data: JSON.stringify(list),
-                    callback: function (res) {
-                        ACTIONS.dispatch(ACTIONS.PAGE_SEARCH);
-                    }
-                });
-
-                break;
-            case ACTIONS.ITEM_CLICK:
-                _this.formView01.setData(data);
-
-                break;
-
-            case ACTIONS.GRID_0_PAGING:
-
-                this.searchView.setPageNumber(data);
-
-                break;
-            default:
-
-                return false;
-        }
+    PAGE_CLOSE: function (caller, act, data) {
+        window.close();
+    },
+    PAGE_SEARCH: function (caller, act, data) {
+        axboot.ajax({
+            type: "GET",
+            url: "/api/v1/files",
+            data: this.searchView.getData(),
+            callback: function (res) {
+                caller.gridView01.setData(res);
+            }
+        });
         return false;
+    },
+    PAGE_CHOICE: function (caller, act, data) {
+        data = this.formView01.getData();
+
+        if (data.id) {
+            var image_tag = "<img src=\"" + data.preview + "\"/>";
+            var doctarget = opener.CKEDITOR.instances.editor1;
+            doctarget.insertHtml(image_tag);
+            window.close();
+        } else {
+            alert("선택된 파일이 없습니다.");
+        }
+    },
+    PAGE_DEL: function (caller, act, data) {
+        if (!confirm("정말 삭제 하시겠습니까?")) return;
+
+        var list = this.gridView01.getData("selected");
+        list.forEach(function (n) {
+            n.__deleted__ = true;
+        });
+
+        axboot.ajax({
+            type: "PUT",
+            url: "/api/v1/files",
+            data: JSON.stringify(list),
+            callback: function (res) {
+                ACTIONS.dispatch(ACTIONS.PAGE_SEARCH);
+            }
+        });
+    },
+    ITEM_CLICK: function (caller, act, data) {
+        caller.formView01.setData(data);
+    },
+    GRID_0_PAGING: function (caller, act, data) {
+        this.searchView.setPageNumber(data);
+    },
+    dispatch: function (caller, act, data) {
+        var result = ACTIONS.exec(caller, act, data);
+        if (result != "error") {
+            return result;
+        } else {
+            // 직접코딩
+            return false;
+        }
     }
 });
 
