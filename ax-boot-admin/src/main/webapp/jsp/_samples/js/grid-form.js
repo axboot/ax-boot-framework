@@ -4,7 +4,7 @@ var ACTIONS = axboot.actionExtend(fnObj, {
         axboot.ajax({
             type: "GET",
             url: "/api/v1/samples/parent",
-            data: this.searchView.getData(),
+            data: caller.searchView.getData(),
             callback: function (res) {
                 caller.gridView01.setData(res);
             },
@@ -18,10 +18,10 @@ var ACTIONS = axboot.actionExtend(fnObj, {
         return false;
     },
     PAGE_SAVE: function (caller, act, data) {
-        if (this.formView01.validate()) {
-            var parentData = this.formView01.getData();
-            var childList = [].concat(this.gridView02.getData("modified"));
-            childList = childList.concat(this.gridView02.getData("deleted"));
+        if (caller.formView01.validate()) {
+            var parentData = caller.formView01.getData();
+            var childList = [].concat(caller.gridView02.getData("modified"));
+            childList = childList.concat(caller.gridView02.getData("deleted"));
 
             // childList에 parentKey 삽입
             childList.forEach(function (n) {

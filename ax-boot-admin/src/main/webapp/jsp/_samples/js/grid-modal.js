@@ -12,11 +12,11 @@ var ACTIONS = axboot.actionExtend(fnObj, {
         return false;
     },
     PAGE_SAVE: function (caller, act, data) {
-        if (this.formView01.validate()) {
+        if (caller.formView01.validate()) {
 
-            var parentData = this.formView01.getData();
-            var childList = [].concat(this.gridView02.getData("modified"));
-            childList = childList.concat(this.gridView02.getData("deleted"));
+            var parentData = caller.formView01.getData();
+            var childList = [].concat(caller.gridView02.getData("modified"));
+            childList = childList.concat(caller.gridView02.getData("deleted"));
 
             // childList에 parentKey 삽입
             childList.forEach(function (n) {

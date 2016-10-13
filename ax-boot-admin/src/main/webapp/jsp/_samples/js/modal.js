@@ -9,7 +9,7 @@ var ACTIONS = axboot.actionExtend(fnObj, {
         axboot.ajax({
             type: "GET",
             url: "/api/v1/samples/parent",
-            data: this.searchView.getData(),
+            data: caller.searchView.getData(),
             callback: function (res) {
                 caller.gridView01.setData(res);
             }
@@ -17,7 +17,7 @@ var ACTIONS = axboot.actionExtend(fnObj, {
         return false;
     },
     PAGE_CHOICE: function (caller, act, data) {
-        var list = this.gridView01.getData("selected");
+        var list = caller.gridView01.getData("selected");
         if (list.length > 0) {
             if (parent && parent.axboot && parent.axboot.modal) {
                 parent.axboot.modal.callback(list[0]);
@@ -29,7 +29,7 @@ var ACTIONS = axboot.actionExtend(fnObj, {
     PAGE_DEL: function (caller, act, data) {
         if (!confirm("정말 삭제 하시겠습니까?")) return;
 
-        var list = this.gridView01.getData("selected");
+        var list = caller.gridView01.getData("selected");
         list.forEach(function (n) {
             n.__deleted__ = true;
         });
@@ -47,7 +47,7 @@ var ACTIONS = axboot.actionExtend(fnObj, {
         ACTIONS.dispatch(ACTIONS.PAGE_CHOICE);
     },
     GRID_0_PAGING: function (caller, act, data) {
-        this.searchView.setPageNumber(data);
+        caller.searchView.setPageNumber(data);
     },
     dispatch: function (caller, act, data) {
         var result = ACTIONS.exec(caller, act, data);
