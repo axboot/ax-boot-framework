@@ -306,8 +306,8 @@ fnObj.tabView = axboot.viewExtend({
     },
     _getItem: function (item) {
         var po = [];
-        po.push('<div class="tab-item ' + item.status + '" data-tab-id="' + item.menuId + '" data-toggle="tooltip" data-placement="bottom" title=\'' + item.menuNm + '\'>');
-        po.push(item.menuNm);
+        po.push('<div class="tab-item ' + item.status + '" data-tab-id="' + item.menuId + '">');
+        po.push('<span data-toggle="tooltip" data-placement="bottom" title=\'' + item.progNm + '\'>', item.progNm, '</span>');
         if (!item.fixed) po.push('<i class="cqc-cancel3" data-tab-close="true" data-tab-id="' + item.menuId + '"></i>');
         po.push('</div>');
         return po.join('');

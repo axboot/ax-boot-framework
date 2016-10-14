@@ -138,9 +138,14 @@ $ax-frame-foot-color: #7C7C7C;
                     font-size: 0.9em;
                     margin: 0 1px;
                     @include ax-background(top, $ax-frame-header-tab-bg-colors);
-                    white-space: nowrap;
-                    text-overflow: ellipsis;
-                    overflow: hidden;
+
+
+                    span[data-toggle="tooltip"]{
+                        display: block;
+                        white-space: nowrap;
+                        text-overflow: ellipsis;
+                        overflow: hidden;
+                    }
 
                     i[data-tab-close] {
                         position: absolute;
