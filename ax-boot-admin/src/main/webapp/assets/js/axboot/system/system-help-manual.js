@@ -1,11 +1,11 @@
 var fnObj = {};
 var ACTIONS = axboot.actionExtend(fnObj, {
     PAGE_SEARCH: function (caller, act, data) {
-        var searchData = this.searchView.getData();
+        var searchData = caller.searchView.getData();
         axboot.ajax({
             type: "GET",
             url: "/api/v1/manual",
-            data: this.searchView.getData(),
+            data: caller.searchView.getData(),
             callback: function (res) {
                 caller.treeView01.setData(searchData, res.list);
             }
@@ -15,8 +15,8 @@ var ACTIONS = axboot.actionExtend(fnObj, {
     PAGE_SAVE: function (caller, act, data) {
 
         var obj = {
-            list: this.treeView01.getData(),
-            deletedList: this.treeView01.getDeletedList()
+            list: caller.treeView01.getData(),
+            deletedList: caller.treeView01.getDeletedList()
         };
 
         axboot
@@ -51,7 +51,7 @@ var ACTIONS = axboot.actionExtend(fnObj, {
     },
     TREEITEM_CLICK: function (caller, act, data) {
         if (typeof data.manualId === "undefined") {
-            this.formView01.clear();
+            caller.formView01.clear();
             if (confirm("신규 생성된 목차는 저장 후 편집 할수 있습니다. 지금 저장 하시겠습니까? (저장 후에 다시 선택해주세요)")) {
                 ACTIONS.dispatch(ACTIONS.PAGE_SAVE);
             }
@@ -71,7 +71,7 @@ var ACTIONS = axboot.actionExtend(fnObj, {
 
     },
     TREE_ROOTNODE_ADD: function (caller, act, data) {
-        this.treeView01.addRootNode();
+        caller.treeView01.addRootNode();
     },
     dispatch: function (caller, act, data) {
         var result = ACTIONS.exec(caller, act, data);

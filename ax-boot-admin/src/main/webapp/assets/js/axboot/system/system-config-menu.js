@@ -1,11 +1,11 @@
 var fnObj = {};
 var ACTIONS = axboot.actionExtend(fnObj, {
     PAGE_SEARCH: function (caller, act, data) {
-        var searchData = this.searchView.getData();
+        var searchData = caller.searchView.getData();
         axboot.ajax({
             type: "GET",
             url: "/api/v2/menu",
-            data: this.searchView.getData(),
+            data: caller.searchView.getData(),
             callback: function (res) {
                 caller.treeView01.setData(searchData, res.list);
             }
@@ -15,8 +15,8 @@ var ACTIONS = axboot.actionExtend(fnObj, {
     },
     PAGE_SAVE: function (caller, act, data) {
         var obj = {
-            list: this.treeView01.getData(),
-            deletedList: this.treeView01.getDeletedList()
+            list: caller.treeView01.getData(),
+            deletedList: caller.treeView01.getDeletedList()
         };
         axboot.ajax({
             type: "PUT",
@@ -38,12 +38,12 @@ var ACTIONS = axboot.actionExtend(fnObj, {
 
         } else {
 
-            var formData = this.formView01.getData();
+            var formData = caller.formView01.getData();
             if (formData.progCd) {
                 axboot.ajax({
                     type: "PUT",
                     url: "/api/v2/menu/auth",
-                    data: JSON.stringify(this.gridView01.getData()),
+                    data: JSON.stringify(caller.gridView01.getData()),
                     callback: function (res) {
                         axToast.push("메뉴 권한그룹 정보가 저장 되었습니다");
                         ACTIONS.dispatch(ACTIONS.SEARCH_AUTH, {menuId: caller.formView01.getData().menuId});
@@ -56,28 +56,28 @@ var ACTIONS = axboot.actionExtend(fnObj, {
     },
     TREEITEM_CLICK: function (caller, act, data) {
         if (typeof data.menuId === "undefined") {
-            this.formView01.clear();
+            caller.formView01.clear();
             if (confirm("신규 생성된 메뉴는 저장 후 편집 할수 있습니다. 지금 저장 하시겠습니까?")) {
                 ACTIONS.dispatch(ACTIONS.PAGE_SAVE);
             }
             return;
         }
 
-        this.formView01.setData(data);
+        caller.formView01.setData(data);
     },
     TREEITEM_DESELECTE: function (caller, act, data) {
-        this.formView01.clear();
+        caller.formView01.clear();
     },
     TREE_ROOTNODE_ADD: function (caller, act, data) {
-        this.treeView01.addRootNode();
+        caller.treeView01.addRootNode();
     },
     SELECT_PROG: function (caller, act, data) {
-        this.treeView01.updateNode(data);
+        caller.treeView01.updateNode(data);
 
-        var _data = this.formView01.getData();
+        var _data = caller.formView01.getData();
         var obj = {
-            list: this.treeView01.getData(),
-            deletedList: this.treeView01.getDeletedList()
+            list: caller.treeView01.getData(),
+            deletedList: caller.treeView01.getDeletedList()
         };
 
         axboot
@@ -93,7 +93,7 @@ var ACTIONS = axboot.actionExtend(fnObj, {
             .call({
                 type: "GET",
                 url: "/api/v2/menu",
-                data: this.searchView.getData(),
+                data: caller.searchView.getData(),
                 callback: function (res) {
                     caller.treeView01.setData(searchData, res.list);
                 }
@@ -166,7 +166,7 @@ var ACTIONS = axboot.actionExtend(fnObj, {
         });
     },
     MENU_AUTH_CLEAR: function (caller, act, data) {
-        this.gridView01.clear();
+        caller.gridView01.clear();
     },
     dispatch: function (caller, act, data) {
         var result = ACTIONS.exec(caller, act, data);
@@ -386,6 +386,9 @@ fnObj.treeView01 = axboot.viewExtend(axboot.treeView, {
         }, []);
     },
     setData: function (_searchData, _tree) {
+        
+        console.log(_searchData, _tree);
+        
         this.param = $.extend({}, _searchData);
         this.target.setData(_tree);
     },

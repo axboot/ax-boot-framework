@@ -4,7 +4,7 @@ var ACTIONS = axboot.actionExtend(fnObj, {
         axboot.ajax({
             type: "GET",
             url: "/api/v1/users",
-            data: this.searchView.getData(),
+            data: caller.searchView.getData(),
             callback: function (res) {
                 caller.gridView01.setData(res);
             }
@@ -13,11 +13,11 @@ var ACTIONS = axboot.actionExtend(fnObj, {
         return false;
     },
     PAGE_SAVE: function (caller, act, data) {
-        if (this.formView01.validate()) {
+        if (caller.formView01.validate()) {
             axboot.ajax({
                 type: "PUT",
                 url: "/api/v1/users",
-                data: JSON.stringify([this.formView01.getData()]),
+                data: JSON.stringify([caller.formView01.getData()]),
                 callback: function (res) {
                     ACTIONS.dispatch(ACTIONS.PAGE_SEARCH);
                 }
@@ -25,7 +25,7 @@ var ACTIONS = axboot.actionExtend(fnObj, {
         }
     },
     FORM_CLEAR: function (caller, act, data) {
-        this.formView01.clear();
+        caller.formView01.clear();
     },
     ITEM_CLICK: function (caller, act, data) {
         axboot.ajax({
@@ -53,10 +53,10 @@ var ACTIONS = axboot.actionExtend(fnObj, {
             list.push(item);
         });
 
-        this.gridView02.setData(list);
+        caller.gridView02.setData(list);
     },
     ROLE_GRID_DATA_GET: function (caller, act, data) {
-        return this.gridView02.getData("Y");
+        return caller.gridView02.getData("Y");
     },
     dispatch: function (caller, act, data) {
         var result = ACTIONS.exec(caller, act, data);

@@ -4,7 +4,7 @@ var ACTIONS = axboot.actionExtend(fnObj, {
         axboot.ajax({
             type: "GET",
             url: "/api/v1/commonCodes",
-            data: this.searchView.getData(),
+            data: caller.searchView.getData(),
             callback: function (res) {
                 caller.gridView01.setData(res);
             }
@@ -12,8 +12,8 @@ var ACTIONS = axboot.actionExtend(fnObj, {
         return false;
     },
     PAGE_SAVE: function (caller, act, data) {
-        var saveList = [].concat(this.gridView01.getData("modified"));
-        saveList = saveList.concat(this.gridView01.getData("deleted"));
+        var saveList = [].concat(caller.gridView01.getData("modified"));
+        saveList = saveList.concat(caller.gridView01.getData("deleted"));
 
         axboot.ajax({
             type: "PUT",
@@ -26,10 +26,10 @@ var ACTIONS = axboot.actionExtend(fnObj, {
         });
     },
     ITEM_ADD: function (caller, act, data) {
-        this.gridView01.addRow();
+        caller.gridView01.addRow();
     },
     ITEM_DEL: function (caller, act, data) {
-        this.gridView01.delRow("selected");
+        caller.gridView01.delRow("selected");
     },
     dispatch: function (caller, act, data) {
         var result = ACTIONS.exec(caller, act, data);
