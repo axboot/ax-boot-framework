@@ -1,19 +1,22 @@
 package com.chequer.axboot.core.domain.manual;
 
 import com.chequer.axboot.core.domain.BaseService;
+import com.chequer.axboot.core.domain.file.CommonFile;
+import com.chequer.axboot.core.domain.file.CommonFileService;
 import com.chequer.axboot.core.parameter.RequestParams;
 import com.querydsl.core.BooleanBuilder;
 import org.apache.commons.io.FileUtils;
-import org.apache.commons.io.IOUtils;
+import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
+import org.apache.poi.ss.usermodel.*;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 import org.zeroturnaround.zip.ZipUtil;
 
 import javax.inject.Inject;
-import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -21,6 +24,9 @@ import java.util.List;
 @Service
 public class ManualService extends BaseService<Manual, Long> {
     private ManualRepository manualRepository;
+
+    @Inject
+    private CommonFileService commonFileService;
 
     @Inject
     public ManualService(ManualRepository manualRepository) {
@@ -148,17 +154,120 @@ public class ManualService extends BaseService<Manual, Long> {
     }
 
     @Transactional
-    public Manual uploadFile(Long id, MultipartFile file) {
+    public Manual uploadFile(Long id, MultipartFile file) throws IOException {
+        CommonFile commonFile = commonFileService.upload(file, "MANUAL", Long.toString(id), 1);
+
         Manual manual = findOne(id);
         try {
-            ByteArrayInputStream stream = new ByteArrayInputStream(file.getBytes());
-            String content = IOUtils.toString(stream, "UTF-8");
-
-            manual.setContent(content);
+            manual.setFileId(commonFile.getId());
             save(manual);
         } catch (Exception e) {
             // ignore
         }
         return manual;
+    }
+
+    @Transactional
+    public void uploadList(String manualGrpCd, InputStream inputStream) throws IOException, InvalidFormatException {
+        Workbook workbook = WorkbookFactory.create(inputStream);
+        Sheet sheet = workbook.getSheetAt(0);
+
+        List<Manual> manualList = new ArrayList<>();
+
+        String level1Name = "";
+        String level2Name = "";
+        String level3Name = "";
+
+        for (int rowIndex = 1; rowIndex <= sheet.getLastRowNum(); rowIndex++) {
+            Row row = sheet.getRow(rowIndex);
+            String _level1Name = getString(row.getCell(0));
+            String _level2Name = getString(row.getCell(1));
+            String _level3Name = getString(row.getCell(2));
+            String callKey = getString(row.getCell(3));
+
+            if (!level1Name.equals(_level1Name) && isNotEmpty(_level1Name)) {
+                level1Name = _level1Name;
+                Manual manual = new Manual();
+                manual.setLevel(0);
+                manual.setManualNm(_level1Name);
+                manual.setManualGrpCd(manualGrpCd);
+                manual.setManualKey(callKey);
+
+                manualList.add(manual);
+            }
+
+            if (!level2Name.equals(_level2Name) && isNotEmpty(_level2Name)) {
+                level2Name = _level2Name;
+                Manual parent = getParent(manualList, level1Name);
+
+                Manual manual = new Manual();
+                manual.setLevel(1);
+                manual.setManualNm(_level2Name);
+                manual.setManualGrpCd(manualGrpCd);
+                manual.setManualKey(callKey);
+
+                parent.addChildren(manual);
+            }
+
+            if (!level3Name.equals(_level3Name) && isNotEmpty(_level3Name)) {
+                level3Name = _level2Name;
+                Manual parent = getParent(manualList, level2Name);
+
+                Manual manual = new Manual();
+                manual.setLevel(2);
+                manual.setManualNm(_level3Name);
+                manual.setManualGrpCd(manualGrpCd);
+                manual.setManualKey(callKey);
+
+                parent.addChildren(manual);
+            }
+        }
+
+        delete(qManual).where(qManual.manualGrpCd.eq(manualGrpCd)).execute();
+
+        process(manualList);
+    }
+
+    public Manual getParent(List<Manual> manualList, String manualNm) {
+        Manual parent = manualList.stream().filter(m -> m.getManualNm().equals(manualNm)).findAny().orElse(null);
+
+        if (parent == null) {
+            for (Manual _manual : manualList) {
+                parent = getParent(_manual.getChildren(), manualNm);
+
+                if (parent != null)
+                    break;
+            }
+        }
+
+        return parent;
+    }
+
+    public String getString(Cell cell) {
+        if (cell == null) {
+            return "";
+        }
+
+        switch (cell.getCellType()) {
+            case Cell.CELL_TYPE_BLANK:
+                return "";
+
+            case Cell.CELL_TYPE_BOOLEAN:
+                return Boolean.toString(cell.getBooleanCellValue());
+
+            case Cell.CELL_TYPE_ERROR:
+                return "";
+
+            case Cell.CELL_TYPE_STRING:
+                return cell.getStringCellValue();
+
+            case Cell.CELL_TYPE_NUMERIC:
+                return Double.toString(cell.getNumericCellValue());
+
+            case Cell.CELL_TYPE_FORMULA:
+                return cell.getCellFormula();
+        }
+
+        return "";
     }
 }

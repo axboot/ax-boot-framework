@@ -11,7 +11,7 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 @RunWith(SpringJUnit4ClassRunner.class)
 @SpringBootTest(classes = {AXBootCoreConfiguration.class})
 @EnableTransactionManagement(proxyTargetClass = true, mode = AdviceMode.PROXY)
-@ActiveProfiles("dirToManualList")
+@ActiveProfiles("dev")
 public abstract class AXBootTestBase {
 
 }
