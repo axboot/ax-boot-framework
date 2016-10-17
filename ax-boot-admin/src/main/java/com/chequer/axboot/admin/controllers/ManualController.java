@@ -8,6 +8,7 @@ import com.chequer.axboot.core.domain.manual.ManualListVO;
 import com.chequer.axboot.core.domain.manual.ManualRequestVO;
 import com.chequer.axboot.core.domain.manual.ManualService;
 import com.chequer.axboot.core.parameter.RequestParams;
+import com.chequer.axboot.core.utils.ExcelUtils;
 import com.chequer.axboot.core.utils.ModelMapperUtils;
 import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
 import org.springframework.stereotype.Controller;
@@ -15,8 +16,11 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.inject.Inject;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 import java.io.IOException;
+import java.util.Collections;
 import java.util.List;
 
 
@@ -50,15 +54,19 @@ public class ManualController extends BaseController {
         return ok();
     }
 
-    @RequestMapping(value = "/{id}", method = RequestMethod.POST, produces = APPLICATION_JSON)
+    @RequestMapping(value = "/{id}/file", method = RequestMethod.POST, produces = APPLICATION_JSON)
     public Manual uploadManualFile(@PathVariable Long id, @RequestParam MultipartFile file) throws IOException {
         return manualService.uploadFile(id, file);
     }
 
-
-    @RequestMapping(value = "/uploadList", method = RequestMethod.POST, produces = APPLICATION_JSON)
+    @RequestMapping(value = "/excel/uploadList", method = RequestMethod.POST, produces = APPLICATION_JSON)
     public ApiResponse uploadManualChapter(@RequestParam String manualGrpCd, @RequestParam MultipartFile file) throws IOException, InvalidFormatException {
         manualService.uploadList(manualGrpCd, file.getInputStream());
         return ok();
+    }
+
+    @RequestMapping(value = "/excel/downloadForm", method = RequestMethod.GET, produces = APPLICATION_JSON)
+    public void downloadForm(HttpServletRequest request, HttpServletResponse response) throws IOException {
+        ExcelUtils.renderExcel("/excel/manual.xlsx", Collections.emptyList(), "매뉴얼 업로드양식", request, response);
     }
 }

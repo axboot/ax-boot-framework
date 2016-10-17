@@ -46,7 +46,7 @@
 
 
         <ax:split-layout name="ax1" oriental="vertical">
-            <ax:split-panel width="300" style="padding-right: 10px;">
+            <ax:split-panel width="350" style="padding-right: 10px;">
 
                 <div class="ax-button-group" data-fit-height-aside="tree-view-01">
                     <div class="left">
@@ -56,6 +56,8 @@
                     </div>
                     <div class="right">
                         <button type="button" class="btn btn-default" data-tree-view-01-btn="add"><i class="cqc-circle-with-plus"></i> 추가</button>
+                        <button type="button" class="btn btn-default" data-tree-view-01-btn="add"><i class="cqc-circle-with-plus"></i> 업로드</button>
+                        <button type="button" class="btn btn-default" data-tree-view-01-btn="add"><i class="cqc-circle-with-plus"></i> 양식 다운로드</button>
                     </div>
                 </div>
 
