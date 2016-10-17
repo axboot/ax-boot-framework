@@ -34,7 +34,7 @@ public class ManualService extends BaseService<Manual, Long> {
         this.manualRepository = manualRepository;
     }
 
-    public List<Manual> get(RequestParams requestParams) {
+    public List<Manual> get(RequestParams<Manual> requestParams) {
         String manualGrpCd = requestParams.getString("manualGrpCd", "");
         boolean menuOpen = requestParams.getBoolean("menuOpen", true);
 
@@ -200,26 +200,30 @@ public class ManualService extends BaseService<Manual, Long> {
                 level2Name = _level2Name;
                 Manual parent = getParent(manualList, level1Name);
 
-                Manual manual = new Manual();
-                manual.setLevel(1);
-                manual.setManualNm(_level2Name);
-                manual.setManualGrpCd(manualGrpCd);
-                manual.setManualKey(callKey);
+                if (parent != null) {
+                    Manual manual = new Manual();
+                    manual.setLevel(1);
+                    manual.setManualNm(_level2Name);
+                    manual.setManualGrpCd(manualGrpCd);
+                    manual.setManualKey(callKey);
 
-                parent.addChildren(manual);
+                    parent.addChildren(manual);
+                }
             }
 
             if (!level3Name.equals(_level3Name) && isNotEmpty(_level3Name)) {
                 level3Name = _level2Name;
                 Manual parent = getParent(manualList, level2Name);
 
-                Manual manual = new Manual();
-                manual.setLevel(2);
-                manual.setManualNm(_level3Name);
-                manual.setManualGrpCd(manualGrpCd);
-                manual.setManualKey(callKey);
+                if (parent != null) {
+                    Manual manual = new Manual();
+                    manual.setLevel(2);
+                    manual.setManualNm(_level3Name);
+                    manual.setManualGrpCd(manualGrpCd);
+                    manual.setManualKey(callKey);
 
-                parent.addChildren(manual);
+                    parent.addChildren(manual);
+                }
             }
         }
 
