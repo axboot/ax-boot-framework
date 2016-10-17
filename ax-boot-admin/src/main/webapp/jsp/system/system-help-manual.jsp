@@ -37,6 +37,7 @@
                         <ax:td label='매뉴얼 그룹' width="300px">
                             <ax:common-code groupCd="MANUAL_GROUP" id="manualGrpCd"/>
                         </ax:td>
+                        <button type="button" class="btn btn-default" data-tree-view-01-btn="add"><i class="cqc-circle-with-plus"></i> 추가</button>
                     </ax:tr>
                 </ax:tbl>
             </ax:form>
@@ -83,6 +84,8 @@
                                 <ax:td label="호출 아이디">
                                     <input type="hidden" data-ax-path="manualId"/>
                                     <input type="text" data-ax-path="manualKey" class="form-control" value=""/>
+
+                                    <button type="button" class="btn btn-default" data-tree-view-01-btn="add"><i class="cqc-circle-with-plus"></i> 원본파일 업로드</button>
                                 </ax:td>
                             </ax:tr>
                         </ax:tbl>

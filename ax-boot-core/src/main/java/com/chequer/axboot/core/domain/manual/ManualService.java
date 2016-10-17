@@ -262,7 +262,7 @@ public class ManualService extends BaseService<Manual, Long> {
                 return cell.getStringCellValue();
 
             case Cell.CELL_TYPE_NUMERIC:
-                return Double.toString(cell.getNumericCellValue());
+                return Integer.toString((int) cell.getNumericCellValue());
 
             case Cell.CELL_TYPE_FORMULA:
                 return cell.getCellFormula();
