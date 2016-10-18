@@ -302,10 +302,10 @@ public class DatabaseInitService {
 
     @Transactional
     public void dropSchema() {
-        List<Table> tableList = jdbcMetadataService.getTables();
+        List<String> tableList = schemaGenerator.getTableList();
 
         tableList.forEach(table -> {
-            jdbcTemplate.update("DROP TABLE " + table.getTableName());
+            jdbcTemplate.update("DROP TABLE " + table);
         });
     }
 }
