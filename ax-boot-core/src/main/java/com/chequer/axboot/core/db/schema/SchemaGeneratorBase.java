@@ -21,6 +21,8 @@ import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Table;
 import javax.persistence.metamodel.EntityType;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Properties;
 import java.util.Set;
 
@@ -67,6 +69,20 @@ public class SchemaGeneratorBase {
                 .forEach(metadataSources::addAnnotatedClass);
 
         return metadataSources.buildMetadata();
+    }
+
+    public List<String> getTableList() {
+        List<String> tableName = new ArrayList();
+
+        new Reflections(GlobalConstants.CORE_PACKAGE)
+                .getTypesAnnotatedWith(Entity.class)
+                .forEach(clazz -> {
+                    if (clazz.isAnnotationPresent(Table.class)) {
+                        tableName.add(clazz.getAnnotation(Table.class).name());
+                    }
+                });
+
+        return tableName;
     }
 
     protected String getEntityClassName(String tableName) {
