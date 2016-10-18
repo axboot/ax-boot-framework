@@ -28,46 +28,53 @@ public class TemplateBuilder {
             List<String> importList = new ArrayList<>();
             List<String> annotations = new ArrayList<>();
 
-            table.getColumns().stream().filter(field -> !field.skip()).forEach(column -> {
-                HibernateField hibernateField = column.hibernateField();
+            int index = 1;
 
-                if (ArrayUtils.isNotEmpty(hibernateField.getEntityClassImportList())) {
-                    for (String importPackage : hibernateField.getEntityClassImportList()) {
-                        String importPackageText = String.format("import %s;", importPackage);
-                        if (!importList.contains(importPackageText)) {
-                            importList.add(importPackageText);
+            for (Column column : table.getColumns()) {
+                if (!column.skip()) {
+                    HibernateField hibernateField = column.hibernateField();
+
+                    if (ArrayUtils.isNotEmpty(hibernateField.getEntityClassImportList())) {
+                        for (String importPackage : hibernateField.getEntityClassImportList()) {
+                            String importPackageText = String.format("import %s;", importPackage);
+                            if (!importList.contains(importPackageText)) {
+                                importList.add(importPackageText);
+                            }
                         }
                     }
-                }
 
-                if (ArrayUtils.isNotEmpty(hibernateField.getEntityClassAnnotationList())) {
-                    for (String annotation : hibernateField.getEntityClassAnnotationList()) {
-                        String annotationText = annotation;
-                        if (!annotations.contains(annotationText)) {
-                            annotations.add(annotationText);
+                    if (ArrayUtils.isNotEmpty(hibernateField.getEntityClassAnnotationList())) {
+                        for (String annotation : hibernateField.getEntityClassAnnotationList()) {
+                            String annotationText = annotation;
+                            if (!annotations.contains(annotationText)) {
+                                annotations.add(annotationText);
+                            }
                         }
                     }
-                }
 
-                if (column.isKey()) {
+                    if (column.isKey()) {
+                        code.append(NEW_LINE);
+                        code.append(TAB + "@Id");
+                    }
+
                     code.append(NEW_LINE);
-                    code.append(TAB + "@Id");
-                }
-
-                code.append(NEW_LINE);
-                code.append(TAB + hibernateField.getFieldAnnotation());
-                code.append(NEW_LINE);
-                code.append(TAB + String.format("@Comment(value = \"%s\")", column.getRemarks()));
-
-                if ("YES".equals(column.getIsAutoincrement())) {
+                    code.append(TAB + hibernateField.getFieldAnnotation());
                     code.append(NEW_LINE);
-                    code.append(TAB + "@GeneratedValue(strategy = GenerationType.IDENTITY)");
-                }
+                    code.append(TAB + String.format("@Comment(value = \"%s\")", column.getRemarks()));
 
-                code.append(NEW_LINE);
-                code.append(TAB + String.format("private %s %s;", hibernateField.getJavaType(), hibernateField.getFieldName()));
-                code.append(NEW_LINE);
-            });
+                    if ("YES".equals(column.getIsAutoincrement())) {
+                        code.append(NEW_LINE);
+                        code.append(TAB + "@GeneratedValue(strategy = GenerationType.IDENTITY)");
+                    }
+
+                    code.append(NEW_LINE);
+                    code.append(TAB + "@ColumnPosition(" + (index++) + ")");
+                    code.append(NEW_LINE);
+                    code.append(TAB + String.format("private %s %s;", hibernateField.getJavaType(), hibernateField.getFieldName()));
+
+                    code.append(NEW_LINE);
+                }
+            }
 
             entityFields.setCode(code.toString());
             entityFields.setImportPackages(importList.stream().map(String::toString).collect(Collectors.joining(NEW_LINE)));

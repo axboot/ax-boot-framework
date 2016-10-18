@@ -15,6 +15,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 public class JdbcMetadataService {
 
@@ -55,7 +56,22 @@ public class JdbcMetadataService {
             connection = getConnection();
             String[] types = {"TABLE"};
 
-            ResultSet resultSet = connection.getMetaData().getTables(connection.getCatalog(), connection.getSchema(), "%", types);
+            String schema = null;
+            String catalog = null;
+
+            try {
+                catalog = connection.getCatalog();
+            } catch (Throwable e) {
+                // ignore
+            }
+
+            try {
+                schema = connection.getSchema();
+            } catch (Throwable e) {
+                // ignore
+            }
+
+            ResultSet resultSet = connection.getMetaData().getTables(catalog, schema, "%", types);
             tables.addAll(new ColumnToBeanPropertyRowMapper<>(Table.class).mapRows(resultSet));
 
             for (Table table : tables) {
@@ -105,6 +121,20 @@ public class JdbcMetadataService {
             connection = getConnection();
             ResultSet columnsResultSet = connection.getMetaData().getColumns(connection.getCatalog(), null, tableName, null);
             columns.addAll(new ColumnToBeanPropertyRowMapper<>(Column.class).mapRows(columnsResultSet));
+
+            if ("oracle".equals(axBootContextConfig.getDataSourceConfig().getHibernateConfig().getDatabaseType().toLowerCase())) {
+                List<Map<String, Object>> comments = jdbcTemplate.queryForList(String.format("SELECT A.COLUMN_NAME, B.COMMENTS FROM ALL_TAB_COLUMNS A, ALL_COL_COMMENTS B WHERE  A.TABLE_NAME = B.TABLE_NAME AND  A.COLUMN_NAME = B.COLUMN_NAME AND A.OWNER = 'SR' AND A.TABLE_NAME = '%s'", tableName));
+
+                for (Column column : columns) {
+                    comments.stream().filter(comment -> column.getColumnName().equals(comment.get("COLUMN_NAME").toString())).forEach(comment -> {
+                        Object remark = comment.get("COMMENTS");
+
+                        if (remark != null) {
+                            column.setRemarks(remark.toString());
+                        }
+                    });
+                }
+            }
 
             ResultSet primaryKeyResultSet = connection.getMetaData().getPrimaryKeys(connection.getCatalog(), null, tableName);
 

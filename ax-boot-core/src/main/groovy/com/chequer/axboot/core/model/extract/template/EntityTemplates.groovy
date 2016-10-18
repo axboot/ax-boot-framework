@@ -5,9 +5,7 @@ class EntityTemplates {
     public static String SINGLE_KEY_ENTITY_CLASS_TEMPLATE =
 '''
 import ${packageName}.domain.BaseJpaModel;
-import lombok.Getter;
-import lombok.Setter;
-import lombok.EqualsAndHashCode;
+import lombok.*;
 import org.apache.ibatis.type.Alias;
 import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.DynamicUpdate;
