@@ -119,7 +119,7 @@ public class JdbcMetadataService {
         Connection connection = null;
         try {
             connection = getConnection();
-            ResultSet columnsResultSet = connection.getMetaData().getColumns(connection.getCatalog(), null, tableName, null);
+            ResultSet columnsResultSet = connection.getMetaData().getColumns(getCatalog(), null, tableName, null);
             columns.addAll(new ColumnToBeanPropertyRowMapper<>(Column.class).mapRows(columnsResultSet));
 
             if ("oracle".equals(axBootContextConfig.getDataSourceConfig().getHibernateConfig().getDatabaseType().toLowerCase())) {
@@ -136,7 +136,7 @@ public class JdbcMetadataService {
                 }
             }
 
-            ResultSet primaryKeyResultSet = connection.getMetaData().getPrimaryKeys(connection.getCatalog(), null, tableName);
+            ResultSet primaryKeyResultSet = connection.getMetaData().getPrimaryKeys(getCatalog(), null, tableName);
 
             List<PrimaryKey> primaryKeyList = new ColumnToBeanPropertyRowMapper<>(PrimaryKey.class).mapRows(primaryKeyResultSet);
 
