@@ -28,16 +28,22 @@
     </jsp:attribute>
     <jsp:body>
 
-        <ax:page-buttons></ax:page-buttons>
+        <ax:page-buttons>
+            <button type="button" class="btn btn-default" data-page-btn="form-download"><i class="cqc-download"></i> 양식 다운로드</button>
+        </ax:page-buttons>
 
         <div role="page-header">
             <ax:form name="searchView0">
                 <ax:tbl clazz="ax-search-tbl" minWidth="500px">
                     <ax:tr>
-                        <ax:td label='매뉴얼 그룹' width="300px">
-                            <ax:common-code groupCd="MANUAL_GROUP" id="manualGrpCd"/>
+                        <ax:td label='매뉴얼 그룹' width="400px">
+
+                            <ax:common-code groupCd="MANUAL_GROUP" id="manualGrpCd" clazz="inline-block W150"/>
+
+                            <button type="button" class="btn btn-default" data-search-view-0-btn="add">그룹설정</button>
+
                         </ax:td>
-                        <button type="button" class="btn btn-default" data-tree-view-01-btn="add"><i class="cqc-circle-with-plus"></i> 추가</button>
+
                     </ax:tr>
                 </ax:tbl>
             </ax:form>
@@ -56,12 +62,32 @@
                     </div>
                     <div class="right">
                         <button type="button" class="btn btn-default" data-tree-view-01-btn="add"><i class="cqc-circle-with-plus"></i> 추가</button>
-                        <button type="button" class="btn btn-default" data-tree-view-01-btn="add"><i class="cqc-circle-with-plus"></i> 업로드</button>
-                        <button type="button" class="btn btn-default" data-tree-view-01-btn="add"><i class="cqc-circle-with-plus"></i> 양식 다운로드</button>
                     </div>
                 </div>
 
                 <div data-z-tree="tree-view-01" data-fit-height-content="tree-view-01" style="height: 300px;" class="ztree"></div>
+
+
+                <div data-fit-height-aside="tree-view-01">
+                    <div class="H10"></div>
+                    <form name="uploadForm" action="/ckeditor/uploadImage" method="POST" enctype="multipart/form-data">
+                        <input type="hidden" name="targetId" value="${targetId}"/>
+                        <input type="hidden" name="targetType" value="CKEDITOR"/>
+
+                        <ax:tbl clazz="ax-search-tbl" minWidth="500px">
+                            <ax:tr>
+                                <ax:td label='목차업로드' width="100%" labelStyle="background: #616161;color: #fff;">
+                                    <div class="input-group">
+                                        <input type="file" name="upload" class="form-control" />
+                                        <span class="input-group-btn">
+                                            <button type="submit" name="Upload" class="btn btn-primary"><i class="cqc-upload"></i> 업로드</button>
+                                        </span>
+                                    </div><!-- /input-group -->
+                                </ax:td>
+                            </ax:tr>
+                        </ax:tbl>
+                    </form>
+                </div>
 
             </ax:split-panel>
             <ax:splitter></ax:splitter>
@@ -80,22 +106,43 @@
                             </div>
                         </div>
 
-
                         <ax:tbl clazz="ax-form-tbl" minWidth="500px">
                             <ax:tr>
                                 <ax:td label="호출 아이디">
                                     <input type="hidden" data-ax-path="manualId"/>
                                     <input type="text" data-ax-path="manualKey" class="form-control" value=""/>
-
-                                    <button type="button" class="btn btn-default" data-tree-view-01-btn="add"><i class="cqc-circle-with-plus"></i> 원본파일 업로드</button>
                                 </ax:td>
                             </ax:tr>
                         </ax:tbl>
+                        <div class="H10"></div>
                     </div>
-                    <div class="H10"></div>
+                    <div data-fit-height-content="form-view-01">
                     <textarea data-ax-path="content" id="editor1"></textarea>
-                    <div data-fit-height-content="form-view-01"></div>
+                    </div>
+
                 </ax:form>
+
+                <form name="uploadForm" action="/ckeditor/uploadImage" method="POST" enctype="multipart/form-data" data-fit-height-aside="form-view-01">
+                    <input type="hidden" name="targetId" value="${targetId}"/>
+                    <input type="hidden" name="targetType" value="CKEDITOR"/>
+
+                    <ax:tbl clazz="ax-search-tbl" minWidth="500px">
+                        <ax:tr>
+                            <ax:td label="원본파일" width="350px">
+                                <div class="input-group">
+                                    <input type="file" name="upload" class="form-control" />
+                                    <span class="input-group-btn">
+                                        <button type="submit" name="Upload" class="btn btn-primary"><i class="cqc-upload"></i> 업로드</button>
+                                    </span>
+                                </div><!-- /input-group -->
+                            </ax:td>
+                            <ax:td label="등록된 파일" width="300px">
+
+                                <button type="button" class="btn btn-default"><small>등록된 파일이 없습니다.</small></button>
+                            </ax:td>
+                        </ax:tr>
+                    </ax:tbl>
+                </form>
 
             </ax:split-panel>
         </ax:split-layout>

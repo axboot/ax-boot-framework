@@ -9,6 +9,7 @@
 <%@ attribute name="dataPath" required="false" %>
 <%@ attribute name="type" required="false" %>
 <%@ attribute name="defaultValue" required="false" %>
+<%@ attribute name="clazz" %>
 
 <%
     if (StringUtils.isEmpty(type)) {
@@ -21,7 +22,7 @@
 
     switch (type) {
         case "select":
-            builder.append(String.format("<select class=\"form-control\" id=\"%s\" name=\"%s\" data-ax-path=\"%s\">", id, name, dataPath));
+            builder.append(String.format("<select id=\"%s\" name=\"%s\" data-ax-path=\"%s\" class=\"form-control %s\">", id, name, dataPath, clazz));
 
             for (CommonCode commonCode : commonCodes) {
                 if (StringUtils.isNotEmpty(defaultValue) && defaultValue.equals(commonCode.getCode())) {
