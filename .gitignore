@@ -36,3 +36,4 @@ overridedb.*
 node_modules/
 rebel.xml
 axboot-dev.properties
+.rebel.*
