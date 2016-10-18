@@ -46,11 +46,11 @@ public class ProgramService extends BaseService<Program, String> {
 
             // 삭제 처리
             if (program.isDeleted()) {
-                delete(program.getId());
-
                 List<Long> menuIds = select().select(qMenu.menuId).distinct().from(qMenu).where(qMenu.progCd.eq(program.getProgCd())).fetch();
                 delete(qAuthGroupMenu).where(qAuthGroupMenu.menuId.in(menuIds)).execute();
-                update(qMenu).setNull(qMenu.progCd).where(qMenu.progCd.eq(program.getProgCd()));
+                update(qMenu).setNull(qMenu.progCd).where(qMenu.progCd.eq(program.getProgCd())).execute();
+
+                delete(program.getId());
             }
 
             // 저장 처리
