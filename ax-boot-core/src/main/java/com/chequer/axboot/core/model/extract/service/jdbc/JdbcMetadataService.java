@@ -32,12 +32,28 @@ public class JdbcMetadataService {
         return dataSource.getConnection();
     }
 
+    public String getDatabaseType() {
+        return axBootContextConfig.getDataSourceConfig().getHibernateConfig().getDatabaseType().toLowerCase();
+    }
+
     public String getCatalog() {
         try {
             return getConnection().getCatalog().toString();
-        } catch (Exception e) {
+        } catch (Throwable e) {
         }
-        return "";
+        return null;
+    }
+
+    public String getSchema() {
+        if ("oracle".equals(getDatabaseType())) {
+            return axBootContextConfig.getDataSourceConfig().getUsername();
+        }
+
+        try {
+            return getConnection().getCatalog().toString();
+        } catch (Throwable e) {
+        }
+        return null;
     }
 
     public Database getDatabase() {
@@ -56,22 +72,7 @@ public class JdbcMetadataService {
             connection = getConnection();
             String[] types = {"TABLE"};
 
-            String schema = null;
-            String catalog = null;
-
-            try {
-                catalog = connection.getCatalog();
-            } catch (Throwable e) {
-                // ignore
-            }
-
-            try {
-                schema = connection.getSchema();
-            } catch (Throwable e) {
-                // ignore
-            }
-
-            ResultSet resultSet = connection.getMetaData().getTables(catalog, schema, "%", types);
+            ResultSet resultSet = connection.getMetaData().getTables(getCatalog(), getSchema(), "%", types);
             tables.addAll(new ColumnToBeanPropertyRowMapper<>(Table.class).mapRows(resultSet));
 
             for (Table table : tables) {
@@ -94,8 +95,7 @@ public class JdbcMetadataService {
         Table table = null;
         try {
             connection = getConnection();
-
-            ResultSet resultSet = connection.getMetaData().getTables(connection.getCatalog(), null, tableName, null);
+            ResultSet resultSet = connection.getMetaData().getTables(getCatalog(), getSchema(), tableName, null);
             if (resultSet.next()) {
                 table = new ColumnToBeanPropertyRowMapper<>(Table.class).mapRow(resultSet, 0);
                 table.setColumns(getColumns(tableName));
