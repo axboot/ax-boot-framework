@@ -1442,155 +1442,166 @@ axboot.gridBuilder = function () {
             lastIcon: '<i class="cqc-controller-next"></i>'
         }
     };
-    var preDefineColumns = {
-        "insDt": { width: 100, label: "등록일", align: "center" },
-        "compCd": { width: 70, label: "업체코드", align: "center" },
-        "compNm": { width: 110, label: "업체명", align: "left" },
-        "storCd": { width: 70, label: "매장코드", align: "center" },
-        "storNm": { width: 200, label: "매장명", align: "left" },
-        "userNm": { width: 100, label: "이름", align: "center" },
-        "itemCd": { width: 80, label: "품목코드", align: "center" },
-        "itemNm": { width: 150, label: "품목명", align: "left" },
-        "posItemNm": { width: 150, label: "POS단축명", align: "left" },
-        "delYn": {
-            width: 50, label: "삭제", align: "center", formatter: function formatter() {
-                return parent.COMMON_CODE["DEL_YN"].map[this.value];
-            }
-        },
-        "useYn": {
-            width: 70, label: "사용여부", align: "center", formatter: function formatter() {
-                return parent.COMMON_CODE["USE_YN"].map[this.value];
-            }
-        },
-        "posUseYn": {
-            width: 90, label: "포스사용여부", align: "center", formatter: function formatter() {
-                return parent.COMMON_CODE["USE_YN"].map[this.value];
-            }
-        },
-        "sort": { width: 50, label: "정렬", align: "center" },
-        "companyJson.대표자명": { width: 100, label: "대표자명", align: "center" },
-        "companyJson.사업자등록번호": {
-            label: "사업자등록번호",
-            width: 120,
-            align: "center",
-            formatter: "bizno"
-        },
-        "storeInfoJson.대표자명": { width: 100, label: "대표자명", align: "center" },
-        "storeInfoJson.사업자등록번호": {
-            label: "사업자등록번호",
-            width: 120,
-            align: "center",
-            formatter: "bizno"
-        },
-        "storeInfoJson.영업시작시간": {
-            label: "영업시작시간",
-            width: 100,
-            align: "center"
-        },
-        "storeInfoJson.영업종료시간": {
-            label: "영업종료시간",
-            width: 100,
-            align: "center"
-        },
-        "storeInfoJson.담당자": {
-            label: "담당자",
-            width: 70,
-            align: "center"
-        },
-        "storeInfoJson.연락처": {
-            label: "연락처",
-            width: 100,
-            align: "center"
-        },
-        "locale": {
-            width: 120, label: "국가", align: "center", formatter: function formatter() {
-                return parent.COMMON_CODE["LOCALE"].map[this.value];
-            }
-        },
-
-        "printerType": {
-            width: 100, label: "프린터 타입", align: "center",
-            formatter: function formatter() {
-                return parent.COMMON_CODE["PRINTER_TYPE"].map[this.value];
-            }
-        }
-    };
-    var preDefineEditor = {
-        "useYn": {
-            type: "select", config: {
-                columnKeys: {
-                    optionValue: "CD", optionText: "NM"
-                },
-                options: [{ CD: "Y", NM: "사용" }, { CD: "N", NM: "사용안함" }]
-            }
-        },
-        "checkYn": {
-            type: "checkbox", config: { trueValue: "Y", falseValue: "N" }
-        },
-        "menu-program-auth-checkYn": {
-            type: "checkbox", config: { trueValue: "Y", falseValue: "N" },
-            disabled: function disabled() {
-                return this.item["program_" + this.key] == "N";
-            }
-        },
-        "number": {
-            type: "number"
-        },
-        "text": {
-            type: "text"
-        },
-        "PRINTER_TYPE": function PRINTER_TYPE() {
-            return {
-                type: "select", config: {
-                    columnKeys: {
-                        optionValue: "code", optionText: "name"
-                    },
-                    options: parent.COMMON_CODE["PRINTER_TYPE"]
-                }
-            };
-        }
-    };
-    var preDefineEditorDisabled = {
-        "notCreated": function notCreated() {
-            return !this.item.__created__;
-        }
-    };
 
     return function (_config) {
         var myGridConfig = $.extend(true, {}, defaultGridConfig, _config);
 
         var convertColumn = function convertColumn(columns) {
+
             for (var i = 0, l = columns.length; i < l; i++) {
-                if (preDefineColumns[columns[i].key]) {
-                    columns[i] = $.extend({}, columns[i], preDefineColumns[columns[i].key]);
+                if (axboot.gridBuilder.preDefineColumns[columns[i].key]) {
+                    columns[i] = $.extend({}, columns[i], axboot.gridBuilder.preDefineColumns[columns[i].key]);
                 }
                 if (columns[i].columns) {
                     columns[i].columns = convertColumn(columns[i].columns);
                 }
                 if (ax5.util.isString(columns[i].editor)) {
-                    if (columns[i].editor in preDefineEditor) {
-                        if (ax5.util.isFunction(preDefineEditor[columns[i].editor])) {
-                            columns[i].editor = preDefineEditor[columns[i].editor]();
+                    if (columns[i].editor in axboot.gridBuilder.preDefineEditor) {
+                        if (ax5.util.isFunction(axboot.gridBuilder.preDefineEditor[columns[i].editor])) {
+                            columns[i].editor = axboot.gridBuilder.preDefineEditor[columns[i].editor]();
                         } else {
-                            columns[i].editor = $.extend({}, preDefineEditor[columns[i].editor]);
+                            columns[i].editor = $.extend({}, axboot.gridBuilder.preDefineEditor[columns[i].editor]);
                         }
                     }
                 }
 
                 if (columns[i].editor && ax5.util.isString(columns[i].editor.disabled)) {
-                    columns[i].editor.disabled = preDefineEditorDisabled[columns[i].editor.disabled];
+                    columns[i].editor.disabled = axboot.gridBuilder.preDefineEditorDisabled[columns[i].editor.disabled];
                 }
             }
             return columns;
         };
+
         myGridConfig.columns = convertColumn(myGridConfig.columns);
         myGridConfig.page.onChange = function () {
-            myGridConfig.onPageChange.call(this, this.page.selectPage);
+            myGridConfig.onPageChange(this.page.selectPage);
         };
 
         return new ax5.ui.grid(myGridConfig);
     };
 }();
+
+axboot.gridBuilder.preDefineColumns = {
+    "insDt": { width: 100, label: "등록일", align: "center" },
+    "compCd": { width: 70, label: "업체코드", align: "center" },
+    "compNm": { width: 110, label: "업체명", align: "left" },
+    "storCd": { width: 70, label: "매장코드", align: "center" },
+    "storNm": { width: 200, label: "매장명", align: "left" },
+    "userNm": { width: 100, label: "이름", align: "center" },
+    "itemCd": { width: 80, label: "품목코드", align: "center" },
+    "itemNm": { width: 150, label: "품목명", align: "left" },
+    "posItemNm": { width: 150, label: "POS단축명", align: "left" },
+    "delYn": {
+        width: 50, label: "삭제", align: "center", formatter: function formatter() {
+            return parent.COMMON_CODE["DEL_YN"].map[this.value];
+        }
+    },
+    "useYn": {
+        width: 70, label: "사용여부", align: "center", formatter: function formatter() {
+            return parent.COMMON_CODE["USE_YN"].map[this.value];
+        }
+    },
+    "posUseYn": {
+        width: 90, label: "포스사용여부", align: "center", formatter: function formatter() {
+            return parent.COMMON_CODE["USE_YN"].map[this.value];
+        }
+    },
+    "sort": { width: 50, label: "정렬", align: "center" },
+    "companyJson.대표자명": { width: 100, label: "대표자명", align: "center" },
+    "companyJson.사업자등록번호": {
+        label: "사업자등록번호",
+        width: 120,
+        align: "center",
+        formatter: "bizno"
+    },
+    "storeInfoJson.대표자명": { width: 100, label: "대표자명", align: "center" },
+    "storeInfoJson.사업자등록번호": {
+        label: "사업자등록번호",
+        width: 120,
+        align: "center",
+        formatter: "bizno"
+    },
+    "storeInfoJson.영업시작시간": {
+        label: "영업시작시간",
+        width: 100,
+        align: "center"
+    },
+    "storeInfoJson.영업종료시간": {
+        label: "영업종료시간",
+        width: 100,
+        align: "center"
+    },
+    "storeInfoJson.담당자": {
+        label: "담당자",
+        width: 70,
+        align: "center"
+    },
+    "storeInfoJson.연락처": {
+        label: "연락처",
+        width: 100,
+        align: "center"
+    }
+};
+
+// 컬럼 확장 구문
+axboot.gridBuilder.preDefineColumns["locale"] = function () {
+    return {
+        width: 120, label: "국가", align: "center", formatter: function formatter() {
+            return parent.COMMON_CODE["LOCALE"].map[this.value];
+        }
+    };
+}();
+
+axboot.gridBuilder.preDefineColumns["printerType"] = function () {
+    return {
+        width: 100, label: "프린터 타입", align: "center",
+        formatter: function formatter() {
+            return parent.COMMON_CODE["PRINTER_TYPE"].map[this.value];
+        }
+    };
+}();
+
+axboot.gridBuilder.preDefineEditor = {
+    "useYn": {
+        type: "select", config: {
+            columnKeys: {
+                optionValue: "CD", optionText: "NM"
+            },
+            options: [{ CD: "Y", NM: "사용" }, { CD: "N", NM: "사용안함" }]
+        }
+    },
+    "checkYn": {
+        type: "checkbox", config: { trueValue: "Y", falseValue: "N" }
+    },
+    "menu-program-auth-checkYn": {
+        type: "checkbox", config: { trueValue: "Y", falseValue: "N" },
+        disabled: function disabled() {
+            return this.item["program_" + this.key] == "N";
+        }
+    },
+    "number": {
+        type: "number"
+    },
+    "text": {
+        type: "text"
+    },
+    "PRINTER_TYPE": function PRINTER_TYPE() {
+        return {
+            type: "select", config: {
+                columnKeys: {
+                    optionValue: "code", optionText: "name"
+                },
+                options: parent.COMMON_CODE["PRINTER_TYPE"]
+            }
+        };
+    }
+};
+
+axboot.gridBuilder.preDefineEditorDisabled = {
+    "notCreated": function notCreated() {
+        return !this.item.__created__;
+    }
+};
 
 ax5.ui.grid.formatter["bizno"] = function () {
     var val = (this.value || "").replace(/\D/g, "");
@@ -1617,6 +1628,7 @@ ax5.ui.grid.formatter["phone"] = function () {
     });
     return returnValue;
 };
+
 /**
  * @Object {Object} axboot.modal
  */
@@ -1704,10 +1716,15 @@ axboot.modal = function () {
      * ```
      */
     var open = function open(modalConfig) {
+
         modalConfig = $.extend(true, {}, defaultOption, modalConfig);
         if (modalConfig.modalType) {
-            if (axboot.def.modal && axboot.def.modal[modalConfig.modalType]) {
-                $.extend(true, modalConfig, axboot.def.modal[modalConfig.modalType]);
+
+            if (axboot.def.MODAL && axboot.def.MODAL[modalConfig.modalType]) {
+                if (modalConfig.param) {
+                    $.extend(true, modalConfig, { iframe: { param: modalConfig.param } });
+                }
+                modalConfig = $.extend(true, {}, modalConfig, axboot.def.MODAL[modalConfig.modalType]);
             }
         }
 
@@ -1715,15 +1732,6 @@ axboot.modal = function () {
 
         this.modalCallback = modalConfig.callback;
         this.modalSendData = modalConfig.sendData;
-
-        if (modalConfig.iframe && ax5.util.isArray(modalConfig.iframe.url)) {
-            if (modalConfig.iframe.url[0] in axboot.def["MODAL"]) {
-                modalConfig.iframe.url[0] = axboot.def["MODAL"][modalConfig.iframe.url[0]];
-                modalConfig.iframe.url = modalConfig.iframe.url.join('/');
-            } else {
-                modalConfig.iframe.url = modalConfig.iframe.url.join('/');
-            }
-        }
 
         window.axModal.open(modalConfig);
     };

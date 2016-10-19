@@ -13,9 +13,32 @@
         };
 
         axboot.def["MODAL"] = {
-            "zipcode": "/jsp/common/zipcode.jsp",
-            "sample-modal": "modal.jsp",
-            "system-config-common-code-modal": "/jsp/system/system-config-common-code-modal.jsp"
+            "ZIPCODE": {
+                width: 500,
+                height: 500,
+                iframe: {
+                    url: "/jsp/common/zipcode.jsp"
+                },
+                header: {
+                    title: "우편번호 찾기"
+                }
+            },
+            "SAMPLE-MODAL": {
+                width: 500,
+                height: 500,
+                iframe: {
+                    url: "/jsp/_samples/modal.jsp"
+                },
+                header: false
+            },
+            "COMMON_CODE_MODAL": {
+                width: 600,
+                height: 400,
+                iframe: {
+                    url: "/jsp/system/system-config-common-code-modal.jsp"
+                },
+                header: false
+            }
         };
     }
 })();
