@@ -65,7 +65,7 @@ public class FilterUtils {
             return lists;
         }
 
-        return lists.parallelStream()
+        return lists.stream()
                 .filter(t -> {
                     try {
                         Annotation annotation = t.getClass().getAnnotation(Searchable.class);
