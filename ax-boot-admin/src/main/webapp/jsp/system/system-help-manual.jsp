@@ -29,7 +29,7 @@
     <jsp:body>
 
         <ax:page-buttons>
-            <button type="button" class="btn btn-default" data-page-btn="form-download"><i class="cqc-download"></i> 양식 다운로드</button>
+            <button type="button" class="btn btn-default" data-page-btn="form-download"><i class="cqc-download"></i> 목차 양식 다운로드</button>
         </ax:page-buttons>
 
         <div role="page-header">
@@ -70,15 +70,13 @@
 
                 <div data-fit-height-aside="tree-view-01">
                     <div class="H10"></div>
-                    <form name="uploadForm" action="/ckeditor/uploadImage" method="POST" enctype="multipart/form-data">
-                        <input type="hidden" name="targetId" value="${targetId}"/>
-                        <input type="hidden" name="targetType" value="CKEDITOR"/>
-
+                    <form name="manualUploadListForm" method="POST" enctype="multipart/form-data">
                         <ax:tbl clazz="ax-search-tbl" minWidth="500px">
                             <ax:tr>
                                 <ax:td label='목차업로드' width="100%" labelStyle="background: #616161;color: #fff;">
+                                    <input type="hidden" name="manualGrpCd" value=""/>
                                     <div class="input-group">
-                                        <input type="file" name="upload" class="form-control" />
+                                        <input type="file" name="file" class="form-control" />
                                         <span class="input-group-btn">
                                             <button type="submit" name="Upload" class="btn btn-primary"><i class="cqc-upload"></i> 업로드</button>
                                         </span>
@@ -119,26 +117,23 @@
                     <div data-fit-height-content="form-view-01">
                         <textarea data-ax-path="content" id="editor1" style="opacity: 0;"></textarea>
                     </div>
-
                 </ax:form>
 
-                <form name="uploadForm" action="/ckeditor/uploadImage" method="POST" enctype="multipart/form-data" data-fit-height-aside="form-view-01">
-                    <input type="hidden" name="targetId" value="${targetId}"/>
-                    <input type="hidden" name="targetType" value="CKEDITOR"/>
+                <form name="manualUploadForm" method="POST" enctype="multipart/form-data" data-fit-height-aside="form-view-01">
+                    <input type="hidden" name="manualGrpCd" value=""/>
 
                     <ax:tbl clazz="ax-search-tbl" minWidth="500px">
                         <ax:tr>
                             <ax:td label="원본파일" width="350px">
                                 <div class="input-group">
-                                    <input type="file" name="upload" class="form-control" />
+                                    <input type="file" name="file" class="form-control" />
                                     <span class="input-group-btn">
                                         <button type="submit" name="Upload" class="btn btn-primary"><i class="cqc-upload"></i> 업로드</button>
                                     </span>
                                 </div><!-- /input-group -->
                             </ax:td>
                             <ax:td label="등록된 파일" width="300px">
-
-                                <button type="button" class="btn btn-default"><small>등록된 파일이 없습니다.</small></button>
+                                <button type="button" class="btn btn-default" data-form-view-01-btn="file"><small>등록된 파일이 없습니다.</small></button>
                             </ax:td>
                         </ax:tr>
                     </ax:tbl>
