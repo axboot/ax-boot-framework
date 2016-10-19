@@ -79,6 +79,7 @@ var ACTIONS = axboot.actionExtend(fnObj, {
             list: caller.treeView01.getData(),
             deletedList: caller.treeView01.getDeletedList()
         };
+        var searchData = caller.searchView.getData();
 
         axboot
             .call({
@@ -93,7 +94,7 @@ var ACTIONS = axboot.actionExtend(fnObj, {
             .call({
                 type: "GET",
                 url: "/api/v2/menu",
-                data: caller.searchView.getData(),
+                data: searchData,
                 callback: function (res) {
                     caller.treeView01.setData(searchData, res.list);
                 }
@@ -199,9 +200,6 @@ fnObj.pageStart = function () {
                 });
                 this.programList = programList;
             }
-        })
-        .call(function () {
-            this.something = 1;
         })
         .call({
             type: "GET", url: "/api/v1/commonCodes", data: {groupCd: "AUTH_GROUP", useYn: "Y"},
@@ -386,9 +384,6 @@ fnObj.treeView01 = axboot.viewExtend(axboot.treeView, {
         }, []);
     },
     setData: function (_searchData, _tree) {
-        
-        console.log(_searchData, _tree);
-        
         this.param = $.extend({}, _searchData);
         this.target.setData(_tree);
     },
@@ -487,6 +482,26 @@ fnObj.formView01 = axboot.viewExtend(axboot.formView, {
 
         this.combobox = $('[data-ax5combobox]').ax5combobox({
             options: this.programList,
+            onExpand: function (callBack) {
+                axboot
+                    .ajax({
+                        type: "GET", url: "/api/v1/programs", data: "",
+                        callback: function (res) {
+                            var programList = [];
+                            res.list.forEach(function (n) {
+                                programList.push({
+                                    value: n.progCd, text: n.progNm + "(" + n.progCd + ")",
+                                    progCd: n.progCd, progNm: n.progNm,
+                                    data: n
+                                });
+                            });
+                            _this.programList = programList;
+                            callBack({
+                                options: programList
+                            });
+                        }, options: {nomask: true}
+                    });
+            },
             onChange: function () {
                 if (this.value[0]) {
                     _this.model.set("progCd", this.value[0].progCd);
