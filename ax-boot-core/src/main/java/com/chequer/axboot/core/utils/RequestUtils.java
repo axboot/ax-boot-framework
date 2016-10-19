@@ -1,6 +1,5 @@
 package com.chequer.axboot.core.utils;
 
-import com.fasterxml.jackson.databind.JsonNode;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
 
@@ -201,20 +200,23 @@ public class RequestUtils {
         return "";
     }
 
-    public JsonNode getRequestBodyJson() {
+    public String getRequestBodyJson() {
         Map<String, String> requestBodyParameterMap = getRequestBodyParameterMap();
 
         if (requestBodyParameterMap.size() > 0) {
-            return JsonUtils.fromJson(requestBodyParameterMap);
+            return JsonUtils.fromJson(requestBodyParameterMap).toString();
         }
 
         String requestBody = getRequestBody();
 
-        if (!StringUtils.isEmpty(requestBody)) {
-            return JsonUtils.fromJson(requestBody);
+        try {
+            if (!StringUtils.isEmpty(requestBody)) {
+                return JsonUtils.fromJson(requestBody).toString();
+            }
+        } catch (Exception e) {
         }
 
-        return null;
+        return requestBody;
     }
 
     public String getRequestUri() {
