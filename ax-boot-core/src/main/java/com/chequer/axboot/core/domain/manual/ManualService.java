@@ -274,4 +274,14 @@ public class ManualService extends BaseService<Manual, Long> {
 
         return "";
     }
+
+    public Manual getManual(Long id) {
+        Manual manual = findOne(id);
+
+        if (manual.getFileId() != null) {
+            manual.setFile(commonFileService.get("MANUAL", Long.toString(id)));
+        }
+
+        return manual;
+    }
 }

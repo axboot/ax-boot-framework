@@ -39,7 +39,7 @@ public class ManualController extends BaseController {
 
     @RequestMapping(value = "/{id}", method = RequestMethod.GET, produces = APPLICATION_JSON)
     public Manual manualDetail(@PathVariable Long id) {
-        return manualService.findOne(id);
+        return manualService.getManual(id);
     }
 
     @RequestMapping(value = "/detail", method = {RequestMethod.PUT}, produces = APPLICATION_JSON)

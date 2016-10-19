@@ -3,6 +3,7 @@ package com.chequer.axboot.core.domain.manual;
 import com.chequer.axboot.core.annotations.ColumnPosition;
 import com.chequer.axboot.core.annotations.Comment;
 import com.chequer.axboot.core.domain.BaseJpaModel;
+import com.chequer.axboot.core.domain.file.CommonFile;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
@@ -78,6 +79,9 @@ public class Manual extends BaseJpaModel<Long> implements Cloneable {
 
     @Transient
     private boolean open = false;
+
+    @Transient
+    private CommonFile file;
 
     @Transient
     private List<Manual> children = new ArrayList<>();
