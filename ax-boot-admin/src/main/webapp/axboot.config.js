@@ -41,4 +41,8 @@
             }
         };
     }
+
+    axboot.getURL = function(url){
+        return url;
+    }
 })();

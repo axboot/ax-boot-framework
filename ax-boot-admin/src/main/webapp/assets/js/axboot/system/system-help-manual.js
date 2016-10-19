@@ -7,6 +7,8 @@ var ACTIONS = axboot.actionExtend(fnObj, {
             url: ["manual"],
             data: caller.searchView.getData(),
             callback: function (res) {
+                caller.uploadView01.setData(searchData);
+                caller.uploadView02.setData(searchData);
                 caller.treeView01.setData(searchData, res.list);
             }
         });
@@ -59,12 +61,15 @@ var ACTIONS = axboot.actionExtend(fnObj, {
             return;
         }
 
+        caller.uploadView02.setManualId(data.manualId);
+
         axboot.ajax({
             type: "GET",
             url: ["manual", data.manualId],
             data: "",
             callback: function (res) {
                 caller.formView01.setData(res);
+                caller.uploadView02.setData(res);
             }
         });
     },
@@ -88,6 +93,23 @@ var ACTIONS = axboot.actionExtend(fnObj, {
                     }
                 }
                 this.close();
+            }
+        });
+    },
+    FORM_DOWNLOAD: function (caller, act, data) {
+        location.href = "/api/v1/manual/excel/downloadForm";
+    },
+    UPLOAD_1_OK: function (caller, act, data) {
+        window.location.reload();
+    },
+    UPLOAD_2_OK: function (caller, act, data) {
+        axboot.ajax({
+            type: "GET",
+            url: ["manual", caller.uploadView02.manualId],
+            data: "",
+            callback: function (res) {
+                // caller.formView01.setData(res);
+                caller.uploadView02.setData(res);
             }
         });
     },
@@ -128,6 +150,8 @@ fnObj.pageStart = function () {
             _this.searchView.initView();
             _this.treeView01.initView();
             _this.formView01.initView();
+            _this.uploadView01.initView();
+            _this.uploadView02.initView();
 
             ACTIONS.dispatch(ACTIONS.PAGE_SEARCH);
         });
@@ -147,6 +171,9 @@ fnObj.pageButtonView = axboot.viewExtend({
             },
             "save": function () {
                 ACTIONS.dispatch(ACTIONS.PAGE_SAVE);
+            },
+            "form-download": function () {
+                ACTIONS.dispatch(ACTIONS.FORM_DOWNLOAD);
             }
         });
     }
@@ -423,5 +450,132 @@ fnObj.formView01 = axboot.viewExtend(axboot.formView, {
     clear: function () {
         this.mask.open();
         this.model.setModel(this.getDefaultData());
+    }
+});
+
+/**
+ * uploadView01
+ */
+fnObj.uploadView01 = axboot.viewExtend(axboot.commonView, {
+    initView: function () {
+        this.target = document["manualUploadListForm"];
+
+        $(this.target).attr("onsubmit", "return fnObj.uploadView01.onSubmit();");
+    },
+    setData: function (_data) {
+        for (var k in _data) {
+            if (this.target[k]) this.target[k].value = _data[k];
+        }
+    },
+    onSubmit: function () {
+        if (this.target.file.value == "") {
+            alert("파일을 선택해주세요.");
+            return false;
+        }
+
+        if (!confirm("목차 업로드시에 \"기존에 구성한 목차가 모두 삭제되고, 업로드한 목차로 재구성됩니다. 업로드하시겠습니까?\"")) return false;
+
+        this.upload();
+        return false;
+    },
+    upload: function () {
+        axMask.open();
+        var target_name = "submitwin";
+
+        // iframe 생성
+        var iframe = $('<iframe src="javascript:false;" name="' + target_name + '" style="display:none;"></iframe>');
+        $(document.body).append(iframe);
+
+        // onload 이벤트 핸들러
+        // action에서 파일을 받아 처리한 결과값을 텍스트로 출력한다고 가정하고 iframe의 내부 데이터를 결과값으로 callback 호출
+        iframe.load(function () {
+            var doc = this.contentWindow ? this.contentWindow.document : (this.contentDocument ? this.contentDocument : this.document);
+            var root = doc.documentElement ? doc.documentElement : doc.body;
+            var result = root.textContent ? root.textContent : root.innerText;
+            var res = JSON.parse(result);
+
+            if (res.error) {
+                alert(res.error);
+            }
+            else {
+                ACTIONS.dispatch(ACTIONS.UPLOAD_1_OK);
+            }
+            iframe.remove();
+            axMask.close();
+        });
+        this.target.target = target_name;
+        this.target.action = axboot.getURL("/api/v1/manual/excel/uploadList");
+        this.target.submit();
+    }
+});
+
+
+/**
+ * uploadView02
+ */
+fnObj.uploadView02 = axboot.viewExtend(axboot.commonView, {
+    manualId: "",
+    initView: function () {
+        this.target = document["manualUploadForm"];
+
+        $(this.target).attr("onsubmit", "return fnObj.uploadView02.onSubmit();");
+    },
+    setData: function (_data) {
+        this.target.file.value = "";
+
+        if (_data.file) {
+            $('[data-form-view-01-btn="file"]').html('<i class="cqc-download"></i> ' + _data.file.fileNm);
+            $('[data-form-view-01-btn="file"]').on("click", (function () {
+                var url = _data.file.download;
+                return function () {
+                    location.href = url;
+                }
+            })());
+        } else {
+            $('[data-form-view-01-btn="file"]').html('<small>등록된 파일이 없습니다.</small>');
+            $('[data-form-view-01-btn="file"]').off("click");
+        }
+    },
+    setManualId: function (manualId) {
+        this.manualId = manualId;
+    },
+    onSubmit: function () {
+        if (this.target.file.value == "") {
+            alert("파일을 선택해주세요.");
+            return false;
+        }
+
+        this.upload();
+        return false;
+    },
+    upload: function () {
+        axMask.open();
+        var target_name = "submitwin";
+
+        // iframe 생성
+        var iframe = $('<iframe src="javascript:false;" name="' + target_name + '" style="display:none;"></iframe>');
+        $(document.body).append(iframe);
+
+        // onload 이벤트 핸들러
+        // action에서 파일을 받아 처리한 결과값을 텍스트로 출력한다고 가정하고 iframe의 내부 데이터를 결과값으로 callback 호출
+        iframe.load(function () {
+            var doc = this.contentWindow ? this.contentWindow.document : (this.contentDocument ? this.contentDocument : this.document);
+            var root = doc.documentElement ? doc.documentElement : doc.body;
+            var result = root.textContent ? root.textContent : root.innerText;
+            var res = JSON.parse(result);
+
+            if (res.error) {
+                alert(res.error);
+            }
+            else {
+                ACTIONS.dispatch(ACTIONS.UPLOAD_2_OK);
+            }
+            iframe.remove();
+            axMask.close();
+        });
+
+        this.target.target = target_name;
+        this.target.action = axboot.getURL("/api/v1/manual/" + this.manualId + "/file");
+        this.target.submit();
     }
 });
