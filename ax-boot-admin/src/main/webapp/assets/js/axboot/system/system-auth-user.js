@@ -3,10 +3,12 @@ var ACTIONS = axboot.actionExtend(fnObj, {
     PAGE_SEARCH: function (caller, act, data) {
         axboot.ajax({
             type: "GET",
-            url: "/api/v1/users",
+            url: ["users"],
             data: caller.searchView.getData(),
             callback: function (res) {
                 caller.gridView01.setData(res);
+                caller.formView01.clear();
+                ACTIONS.dispatch(ACTIONS.ROLE_GRID_DATA_INIT, {userCd: "", roleList: []});
             }
         });
 
@@ -16,7 +18,7 @@ var ACTIONS = axboot.actionExtend(fnObj, {
         if (caller.formView01.validate()) {
             axboot.ajax({
                 type: "PUT",
-                url: "/api/v1/users",
+                url: ["users"],
                 data: JSON.stringify([caller.formView01.getData()]),
                 callback: function (res) {
                     ACTIONS.dispatch(ACTIONS.PAGE_SEARCH);
@@ -30,7 +32,7 @@ var ACTIONS = axboot.actionExtend(fnObj, {
     ITEM_CLICK: function (caller, act, data) {
         axboot.ajax({
             type: "GET",
-            url: "/api/v1/users",
+            url: ["users"],
             data: {userCd: data.userCd},
             callback: function (res) {
                 //ACTIONS.dispatch(ACTIONS.PAGE_SEARCH);
@@ -77,7 +79,9 @@ fnObj.pageStart = function () {
 
     axboot
         .call({
-            type: "GET", url: "/api/v1/commonCodes", data: {groupCd: "USER_ROLE", useYn: "Y"},
+            type: "GET",
+            url: ["commonCodes"],
+            data: {groupCd: "USER_ROLE", useYn: "Y"},
             callback: function (res) {
                 var userRole = [];
                 res.list.forEach(function (n) {
@@ -112,10 +116,10 @@ fnObj.pageResize = function () {
 fnObj.pageButtonView = axboot.viewExtend({
     initView: function () {
         axboot.buttonClick(this, "data-page-btn", {
-            "search": function(){
+            "search": function () {
                 ACTIONS.dispatch(ACTIONS.PAGE_SEARCH);
             },
-            "save": function(){
+            "save": function () {
                 ACTIONS.dispatch(ACTIONS.PAGE_SAVE);
             }
         });
@@ -204,7 +208,7 @@ fnObj.formView01 = axboot.viewExtend(axboot.formView, {
         this.initEvent();
 
         axboot.buttonClick(this, "data-form-view-01-btn", {
-            "form-clear": function(){
+            "form-clear": function () {
                 axDialog.confirm({
                     msg: "정말 양식을 초기화 하시겠습니까?"
                 }, function () {

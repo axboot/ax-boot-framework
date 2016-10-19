@@ -19,6 +19,7 @@
     </script>
     <script type="text/javascript" src="<c:url value='/assets/js/plugins.min.js' />"></script>
     <script type="text/javascript" src="<c:url value='/assets/js/axboot/dist/axboot.js' />"></script>
+    <script type="text/javascript" src="<c:url value='/axboot.config.js' />"></script>
     <jsp:invoke fragment="css"/>
     <jsp:invoke fragment="js"/>
 </head>

@@ -4,7 +4,7 @@ var ACTIONS = axboot.actionExtend(fnObj, {
         var searchData = caller.searchView.getData();
         axboot.ajax({
             type: "GET",
-            url: "/api/v1/manual",
+            url: ["manual"],
             data: caller.searchView.getData(),
             callback: function (res) {
                 caller.treeView01.setData(searchData, res.list);
@@ -22,7 +22,7 @@ var ACTIONS = axboot.actionExtend(fnObj, {
         axboot
             .call({
                 type: "PUT",
-                url: "/api/v1/manual",
+                url: ["manual"],
                 data: JSON.stringify(obj),
                 callback: function () {
                     caller.treeView01.clearDeletedList();
@@ -35,13 +35,14 @@ var ACTIONS = axboot.actionExtend(fnObj, {
                 if (data.manualId) {
                     axboot.ajax({
                         type: "PUT",
-                        url: "/api/v1/manual/detail",
+                        url: ["manual", "detail"],
                         data: JSON.stringify(data),
                         callback: function (res) {
                             axToast.push("매뉴얼 내용이 저장 되었습니다");
                             ACTIONS.dispatch(ACTIONS.PAGE_SEARCH);
                         }
-                    });
+                    })
+                    ;
                 } else {
                     ACTIONS.dispatch(ACTIONS.PAGE_SEARCH);
                 }
@@ -60,7 +61,7 @@ var ACTIONS = axboot.actionExtend(fnObj, {
 
         axboot.ajax({
             type: "GET",
-            url: "/api/v1/manual/" + data.manualId,
+            url: ["manual", data.manualId],
             data: "",
             callback: function (res) {
                 caller.formView01.setData(res);
@@ -78,7 +79,7 @@ var ACTIONS = axboot.actionExtend(fnObj, {
             width: 600,
             height: 400,
             iframe: {
-                url: "/jsp/system/system-config-common-code-modal.jsp",
+                url: ["system-config-common-code-modal"],
                 param: "GROUP_CD=MANUAL_GROUP&GROUP_NM=매뉴얼 그룹"
             },
             header: false,
@@ -112,7 +113,7 @@ fnObj.pageStart = function () {
     var _this = this;
     axboot
         .call({
-            type: "GET", url: "/api/v1/commonCodes", data: {groupCd: "MANUAL_GROUP", useYn: "Y"},
+            type: "GET", url: ["commonCodes"], data: {groupCd: "MANUAL_GROUP", useYn: "Y"},
             callback: function (res) {
                 var manualGroup = [];
                 res.list.forEach(function (n) {

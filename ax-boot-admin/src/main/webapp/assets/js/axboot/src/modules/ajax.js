@@ -56,7 +56,19 @@ axboot.ajax = (function () {
         httpOpts = {
             contentType: options.contentType
         };
-        http.url = CONTEXT_PATH + http.url;
+
+        var url = "";
+        if (ax5.util.isArray(http.url)) {
+            if (http.url[0] in axboot.def["API"]) {
+                http.url[0] = axboot.def["API"][http.url[0]];
+                http.url = CONTEXT_PATH + http.url.join('/');
+            } else {
+                http.url = CONTEXT_PATH + http.url.join('/');
+            }
+        } else {
+            http.url = CONTEXT_PATH + http.url;
+        }
+
         $.extend(http, httpOpts);
 
         callback = http.callback;
@@ -78,7 +90,7 @@ axboot.ajax = (function () {
                         $('[data-ax-path="' + data.error.requiredKey + '"]').focus();
                     }
                 }
-            }else{
+            } else {
                 var args = [].concat($.makeArray(arguments));
                 if (callback) callback.apply(this, args); // callback
             }

@@ -3,7 +3,7 @@ var ACTIONS = axboot.actionExtend(fnObj, {
     PAGE_SEARCH: function (caller, act, data) {
         axboot.ajax({
             type: "GET",
-            url: "/api/v1/commonCodes",
+            url: ["commonCodes"],
             data: caller.searchView.getData(),
             callback: function (res) {
                 caller.gridView01.setData(res);
@@ -19,7 +19,7 @@ var ACTIONS = axboot.actionExtend(fnObj, {
         axboot
             .call({
                 type: "PUT",
-                url: "/api/v1/commonCodes",
+                url: ["commonCodes"],
                 data: JSON.stringify((function () {
                     var saveList = [].concat(caller.gridView01.getData("modified"));
                     saveList = saveList.concat(caller.gridView01.getData("deleted"));

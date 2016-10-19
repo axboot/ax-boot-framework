@@ -3,6 +3,7 @@
 <%@ taglib prefix="ax" tagdir="/WEB-INF/tags" %>
 
 <ax:set key="title" value="${pageName}"/>
+<ax:set key="page_auto_height" value="true"/>
 
 <ax:layout name="modal">
     <jsp:attribute name="js">

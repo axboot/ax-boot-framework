@@ -3,7 +3,7 @@ var ACTIONS = axboot.actionExtend(fnObj, {
     PAGE_SEARCH: function (caller, act, data) {
         axboot.ajax({
             type: "GET",
-            url: "/api/v1/samples/parent",
+            url: ["samples", "parent"],
             data: caller.searchView.getData(),
             callback: function (res) {
                 caller.gridView01.setData(res);
@@ -25,13 +25,13 @@ var ACTIONS = axboot.actionExtend(fnObj, {
 
             axboot
                 .call({
-                    type: "PUT", url: "/api/v1/samples/parent", data: JSON.stringify([parentData]),
+                    type: "PUT", url: ["samples", "parent"], data: JSON.stringify([parentData]),
                     callback: function (res) {
 
                     }
                 })
                 .call({
-                    type: "PUT", url: "/api/v1/samples/child", data: JSON.stringify(childList),
+                    type: "PUT", url: ["samples", "child"], data: JSON.stringify(childList),
                     callback: function (res) {
 
                     }
@@ -55,7 +55,7 @@ var ACTIONS = axboot.actionExtend(fnObj, {
         caller.formView01.setData(data);
         axboot.ajax({
             type: "GET",
-            url: "/api/v1/samples/child",
+            url: ["samples", "child"],
             data: "parentKey=" + data.key,
             callback: function (res) {
                 caller.gridView02.setData(res);

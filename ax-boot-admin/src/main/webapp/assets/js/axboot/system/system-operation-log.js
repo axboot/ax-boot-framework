@@ -8,7 +8,7 @@ var ACTIONS = axboot.actionExtend(fnObj, {
 
         axboot.ajax({
             type: "GET",
-            url: "/api/v1/errorLogs",
+            url: ["errorLogs"],
             data: caller.searchView.getData(),
             callback: function (res) {
                 caller.gridView01.setData(res);
@@ -22,7 +22,7 @@ var ACTIONS = axboot.actionExtend(fnObj, {
 
         axboot.ajax({
             type: "PUT",
-            url: "/api/v1/programs",
+            url: ["errorLogs"],
             data: JSON.stringify(saveList),
             callback: function (res) {
                 ACTIONS.dispatch(ACTIONS.PAGE_SEARCH);
@@ -46,7 +46,7 @@ var ACTIONS = axboot.actionExtend(fnObj, {
             if (pars = delete_queue.shift()) {
                 axboot.ajax({
                     type: "DELETE",
-                    url: "/api/v1/errorLogs/" + pars.id,
+                    url: ["errorLogs", pars.id],
                     data: "",
                     callback: function (res) {
                         delQueue();
@@ -70,7 +70,7 @@ var ACTIONS = axboot.actionExtend(fnObj, {
         if (!confirm("정말 삭제하시겠습니까?")) return;
         axboot.ajax({
             type: "DELETE",
-            url: "/api/v1/errorLogs/events/all",
+            url: ["errorLogs", "events/all"],
             data: "",
             callback: function (res) {
                 axToast.push("삭제 처리 되었습니다.");
@@ -130,7 +130,7 @@ fnObj.searchView = axboot.viewExtend(axboot.searchView, {
     getData: function () {
         return {
             pageNumber: this.pageNumber,
-            pageSize: this.pageSize,
+            pageSize: 10, //this.pageSize,
             filter: this.filter.val(),
             sort: "id,desc"
         }

@@ -3,7 +3,7 @@ var ACTIONS = axboot.actionExtend(fnObj, {
     PAGE_SEARCH: function (caller, act, data) {
         axboot.ajax({
             type: "GET",
-            url: "/api/v1/samples/parent",
+            url: ["samples", "parent"],
             data: caller.searchView.getData(),
             callback: function (res) {
                 caller.gridView01.setData(res);
@@ -25,13 +25,13 @@ var ACTIONS = axboot.actionExtend(fnObj, {
 
             axboot
                 .call({
-                    type: "PUT", url: "/api/v1/samples/parent", data: JSON.stringify([parentData]),
+                    type: "PUT", url: ["samples", "parent"], data: JSON.stringify([parentData]),
                     callback: function (res) {
 
                     }
                 })
                 .call({
-                    type: "PUT", url: "/api/v1/samples/child", data: JSON.stringify(childList),
+                    type: "PUT", url: ["samples", "child"], data: JSON.stringify(childList),
                     callback: function (res) {
 
                     }
@@ -58,7 +58,7 @@ var ACTIONS = axboot.actionExtend(fnObj, {
             width: 500,
             height: 600,
             iframe: {
-                url: "/jsp/common/zipcode.jsp"
+                url: ["zipcode"]
             },
             header: {
                 title: '<i class="cqc-magnifier"></i> 우편번호 찾기'
@@ -77,7 +77,7 @@ var ACTIONS = axboot.actionExtend(fnObj, {
             width: 600,
             height: 400,
             iframe: {
-                url: "modal.jsp"
+                url: ["sample-modal"]
             },
             header: false,
             callback: function (data) {

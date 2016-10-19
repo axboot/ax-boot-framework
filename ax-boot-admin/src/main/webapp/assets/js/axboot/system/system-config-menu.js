@@ -4,7 +4,7 @@ var ACTIONS = axboot.actionExtend(fnObj, {
         var searchData = caller.searchView.getData();
         axboot.ajax({
             type: "GET",
-            url: "/api/v2/menu",
+            url: ["menu"],
             data: caller.searchView.getData(),
             callback: function (res) {
                 caller.treeView01.setData(searchData, res.list);
@@ -20,7 +20,7 @@ var ACTIONS = axboot.actionExtend(fnObj, {
         };
         axboot.ajax({
             type: "PUT",
-            url: "/api/v2/menu",
+            url: ["menu"],
             data: JSON.stringify(obj),
             callback: function (res) {
                 caller.treeView01.clearDeletedList();
@@ -42,7 +42,7 @@ var ACTIONS = axboot.actionExtend(fnObj, {
             if (formData.progCd) {
                 axboot.ajax({
                     type: "PUT",
-                    url: "/api/v2/menu/auth",
+                    url: ["menu", "auth"],
                     data: JSON.stringify(caller.gridView01.getData()),
                     callback: function (res) {
                         axToast.push("메뉴 권한그룹 정보가 저장 되었습니다");
@@ -84,7 +84,7 @@ var ACTIONS = axboot.actionExtend(fnObj, {
         axboot
             .call({
                 type: "PUT",
-                url: "/api/v2/menu",
+                url: ["menu"],
                 data: JSON.stringify(obj),
                 callback: function (res) {
                     caller.treeView01.clearDeletedList();
@@ -93,7 +93,7 @@ var ACTIONS = axboot.actionExtend(fnObj, {
             })
             .call({
                 type: "GET",
-                url: "/api/v2/menu",
+                url: ["menu"],
                 data: searchData,
                 callback: function (res) {
                     caller.treeView01.setData(searchData, res.list);
@@ -107,7 +107,7 @@ var ACTIONS = axboot.actionExtend(fnObj, {
     SEARCH_AUTH: function (caller, act, data) {
         axboot.ajax({
             type: "GET",
-            url: "/api/v2/menu/auth",
+            url: ["menu", "auth"],
             data: data,
             callback: function (res) {
                 var list = [];

@@ -8,7 +8,7 @@
     requestUtils.setAttribute("targetId", requestUtils.getString("targetId"));
 %>
 <ax:set key="pageName" value="File Browser"/>
-<ax:set key="page_auto_height" value="false"/>
+<ax:set key="page_auto_height" value="true"/>
 <ax:set key="axbody_class" value="baseStyle"/>
 
 <ax:layout name="modal">

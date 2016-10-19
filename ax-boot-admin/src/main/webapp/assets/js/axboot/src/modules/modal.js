@@ -99,6 +99,16 @@ axboot.modal = (function () {
 
         this.modalCallback = modalConfig.callback;
         this.modalSendData = modalConfig.sendData;
+
+        if (modalConfig.iframe && ax5.util.isArray(modalConfig.iframe.url)) {
+            if (modalConfig.iframe.url[0] in axboot.def["MODAL"]) {
+                modalConfig.iframe.url[0] = axboot.def["MODAL"][modalConfig.iframe.url[0]];
+                modalConfig.iframe.url = modalConfig.iframe.url.join('/');
+            } else {
+                modalConfig.iframe.url = modalConfig.iframe.url.join('/');
+            }
+        }
+
         window.axModal.open(modalConfig);
     };
 
