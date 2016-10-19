@@ -64,6 +64,29 @@ public class JdbcMetadataService {
         return database;
     }
 
+    public int getTableSize() {
+        List<Table> tables = new ArrayList<>();
+
+        Connection connection = null;
+        try {
+            connection = getConnection();
+            String[] types = {"TABLE"};
+
+            ResultSet resultSet = connection.getMetaData().getTables(getCatalog(), getSchema(), "%", types);
+            tables.addAll(new ColumnToBeanPropertyRowMapper<>(Table.class).mapRows(resultSet));
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                connection.close();
+            } catch (Exception e) {
+                // ignore
+            }
+        }
+        return tables.size();
+    }
+
     public List<Table> getTables() {
         List<Table> tables = new ArrayList<>();
 
