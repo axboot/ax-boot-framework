@@ -88,10 +88,15 @@ axboot.modal = (function () {
      * ```
      */
     var open = function (modalConfig) {
+
         modalConfig = $.extend(true, {}, defaultOption, modalConfig);
         if (modalConfig.modalType) {
-            if (axboot.def.modal && axboot.def.modal[modalConfig.modalType]) {
-                $.extend(true, modalConfig, axboot.def.modal[modalConfig.modalType]);
+
+            if (axboot.def.MODAL && axboot.def.MODAL[modalConfig.modalType]) {
+                if (modalConfig.param) {
+                    $.extend(true, modalConfig, {iframe: {param: modalConfig.param}});
+                }
+                modalConfig = $.extend(true, {}, modalConfig, axboot.def.MODAL[modalConfig.modalType]);
             }
         }
 
@@ -99,15 +104,6 @@ axboot.modal = (function () {
 
         this.modalCallback = modalConfig.callback;
         this.modalSendData = modalConfig.sendData;
-
-        if (modalConfig.iframe && ax5.util.isArray(modalConfig.iframe.url)) {
-            if (modalConfig.iframe.url[0] in axboot.def["MODAL"]) {
-                modalConfig.iframe.url[0] = axboot.def["MODAL"][modalConfig.iframe.url[0]];
-                modalConfig.iframe.url = modalConfig.iframe.url.join('/');
-            } else {
-                modalConfig.iframe.url = modalConfig.iframe.url.join('/');
-            }
-        }
 
         window.axModal.open(modalConfig);
     };

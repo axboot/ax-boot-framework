@@ -55,13 +55,10 @@ var ACTIONS = axboot.actionExtend(fnObj, {
     },
     ETC1FIND: function (caller, act, data) {
         axboot.modal.open({
-            width: 500,
-            height: 600,
-            iframe: {
-                url: ["zipcode"]
-            },
-            header: {
-                title: '<i class="cqc-magnifier"></i> 우편번호 찾기'
+            modalType: "ZIPCODE",
+            param: "",
+            modalSendData: function(){
+                return {};
             },
             callback: function (data) {
                 //{zipcodeData: data, zipcode: data.zonecode || data.postcode, roadAddress: fullRoadAddr, jibunAddress: data.jibunAddress}
@@ -74,12 +71,11 @@ var ACTIONS = axboot.actionExtend(fnObj, {
     },
     ETC3FIND: function (caller, act, data) {
         axboot.modal.open({
-            width: 600,
-            height: 400,
-            iframe: {
-                url: ["sample-modal"]
+            modalType: "SAMPLE-MODAL",
+            param: "",
+            modalSendData: function(){
+                return {};
             },
-            header: false,
             callback: function (data) {
                 caller.formView01.setEtc3Value({
                     key: data.key,

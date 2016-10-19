@@ -76,13 +76,8 @@ var ACTIONS = axboot.actionExtend(fnObj, {
     },
     MANUAL_GROUP_MNG: function (caller, act, data) {
         axboot.modal.open({
-            width: 600,
-            height: 400,
-            iframe: {
-                url: ["system-config-common-code-modal"],
-                param: "GROUP_CD=MANUAL_GROUP&GROUP_NM=매뉴얼 그룹"
-            },
-            header: false,
+            modalType: "COMMON_CODE_MODAL",
+            param: "GROUP_CD=MANUAL_GROUP&GROUP_NM=매뉴얼 그룹",
             modalSendData: function () {
                 return {};
             },
