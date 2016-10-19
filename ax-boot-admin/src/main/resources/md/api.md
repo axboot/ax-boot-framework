@@ -114,6 +114,7 @@ axboot 오브젝트 axboot 애플리케이션을 편리하게 사용하기 위�
     * [.pageResize()](#axboot.pageResize)
     * [.layoutResize()](#axboot.layoutResize)
     * [.ajax(http)](#axboot.ajax)
+    * [.buttonClick(_caller, _attribute, _functionJson)](#axboot.buttonClick) ⇒
     * [.call()](#axboot.call)
         * [.done()](#axboot.call.done)
     * [.gridBuilder(_config)](#axboot.gridBuilder)
@@ -399,6 +400,26 @@ axboot.def.pageFunctionName의 pageResize를 실행해 줍니다.
          }
      }
  });
+```
+<a name="axboot.buttonClick"></a>
+
+### axboot.buttonClick(_caller, _attribute, _functionJson) ⇒
+**Kind**: static method of <code>[axboot](#axboot)</code>  
+**Returns**: _caller  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| _caller | <code>Object</code> | this of function |
+| _attribute | <code>String</code> |  |
+| _functionJson | <code>Object</code> | 속성명과 매치되는 함수 속성값을 가진 버튼을 클릭하면 속성키에 선언된 함수가 실행됩니다. |
+
+**Example**  
+```js
+axboot.buttonClick(this, "data-page-btn", {
+ "SEARCH": function(){
+     ACTIONS.dispatch(ACTIONS.PAGE_SEARCH);
+ }
+});
 ```
 <a name="axboot.call"></a>
 

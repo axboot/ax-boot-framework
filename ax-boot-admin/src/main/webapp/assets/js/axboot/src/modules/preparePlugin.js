@@ -36,6 +36,7 @@ axboot.preparePlugin = (function () {
          * @var {ax5ui} axModal
          */
         window.axModal = new ax5.ui.modal({
+            absolute: true,
             iframeLoadingMsg: '<i class="cqc-chequer ax-loading-icon lg"></i>'
         });
 

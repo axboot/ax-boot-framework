@@ -14656,7 +14656,7 @@ return jQuery;
 })(jQuery);
 'use strict';
 
-var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol ? "symbol" : typeof obj; };
+var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
 
 (function () {
     'use strict';
@@ -14709,7 +14709,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
          * ax5 version
          * @member {String} ax5.info.version
          */
-        var version = "0.0.1";
+        var version = "1.2.51";
 
         /**
          * ax5 library path
@@ -17751,7 +17751,7 @@ ax5.ui = function () {
 
     UI.addClass({
         className: "dialog",
-        version: "0.8.8"
+        version: "1.2.51"
     }, function () {
         /**
          * @class ax5dialog
@@ -18290,7 +18290,7 @@ ax5.ui = function () {
 
     UI.addClass({
         className: "mask",
-        version: "0.7.6"
+        version: "1.2.51"
     }, function () {
         /**
          * @class ax5mask
@@ -18545,6 +18545,7 @@ ax5.ui = function () {
             };
             //== class body end
 
+
             this.pullRequest = function () {
                 console.log("test pullRequest01");
                 console.log("test pullRequest02");
@@ -18593,7 +18594,7 @@ ax5.ui = function () {
 
     UI.addClass({
         className: "toast",
-        version: "0.4.1"
+        version: "1.2.51"
     }, function () {
         /**
          * @class ax5toast
@@ -18957,7 +18958,7 @@ ax5.ui = function () {
 
     UI.addClass({
         className: "modal",
-        version: "0.8.3"
+        version: "1.2.51"
     }, function () {
         /**
          * @class ax5modal
@@ -19147,6 +19148,8 @@ ax5.ui = function () {
                 }.bind(this));
 
                 this.$.header.bind(ENM["mousedown"], function (e) {
+                    if (opts.isFullScreen) return false;
+
                     /// 이벤트 필터링 추가 : 버튼엘리먼트로 부터 발생된 이벤트이면 moveModal 시작하지 않도록 필터링
                     var isButton = U.findParentNode(e.target, function (_target) {
                         if (_target.getAttribute("data-modal-header-btn")) {
@@ -19476,7 +19479,7 @@ ax5.ui = function () {
                         height: opts.height
                     };
 
-                    var fullScreen = function (_fullScreen) {
+                    var fullScreen = opts.isFullScreen = function (_fullScreen) {
                         if (typeof _fullScreen === "undefined") {
                             return false;
                         } else if (U.isFunction(_fullScreen)) {
@@ -19485,7 +19488,7 @@ ax5.ui = function () {
                     }(opts.fullScreen);
 
                     if (fullScreen) {
-                        if (opts.header) this.$.header.hide();
+                        if (opts.header) this.$.header.show();
                         box.width = jQuery(window).width();
                         box.height = opts.height;
                         box.left = 0;
@@ -19581,7 +19584,7 @@ ax5.ui = function () {
 
     UI.addClass({
         className: "calendar",
-        version: "0.9.0"
+        version: "1.2.51"
     }, function () {
 
         /**
@@ -20618,7 +20621,7 @@ ax5.ui = function () {
 
     UI.addClass({
         className: "picker",
-        version: "0.8.1"
+        version: "1.2.51"
     }, function () {
         /**
          * @class ax5picker
@@ -21576,7 +21579,7 @@ jQuery.fn.ax5picker = function () {
 
     UI.addClass({
         className: "formatter",
-        version: "0.6.1"
+        version: "1.2.51"
     }, function () {
         var TODAY = new Date();
         var setSelectionRange = function setSelectionRange(input, pos) {
@@ -22214,7 +22217,7 @@ jQuery.fn.ax5formatter = function () {
 
     UI.addClass({
         className: "menu",
-        version: "0.7.0"
+        version: "1.2.51"
     }, function () {
         /**
          * @class ax5.ui.menu
@@ -23009,7 +23012,7 @@ jQuery.fn.ax5formatter = function () {
 
     UI.addClass({
         className: "select",
-        version: "0.4.6"
+        version: "1.2.51"
     }, function () {
         /**
          * @class ax5select
@@ -24100,6 +24103,9 @@ jQuery.fn.ax5select = function () {
         return this;
     };
 }();
+
+// muliple 속성이 없는 select의 기본 선택 해제 방법.. 결정 필요..
+// onExpand 가 있으면..?
 // ax5.ui.select.tmpl
 (function () {
 
@@ -24131,7 +24137,7 @@ jQuery.fn.ax5select = function () {
 })();
 "use strict";
 
-var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol ? "symbol" : typeof obj; };
+var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
 
 /*
  * Copyright (c) 2016. tom@axisj.com
@@ -24148,7 +24154,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
 
     UI.addClass({
         className: "grid",
-        version: "0.3.7"
+        version: "${VERSION}"
     }, function () {
         /**
          * @class ax5grid
@@ -25396,15 +25402,21 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
              * @param {Number} _selectObject.index - index of row
              * @param {Number} _selectObject.rowIndex - rowIndex of columns
              * @param {Number} _selectObject.conIndex - colIndex of columns
+             * @param {Object} _options
              * @returns {ax5grid}
              */
-            this.select = function (_selectObject) {
+            this.select = function (_selectObject, _options) {
                 if (U.isNumber(_selectObject)) {
                     var dindex = _selectObject;
 
                     if (!this.config.multipleSelect) {
                         GRID.body.updateRowState.call(this, ["selectedClear"]);
                         GRID.data.clearSelect.call(this);
+                    } else {
+                        if (_options && _options.selectedClear) {
+                            GRID.body.updateRowState.call(this, ["selectedClear"]);
+                            GRID.data.clearSelect.call(this);
+                        }
                     }
 
                     GRID.data.select.call(this, dindex);
@@ -25434,6 +25446,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
 // todo : filter
 // todo : body menu
 // todo : column reorder
+
 
 // ax5.ui.grid.body
 (function () {
@@ -29295,7 +29308,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
 
     UI.addClass({
         className: "combobox",
-        version: "0.3.9"
+        version: "1.2.51"
     }, function () {
         /**
          * @class ax5combobox
@@ -30947,7 +30960,7 @@ jQuery.fn.ax5combobox = function () {
 
     UI.addClass({
         className: "layout",
-        version: "0.3.2"
+        version: "1.2.51"
     }, function () {
         /**
          * @class ax5layout
@@ -31054,12 +31067,12 @@ jQuery.fn.ax5combobox = function () {
                                         }
                                     }
                                 } else {
-                                        if (panel.height == "*") {
-                                            item.splitPanel.asteriskLength++;
-                                        } else {
-                                            //panel.__height = getPixel(panel.height, item.targetDimension.height);
-                                        }
+                                    if (panel.height == "*") {
+                                        item.splitPanel.asteriskLength++;
+                                    } else {
+                                        //panel.__height = getPixel(panel.height, item.targetDimension.height);
                                     }
+                                }
                             }
                         },
                         "vertical": function vertical(item, panel, panelIndex) {
@@ -31976,7 +31989,7 @@ jQuery.fn.ax5layout = function () {
 
     UI.addClass({
         className: "binder",
-        version: "0.2.0"
+        version: "1.2.51"
     }, function () {
 
         /**
@@ -32933,7 +32946,7 @@ jQuery.fn.ax5layout = function () {
 
     UI.addClass({
         className: "autocomplete",
-        version: "0.0.5"
+        version: "1.2.51"
     }, function () {
         /**
          * @class ax5autocomplete

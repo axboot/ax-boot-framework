@@ -9,7 +9,7 @@
 
     UI.addClass({
         className: "modal",
-        version: "0.8.3"
+        version: "1.2.51"
     }, function () {
         /**
          * @class ax5modal
@@ -199,6 +199,8 @@
                 }.bind(this));
 
                 this.$.header.bind(ENM["mousedown"], function (e) {
+                    if (opts.isFullScreen) return false;
+
                     /// 이벤트 필터링 추가 : 버튼엘리먼트로 부터 발생된 이벤트이면 moveModal 시작하지 않도록 필터링
                     var isButton = U.findParentNode(e.target, function (_target) {
                         if (_target.getAttribute("data-modal-header-btn")) {
@@ -528,7 +530,7 @@
                         height: opts.height
                     };
 
-                    var fullScreen = function (_fullScreen) {
+                    var fullScreen = opts.isFullScreen = function (_fullScreen) {
                         if (typeof _fullScreen === "undefined") {
                             return false;
                         } else if (U.isFunction(_fullScreen)) {
@@ -537,7 +539,7 @@
                     }(opts.fullScreen);
 
                     if (fullScreen) {
-                        if (opts.header) this.$.header.hide();
+                        if (opts.header) this.$.header.show();
                         box.width = jQuery(window).width();
                         box.height = opts.height;
                         box.left = 0;

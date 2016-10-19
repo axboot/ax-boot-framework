@@ -15,6 +15,18 @@ axboot.searchView = {
                 this[k].val(_obj[k]);
             }
         }
+    },
+    pageNumber: 0,
+    pageSize: 99999,
+    setPageNumber: function (pageNumber) {
+        if (typeof pageNumber !== "undefined") {
+            this.pageNumber = pageNumber;
+        }
+    },
+    setPageSize: function (pageSize) {
+        if (typeof pageSize !== "undefined") {
+            this.pageSize = pageSize;
+        }
     }
     /* 라디오와 checkbox 타입 값 가져오기.
      radioBox: this.radioBox.filter(":checked").val(),
@@ -185,9 +197,9 @@ axboot.actionExtend = (function () {
         }
 
         myAction["exec"] = function (caller, act, data) {
-            if(_action[act]){
+            if (_action[act]) {
                 return _action[act].call(caller, caller, act, data);
-            }else{
+            } else {
                 return "error";
             }
         };

@@ -1,6 +1,6 @@
 {
 	"name": "ax5ui-picker",
-	"version": "0.8.1",
+	"version": "1.2.51",
 	"description": "A picker plugin that works with Bootstrap & jQuery",
 	"authors": [
 		"ThomasJ <tom@axisj.com>"

@@ -32,6 +32,7 @@ axboot.modal = (function () {
             },
             animateTime: 100,
             zIndex: 5000,
+            absolute: true,
             fullScreen: false,
             header: {
                 title: "",
@@ -88,6 +89,11 @@ axboot.modal = (function () {
      */
     var open = function (modalConfig) {
         modalConfig = $.extend(true, {}, defaultOption, modalConfig);
+        if (modalConfig.modalType) {
+            if (axboot.def.modal && axboot.def.modal[modalConfig.modalType]) {
+                $.extend(true, modalConfig, axboot.def.modal[modalConfig.modalType]);
+            }
+        }
 
         $(document.body).addClass("modalOpened");
 

@@ -7,7 +7,7 @@
 
     UI.addClass({
         className: "layout",
-        version: "0.3.2"
+        version: "1.2.51"
     }, function () {
         /**
          * @class ax5layout
@@ -114,12 +114,12 @@
                                         }
                                     }
                                 } else {
-                                        if (panel.height == "*") {
-                                            item.splitPanel.asteriskLength++;
-                                        } else {
-                                            //panel.__height = getPixel(panel.height, item.targetDimension.height);
-                                        }
+                                    if (panel.height == "*") {
+                                        item.splitPanel.asteriskLength++;
+                                    } else {
+                                        //panel.__height = getPixel(panel.height, item.targetDimension.height);
                                     }
+                                }
                             }
                         },
                         "vertical": function vertical(item, panel, panelIndex) {

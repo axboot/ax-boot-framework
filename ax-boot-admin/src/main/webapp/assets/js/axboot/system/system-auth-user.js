@@ -111,33 +111,14 @@ fnObj.pageResize = function () {
 
 fnObj.pageButtonView = axboot.viewExtend({
     initView: function () {
-        var _this = this;
-        $('[data-page-btn]').click(function () {
-            _this.onClick(this.getAttribute("data-page-btn"));
-        });
-    },
-    onClick: function (_act) {
-        var _root = fnObj;
-        switch (_act) {
-            case "search":
+        axboot.buttonClick(this, "data-page-btn", {
+            "search": function(){
                 ACTIONS.dispatch(ACTIONS.PAGE_SEARCH);
-                break;
-            case "save":
+            },
+            "save": function(){
                 ACTIONS.dispatch(ACTIONS.PAGE_SAVE);
-                break;
-            case "excel":
-                break;
-            case "fn1":
-                break;
-            case "fn2":
-                break;
-            case "fn3":
-                break;
-            case "fn4":
-                break;
-            case "fn5":
-                break;
-        }
+            }
+        });
     }
 });
 
@@ -222,19 +203,15 @@ fnObj.formView01 = axboot.viewExtend(axboot.formView, {
         this.modelFormatter = new axboot.modelFormatter(this.model); // 모델 포메터 시작
         this.initEvent();
 
-        $('[data-form-view-01-btn]').click(function () {
-            var _root = fnObj;
-            switch (this.getAttribute("data-form-view-01-btn")) {
-                case "form-clear":
-                    axDialog.confirm({
-                        msg: "정말 양식을 초기화 하시겠습니까?"
-                    }, function () {
-                        if (this.key == "ok") {
-                            ACTIONS.dispatch(ACTIONS.FORM_CLEAR);
-                        }
-                    });
-
-                    break;
+        axboot.buttonClick(this, "data-form-view-01-btn", {
+            "form-clear": function(){
+                axDialog.confirm({
+                    msg: "정말 양식을 초기화 하시겠습니까?"
+                }, function () {
+                    if (this.key == "ok") {
+                        ACTIONS.dispatch(ACTIONS.FORM_CLEAR);
+                    }
+                });
             }
         });
 

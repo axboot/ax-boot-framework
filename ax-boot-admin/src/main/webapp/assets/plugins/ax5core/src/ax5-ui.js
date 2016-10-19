@@ -69,6 +69,7 @@ ax5.ui = (function () {
         this.main = (function () {
 
         }).apply(this, arguments);
+
     }
 
     /**

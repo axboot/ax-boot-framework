@@ -9,7 +9,7 @@
 
     UI.addClass({
         className: "select",
-        version: "0.4.6"
+        version: "1.2.51"
     }, function () {
         /**
          * @class ax5select
@@ -1100,6 +1100,9 @@ jQuery.fn.ax5select = function () {
         return this;
     };
 }();
+
+// muliple 속성이 없는 select의 기본 선택 해제 방법.. 결정 필요..
+// onExpand 가 있으면..?
 // ax5.ui.select.tmpl
 (function () {
 

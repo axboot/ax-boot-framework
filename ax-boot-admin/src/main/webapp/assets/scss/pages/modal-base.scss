@@ -49,7 +49,7 @@
 
     [data-page-buttons]{
         position: absolute;
-        right: 15px;
+        //right: 10px;
         top: 15px;
         .btn{
             padding: 5px 10px;
@@ -60,4 +60,13 @@
 &.baseStyle{
     @extend #ax-modal-base-root;
     padding: 0 10px;
+
+    [data-page-buttons]{
+        position: absolute;
+        right: 0px;
+        top: 10px;
+        .btn{
+            padding: 5px 10px;
+        }
+    }
 }

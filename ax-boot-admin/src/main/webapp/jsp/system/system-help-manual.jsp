@@ -40,7 +40,7 @@
 
                             <ax:common-code groupCd="MANUAL_GROUP" id="manualGrpCd" clazz="inline-block W150"/>
 
-                            <button type="button" class="btn btn-default" data-search-view-0-btn="add">그룹설정</button>
+                            <button type="button" class="btn btn-default" data-search-view-0-btn="manualGroupMng">그룹설정</button>
 
                         </ax:td>
 
@@ -117,7 +117,7 @@
                         <div class="H10"></div>
                     </div>
                     <div data-fit-height-content="form-view-01">
-                    <textarea data-ax-path="content" id="editor1"></textarea>
+                        <textarea data-ax-path="content" id="editor1" style="opacity: 0;"></textarea>
                     </div>
 
                 </ax:form>

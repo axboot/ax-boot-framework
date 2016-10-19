@@ -42,7 +42,7 @@
          * ax5 version
          * @member {String} ax5.info.version
          */
-        var version = "0.0.1";
+        var version = "${VERSION}";
 
         /**
          * ax5 library path

@@ -9,21 +9,31 @@ var ACTIONS = axboot.actionExtend(fnObj, {
                 caller.gridView01.setData(res);
             }
         });
+
         return false;
     },
+    PAGE_CLOSE: function (caller, act, data) {
+        parent.axboot.modal.close();
+    },
     PAGE_SAVE: function (caller, act, data) {
-        var saveList = [].concat(caller.gridView01.getData("modified"));
-        saveList = saveList.concat(caller.gridView01.getData("deleted"));
+        axboot
+            .call({
+                type: "PUT",
+                url: "/api/v1/commonCodes",
+                data: JSON.stringify((function () {
+                    var saveList = [].concat(caller.gridView01.getData("modified"));
+                    saveList = saveList.concat(caller.gridView01.getData("deleted"));
+                    return saveList;
+                })()),
+                callback: function (res) {
 
-        axboot.ajax({
-            type: "PUT",
-            url: "/api/v1/commonCodes",
-            data: JSON.stringify(saveList),
-            callback: function (res) {
-                ACTIONS.dispatch(ACTIONS.PAGE_SEARCH);
-                axToast.push("저장 되었습니다");
-            }
-        });
+                },
+                options: {}
+            })
+            .done(function () {
+                parent.axboot.modal.callback("saved");
+                parent.axToast.push(GROUP_NM + " 정보가 저장되었습니다");
+            });
     },
     ITEM_ADD: function (caller, act, data) {
         caller.gridView01.addRow();
@@ -64,6 +74,15 @@ fnObj.pageButtonView = axboot.viewExtend({
             },
             "save": function () {
                 ACTIONS.dispatch(ACTIONS.PAGE_SAVE);
+            },
+            "close": function () {
+                ACTIONS.dispatch(ACTIONS.PAGE_CLOSE);
+            },
+            "add": function () {
+                ACTIONS.dispatch(ACTIONS.ITEM_ADD);
+            },
+            "del": function () {
+                ACTIONS.dispatch(ACTIONS.ITEM_DEL);
             }
         });
     }
@@ -75,15 +94,14 @@ fnObj.pageButtonView = axboot.viewExtend({
  */
 fnObj.searchView = axboot.viewExtend(axboot.searchView, {
     initView: function () {
-        this.target = $(document["searchView0"]);
-        this.target.attr("onsubmit", "return ACTIONS.dispatch(ACTIONS.PAGE_SEARCH);");
-        this.filter = $("#filter");
+
     },
     getData: function () {
         return {
             pageNumber: this.pageNumber,
             pageSize: this.pageSize,
-            filter: this.filter.val()
+            groupCd: GROUP_CD,
+            useYn: "Y"
         }
     }
 });
@@ -97,36 +115,18 @@ fnObj.gridView01 = axboot.viewExtend(axboot.gridView, {
         var _this = this;
         this.target = axboot.gridBuilder({
             showRowSelector: true,
-            frozenColumnIndex: 0,
-            sortable: true,
             multipleSelect: true,
             target: $('[data-ax5grid="grid-view-01"]'),
             columns: [
-                {key: "groupCd", label: "분류코드", width: 250, align: "center", editor: {type: "text", disabled: "notCreated"}},
-                {key: "groupNm", label: "분류명", width: 200, align: "center", editor: "text"},
                 {key: "code", label: "코드", width: 100, align: "center", editor: {type: "text", disabled: "notCreated"}},
                 {key: "name", label: "코드값", width: 150, align: "left", editor: "text"},
                 {key: "sort", editor: "number"},
-                {key: "useYn", editor: "checkYn"},
-                {key: "remark", label: "비고", width: 200, align: "left", editor: "text"},
-                {key: "data1", label: "데이터1", width: 70, align: "left", editor: "text"},
-                {key: "data2", label: "데이터2", width: 70, align: "left", editor: "text"},
-                {key: "data3", label: "데이터3", width: 70, align: "left", editor: "text"},
-                {key: "data4", label: "데이터4", width: 70, align: "left", editor: "text"}
+                {key: "useYn", editor: "checkYn"}
             ],
             body: {
                 onClick: function () {
-                    this.self.select(this.dindex, {selectedClear: true});
-                }
-            }
-        });
 
-        axboot.buttonClick(this, "data-grid-view-01-btn", {
-            "add": function () {
-                ACTIONS.dispatch(ACTIONS.ITEM_ADD);
-            },
-            "delete": function () {
-                ACTIONS.dispatch(ACTIONS.ITEM_DEL);
+                }
             }
         });
     },
@@ -136,7 +136,7 @@ fnObj.gridView01 = axboot.viewExtend(axboot.gridView, {
 
         if (_type == "modified" || _type == "deleted") {
             list = ax5.util.filter(_list, function () {
-                return this.groupCd && this.code;
+                return this.code;
             });
         } else {
             list = _list;
@@ -144,6 +144,6 @@ fnObj.gridView01 = axboot.viewExtend(axboot.gridView, {
         return list;
     },
     addRow: function () {
-        this.target.addRow({__created__: true, posUseYn: "N", useYn: "Y"}, "last");
+        this.target.addRow({__created__: true, groupCd: GROUP_CD, groupNm: GROUP_NM, posUseYn: "N", useYn: "Y"}, "last");
     }
 });

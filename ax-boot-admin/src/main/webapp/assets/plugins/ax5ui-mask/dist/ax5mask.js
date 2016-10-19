@@ -9,7 +9,7 @@
 
     UI.addClass({
         className: "mask",
-        version: "0.7.6"
+        version: "1.2.51"
     }, function () {
         /**
          * @class ax5mask
@@ -263,6 +263,7 @@
                 return this;
             };
             //== class body end
+
 
             this.pullRequest = function () {
                 console.log("test pullRequest01");

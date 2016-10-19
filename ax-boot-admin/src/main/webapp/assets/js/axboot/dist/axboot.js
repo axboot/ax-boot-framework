@@ -1,6 +1,6 @@
 "use strict";
 
-var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol ? "symbol" : typeof obj; };
+var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
 
 /**
  * axboot 오브젝트 axboot 애플리케이션을 편리하게 사용하기 위한 오브젝트 입니다.
@@ -1213,6 +1213,36 @@ axboot.ajax = function () {
     };
 }(jQuery);
 /**
+ * @method axboot.buttonClick
+ * @param {Object} _caller - this of function
+ * @param {String} _attribute
+ * @param {Object} _functionJson - 속성명과 매치되는 함수 속성값을 가진 버튼을 클릭하면 속성키에 선언된 함수가 실행됩니다.
+ * @return _caller
+ * @example
+ * ```js
+ * axboot.buttonClick(this, "data-page-btn", {
+ *  "SEARCH": function(){
+ *      ACTIONS.dispatch(ACTIONS.PAGE_SEARCH);
+ *  }
+ * });
+ * ```
+ */
+
+axboot.buttonClick = function () {
+    return function (_caller, _attribute, _functionJson) {
+        var processor = $.extend(true, {}, _functionJson);
+
+        $('[' + _attribute + ']').click(function () {
+            var act = this.getAttribute(_attribute);
+            if (act in processor) {
+                processor[act].call(_caller, act, this);
+            }
+        });
+
+        return this;
+    };
+}();
+/**
  * @Object {Object} axboot.call
 */
 
@@ -1543,7 +1573,7 @@ axboot.gridBuilder = function () {
         };
         myGridConfig.columns = convertColumn(myGridConfig.columns);
         myGridConfig.page.onChange = function () {
-            myGridConfig.onPageChange(this.page.selectPage);
+            myGridConfig.onPageChange.call(this, this.page.selectPage);
         };
 
         return new ax5.ui.grid(myGridConfig);
@@ -1607,6 +1637,7 @@ axboot.modal = function () {
         },
         animateTime: 100,
         zIndex: 5000,
+        absolute: true,
         fullScreen: false,
         header: {
             title: "",
@@ -1662,6 +1693,11 @@ axboot.modal = function () {
      */
     var open = function open(modalConfig) {
         modalConfig = $.extend(true, {}, defaultOption, modalConfig);
+        if (modalConfig.modalType) {
+            if (axboot.def.modal && axboot.def.modal[modalConfig.modalType]) {
+                $.extend(true, modalConfig, axboot.def.modal[modalConfig.modalType]);
+            }
+        }
 
         $(document.body).addClass("modalOpened");
 
@@ -1892,6 +1928,7 @@ axboot.preparePlugin = function () {
          * @var {ax5ui} axModal
          */
         window.axModal = new ax5.ui.modal({
+            absolute: true,
             iframeLoadingMsg: '<i class="cqc-chequer ax-loading-icon lg"></i>'
         });
 
@@ -2200,6 +2237,18 @@ axboot.searchView = {
             if (k in this) {
                 this[k].val(_obj[k]);
             }
+        }
+    },
+    pageNumber: 0,
+    pageSize: 99999,
+    setPageNumber: function setPageNumber(pageNumber) {
+        if (typeof pageNumber !== "undefined") {
+            this.pageNumber = pageNumber;
+        }
+    },
+    setPageSize: function setPageSize(pageSize) {
+        if (typeof pageSize !== "undefined") {
+            this.pageSize = pageSize;
         }
     }
     /* 라디오와 checkbox 타입 값 가져오기.

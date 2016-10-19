@@ -73,6 +73,28 @@ var ACTIONS = axboot.actionExtend(fnObj, {
     TREE_ROOTNODE_ADD: function (caller, act, data) {
         caller.treeView01.addRootNode();
     },
+    MANUAL_GROUP_MNG: function (caller, act, data) {
+        axboot.modal.open({
+            width: 600,
+            height: 400,
+            iframe: {
+                url: "/jsp/system/system-config-common-code-modal.jsp",
+                param: "GROUP_CD=MANUAL_GROUP&GROUP_NM=매뉴얼 그룹"
+            },
+            header: false,
+            modalSendData: function () {
+                return {};
+            },
+            callback: function (data) {
+                if (data == "saved") {
+                    if (confirm("매뉴얼 그룹 정보가 변경 되었습니다. 페이지를 새로고침 하시겠습니까?")) {
+                        window.location.reload();
+                    }
+                }
+                this.close();
+            }
+        });
+    },
     dispatch: function (caller, act, data) {
         var result = ACTIONS.exec(caller, act, data);
         if (result != "error") {
@@ -87,9 +109,7 @@ var CODE = {};
 
 // fnObj 기본 함수 스타트와 리사이즈
 fnObj.pageStart = function () {
-
     var _this = this;
-
     axboot
         .call({
             type: "GET", url: "/api/v1/commonCodes", data: {groupCd: "MANUAL_GROUP", useYn: "Y"},
@@ -123,36 +143,16 @@ fnObj.pageResize = function () {
     }, 100);
 };
 
-
 fnObj.pageButtonView = axboot.viewExtend({
     initView: function () {
-        var _this = this;
-        $('[data-page-btn]').click(function () {
-            _this.onClick(this.getAttribute("data-page-btn"));
-        });
-    },
-    onClick: function (_act) {
-        var _root = fnObj;
-        switch (_act) {
-            case "search":
+        axboot.buttonClick(this, "data-page-btn", {
+            "search": function () {
                 ACTIONS.dispatch(ACTIONS.PAGE_SEARCH);
-                break;
-            case "save":
+            },
+            "save": function () {
                 ACTIONS.dispatch(ACTIONS.PAGE_SAVE);
-                break;
-            case "excel":
-                break;
-            case "fn1":
-                break;
-            case "fn2":
-                break;
-            case "fn3":
-                break;
-            case "fn4":
-                break;
-            case "fn5":
-                break;
-        }
+            }
+        });
     }
 });
 
@@ -165,6 +165,12 @@ fnObj.searchView = axboot.viewExtend(axboot.searchView, {
         this.target = $(document["searchView0"]);
         this.target.attr("onsubmit", "return ACTIONS.dispatch(ACTIONS.PAGE_SEARCH);");
         this.manualGrpCd = $("#manualGrpCd");
+
+        axboot.buttonClick(this, "data-search-view-0-btn", {
+            "manualGroupMng": function () {
+                ACTIONS.dispatch(ACTIONS.MANUAL_GROUP_MNG);
+            }
+        });
     },
     getData: function () {
         return {
@@ -205,15 +211,9 @@ fnObj.treeView01 = axboot.viewExtend(axboot.treeView, {
     initView: function () {
         var _this = this;
 
-        $('[data-tree-view-01-btn]').click(function () {
-            var _act = this.getAttribute("data-tree-view-01-btn");
-            switch (_act) {
-                case "add":
-                    ACTIONS.dispatch(ACTIONS.TREE_ROOTNODE_ADD);
-                    break;
-                case "delete":
-                    //ACTIONS.dispatch(ACTIONS.ITEM_DEL);
-                    break;
+        axboot.buttonClick(this, "data-tree-view-01-btn", {
+            "add": function () {
+                ACTIONS.dispatch(ACTIONS.TREE_ROOTNODE_ADD);
             }
         });
 
@@ -399,12 +399,9 @@ fnObj.formView01 = axboot.viewExtend(axboot.formView, {
         this.resize();
         this.initEvent();
 
-        $('[data-form-view-01-btn]').click(function () {
-            var _root = fnObj;
-            switch (this.getAttribute("data-form-view-01-btn")) {
-                case "form-clear":
-                    ACTIONS.dispatch(ACTIONS.FORM_CLEAR);
-                    break;
+        axboot.buttonClick(this, "data-form-view-01-btn", {
+            "form-clear": function () {
+                ACTIONS.dispatch(ACTIONS.FORM_CLEAR);
             }
         });
     },

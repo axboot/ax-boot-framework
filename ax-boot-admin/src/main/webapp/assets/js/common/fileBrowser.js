@@ -81,37 +81,20 @@ fnObj.pageResize = function () {
 
 fnObj.pageButtonView = axboot.viewExtend({
     initView: function () {
-        var _this = this;
-        $('[data-page-btn]').click(function () {
-            _this.onClick(this.getAttribute("data-page-btn"));
-        });
-    },
-    onClick: function (_act) {
-        var _root = fnObj;
-        switch (_act) {
-            case "search":
+        axboot.buttonClick(this, "data-page-btn", {
+            "search": function () {
                 ACTIONS.dispatch(ACTIONS.PAGE_SEARCH);
-                break;
-            case "choice":
+            },
+            "choice": function () {
                 ACTIONS.dispatch(ACTIONS.PAGE_CHOICE);
-                break;
-            case "excel":
-                break;
-            case "fn1":
+            },
+            "fn1": function () {
                 ACTIONS.dispatch(ACTIONS.PAGE_DEL);
-                break;
-            case "fn2":
-                break;
-            case "fn3":
-                break;
-            case "fn4":
-                break;
-            case "fn5":
-                break;
-            case "close":
+            },
+            "close": function () {
                 ACTIONS.dispatch(ACTIONS.PAGE_CLOSE);
-                break;
-        }
+            }
+        });
     }
 });
 

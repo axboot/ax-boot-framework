@@ -13,7 +13,7 @@
 
     UI.addClass({
         className: "grid",
-        version: "0.3.7"
+        version: "${VERSION}"
     }, (function () {
         /**
          * @class ax5grid
@@ -1284,15 +1284,21 @@
              * @param {Number} _selectObject.index - index of row
              * @param {Number} _selectObject.rowIndex - rowIndex of columns
              * @param {Number} _selectObject.conIndex - colIndex of columns
+             * @param {Object} _options
              * @returns {ax5grid}
              */
-            this.select = function (_selectObject) {
+            this.select = function (_selectObject, _options) {
                 if (U.isNumber(_selectObject)) {
                     var dindex = _selectObject;
 
                     if (!this.config.multipleSelect) {
                         GRID.body.updateRowState.call(this, ["selectedClear"]);
                         GRID.data.clearSelect.call(this);
+                    }else {
+                        if (_options && _options.selectedClear) {
+                            GRID.body.updateRowState.call(this, ["selectedClear"]);
+                            GRID.data.clearSelect.call(this);
+                        }
                     }
 
                     GRID.data.select.call(this, dindex);

@@ -1,6 +1,11 @@
 var fnObj = {};
 var ACTIONS = axboot.actionExtend(fnObj, {
     PAGE_SEARCH: function (caller, act, data) {
+
+        if (data && data.page) {
+            caller.searchView.setPageNumber(data.page.pageNumber);
+        }
+
         axboot.ajax({
             type: "GET",
             url: "/api/v1/errorLogs",
@@ -101,33 +106,14 @@ fnObj.pageResize = function () {
 
 fnObj.pageButtonView = axboot.viewExtend({
     initView: function () {
-        var _this = this;
-        $('[data-page-btn]').click(function () {
-            _this.onClick(this.getAttribute("data-page-btn"));
-        });
-    },
-    onClick: function (_act) {
-        var _root = fnObj;
-        switch (_act) {
-            case "search":
+        axboot.buttonClick(this, "data-page-btn", {
+            "search": function () {
                 ACTIONS.dispatch(ACTIONS.PAGE_SEARCH);
-                break;
-            case "save":
+            },
+            "save": function () {
                 ACTIONS.dispatch(ACTIONS.PAGE_SAVE);
-                break;
-            case "excel":
-                break;
-            case "fn1":
-                break;
-            case "fn2":
-                break;
-            case "fn3":
-                break;
-            case "fn4":
-                break;
-            case "fn5":
-                break;
-        }
+            }
+        });
     }
 });
 
@@ -158,19 +144,6 @@ fnObj.searchView = axboot.viewExtend(axboot.searchView, {
 fnObj.gridView01 = axboot.viewExtend(axboot.gridView, {
     initView: function () {
         var _this = this;
-
-        $('[data-grid-view-01-btn]').click(function () {
-            var _act = this.getAttribute("data-grid-view-01-btn");
-            switch (_act) {
-                case "remove":
-                    ACTIONS.dispatch(ACTIONS.ITEM_REMOVE);
-                    break;
-                case "removeAll":
-                    ACTIONS.dispatch(ACTIONS.ITEM_REMOVEALL);
-                    break;
-            }
-        });
-
         this.target = axboot.gridBuilder({
             showRowSelector: true,
             frozenColumnIndex: 0,
@@ -195,6 +168,18 @@ fnObj.gridView01 = axboot.viewExtend(axboot.gridView, {
                     this.self.select(this.dindex);
                     ACTIONS.dispatch(ACTIONS.ITEM_CLICK, this.list[this.dindex]);
                 }
+            },
+            onPageChange: function (pageNumber) {
+                ACTIONS.dispatch(ACTIONS.PAGE_SEARCH, {page: {pageNumber: pageNumber}});
+            }
+        });
+
+        axboot.buttonClick(this, "data-grid-view-01-btn", {
+            "remove": function () {
+                ACTIONS.dispatch(ACTIONS.ITEM_REMOVE);
+            },
+            "removeAll": function () {
+                ACTIONS.dispatch(ACTIONS.ITEM_REMOVEALL);
             }
         });
     },

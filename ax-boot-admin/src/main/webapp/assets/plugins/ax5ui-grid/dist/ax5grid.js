@@ -1,6 +1,6 @@
 "use strict";
 
-var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol ? "symbol" : typeof obj; };
+var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
 
 /*
  * Copyright (c) 2016. tom@axisj.com
@@ -17,7 +17,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
 
     UI.addClass({
         className: "grid",
-        version: "0.3.7"
+        version: "${VERSION}"
     }, function () {
         /**
          * @class ax5grid
@@ -1265,15 +1265,21 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
              * @param {Number} _selectObject.index - index of row
              * @param {Number} _selectObject.rowIndex - rowIndex of columns
              * @param {Number} _selectObject.conIndex - colIndex of columns
+             * @param {Object} _options
              * @returns {ax5grid}
              */
-            this.select = function (_selectObject) {
+            this.select = function (_selectObject, _options) {
                 if (U.isNumber(_selectObject)) {
                     var dindex = _selectObject;
 
                     if (!this.config.multipleSelect) {
                         GRID.body.updateRowState.call(this, ["selectedClear"]);
                         GRID.data.clearSelect.call(this);
+                    } else {
+                        if (_options && _options.selectedClear) {
+                            GRID.body.updateRowState.call(this, ["selectedClear"]);
+                            GRID.data.clearSelect.call(this);
+                        }
                     }
 
                     GRID.data.select.call(this, dindex);
@@ -1303,6 +1309,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
 // todo : filter
 // todo : body menu
 // todo : column reorder
+
 
 // ax5.ui.grid.body
 (function () {

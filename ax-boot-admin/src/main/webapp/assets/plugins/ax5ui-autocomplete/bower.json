@@ -1,6 +1,6 @@
 {
 	"name": "ax5ui-autocomplete",
-	"version": "0.0.5",
+	"version": "1.2.51",
 	"description": "A autocomplete plugin that works with Bootstrap & jQuery",
 	"authors": [
 		"ThomasJ <tom@axisj.com>"
