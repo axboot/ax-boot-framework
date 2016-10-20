@@ -17,6 +17,7 @@ public class ManualListVO {
     private Integer level;
     private Integer sort;
     private String key;
+    private String manualKey;
     private boolean open = false;
 
     private List<ManualListVO> children = new ArrayList<>();
