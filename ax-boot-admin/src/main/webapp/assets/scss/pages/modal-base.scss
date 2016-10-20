@@ -1,72 +1,98 @@
-[data-page-auto-height="true"]{
+[data-page-auto-height="true"] {
     #ax-modal-base-root {
         overflow: hidden;
         height: 100%;
     }
 }
-[data-page-auto-height="false"]{
+
+[data-page-auto-height="false"] {
     #ax-modal-base-root {
         overflow: auto;
     }
 }
 
-
-#ax-modal-base-root{
+#ax-modal-base-root {
     padding: 0;
     @include animation(BODY_FADE_IN 0.5s $ease-out-back forwards);
 
-    .ax-base-title{
+    .ax-base-title {
         display: table;
         height: 60px;
-        .title{
+        .title {
             display: table-cell;
-            &h1{font-size: 24px;}
-            &h2{font-size: 18px;}
-            &h3{font-size: 16px;}
+            &h1 {
+                font-size: 24px;
+            }
+            &h2 {
+                font-size: 18px;
+            }
+            &h3 {
+                font-size: 16px;
+            }
 
             vertical-align: middle;
         }
-        .desc{
+        .desc {
             display: table-cell;
             vertical-align: middle;
             padding-left: 10px;
         }
     }
 
-    h1,h2,h3,h4,h5,h6{
+    h1, h2, h3, h4, h5, h6 {
         margin: 0;
     }
 
-    h1{
+    h1 {
         font-size: 24px;
     }
-    h2{
+    h2 {
         font-size: 18px;
     }
-    h3{
+    h3 {
         font-size: 16px;
     }
 
-    [data-page-buttons]{
+    [data-page-buttons] {
         position: absolute;
         //right: 10px;
         top: 15px;
-        .btn{
+        .btn {
             padding: 5px 10px;
         }
     }
 }
 
-&.baseStyle{
+&.baseStyle {
     @extend #ax-modal-base-root;
     padding: 0 10px;
 
-    [data-page-buttons]{
+    [data-page-buttons] {
         position: absolute;
         right: 0px;
         top: 10px;
-        .btn{
+        .btn {
             padding: 5px 10px;
+        }
+    }
+}
+
+&.manualView {
+    padding: 0 0px;
+    .ax-base-title {
+        padding-left: 20px;
+    }
+    [role="page-content"] {
+        position: relative;
+        padding: 0 10px;
+        .manual-content-layout {
+            table-layout: fixed;
+            height: 100%;
+            width: 100%;
+            .content-aside {
+                width: 300px;
+                padding-right: 10px;
+            }
         }
     }
 }

@@ -42,7 +42,20 @@
         };
     }
 
-    axboot.getURL = function(url){
-        return url;
+
+    var preDefineUrls = {
+        "manual_downloadForm": "/api/v1/manual/excel/downloadForm",
+        "manual_viewer": "/jsp/system/system-help-manual-view.jsp"
+    };
+    axboot.getURL = function (url) {
+        if (ax5.util.isArray(url)) {
+            if (url[0] in preDefineUrls) {
+                url[0] = preDefineUrls[url[0]];
+            }
+            return url.join('/');
+
+        } else {
+            return url;
+        }
     }
 })();
