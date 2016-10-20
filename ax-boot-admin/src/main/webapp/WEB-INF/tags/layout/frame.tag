@@ -12,7 +12,6 @@
           content="width=device-width, user-scalable=no, initial-scale=1, maximum-scale=1, minimum-scale=1"/>
     <meta name="apple-mobile-web-app-capable" content="yes">
     <title>AXBOOT :: Full Stack Web Development Framework</title>
-
     <link rel="shortcut icon" href="<c:url value='/assets/favicon.ico'/>" type="image/x-icon"/>
     <link rel="icon" href="<c:url value='/assets/favicon.ico'/>" type="image/x-icon"/>
     <link rel="stylesheet" type="text/css" href="<c:url value='/assets/css/axboot.css'/>"/>
@@ -35,7 +34,6 @@
     <jsp:doBody/>
 
     <div class="ax-frame-header-tool">
-
         <div class="ax-split-col" style="height: 100%;">
             <div class="ax-split-panel text-align-left">
 
@@ -71,7 +69,6 @@
                 </a>
             </div>
             <div id="ax-top-menu" class="ax-split-panel ax-split-flex">
-
             </div>
         </div>
     </div>
@@ -100,6 +97,7 @@
             </div>
             <div class="ax-split-panel text-align-right">
                 Last account activity 52 mins ago
+
             </div>
         </div>
     </div>
