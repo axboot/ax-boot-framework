@@ -129,8 +129,11 @@ fnObj.frameView = axboot.viewExtend({
         this.asideHandle.on("click", function () {
             ACTIONS.dispatch(ACTIONS.TOGGLE_ASIDE);
         });
-        this.asideView.initView();
-        this.asideView.print();
+
+        if (this.aside.get(0)) {
+            this.asideView.initView();
+            this.asideView.print();
+        }
     },
     toggleAside: function () {
         this.target.toggleClass("show-aside");
@@ -269,7 +272,7 @@ fnObj.tabView = axboot.viewExtend({
                 case "close":
                     fnObj.tabView.list.forEach(function (_item, idx) {
                         if (_item.status == "on") {
-                            if(idx == 0){
+                            if (idx == 0) {
                                 alert("홈 탭은 닫을 수 없습니다.");
                                 return false;
                             }
