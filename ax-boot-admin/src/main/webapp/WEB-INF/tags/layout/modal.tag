@@ -10,8 +10,9 @@
 
     <link rel="shortcut icon" href="<c:url value='/assets/favicon.ico'/>" type="image/x-icon"/>
     <link rel="icon" href="<c:url value='/assets/favicon.ico'/>" type="image/x-icon"/>
-    <link rel="stylesheet" type="text/css" href="<c:url value='/assets/css/axboot.css'/>"/>
-    <link rel="stylesheet" type="text/css" href="<c:url value='/assets/css/lang-kor.css'/>"/>
+    <c:forEach var="css" items="${config.extendedCss}">
+        <link rel="stylesheet" type="text/css" href="<c:url value='${css}'/>"/>
+    </c:forEach>
     <script type="text/javascript">
         var CONTEXT_PATH = "<%=ContextUtil.getContext()%>";
         var SCRIPT_SESSION = (function(json){return json;})(${scriptSession});

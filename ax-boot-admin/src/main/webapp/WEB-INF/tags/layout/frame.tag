@@ -14,11 +14,9 @@
     <title>${config.title}</title>
     <link rel="shortcut icon" href="<c:url value='/assets/favicon.ico'/>" type="image/x-icon"/>
     <link rel="icon" href="<c:url value='/assets/favicon.ico'/>" type="image/x-icon"/>
-    <link rel="stylesheet" type="text/css" href="<c:url value='/assets/css/axboot.css'/>"/>
-    <link rel="stylesheet" type="text/css" href="<c:url value='/assets/css/lang-kor.css'/>"/>
 
     <c:forEach var="css" items="${config.extendedCss}">
-    <link rel="stylesheet" type="text/css" href="<c:url value='${css}'/>"/>
+        <link rel="stylesheet" type="text/css" href="<c:url value='${css}'/>"/>
     </c:forEach>
 
     <script type="text/javascript">
@@ -53,7 +51,7 @@
                     <div class="ax-split-panel">
                         <a href="#ax" class="ax-frame-logout" onclick="location.href = '${pageContext.request.contextPath}/api/logout';">
                             <i class="cqc-log-out"></i>
-                            <lang data-id="로그아웃"></lang>
+                            로그아웃
                         </a>
                     </div>
                 </div>
