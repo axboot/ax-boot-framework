@@ -16,7 +16,7 @@
     if (initialized) {
         request.setAttribute("redirect", lastNavigatedPage);
     } else {
-        //request.setAttribute("redirect", "/setup");
+        request.setAttribute("redirect", "/setup");
     }
 %>
 

@@ -6,6 +6,7 @@ import com.chequer.axboot.core.model.extract.metadata.Column;
 import com.chequer.axboot.core.model.extract.metadata.Database;
 import com.chequer.axboot.core.model.extract.metadata.PrimaryKey;
 import com.chequer.axboot.core.model.extract.metadata.Table;
+import org.apache.commons.dbutils.DbUtils;
 import org.springframework.jdbc.core.JdbcTemplate;
 
 import javax.inject.Inject;
@@ -37,21 +38,28 @@ public class JdbcMetadataService {
     }
 
     public String getCatalog() {
+        Connection connection = null;
         try {
-            return getConnection().getCatalog().toString();
+            connection = getConnection();
+            return connection.getCatalog();
         } catch (Throwable e) {
+        } finally {
+            DbUtils.closeQuietly(connection);
         }
         return null;
     }
 
     public String getSchema() {
+        Connection connection = null;
+
         if ("oracle".equals(getDatabaseType())) {
             return axBootContextConfig.getDataSourceConfig().getUsername();
         }
-
         try {
-            return getConnection().getCatalog().toString();
+            return connection.getCatalog().toString();
         } catch (Throwable e) {
+        } finally {
+            DbUtils.closeQuietly(connection);
         }
         return null;
     }
@@ -62,29 +70,6 @@ public class JdbcMetadataService {
         database.setTables(tables);
 
         return database;
-    }
-
-    public int getTableSize() {
-        List<Table> tables = new ArrayList<>();
-
-        Connection connection = null;
-        try {
-            connection = getConnection();
-            String[] types = {"TABLE"};
-
-            ResultSet resultSet = connection.getMetaData().getTables(getCatalog(), getSchema(), "%", types);
-            tables.addAll(new ColumnToBeanPropertyRowMapper<>(Table.class).mapRows(resultSet));
-
-        } catch (Exception e) {
-            e.printStackTrace();
-        } finally {
-            try {
-                connection.close();
-            } catch (Exception e) {
-                // ignore
-            }
-        }
-        return tables.size();
     }
 
     public List<Table> getTables() {
@@ -101,14 +86,12 @@ public class JdbcMetadataService {
             for (Table table : tables) {
                 table.setColumns(getColumns(table.getTableName()));
             }
+
+            DbUtils.closeQuietly(resultSet);
         } catch (Exception e) {
             e.printStackTrace();
         } finally {
-            try {
-                connection.close();
-            } catch (Exception e) {
-                // ignore
-            }
+            DbUtils.closeQuietly(connection);
         }
         return tables;
     }
@@ -123,14 +106,11 @@ public class JdbcMetadataService {
                 table = new ColumnToBeanPropertyRowMapper<>(Table.class).mapRow(resultSet, 0);
                 table.setColumns(getColumns(tableName));
             }
+            DbUtils.closeQuietly(resultSet);
         } catch (Exception e) {
             e.printStackTrace();
         } finally {
-            try {
-                connection.close();
-            } catch (Exception e) {
-                // ignore
-            }
+            DbUtils.closeQuietly(connection);
         }
 
         return table;
@@ -138,7 +118,6 @@ public class JdbcMetadataService {
 
     public List<Column> getColumns(String tableName) {
         List<Column> columns = new ArrayList<>();
-
         Connection connection = null;
         try {
             connection = getConnection();
@@ -159,6 +138,8 @@ public class JdbcMetadataService {
                 }
             }
 
+            DbUtils.closeQuietly(columnsResultSet);
+
             ResultSet primaryKeyResultSet = connection.getMetaData().getPrimaryKeys(getCatalog(), null, tableName);
 
             List<PrimaryKey> primaryKeyList = new ColumnToBeanPropertyRowMapper<>(PrimaryKey.class).mapRows(primaryKeyResultSet);
@@ -172,14 +153,12 @@ public class JdbcMetadataService {
                 }
             }
 
+            DbUtils.closeQuietly(primaryKeyResultSet);
+
         } catch (Exception e) {
             e.printStackTrace();
         } finally {
-            try {
-                connection.close();
-            } catch (Exception e) {
-                // ignore
-            }
+            DbUtils.closeQuietly(connection);
         }
 
         return columns;
