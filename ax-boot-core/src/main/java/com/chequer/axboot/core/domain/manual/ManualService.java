@@ -162,18 +162,15 @@ public class ManualService extends BaseService<Manual, Long> {
     }
 
     @Transactional
-    public Manual uploadFile(Long id, MultipartFile file) throws IOException {
-        CommonFile commonFile = commonFileService.upload(file, "MANUAL", Long.toString(id), 1);
+    public Manual uploadFile(Long id, MultipartFile uploadFile) throws IOException {
+        File file = commonFileService.multiPartFileToFile(uploadFile);
 
         Manual manual = findOne(id);
         try {
-            manual.setFileId(commonFile.getId());
-            save(manual);
-
-            if (FilenameUtils.getExtension(file.getOriginalFilename()).toLowerCase().equals("pdf")) {
+            if (FilenameUtils.getExtension(file.getName()).toLowerCase().equals("pdf")) {
                 System.setProperty("sun.java2d.cmm", "sun.java2d.cmm.kcms.KcmsServiceProvider");
 
-                PDDocument document = PDDocument.load(file.getInputStream());
+                PDDocument document = PDDocument.load(file);
 
                 PDType0Font.load(document, getClass().getResourceAsStream("/font/NotoSans-Bold.ttf"));
                 PDType0Font.load(document, getClass().getResourceAsStream("/font/NotoSans-BoldItalic.ttf"));
@@ -192,6 +189,8 @@ public class ManualService extends BaseService<Manual, Long> {
 
                 String tmp = System.getProperty("java.io.tmpdir");
 
+                StringBuilder stringBuilder = new StringBuilder();
+
                 for (int page = 0; page < document.getNumberOfPages(); ++page) {
                     String tmpFileName = tmp + "/" + System.nanoTime() + ".jpg";
 
@@ -208,13 +207,22 @@ public class ManualService extends BaseService<Manual, Long> {
 
                     ImageIOUtil.writeImage(outputImage, tmpFileName, 720);
 
-                    commonFileService.upload(file, "MANUAL_CONTENT", Long.toString(id), page);
+                    CommonFile commonFile = commonFileService.upload(new File(tmpFileName), "MANUAL_CONTENT", Long.toString(id), page);
+
+                    stringBuilder.append("<img src=\"").append(commonFile.preview()).append("\" style='width:100%;'/>");
                 }
+
+                manual.setContent(stringBuilder.toString());
 
                 document.close();
             }
 
+            CommonFile commonFile = commonFileService.upload(file, "MANUAL", Long.toString(id), 1);
+            manual.setFileId(commonFile.getId());
+            save(manual);
+
         } catch (Exception e) {
+            e.printStackTrace();
             // ignore
         }
         return manual;

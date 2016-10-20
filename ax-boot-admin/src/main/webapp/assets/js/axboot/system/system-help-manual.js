@@ -108,7 +108,8 @@ var ACTIONS = axboot.actionExtend(fnObj, {
             url: ["manual", caller.uploadView02.manualId],
             data: "",
             callback: function (res) {
-                // caller.formView01.setData(res);
+                console.log(res);
+                caller.formView01.setData(res);
                 caller.uploadView02.setData(res);
             }
         });

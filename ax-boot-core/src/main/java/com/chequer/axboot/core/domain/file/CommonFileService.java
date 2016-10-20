@@ -62,7 +62,14 @@ public class CommonFileService extends BaseService<CommonFile, Long> implements 
     }
 
     public File multiPartFileToFile(MultipartFile multipartFile) throws IOException {
-        File file = new File(getTempDir() + "/" + UUID.randomUUID().toString() + "/" + FilenameUtils.getName(multipartFile.getName()));
+        String baseDir = getTempDir() + "/" + UUID.randomUUID().toString();
+
+        FileUtils.forceMkdir(new File(baseDir));
+
+        String tmpFileName = baseDir + "/" + FilenameUtils.getName(multipartFile.getOriginalFilename());
+
+        File file = new File(tmpFileName);
+
         multipartFile.transferTo(file);
         return file;
     }
