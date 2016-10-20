@@ -13,8 +13,6 @@ import com.chequer.axboot.core.session.JWTSessionHandler;
 import com.chequer.axboot.core.utils.*;
 import com.chequer.axboot.core.vo.ScriptSessionVO;
 import org.apache.commons.io.FilenameUtils;
-import org.apache.commons.io.IOUtils;
-import org.springframework.core.io.ClassPathResource;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -26,7 +24,6 @@ import javax.servlet.http.HttpServletResponse;
 import javax.xml.bind.DatatypeConverter;
 import java.io.IOException;
 import java.util.List;
-import java.util.Map;
 
 @Service
 public class AdminTokenAuthenticationService {
@@ -113,22 +110,10 @@ public class AdminTokenAuthenticationService {
                 requestUtils.setAttribute("menuJson", JsonUtils.toJson(menuList));
             }
 
-            setExternalConfiguration(request, response);
-
             setUserEnvironments(user, response);
         }
 
         return new AdminUserAuthentication(user);
-    }
-
-    private void setExternalConfiguration(HttpServletRequest request, HttpServletResponse response) {
-        try {
-            Map<String, Object> config =JsonUtils.fromJsonToMap(IOUtils.toString(new ClassPathResource("axboot.json").getInputStream(), "UTF-8"));
-            request.setAttribute("config", config);
-
-        } catch (Exception e) {
-            // ignore
-        }
     }
 
     private Authentication deleteCookieAndReturnNullAuthentication(HttpServletRequest request, HttpServletResponse response) {
