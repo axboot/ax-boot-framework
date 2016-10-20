@@ -1,6 +1,5 @@
 package com.chequer.axboot.admin;
 
-import com.chequer.axboot.admin.interceptor.HttpRequestInterceptor;
 import com.chequer.axboot.core.filters.MultiReadableHttpServletRequestFilter;
 import com.chequer.axboot.core.json.ContentTypeSwitchableMappingJackson2JsonView;
 import com.chequer.axboot.core.parameter.RequestParamsArgumentResolver;
@@ -30,7 +29,6 @@ import org.springframework.web.method.support.HandlerMethodArgumentResolver;
 import org.springframework.web.servlet.View;
 import org.springframework.web.servlet.ViewResolver;
 import org.springframework.web.servlet.config.annotation.DefaultServletHandlerConfigurer;
-import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
 import org.springframework.web.servlet.view.ContentNegotiatingViewResolver;
@@ -50,16 +48,6 @@ public class AXBootAdminWebMvcConfigurerAdapter extends WebMvcConfigurerAdapter 
         registry.addResourceHandler("/assets/**").addResourceLocations("/assets/");
         registry.addResourceHandler("/layout/**").addResourceLocations("/layout/");
         registry.addResourceHandler("/favicon.ico").addResourceLocations("/static/favicon.ico");
-    }
-
-    @Bean
-    public HttpRequestInterceptor httpRequestInterceptor() {
-        return new HttpRequestInterceptor();
-    }
-
-    @Override
-    public void addInterceptors(InterceptorRegistry registry) {
-        registry.addInterceptor(httpRequestInterceptor());
     }
 
     @Bean
