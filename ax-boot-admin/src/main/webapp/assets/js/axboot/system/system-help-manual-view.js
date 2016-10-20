@@ -7,7 +7,6 @@ var ACTIONS = axboot.actionExtend(fnObj, {
             url: ["manual"],
             data: caller.searchView.getData(),
             callback: function (res) {
-                //caller.uploadView01.setData(searchData);
                 caller.uploadView02.setData(searchData);
                 caller.treeView01.setData(searchData, res.list);
             }
@@ -62,6 +61,7 @@ var ACTIONS = axboot.actionExtend(fnObj, {
         }
 
         caller.uploadView02.setManualId(data.manualId);
+        caller.searchView.toggleHandle(false);
 
         axboot.ajax({
             type: "GET",
@@ -151,7 +151,7 @@ fnObj.pageStart = function () {
             CODE = this; // this는 call을 통해 수집된 데이터들.
 
             //_this.pageButtonView.initView();
-            //_this.searchView.initView();
+            _this.searchView.initView();
             _this.treeView01.initView();
             _this.formView01.initView();
             //_this.uploadView01.initView();
@@ -163,7 +163,9 @@ fnObj.pageStart = function () {
 };
 
 fnObj.pageResize = function () {
-    this.contentResize();
+    setTimeout(function () {
+        fnObj.contentResize();
+    });
 };
 
 fnObj.contentResize = function () {
@@ -184,10 +186,10 @@ fnObj.contentResize = function () {
     }
 
     /*
-    setTimeout(function () {
-        fnObj.formView01.resize();
-    }, 100);
-    */
+     setTimeout(function () {
+     fnObj.formView01.resize();
+     }, 100);
+     */
 };
 
 fnObj.pageButtonView = axboot.viewExtend({
@@ -212,11 +214,29 @@ fnObj.pageButtonView = axboot.viewExtend({
  */
 fnObj.searchView = axboot.viewExtend(axboot.searchView, {
     initView: function () {
-
+        var _this = this;
+        $('[data-manual-menu-handle]').click(function () {
+            _this.toggleHandle();
+        });
     },
     getData: function () {
         return {
             manualGrpCd: manualGrpCd
+        }
+    },
+    toggleHandle: function (TF) {
+        if (typeof TF === "undefined") {
+            if ($(document.body).hasClass("menu-opened")) {
+                $(document.body).removeClass("menu-opened");
+            } else {
+                $(document.body).addClass("menu-opened");
+            }
+        } else {
+            if (TF) {
+                $(document.body).addClass("menu-opened");
+            } else {
+                $(document.body).removeClass("menu-opened");
+            }
         }
     }
 });
@@ -259,39 +279,41 @@ fnObj.treeView01 = axboot.viewExtend(axboot.treeView, {
 
         this.target = axboot.treeBuilder($('[data-z-tree="tree-view-01"]'), {
             view: {
-                dblClickExpand: false,
-                addHoverDom: function (treeId, treeNode) {
-                    var sObj = $("#" + treeNode.tId + "_span");
-                    if (treeNode.editNameFlag || $("#addBtn_" + treeNode.tId).length > 0) return;
-                    var addStr = "<span class='button add' id='addBtn_" + treeNode.tId
-                        + "' title='add node' onfocus='this.blur();'></span>";
-                    sObj.after(addStr);
-                    var btn = $("#addBtn_" + treeNode.tId);
-                    if (btn) {
-                        btn.bind("click", function () {
-                            _this.target.zTree.addNodes(
-                                treeNode,
-                                {
-                                    id: "_isnew_" + (++_this.newCount),
-                                    pId: treeNode.id,
-                                    name: "새 목차",
-                                    __created__: true,
-                                    manualGrpCd: _this.param.manualGrpCd
-                                }
-                            );
-                            _this.target.zTree.selectNode(treeNode.children[treeNode.children.length - 1]);
-                            _this.target.editName();
-                            fnObj.treeView01.deselectNode();
-                            return false;
-                        });
-                    }
-                },
-                removeHoverDom: function (treeId, treeNode) {
-                    $("#addBtn_" + treeNode.tId).unbind().remove();
-                }
+                dblClickExpand: false
+                /*
+                 addHoverDom: function (treeId, treeNode) {
+                 var sObj = $("#" + treeNode.tId + "_span");
+                 if (treeNode.editNameFlag || $("#addBtn_" + treeNode.tId).length > 0) return;
+                 var addStr = "<span class='button add' id='addBtn_" + treeNode.tId
+                 + "' title='add node' onfocus='this.blur();'></span>";
+                 sObj.after(addStr);
+                 var btn = $("#addBtn_" + treeNode.tId);
+                 if (btn) {
+                 btn.bind("click", function () {
+                 _this.target.zTree.addNodes(
+                 treeNode,
+                 {
+                 id: "_isnew_" + (++_this.newCount),
+                 pId: treeNode.id,
+                 name: "새 목차",
+                 __created__: true,
+                 manualGrpCd: _this.param.manualGrpCd
+                 }
+                 );
+                 _this.target.zTree.selectNode(treeNode.children[treeNode.children.length - 1]);
+                 _this.target.editName();
+                 fnObj.treeView01.deselectNode();
+                 return false;
+                 });
+                 }
+                 },
+                 removeHoverDom: function (treeId, treeNode) {
+                 $("#addBtn_" + treeNode.tId).unbind().remove();
+                 }
+                 */
             },
             edit: {
-                enable: true,
+                enable: false,
                 editNameSelectAll: true
             },
             callback: {
@@ -314,8 +336,31 @@ fnObj.treeView01 = axboot.viewExtend(axboot.treeView, {
         }, []);
     },
     setData: function (_searchData, _tree) {
+        var _this = this;
         this.param = $.extend({}, _searchData);
         this.target.setData(_tree);
+
+        var nodes = this.target.zTree.getNodes();
+        var findedManualId, findedManual;
+        var findNode = function (_arr) {
+            var i = _arr.length;
+            while (i--) {
+                if (_arr[i].manualKey == manualKey) {
+                    _this.target.zTree.selectNode(_arr[i]);
+                    findedManualId = _arr[i].manualId;
+                    findedManual = _arr[i];
+                }
+                if (_arr[i].children && _arr[i].children.length > 0) {
+                    findNode(_arr[i].children);
+                }
+            }
+        };
+        findNode(nodes);
+        
+        if(ax5.util.isNumber(findedManualId)){
+            console.log(findedManual);
+            ACTIONS.dispatch(ACTIONS.TREEITEM_CLICK, findedManual);
+        }
     },
     getData: function () {
         var _this = this;
@@ -386,27 +431,17 @@ fnObj.formView01 = axboot.viewExtend(axboot.formView, {
     initView: function () {
         var _this = this;
         this.manualGroup = CODE.manualGroup;
-
+        this.tmpl = $('[data-manual-content="tmpl"]').html();
+        this.$view = $('[data-manual-content="view"]');
     },
     initEvent: function () {
         var _this = this;
     },
     setData: function (data) {
-        //this.mask.close();
-        $.extend(true, data, this.getDefaultData());
-        this.model.setModel(data);
-        this.editor.setData(data.content);
-        this.resize();
-    },
-    resize: function () {
-        try {
-            this.editor.resize('100%', $('[data-fit-height-content="form-view-01"]').height() - 10, false);
-        } catch (e) {
-        }
+        this.$view.html(ax5.mustache.render(this.tmpl, data));
     },
     clear: function () {
-        this.mask.open();
-        this.model.setModel(this.getDefaultData());
+        //this.model.setModel(this.getDefaultData());
     }
 });
 

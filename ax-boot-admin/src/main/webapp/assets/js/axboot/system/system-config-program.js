@@ -9,6 +9,8 @@ var ACTIONS = axboot.actionExtend(fnObj, {
                 caller.gridView01.setData(res);
             }
         });
+
+        return false;
     },
     PAGE_SAVE: function (caller, act, data) {
         var saveList = [].concat(caller.gridView01.getData("modified"));

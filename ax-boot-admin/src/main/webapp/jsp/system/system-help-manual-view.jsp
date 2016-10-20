@@ -7,12 +7,15 @@
 
     String manualGrpCd = requestUtils.getString("manualGrpCd");
     request.setAttribute("manualGrpCd", manualGrpCd);
+
+    String manualKey = requestUtils.getString("manualKey");
+    request.setAttribute("manualKey", manualKey);
 %>
 
 <ax:set key="system-help-manual-version" value="1.0.0"/>
 <ax:set key="title" value="${pageName}"/>
 <ax:set key="page_desc" value="${PAGE_REMARK}"/>
-<ax:set key="page_auto_height" value="false"/>
+<ax:set key="page_auto_height" value="true"/>
 <ax:set key="axbody_class" value="manualView"/>
 
 <ax:layout name="modal">
@@ -22,6 +25,7 @@
     <jsp:attribute name="js">
         <script type="text/javascript">
             var menuId = "7";
+            var manualKey = "${manualKey}";
             var manualGrpCd = "${manualGrpCd}";
         </script>
         <script src="/assets/plugins/ckeditor/ckeditor.js"></script>
@@ -31,31 +35,27 @@
     </jsp:attribute>
     <jsp:body>
 
-        <div role="page-header" class="ax-base-title">
-            <h1 class="title"><i class="cqc-browser"></i> 매뉴얼</h1>
-            <p class="desc"></p>
+
+        <div role="page-header">
+            <nav class="navbar navbar-default">
+                <span class="navbar-brand navbar-menu-handle" data-manual-menu-handle="">
+                    <button class="btn btn-default"><i class="cqc-menu"></i></button>
+                </span>
+                <b class="navbar-brand" href="#">${manualGrpCd} 매뉴얼</b>
+            </nav>
         </div>
 
         <div role="page-content">
 
-            <table class="manual-content-layout">
-                <tbody>
-                <tr>
-                    <td class="content-aside">
-
-                        <div data-z-tree="tree-view-01" data-fit-height-content="tree-view-01" style="height: 300px;" class="ztree"></div>
-
-                    </td>
-                    <td>
-
-                        <div data-fit-height-content="form-view-01">
-                            <textarea data-ax-path="content" id="editor1"></textarea>
-                        </div>
-
-                    </td>
-                </tr>
-                </tbody>
-            </table>
+            <div class="content-aside">
+                <div data-z-tree="tree-view-01" data-fit-height-content="tree-view-01" style="height: 300px;" class="ztree"></div>
+            </div>
+            <div class="content-body">
+                <div data-fit-height-content="form-view-01" data-manual-content="view" style="background: #fff;border:1px solid #ccc;overflow: auto;padding: 10px;"></div>
+                <script type="text/html" data-manual-content="tmpl">
+                    {{{content}}}
+                </script>
+            </div>
 
         </div>
 
