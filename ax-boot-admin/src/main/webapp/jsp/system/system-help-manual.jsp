@@ -36,11 +36,12 @@
             <ax:form name="searchView0">
                 <ax:tbl clazz="ax-search-tbl" minWidth="500px">
                     <ax:tr>
-                        <ax:td label='매뉴얼 그룹' width="400px">
+                        <ax:td label='매뉴얼 그룹' width="600px">
 
                             <ax:common-code groupCd="MANUAL_GROUP" id="manualGrpCd" clazz="inline-block W150"/>
 
                             <button type="button" class="btn btn-default" data-search-view-0-btn="manualGroupMng">그룹설정</button>
+                            <button type="button" class="btn btn-default" data-search-view-0-btn="open-book"><i class="cqc-open-book"></i> 매뉴얼 보기</button>
 
                         </ax:td>
 

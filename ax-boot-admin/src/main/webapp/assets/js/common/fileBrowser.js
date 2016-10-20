@@ -6,7 +6,7 @@ var ACTIONS = axboot.actionExtend(fnObj, {
     PAGE_SEARCH: function (caller, act, data) {
         axboot.ajax({
             type: "GET",
-            url: axboot.API["files"],
+            url: ["files"],
             data: this.searchView.getData(),
             callback: function (res) {
                 caller.gridView01.setData(res);
@@ -36,7 +36,7 @@ var ACTIONS = axboot.actionExtend(fnObj, {
 
         axboot.ajax({
             type: "PUT",
-            url: axboot.API["files"],
+            url: ["files"],
             data: JSON.stringify(list),
             callback: function (res) {
                 ACTIONS.dispatch(ACTIONS.PAGE_SEARCH);

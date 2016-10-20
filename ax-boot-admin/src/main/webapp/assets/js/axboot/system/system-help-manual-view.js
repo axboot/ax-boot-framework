@@ -7,7 +7,7 @@ var ACTIONS = axboot.actionExtend(fnObj, {
             url: ["manual"],
             data: caller.searchView.getData(),
             callback: function (res) {
-                caller.uploadView01.setData(searchData);
+                //caller.uploadView01.setData(searchData);
                 caller.uploadView02.setData(searchData);
                 caller.treeView01.setData(searchData, res.list);
             }
@@ -150,21 +150,44 @@ fnObj.pageStart = function () {
         .done(function () {
             CODE = this; // this는 call을 통해 수집된 데이터들.
 
-            _this.pageButtonView.initView();
-            _this.searchView.initView();
+            //_this.pageButtonView.initView();
+            //_this.searchView.initView();
             _this.treeView01.initView();
             _this.formView01.initView();
-            _this.uploadView01.initView();
-            _this.uploadView02.initView();
+            //_this.uploadView01.initView();
+            //_this.uploadView02.initView();
 
             ACTIONS.dispatch(ACTIONS.PAGE_SEARCH);
         });
+    this.contentResize();
 };
 
 fnObj.pageResize = function () {
+    this.contentResize();
+};
+
+fnObj.contentResize = function () {
+    $('[data-fit-height-content]').each(function () {
+        var $this = $(this);
+        var _pHeight = $this.offsetParent().height();
+        var name = this.getAttribute("data-fit-height-content");
+        var _asideHeight = 0;
+        $('[data-fit-height-aside="' + name + '"]').each(function () {
+            _asideHeight += $(this).outerHeight();
+        });
+        $this.css({height: _pHeight - _asideHeight});
+    });
+    if (ax5.ui.grid_instance) {
+        ax5.ui.grid_instance.forEach(function (g) {
+            g.setHeight(g.$target.height());
+        });
+    }
+
+    /*
     setTimeout(function () {
         fnObj.formView01.resize();
     }, 100);
+    */
 };
 
 fnObj.pageButtonView = axboot.viewExtend({
@@ -189,24 +212,11 @@ fnObj.pageButtonView = axboot.viewExtend({
  */
 fnObj.searchView = axboot.viewExtend(axboot.searchView, {
     initView: function () {
-        this.target = $(document["searchView0"]);
-        this.target.attr("onsubmit", "return ACTIONS.dispatch(ACTIONS.PAGE_SEARCH);");
-        this.manualGrpCd = $("#manualGrpCd");
 
-        axboot.buttonClick(this, "data-search-view-0-btn", {
-            "manualGroupMng": function () {
-                ACTIONS.dispatch(ACTIONS.MANUAL_GROUP_MNG);
-            },
-            "open-book": function () {
-                ACTIONS.dispatch(ACTIONS.OPEN_BOOK);
-            }
-        });
     },
     getData: function () {
         return {
-            pageNumber: this.pageNumber,
-            pageSize: this.pageSize,
-            manualGrpCd: this.manualGrpCd.val()
+            manualGrpCd: manualGrpCd
         }
     }
 });
@@ -375,77 +385,14 @@ fnObj.formView01 = axboot.viewExtend(axboot.formView, {
     },
     initView: function () {
         var _this = this;
-
-        this.mask = new ax5.ui.mask({
-            theme: "form-mask",
-            target: $('#split-panel-form'),
-            content: '좌측 목차를 선택해주세요.'
-        });
-        this.mask.open();
-
         this.manualGroup = CODE.manualGroup;
 
-        this.target = $("#formView01");
-        this.model = new ax5.ui.binder();
-        this.model.setModel(this.getDefaultData(), this.target);
-        this.modelFormatter = new axboot.modelFormatter(this.model); // 모델 포메터 시작
-
-        this.editor = CKEDITOR.replace('editor1', {
-            language: 'korean',
-            extraPlugins: 'uploadimage,filemanager,notification',
-            filebrowserBrowseUrl: CONTEXT_PATH + '/ckeditor/fileBrowser?targetType=CKEDITOR&targetId=' + menuId,
-            filebrowserWindowWidth: '960',
-            filebrowserWindowHeight: '600',
-            imageUploadUrl: CONTEXT_PATH + '/ckeditor/uploadImage?&targetId=' + menuId,
-            removePlugins: 'resize',
-            removeButtons: 'Underline,Subscript,Superscript,About',
-            toolbarGroups: [
-                {name: 'clipboard', groups: ['undo', 'clipboard']},
-                {name: 'editing', groups: ['find', 'selection', 'spellchecker', 'editing']},
-                {name: 'links', groups: ['links']},
-                {name: 'insert', groups: ['others', 'insert']},
-                {name: 'forms', groups: ['forms']},
-                {name: 'tools', groups: ['tools']},
-                {name: 'document', groups: ['mode', 'document', 'doctools']},
-                '/',
-                {name: 'basicstyles', groups: ['basicstyles', 'cleanup']},
-                {name: 'paragraph', groups: ['list', 'indent', 'blocks', 'align', 'bidi', 'paragraph']},
-                {name: 'styles', groups: ['styles']},
-                {name: 'colors', groups: ['colors']}
-            ]
-        });
-
-        this.editor.once('instanceReady', function () {
-        });
-
-        this.editor.on('notificationShow', function (evt) {
-            evt.cancel();
-        });
-
-        this.editor.on('notificationUpdate', function (evt) {
-            evt.cancel();
-        });
-
-        this.resize();
-        this.initEvent();
-
-        axboot.buttonClick(this, "data-form-view-01-btn", {
-            "form-clear": function () {
-                ACTIONS.dispatch(ACTIONS.FORM_CLEAR);
-            }
-        });
     },
     initEvent: function () {
         var _this = this;
     },
-    getData: function () {
-        var data = this.modelFormatter.getClearData(this.model.get()); // 모델의 값을 포멧팅 전 값으로 치환.
-        data.content = this.editor.getData();
-
-        return data;
-    },
     setData: function (data) {
-        this.mask.close();
+        //this.mask.close();
         $.extend(true, data, this.getDefaultData());
         this.model.setModel(data);
         this.editor.setData(data.content);
@@ -531,7 +478,7 @@ fnObj.uploadView02 = axboot.viewExtend(axboot.commonView, {
         $(this.target).attr("onsubmit", "return fnObj.uploadView02.onSubmit();");
     },
     setData: function (_data) {
-        this.target.file.value = "";
+        //this.target.file.value = "";
 
         if (_data.file) {
             $('[data-form-view-01-btn="file"]').html('<i class="cqc-download"></i> ' + _data.file.fileNm);
