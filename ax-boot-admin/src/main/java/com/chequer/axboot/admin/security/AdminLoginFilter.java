@@ -20,7 +20,6 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.time.Instant;
 
 public class AdminLoginFilter extends AbstractAuthenticationProcessingFilter {
 
@@ -52,9 +51,11 @@ public class AdminLoginFilter extends AbstractAuthenticationProcessingFilter {
         adminTokenAuthenticationService.addAuthentication(response, userAuthentication);
 
         User user = userService.findOne(userAuthentication.getName());
+        /*
         user.setIp(HttpUtils.getRemoteAddress(request));
         user.setLastLoginDate(Instant.now());
         userService.save(user);
+        */
 
         response.setContentType(HttpUtils.getJsonContentType(request));
         response.getWriter().write(JsonUtils.toJson(user));

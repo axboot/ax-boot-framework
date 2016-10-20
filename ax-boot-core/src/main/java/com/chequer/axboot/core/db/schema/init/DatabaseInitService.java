@@ -17,6 +17,7 @@ import com.chequer.axboot.core.domain.user.auth.menu.AuthGroupMenuService;
 import com.chequer.axboot.core.domain.user.role.UserRole;
 import com.chequer.axboot.core.domain.user.role.UserRoleService;
 import com.chequer.axboot.core.model.extract.service.jdbc.JdbcMetadataService;
+import com.chequer.axboot.core.utils.ArrayUtils;
 import org.apache.commons.io.IOUtils;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
@@ -64,7 +65,7 @@ public class DatabaseInitService {
     private JdbcTemplate jdbcTemplate;
 
     public boolean initialized() {
-        return jdbcMetadataService.getTableSize() > 0;
+        return ArrayUtils.isNotEmpty(jdbcMetadataService.getTables());
     }
 
     @Transactional
