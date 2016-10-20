@@ -28,6 +28,13 @@
 
 <ax:layout name="empty">
     <jsp:attribute name="css">
+        <style>
+            .ax-body.login {
+                background: url(${config.background.login}) center center;
+                background-size: cover;
+                color: #ccc;
+            }
+        </style>
     </jsp:attribute>
 
     <jsp:attribute name="js">
@@ -75,7 +82,7 @@
     <jsp:body>
         <ax:flex-layout valign="middle" align="center" style="width:100%;height:100%;">
             <div>
-                <img src="${pageContext.request.contextPath}/assets/images/login-logo.png" class="img-logo">
+                <img src="${pageContext.request.contextPath}${config.logo.login}" class="img-logo">
             </div>
 
             <div class="panel">

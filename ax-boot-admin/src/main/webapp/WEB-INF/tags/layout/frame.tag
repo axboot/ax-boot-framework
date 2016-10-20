@@ -73,7 +73,7 @@
             </c:if>
             <div class="ax-split-panel cell-logo">
                 <a href="${pageContext.request.contextPath}/jsp/main.jsp">
-                    <img src="${pageContext.request.contextPath}/assets/images/header-logo.png" width="100%"/>
+                    <img src="${pageContext.request.contextPath}${config.logo.header}" width="100%"/>
                 </a>
             </div>
             <div id="ax-top-menu" class="ax-split-panel ax-split-flex">
