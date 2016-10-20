@@ -1,15 +1,15 @@
 {
   "title": "AXBoot :: Advanced Web Application Development Framework",
   "logo": {
-    "header": "header-logo.png",
-    "login": "login-logo.png",
+    "header": "/assets/images/header-logo.png",
+    "login": "/assets/images/login-logo.png",
     "logo": "logo.png"
   },
   "background": {
-    "login": "login-bg"
+    "login": "/assets/images/login-bg.jpg"
   },
   "layout": {
-    "leftSideMenu": "disable"
+    "leftSideMenu": "visible"
   },
   "extendedCss": [
     "/assets/css/axboot.css"
