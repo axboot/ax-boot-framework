@@ -9,7 +9,7 @@
     "login": "login-bg"
   },
   "layout": {
-    "leftSideMenu": "visible"
+    "leftSideMenu": "disable"
   },
   "extendedCss": [
     "/assets/css/axboot.css"

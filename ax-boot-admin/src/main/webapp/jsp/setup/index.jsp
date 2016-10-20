@@ -34,12 +34,13 @@
                         axboot.ajax({
                             type: "GET",
                             url: "/setup/init",
-                            data: {}
-                        }, function (response) {
-                            // do something
+                            data: {},
+                            callback: function (response) {
+                                // do something
 
-                            alert("초기화가 완료 되었습니다");
-                            location.href = CONTEXT_PATH + "/";
+                                alert("초기화가 완료 되었습니다");
+                                location.href = CONTEXT_PATH + "/";
+                            }
                         });
                     });
                 }

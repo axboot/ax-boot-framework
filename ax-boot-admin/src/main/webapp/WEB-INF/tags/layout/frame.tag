@@ -33,7 +33,7 @@
     <jsp:invoke fragment="js"/>
 </head>
 <body class="ax-body ${axbody_class}" onselectstart="return false;">
-<div id="ax-frame-root" class="show-aside" data-root-container="true">
+<div id="ax-frame-root" class="<c:if test="${config.layout.leftSideMenu eq 'visible'}">show-aside</c:if>" data-root-container="true">
     <jsp:doBody/>
 
     <div class="ax-frame-header-tool">
@@ -63,9 +63,14 @@
 
     <div class="ax-frame-header">
         <div class="ax-split-col" style="height: 100%;">
+            <c:if test="${config.layout.leftSideMenu eq 'visible'}">
             <div class="ax-split-panel cell-aside-handle" id="ax-aside-handel">
                 <i class="cqc-menu"></i>
             </div>
+            </c:if>
+            <c:if test="${config.layout.leftSideMenu ne 'visible'}">
+            <div class="ax-split-panel">&nbsp;</div>
+            </c:if>
             <div class="ax-split-panel cell-logo">
                 <a href="${pageContext.request.contextPath}/jsp/main.jsp">
                     <img src="${pageContext.request.contextPath}/assets/images/header-logo.png" width="100%"/>
@@ -80,18 +85,20 @@
         <div id="ax-frame-header-tab-container"></div>
     </div>
 
-    <div class="ax-frame-aside" id="ax-frame-aside"></div>
-    <script type="text/html" data-tmpl="ax-frame-aside">
-        <div class="ax-frame-aside-menu-holder">
-            <div style="height: 10px;"></div>
-            {{#items}}
-            <a class="aside-menu-item aside-menu-item-label {{#open}}opend{{/open}}" data-label-index="{{@i}}">{{{name}}}</a>
-            <div class="aside-menu-item aside-menu-item-tree-body {{#open}}opend{{/open}}" data-tree-body-index="{{@i}}">
-                <div class="tree-holder ztree" id="aside-menu-{{@i}}" data-tree-holder-index="{{@i}}"></div>
+    <c:if test="${config.layout.leftSideMenu eq 'visible'}">
+        <div class="ax-frame-aside" id="ax-frame-aside"></div>
+        <script type="text/html" data-tmpl="ax-frame-aside">
+            <div class="ax-frame-aside-menu-holder">
+                <div style="height: 10px;"></div>
+                {{#items}}
+                <a class="aside-menu-item aside-menu-item-label {{#open}}opend{{/open}}" data-label-index="{{@i}}">{{{name}}}</a>
+                <div class="aside-menu-item aside-menu-item-tree-body {{#open}}opend{{/open}}" data-tree-body-index="{{@i}}">
+                    <div class="tree-holder ztree" id="aside-menu-{{@i}}" data-tree-holder-index="{{@i}}"></div>
+                </div>
+                {{/items}}
             </div>
-            {{/items}}
-        </div>
-    </script>
+        </script>
+    </c:if>
 
     <div class="ax-frame-foot">
         <div class="ax-split-col" style="height: 100%;">
