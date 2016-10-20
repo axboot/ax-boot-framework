@@ -79,20 +79,88 @@
 
 &.manualView {
     padding: 0 0px;
-    .ax-base-title {
-        padding-left: 20px;
+
+    [role="page-header"] {
+        .navbar {
+            margin-bottom: 0;
+            background: transparent;
+            border: 0 none;
+            padding-left: 10px;
+            .navbar-menu-handle{
+                padding:12px 10px;
+                display: none;
+            }
+        }
     }
     [role="page-content"] {
         position: relative;
         padding: 0 10px;
-        .manual-content-layout {
-            table-layout: fixed;
+
+        .content-aside {
+            position: absolute;
+            left: 10px;
+            width: 300px;
             height: 100%;
-            width: 100%;
-            .content-aside {
-                width: 300px;
-                padding-right: 10px;
+            padding-right: 10px;
+        }
+        .content-body {
+            padding-left: 300px;
+        }
+
+    }
+
+    @media (max-width: $screen-md-min) {
+
+        [role="page-header"] {
+            .navbar {
+                margin-bottom: 0;
+                background: transparent;
+                border: 0 none;
+                padding-left: 10px;
+                .navbar-brand{
+                    padding-left: 0;
+                }
+                .navbar-menu-handle{
+                    padding:12px 10px;
+                    display: block;
+                }
             }
         }
+        [role="page-content"] {
+            .content-aside {
+                position: absolute;
+                left: -310px;
+            }
+            .content-body {
+                padding-left: 0px;
+            }
+        }
+
+        &.menu-opened{
+            [role="page-header"] {
+                .navbar {
+                    .navbar-menu-handle{
+                        .btn {
+                            background: #ccc;
+                            color: #fff;
+                        }
+                    }
+                }
+            }
+            [role="page-content"] {
+                .content-aside {
+                    position: absolute;
+                    left: 10px;
+                    opacity: 0.9;
+                    [data-z-tree] {
+                        background: #f3f3f3;
+                    }
+                }
+                .content-body {
+                    padding-left: 0px;
+                }
+            }
+        }
+
     }
 }
