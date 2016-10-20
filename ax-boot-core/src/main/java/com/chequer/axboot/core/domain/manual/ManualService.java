@@ -284,4 +284,8 @@ public class ManualService extends BaseService<Manual, Long> {
 
         return manual;
     }
+
+    public void pdfToImage() {
+
+    }
 }

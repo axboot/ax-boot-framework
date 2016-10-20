@@ -46,6 +46,7 @@ public class AXBootAdminWebMvcConfigurerAdapter extends WebMvcConfigurerAdapter 
     @Override
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
         registry.addResourceHandler("/assets/**").addResourceLocations("/assets/");
+        registry.addResourceHandler("/axboot.config.js").addResourceLocations("/axboot.config.js");
         registry.addResourceHandler("/layout/**").addResourceLocations("/layout/");
         registry.addResourceHandler("/favicon.ico").addResourceLocations("/static/favicon.ico");
     }

@@ -40,6 +40,7 @@ public class AXBootAdminSecurityConfig extends WebSecurityConfigurerAdapter {
 
     public static final String[] ignorePages = new String[]{
             "/resources/**",
+            "/axboot.config.js",
             "/assets/**",
             "/layouts/**",
             "/jsp/common/**",

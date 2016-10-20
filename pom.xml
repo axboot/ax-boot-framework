@@ -119,6 +119,7 @@
 
         <oracle.jdbc.version>12.1.0.1</oracle.jdbc.version>
 
+        <pdf.box.version>2.0.3</pdf.box.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
         <project.version>1.0</project.version>
@@ -506,6 +507,12 @@
                 <groupId>net.coobird</groupId>
                 <artifactId>thumbnailator</artifactId>
                 <version>${thumbnailator.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.apache.pdfbox</groupId>
+                <artifactId>pdfbox</artifactId>
+                <version>${pdf.box.version}</version>
             </dependency>
 
         </dependencies>
