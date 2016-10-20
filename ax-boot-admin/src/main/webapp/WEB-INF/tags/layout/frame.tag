@@ -11,11 +11,16 @@
     <meta name="viewport"
           content="width=device-width, user-scalable=no, initial-scale=1, maximum-scale=1, minimum-scale=1"/>
     <meta name="apple-mobile-web-app-capable" content="yes">
-    <title>AXBOOT :: Full Stack Web Development Framework</title>
+    <title>${config.title}</title>
     <link rel="shortcut icon" href="<c:url value='/assets/favicon.ico'/>" type="image/x-icon"/>
     <link rel="icon" href="<c:url value='/assets/favicon.ico'/>" type="image/x-icon"/>
     <link rel="stylesheet" type="text/css" href="<c:url value='/assets/css/axboot.css'/>"/>
     <link rel="stylesheet" type="text/css" href="<c:url value='/assets/css/lang-kor.css'/>"/>
+
+    <c:forEach var="css" items="${config.extendedCss}">
+    <link rel="stylesheet" type="text/css" href="<c:url value='${css}'/>"/>
+    </c:forEach>
+
     <script type="text/javascript">
         var CONTEXT_PATH = "<%=ContextUtil.getContext()%>";
         var TOP_MENU_DATA = (function(json){return json;})(${menuJson});
