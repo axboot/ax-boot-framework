@@ -26,7 +26,7 @@ public class HttpRequestInterceptor extends HandlerInterceptorAdapter {
         MDCUtil.clear();
     }
 
-    private synchronized void setExternalConfiguration(HttpServletRequest request, HttpServletResponse response) {
+    private void setExternalConfiguration(HttpServletRequest request, HttpServletResponse response) {
         try {
             if (config == null || !PhaseUtils.isProduction()) {
                 config = JsonUtils.fromJsonToMap(IOUtils.toString(new ClassPathResource("axboot.json").getInputStream(), "UTF-8"));
