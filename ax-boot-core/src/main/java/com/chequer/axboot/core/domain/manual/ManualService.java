@@ -6,6 +6,12 @@ import com.chequer.axboot.core.domain.file.CommonFileService;
 import com.chequer.axboot.core.parameter.RequestParams;
 import com.querydsl.core.BooleanBuilder;
 import org.apache.commons.io.FileUtils;
+import org.apache.commons.io.FilenameUtils;
+import org.apache.pdfbox.pdmodel.PDDocument;
+import org.apache.pdfbox.pdmodel.font.PDType0Font;
+import org.apache.pdfbox.rendering.ImageType;
+import org.apache.pdfbox.rendering.PDFRenderer;
+import org.apache.pdfbox.tools.imageio.ImageIOUtil;
 import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
 import org.apache.poi.ss.usermodel.*;
 import org.springframework.stereotype.Service;
@@ -14,6 +20,8 @@ import org.springframework.web.multipart.MultipartFile;
 import org.zeroturnaround.zip.ZipUtil;
 
 import javax.inject.Inject;
+import java.awt.*;
+import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
@@ -161,6 +169,51 @@ public class ManualService extends BaseService<Manual, Long> {
         try {
             manual.setFileId(commonFile.getId());
             save(manual);
+
+            if (FilenameUtils.getExtension(file.getOriginalFilename()).toLowerCase().equals("pdf")) {
+                System.setProperty("sun.java2d.cmm", "sun.java2d.cmm.kcms.KcmsServiceProvider");
+
+                PDDocument document = PDDocument.load(file.getInputStream());
+
+                PDType0Font.load(document, getClass().getResourceAsStream("/font/NotoSans-Bold.ttf"));
+                PDType0Font.load(document, getClass().getResourceAsStream("/font/NotoSans-BoldItalic.ttf"));
+                PDType0Font.load(document, getClass().getResourceAsStream("/font/NotoSans-Italic.ttf"));
+                PDType0Font.load(document, getClass().getResourceAsStream("/font/NotoSans-Regular.ttf"));
+
+                PDType0Font.load(document, getClass().getResourceAsStream("/font/NanumGothic.ttf"));
+                PDType0Font.load(document, getClass().getResourceAsStream("/font/NanumGothicBold.ttf"));
+                PDType0Font.load(document, getClass().getResourceAsStream("/font/NanumGothicExtraBold.ttf"));
+                PDType0Font.load(document, getClass().getResourceAsStream("/font/NanumGothicLight.ttf"));
+
+                PDType0Font.load(document, getClass().getResourceAsStream("/font/malgun.ttf"));
+                PDType0Font.load(document, getClass().getResourceAsStream("/font/malgunbd.ttf"));
+
+                PDFRenderer pdfRenderer = new PDFRenderer(document);
+
+                String tmp = System.getProperty("java.io.tmpdir");
+
+                for (int page = 0; page < document.getNumberOfPages(); ++page) {
+                    String tmpFileName = tmp + "/" + System.nanoTime() + ".jpg";
+
+                    BufferedImage originImage = pdfRenderer.renderImageWithDPI(page, 720, ImageType.RGB);
+
+                    int width = 2048;
+                    int height = (originImage.getHeight() * width) / originImage.getWidth();
+
+                    BufferedImage outputImage = new BufferedImage(width, height, originImage.getType());
+
+                    Graphics2D g2d = outputImage.createGraphics();
+                    g2d.drawImage(originImage, 0, 0, width, height, null);
+                    g2d.dispose();
+
+                    ImageIOUtil.writeImage(outputImage, tmpFileName, 720);
+
+                    commonFileService.upload(file, "MANUAL_CONTENT", Long.toString(id), page);
+                }
+
+                document.close();
+            }
+
         } catch (Exception e) {
             // ignore
         }
@@ -283,9 +336,5 @@ public class ManualService extends BaseService<Manual, Long> {
         }
 
         return manual;
-    }
-
-    public void pdfToImage() {
-
     }
 }

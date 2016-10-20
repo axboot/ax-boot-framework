@@ -515,6 +515,12 @@
                 <version>${pdf.box.version}</version>
             </dependency>
 
+            <dependency>
+                <groupId>org.apache.pdfbox</groupId>
+                <artifactId>pdfbox-tools</artifactId>
+                <version>${pdf.box.version}</version>
+            </dependency>
+
         </dependencies>
     </dependencyManagement>
 

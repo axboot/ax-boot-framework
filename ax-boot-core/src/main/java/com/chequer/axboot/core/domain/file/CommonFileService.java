@@ -57,10 +57,25 @@ public class CommonFileService extends BaseService<CommonFile, Long> implements 
         }
     }
 
+    public String getTempDir() {
+        return System.getProperty("java.io.tmpdir");
+    }
+
+    public File multiPartFileToFile(MultipartFile multipartFile) throws IOException {
+        File file = new File(getTempDir() + "/" + UUID.randomUUID().toString() + "/" + FilenameUtils.getName(multipartFile.getName()));
+        multipartFile.transferTo(file);
+        return file;
+    }
+
     @Transactional
     public CommonFile upload(MultipartFile multipartFile, String targetType, String targetId, int sort) throws IOException {
+        return upload(multiPartFileToFile(multipartFile), targetType, targetId, sort);
+    }
+
+    @Transactional
+    public CommonFile upload(File file, String targetType, String targetId, int sort) throws IOException {
         UploadParameters uploadParameters = new UploadParameters();
-        uploadParameters.setMultipartFile(multipartFile);
+        uploadParameters.setFile(file);
         uploadParameters.setTargetType(targetType);
         uploadParameters.setTargetId(targetId);
         uploadParameters.setSort(sort);
@@ -70,7 +85,11 @@ public class CommonFileService extends BaseService<CommonFile, Long> implements 
 
     @Transactional
     public CommonFile upload(UploadParameters uploadParameters) throws IOException {
-        MultipartFile multipartFile = uploadParameters.getMultipartFile();
+        File uploadFile = uploadParameters.getFile();
+
+        if (uploadFile == null && uploadParameters.getMultipartFile() != null) {
+            uploadFile = multiPartFileToFile(uploadParameters.getMultipartFile());
+        }
 
         String targetType = uploadParameters.getTargetType();
         String targetId = uploadParameters.getTargetId();
@@ -83,7 +102,7 @@ public class CommonFileService extends BaseService<CommonFile, Long> implements 
         int thumbnailWidth = uploadParameters.getThumbnailWidth();
         int thumbnailHeight = uploadParameters.getThumbnailHeight();
 
-        String fileName = FilenameUtils.getName(multipartFile.getOriginalFilename());
+        String fileName = FilenameUtils.getName(uploadFile.getName());
         String extension = FilenameUtils.getExtension(fileName);
         String fileType = getFileType(extension);
 
@@ -92,7 +111,7 @@ public class CommonFileService extends BaseService<CommonFile, Long> implements 
         String savePath = getSavePath(saveName);
 
         File file = new File(savePath);
-        multipartFile.transferTo(file);
+        FileUtils.copyFile(uploadFile, file);
 
         if (deleteIfExist) {
             deleteByTargetTypeAndTargetId(targetType, targetId);
@@ -118,6 +137,8 @@ public class CommonFileService extends BaseService<CommonFile, Long> implements 
             } catch (Exception e) {
             }
         }
+
+        FileUtils.deleteQuietly(uploadFile);
 
         save(commonFile);
 

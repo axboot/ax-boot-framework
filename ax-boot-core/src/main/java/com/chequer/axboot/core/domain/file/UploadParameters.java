@@ -4,8 +4,12 @@ package com.chequer.axboot.core.domain.file;
 import lombok.Data;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.File;
+
 @Data
 public class UploadParameters {
+    private File file;
+
     private MultipartFile multipartFile;
 
     private String targetType;
