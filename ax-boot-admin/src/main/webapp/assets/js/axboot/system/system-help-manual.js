@@ -433,12 +433,15 @@ fnObj.formView01 = axboot.viewExtend(axboot.formView, {
     },
     getData: function () {
         var data = this.modelFormatter.getClearData(this.model.get()); // 모델의 값을 포멧팅 전 값으로 치환.
+        data.content = this.editor.getData();
+
         return data;
     },
     setData: function (data) {
         this.mask.close();
         $.extend(true, data, this.getDefaultData());
         this.model.setModel(data);
+        this.editor.setData(data.content);
         this.resize();
     },
     resize: function () {

@@ -115,7 +115,7 @@
                         <div class="H10"></div>
                     </div>
                     <div data-fit-height-content="form-view-01">
-                        <textarea data-ax-path="content" id="editor1" style="opacity: 0;"></textarea>
+                        <textarea data-ax-path="content" id="editor1"></textarea>
                     </div>
                 </ax:form>
 
