@@ -36,7 +36,7 @@
                 <div class="ax-button-group" data-fit-height-aside="grid-view-01">
                     <div class="left">
                         <h2><i class="cqc-list"></i>
-                            <lang data-id="사용자정보"></lang>
+                            사용자정보
                         </h2>
                     </div>
                     <div class="right"></div>
@@ -51,7 +51,7 @@
                 <div class="ax-button-group" role="panel-header">
                     <div class="left">
                         <h2><i class="cqc-news"></i>
-                            <lang data-id="사용자등록"></lang>
+                            사용자등록
                         </h2>
                     </div>
                     <div class="right">

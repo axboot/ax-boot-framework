@@ -46,9 +46,16 @@ axboot.init = function () {
                     $this.css({height: _pHeight - _asideHeight});
                 });
                 if (ax5.ui.grid_instance) {
-                    ax5.ui.grid_instance.forEach(function (g) {
-                        g.setHeight(g.$target.height());
-                    });
+                    var gi = ax5.ui.grid_instance.length;
+                    while(gi--){
+                        ax5.ui.grid_instance[gi].setHeight(ax5.ui.grid_instance[gi].$target.height());
+                    }
+                }
+                if(ax5.ui.mask_instance){
+                    var mi = ax5.ui.mask_instance.length;
+                    while(mi--){
+                        ax5.ui.mask_instance[mi].align();
+                    }
                 }
             },
             onOpenTab: function () {
