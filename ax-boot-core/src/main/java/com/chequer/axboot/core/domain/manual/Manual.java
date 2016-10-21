@@ -67,14 +67,19 @@ public class Manual extends BaseJpaModel<Long> implements Cloneable {
     @ColumnPosition(7)
     private String content;
 
+    @Column(name = "EXTRACTED_CONTENT", length = 2147483647)
+    @Comment(value = "컨텐츠")
+    @ColumnPosition(8)
+    private String extractedContent;
+
     @Column(name = "MANUAL_KEY", length = 100)
     @Comment(value = "호출 키")
-    @ColumnPosition(8)
+    @ColumnPosition(9)
     private String manualKey;
 
     @Column(name = "FILE_ID", precision = 20)
     @Comment(value = "파일 ID")
-    @ColumnPosition(9)
+    @ColumnPosition(10)
     private Long fileId;
 
     @Transient

@@ -32,8 +32,14 @@ public class ManualController extends BaseController {
     private ManualService manualService;
 
     @RequestMapping(method = RequestMethod.GET, produces = APPLICATION_JSON)
-    public Responses.ListResponse manualList(RequestParams requestParams) {
+    public Responses.ListResponse manualList(RequestParams<Manual> requestParams) {
         List<Manual> list = manualService.get(requestParams);
+        return Responses.ListResponse.of(ModelMapperUtils.mapList(list, ManualListVO.class));
+    }
+
+    @RequestMapping(value = "/search", method = RequestMethod.GET, produces = APPLICATION_JSON)
+    public Responses.ListResponse search(RequestParams<Manual> requestParams) {
+        List<Manual> list = manualService.search(requestParams);
         return Responses.ListResponse.of(ModelMapperUtils.mapList(list, ManualListVO.class));
     }
 

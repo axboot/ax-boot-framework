@@ -192,4 +192,30 @@ public class RequestParams<T> {
         }
         return null;
     }
+
+    public Object getNotEmptyObject(String key) {
+        if (!map.containsKey(key)) {
+            throw new ApiException(key + " is not present");
+        }
+
+        Object object = map.get(key);
+
+        if (object == null || StringUtils.isEmpty(object.toString())) {
+            throw new ApiException(key + " is not present");
+        }
+
+        return object;
+    }
+
+    public Integer getNotEmptyInt(String key) {
+        return Integer.parseInt(getNotEmptyString(key));
+    }
+
+    public String getNotEmptyString(String key) {
+        return (String) getNotEmptyObject(key);
+    }
+
+    public Long getNotEmptyLong(String key) {
+        return Long.parseLong(getNotEmptyString(key));
+    }
 }

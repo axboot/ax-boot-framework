@@ -4,13 +4,13 @@ import com.chequer.axboot.core.domain.BaseService;
 import com.chequer.axboot.core.domain.file.CommonFile;
 import com.chequer.axboot.core.domain.file.CommonFileService;
 import com.chequer.axboot.core.parameter.RequestParams;
-import com.querydsl.core.BooleanBuilder;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.pdmodel.font.PDType0Font;
 import org.apache.pdfbox.rendering.ImageType;
 import org.apache.pdfbox.rendering.PDFRenderer;
+import org.apache.pdfbox.text.PDFTextStripper;
 import org.apache.pdfbox.tools.imageio.ImageIOUtil;
 import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
 import org.apache.poi.ss.usermodel.*;
@@ -43,16 +43,15 @@ public class ManualService extends BaseService<Manual, Long> {
     }
 
     public List<Manual> get(RequestParams<Manual> requestParams) {
-        String manualGrpCd = requestParams.getString("manualGrpCd", "");
+        String manualGrpCd = requestParams.getNotEmptyString("manualGrpCd");
         boolean menuOpen = requestParams.getBoolean("menuOpen", true);
 
-        BooleanBuilder builder = new BooleanBuilder();
-
-        if (isNotEmpty(manualGrpCd)) {
-            builder.and(qManual.manualGrpCd.eq(manualGrpCd));
-        }
-
-        List<Manual> manualList = select().from(qManual).where(builder).orderBy(qManual.level.asc(), qManual.sort.asc()).fetch();
+        List<Manual> manualList =
+                select()
+                        .from(qManual)
+                        .where(qManual.manualGrpCd.eq(manualGrpCd))
+                        .orderBy(qManual.level.asc(), qManual.sort.asc())
+                        .fetch();
 
         List<Manual> hierarchyList = new ArrayList<>();
 
@@ -70,6 +69,73 @@ public class ManualService extends BaseService<Manual, Long> {
 
         return hierarchyList;
     }
+
+    public List<Manual> search(RequestParams<Manual> requestParams) {
+        String manualGrpCd = requestParams.getNotEmptyString("manualGrpCd");
+        boolean menuOpen = requestParams.getBoolean("menuOpen", true);
+        String filter = requestParams.getNotEmptyString("filter");
+
+        List<Manual> hierarchyList = get(requestParams);
+
+        List<Long> filterManualIds =
+                select()
+                        .select(qManual.manualId)
+                        .from(qManual)
+                        .where(qManual.manualGrpCd.eq(manualGrpCd).and(qManual.content.like("%" + filter + "%").or(qManual.extractedContent.like("%" + filter + "%")).or(qManual.manualNm.like("%" + filter + "%"))))
+                        .orderBy(qManual.level.asc(), qManual.sort.asc())
+                        .fetch();
+
+        List<Manual> filterList = new ArrayList<>();
+
+        filter(filterManualIds, filterList, hierarchyList, menuOpen);
+
+        return filterList;
+    }
+
+    public boolean isContainedFilterManualId(Manual manual, List<Long> filterManualIds) {
+        boolean hasFilterManualId = false;
+
+        if (isNotEmpty(manual.getChildren())) {
+            for (Manual _menual : manual.getChildren()) {
+                hasFilterManualId = isContainedFilterManualId(_menual, filterManualIds);
+
+                if (hasFilterManualId) {
+                    return true;
+                }
+            }
+        }
+
+        if (filterManualIds.contains(manual.getManualId())) {
+            hasFilterManualId = true;
+        }
+
+        return hasFilterManualId;
+    }
+
+    public void filter(List<Long> filterManualIds, List<Manual> filterList, List<Manual> hierarchyList, boolean menuOpen) {
+        if (isNotEmpty(hierarchyList)) {
+            for (Manual manual : hierarchyList) {
+                if (isContainedFilterManualId(manual, filterManualIds)) {
+                    Manual parent = getParent(filterList, manual);
+
+                    if (parent == null) {
+                        Manual _manual = manual.clone();
+                        _manual.setOpen(menuOpen);
+                        filterList.add(_manual);
+                    } else {
+                        Manual _manual = manual.clone();
+                        _manual.setOpen(menuOpen);
+                        parent.addChildren(_manual);
+                    }
+                }
+
+                if (isNotEmpty(manual.getChildren())) {
+                    filter(filterManualIds, filterList, manual.getChildren(), menuOpen);
+                }
+            }
+        }
+    }
+
 
     @Transactional
     public void uploadZip(File zip, String manualGrpCd) throws IOException {
@@ -186,6 +252,22 @@ public class ManualService extends BaseService<Manual, Long> {
                 PDType0Font.load(document, getClass().getResourceAsStream("/font/malgunbd.ttf"));
 
                 PDFRenderer pdfRenderer = new PDFRenderer(document);
+
+                PDFTextStripper pdfStripper = new PDFTextStripper();
+                pdfStripper.setStartPage(1);
+                pdfStripper.setEndPage(document.getNumberOfPages());
+
+                String text = pdfStripper.getText(document);
+
+                StringBuilder hangul = new StringBuilder();
+                for (int i = 0; i < text.length(); i++) {
+                    char cValue = text.charAt(i);
+                    if (cValue >= 0xAC00 && cValue <= 0xD743) {
+                        hangul.append(cValue);
+                    }
+                }
+
+                manual.setExtractedContent(hangul.toString());
 
                 String tmp = System.getProperty("java.io.tmpdir");
 
