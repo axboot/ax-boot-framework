@@ -1,20 +1,25 @@
-$ax-frame-header-tool-height: 30px;
-$ax-frame-header-tool-bg: #788694;
-$ax-frame-header-height: 50px;
-$ax-frame-header-bg: #fff;
-$ax-frame-header-tab-height: 30px;
-$ax-frame-header-tab-bg-colors: (#DDDDDD, #DDDDDD);
-$ax-frame-header-tab-color: #000;
-$ax-frame-header-tab-border: 1px solid #636363;
-$ax-frame-header-tab-on-bg-colors: (#3DACFC, #3DACFC);
-$ax-frame-header-tab-on-color: #fff;
+$ax-frame-header-tool-height: 30px !default;
+$ax-frame-header-tool-bg: #788694 !default;
+$ax-frame-header-tool-border: 0 none !default;
+$ax-frame-header-tool-user-info-color: #fff !default;
+$ax-frame-header-tool-user-info-btn-bg-colors: (#79CBE3, #39B5DC) !default;
 
-$ax-frame-aside-width: 220px;
-$ax-frame-aside-bg: #2B3A48;
+$ax-frame-header-height: 50px !default;
+$ax-frame-header-bg: #fff !default;
+$ax-frame-header-tab-height: 30px !default;
+$ax-frame-header-tab-container-bg-colors: (#B5B6B6, #B5B6B6) !default;
+$ax-frame-header-tab-bg-colors: (#DDDDDD, #DDDDDD) !default;
+$ax-frame-header-tab-color: #000 !default;
+$ax-frame-header-tab-border: 1px solid #636363 !default;
+$ax-frame-header-tab-on-bg-colors: (#3DACFC, #3DACFC) !default;
+$ax-frame-header-tab-on-color: #fff !default;
 
-$ax-frame-foot-height: 30px;
-$ax-frame-foot-bg: #E2E2E2;
-$ax-frame-foot-color: #7C7C7C;
+$ax-frame-aside-width: 220px !default;
+$ax-frame-aside-bg: #2B3A48 !default;
+
+$ax-frame-foot-height: 30px !default;
+$ax-frame-foot-bg: #E2E2E2 !default;
+$ax-frame-foot-color: #7C7C7C !default;
 
 &.frame-set {
     overflow: hidden;
@@ -29,16 +34,17 @@ $ax-frame-foot-color: #7C7C7C;
             position: relative;
             height: $ax-frame-header-tool-height;
             background-color: $ax-frame-header-tool-bg;
+            border-bottom: $ax-frame-header-tool-border;
 
             .ax-frame-user-info {
                 height: 100%;
                 width: auto;
                 margin-right: 10px;
                 margin-left: auto;
-                color: #fff;
+                color: $ax-frame-header-tool-user-info-color;
                 font-size: 0.8em;
                 a {
-                    color: #fff;
+                    color: $ax-frame-header-tool-user-info-color;
                 }
                 .ax-frame-logout {
                     text-decoration: none;
@@ -47,9 +53,9 @@ $ax-frame-foot-color: #7C7C7C;
                     border-radius: 8px;
                     padding: 3px 8px;
                     /* button: */
-                    @include ax-background(top, #79CBE3, #39B5DC);
+                    @include ax-background(top, $ax-frame-header-tool-user-info-btn-bg-colors);
                     font-size: 0.8em;
-                    color: #FFFFFF;
+                    color: $ax-frame-header-tool-user-info-color;
                     display: block;
                     i {
 
@@ -66,6 +72,7 @@ $ax-frame-foot-color: #7C7C7C;
             width: 100%;
             height: $ax-frame-header-height;
             background-color: $ax-frame-header-bg;
+
             .cell-aside-handle {
                 cursor: pointer;
                 width: $ax-frame-header-height;
@@ -90,7 +97,7 @@ $ax-frame-foot-color: #7C7C7C;
             }
         }
         .ax-frame-header-tab {
-            @include transition(all 0.3s ease-in-out);
+            //@include transition(all 0.3s ease-in-out);
             @include animation(SLIDE-DOWN 0.3s ease-in-out forwards);
             z-index: 1;
             position: absolute;
@@ -98,7 +105,8 @@ $ax-frame-foot-color: #7C7C7C;
             left: 0;
             width: 100%;
             height: $ax-frame-header-tab-height;
-            @include ax-background(top, $ax-frame-header-tab-bg-colors);
+            @include ax-background(top, $ax-frame-header-tab-container-bg-colors);
+
             #ax-frame-header-tab-container {
                 border-top: $ax-frame-header-tab-border;
                 border-bottom: $ax-frame-header-tab-border;
@@ -111,7 +119,7 @@ $ax-frame-foot-color: #7C7C7C;
                     bottom: 1px;
                     height: 4px;
                     width: 100%;
-                    background: #3DACFC;
+                    background: nth($ax-frame-header-tab-on-bg-colors, 1);
                     border-top: $ax-frame-header-tab-border;
                     box-sizing: border-box;
                 }
@@ -183,7 +191,7 @@ $ax-frame-foot-color: #7C7C7C;
             }
         }
         .ax-frame-aside {
-            @include animation(SLIDE-IN-LEFT 0.3s ease-in-out forwards);
+            //@include animation(SLIDE-IN-LEFT 0.3s ease-in-out forwards);
             @include transition(all 0.3s ease-in-out);
             z-index: 2;
             position: absolute;
@@ -238,8 +246,8 @@ $ax-frame-foot-color: #7C7C7C;
             }
         }
         .ax-frame-contents {
-            @include transition(all 0.3s ease-in-out);
-            @include animation(FADE-IN 0.3s ease-in-out forwards);
+            //@include transition(all 0.3s ease-in-out);
+            //@include animation(FADE-IN 0.3s ease-in-out forwards);
             position: absolute;
             left: 0;
             top: 0;
@@ -258,7 +266,7 @@ $ax-frame-foot-color: #7C7C7C;
             }
         }
         .ax-frame-foot {
-            @include transition(all 0.3s ease-in-out);
+            //@include transition(all 0.3s ease-in-out);
             @include animation(SLIDE-UP 0.3s ease-in-out forwards);
             z-index: 1;
             position: absolute;

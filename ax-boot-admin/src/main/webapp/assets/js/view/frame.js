@@ -6,8 +6,10 @@ var ACTIONS = axboot.actionExtend(fnObj, {
     dispatch: function (caller, act, data) {
         switch (act) {
             case ACTIONS.PAGE_SEARCH:
+
                 //console.log("PAGE_SEARCH");
                 //console.log(arguments);
+
                 break;
             case ACTIONS.TOGGLE_ASIDE:
                 this.frameView.toggleAside();
@@ -169,6 +171,7 @@ fnObj.frameView = axboot.viewExtend({
                             onClick: function (event, treeId, treeNode, clickFlag) {
                                 var zTree = $.fn.zTree.getZTreeObj(treeTargetId);
                                 zTree.expandNode(treeNode);
+
                                 if (treeNode.program) {
                                     ACTIONS.dispatch(ACTIONS.MENU_OPEN, $.extend({}, treeNode.program, {menuId: treeNode.menuId, menuNm: treeNode.menuNm}));
                                 }
@@ -237,9 +240,7 @@ fnObj.tabView = axboot.viewExtend({
     target: null,
     frameTarget: null,
     limitCount: 10,
-    list: [
-        {menuId: "00-dashboard", id: "dashboard", progNm: '홈', menuNm: '홈', progPh: '/jsp/dashboard.jsp', url: CONTEXT_PATH + '/jsp/dashboard.jsp?progCd=dashboard', status: "on", fixed: true}
-    ],
+    list: axboot.def["DEFAULT_TAB_LIST"],
     initView: function () {
         this.target = $("#ax-frame-header-tab-container");
         this.frameTarget = $("#content-frame-container");

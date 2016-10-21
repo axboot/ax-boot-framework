@@ -103,7 +103,7 @@
     <div class="ax-frame-foot">
         <div class="ax-split-col" style="height: 100%;">
             <div class="ax-split-panel text-align-left">
-                AXBOOT 2.0.0 - Web Application Framework © 2010-2016
+                ${config.copyrights}
             </div>
             <div class="ax-split-panel text-align-right">
                 Last account activity 52 mins ago

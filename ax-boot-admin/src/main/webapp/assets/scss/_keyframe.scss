@@ -76,3 +76,11 @@
         @include transform(translateY(0%) scale(1.0));
     }
 }
+@include keyframes(SLIDE-IN-RIGHT) {
+    0% {
+        @include transform(translateX(30px) scale(1.0));
+    }
+    100% {
+        @include transform(translateY(0%) scale(1.0));
+    }
+}
