@@ -48,10 +48,27 @@
         <div role="page-content">
 
             <div class="content-aside">
+                <div data-fit-height-aside="tree-view-01">
+                    <ax:form name="searchView0">
+                        <ax:tbl clazz="ax-search-tbl">
+                            <ax:tr>
+                                <ax:td label='검색어' width="280px" labelWidth="80px;">
+                                    <div class="input-group">
+                                        <input type="text" name="filter" id="filter" class="form-control" value="" placeholder="검색어를 입력하세요."/>
+                                        <span class="input-group-btn">
+                                            <button type="submit" class="btn btn-primary">확인</button>
+                                        </span>
+                                    </div><!-- /input-group -->
+                                </ax:td>
+                            </ax:tr>
+                        </ax:tbl>
+                    </ax:form>
+                    <div class="H10"></div>
+                </div>
                 <div data-z-tree="tree-view-01" data-fit-height-content="tree-view-01" style="height: 300px;" class="ztree"></div>
             </div>
             <div class="content-body">
-                <div data-fit-height-content="form-view-01" data-manual-content="view" style="background: #fff;border:1px solid #ccc;overflow: auto;padding: 10px;"></div>
+                <div data-fit-height-content="form-view-01" data-manual-content="view"></div>
                 <script type="text/html" data-manual-content="tmpl">
                     {{{content}}}
                 </script>

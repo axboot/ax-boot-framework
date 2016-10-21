@@ -79,6 +79,7 @@
 
 &.manualView {
     padding: 0 0px;
+    @include ax-background((darken(#ECF0F5, 5%), lighten(#ECF0F5, 0%)));
 
     [role="page-header"] {
         .navbar {
@@ -86,9 +87,12 @@
             background: transparent;
             border: 0 none;
             padding-left: 10px;
-            .navbar-menu-handle{
-                padding:12px 10px;
+            .navbar-menu-handle {
+                padding: 12px 10px;
                 display: none;
+            }
+            .navbar-brand{
+                color: #222;
             }
         }
     }
@@ -102,9 +106,21 @@
             width: 300px;
             height: 100%;
             padding-right: 10px;
+            [data-z-tree="tree-view-01"]{
+                border: 1px solid #bcbcbc;
+                border-radius: 6px;
+            }
         }
         .content-body {
             padding-left: 300px;
+            [data-manual-content="view"] {
+                background: #fff;
+                border: 1px solid #bcbcbc;
+                //box-shadow: 1px 1px 3px #000;
+                overflow: auto;
+                padding: 10px;
+                border-radius: 6px;
+            }
         }
 
     }
@@ -117,17 +133,18 @@
                 background: transparent;
                 border: 0 none;
                 padding-left: 10px;
-                .navbar-brand{
+                .navbar-brand {
                     padding-left: 0;
                 }
-                .navbar-menu-handle{
-                    padding:12px 10px;
+                .navbar-menu-handle {
+                    padding: 12px 10px;
                     display: block;
                 }
             }
         }
         [role="page-content"] {
             .content-aside {
+                @include transition(all 0.3s);
                 position: absolute;
                 left: -310px;
             }
@@ -136,10 +153,10 @@
             }
         }
 
-        &.menu-opened{
+        &.menu-opened {
             [role="page-header"] {
                 .navbar {
-                    .navbar-menu-handle{
+                    .navbar-menu-handle {
                         .btn {
                             background: #ccc;
                             color: #fff;
@@ -151,8 +168,21 @@
                 .content-aside {
                     position: absolute;
                     left: 10px;
+                    padding-top: 5px;
+                    padding-left: 5px;
+                    //
+                    [data-ax-tbl]{
+                        //border-top-left-radius: 8px;
+                        //border-right: 1px solid #ccc;
+                    }
+                    .H10{
+                        display: none;
+                    }
+
                     [data-z-tree] {
                         background: #f3f3f3;
+                        border: 0 none;
+                        border-radius: 0;
                     }
                 }
                 .content-body {

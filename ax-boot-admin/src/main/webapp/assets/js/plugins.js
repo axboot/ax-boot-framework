@@ -18558,15 +18558,17 @@ ax5.ui = function () {
              * @returns {ax5mask}
              */
             this.align = function () {
-                if (this.$target && this.$target !== jQuery(document.body).get(0)) {
-                    var css = {
-                        position: this.maskConfig.position || "absolute",
-                        left: this.$target.offset().left,
-                        top: this.$target.offset().top,
-                        width: this.$target.outerWidth(),
-                        height: this.$target.outerHeight()
-                    };
-                    this.$mask.css(css);
+                if (this.maskConfig && this.maskConfig.target && this.maskConfig.target !== jQuery(document.body).get(0)) {
+                    try {
+                        var css = {
+                            position: this.maskConfig.position || "absolute",
+                            left: this.$target.offset().left,
+                            top: this.$target.offset().top,
+                            width: this.$target.outerWidth(),
+                            height: this.$target.outerHeight()
+                        };
+                        this.$mask.css(css);
+                    } catch (e) {}
                 }
                 return this;
             };
