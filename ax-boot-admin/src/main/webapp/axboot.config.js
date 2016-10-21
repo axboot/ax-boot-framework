@@ -1,6 +1,10 @@
 (function () {
     if (axboot && axboot.def) {
 
+        axboot.def["DEFAULT_TAB_LIST"] = [
+            {menuId: "00-dashboard", id: "dashboard", progNm: '홈', menuNm: '홈', progPh: '/jsp/dashboard.jsp', url: '/jsp/dashboard.jsp?progCd=dashboard', status: "on", fixed: true}
+        ];
+
         axboot.def["API"] = {
             "users": "/api/v1/users",
             "commonCodes": "/api/v1/commonCodes",

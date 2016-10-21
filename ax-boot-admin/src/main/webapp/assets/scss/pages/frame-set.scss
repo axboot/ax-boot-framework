@@ -90,7 +90,7 @@ $ax-frame-foot-color: #7C7C7C;
             }
         }
         .ax-frame-header-tab {
-            @include transition(all 0.3s ease-in-out);
+            //@include transition(all 0.3s ease-in-out);
             @include animation(SLIDE-DOWN 0.3s ease-in-out forwards);
             z-index: 1;
             position: absolute;
@@ -183,7 +183,7 @@ $ax-frame-foot-color: #7C7C7C;
             }
         }
         .ax-frame-aside {
-            @include animation(SLIDE-IN-LEFT 0.3s ease-in-out forwards);
+            //@include animation(SLIDE-IN-LEFT 0.3s ease-in-out forwards);
             @include transition(all 0.3s ease-in-out);
             z-index: 2;
             position: absolute;
@@ -238,8 +238,8 @@ $ax-frame-foot-color: #7C7C7C;
             }
         }
         .ax-frame-contents {
-            @include transition(all 0.3s ease-in-out);
-            @include animation(FADE-IN 0.3s ease-in-out forwards);
+            //@include transition(all 0.3s ease-in-out);
+            //@include animation(FADE-IN 0.3s ease-in-out forwards);
             position: absolute;
             left: 0;
             top: 0;
@@ -258,7 +258,7 @@ $ax-frame-foot-color: #7C7C7C;
             }
         }
         .ax-frame-foot {
-            @include transition(all 0.3s ease-in-out);
+            //@include transition(all 0.3s ease-in-out);
             @include animation(SLIDE-UP 0.3s ease-in-out forwards);
             z-index: 1;
             position: absolute;

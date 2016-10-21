@@ -93,12 +93,15 @@ axboot.init = function () {
             axboot.pageStart();
         }
 
-        $(window).resize(function () {
+        var debounceFn = ax5.util.debounce(function( val ) {
             axboot.pageResize();
             axboot.pageAutoHeight.align();
             setTimeout(function(){
                 $('[data-ax5layout]').ax5layout("align", true);
             });
+        }, 100);
+        $(window).resize(function () {
+            debounceFn();
         });
         $(document.body).on("click", function () {
             if (window.parent != window) {
