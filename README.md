@@ -1,7 +1,7 @@
 # AX-Boot Framework
 
 ## What is AX-Boot Framework?
->AXISJ UI Framework & Spring Boot Based Full Stack Development Framework.
+>AX5UI Framework & Spring Boot Based Full Stack Development Framework.
 
 ## Features
 - Pre Configuration Spring Boot with Optimized Configuration
