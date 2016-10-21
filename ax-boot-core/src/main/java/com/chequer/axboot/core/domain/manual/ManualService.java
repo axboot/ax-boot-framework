@@ -194,7 +194,7 @@ public class ManualService extends BaseService<Manual, Long> {
                 for (int page = 0; page < document.getNumberOfPages(); ++page) {
                     String tmpFileName = tmp + "/" + System.nanoTime() + ".jpg";
 
-                    BufferedImage originImage = pdfRenderer.renderImageWithDPI(page, 720, ImageType.RGB);
+                    BufferedImage originImage = pdfRenderer.renderImageWithDPI(page, 320, ImageType.RGB);
 
                     int width = 2048;
                     int height = (originImage.getHeight() * width) / originImage.getWidth();
@@ -205,7 +205,7 @@ public class ManualService extends BaseService<Manual, Long> {
                     g2d.drawImage(originImage, 0, 0, width, height, null);
                     g2d.dispose();
 
-                    ImageIOUtil.writeImage(outputImage, tmpFileName, 720);
+                    ImageIOUtil.writeImage(outputImage, tmpFileName, 320);
 
                     CommonFile commonFile = commonFileService.upload(new File(tmpFileName), "MANUAL_CONTENT", Long.toString(id), page);
 
