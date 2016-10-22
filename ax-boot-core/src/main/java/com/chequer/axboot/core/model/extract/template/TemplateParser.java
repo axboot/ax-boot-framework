@@ -24,7 +24,8 @@ public class TemplateParser {
         Map<String, String> templateElements = new HashMap<>();
 
         templateElements.put(TemplateKeys.TABLE_NAME, table.getTableName());
-        templateElements.put(TemplateKeys.PACKAGE_NAME, AXBootContextConfig.getInstance().getBasePackageName());
+        templateElements.put(TemplateKeys.BASE_PACKAGE_NAME, AXBootContextConfig.getInstance().getBasePackageName());
+        templateElements.put(TemplateKeys.DOMAIN_PACKAGE_NAME, AXBootContextConfig.getInstance().getDomainPackageName());
         templateElements.put(TemplateKeys.TABLE_COMMENT, table.getRemarks());
         templateElements.put(TemplateKeys.ENTITY_CLASS_NAME, className);
         templateElements.put(TemplateKeys.ENTITY_CLASS_FIELD_NAME, NamingUtils.classFieldName(className));
@@ -48,7 +49,8 @@ public class TemplateParser {
     public static ServiceTemplateCode getServiceTemplate(String className, Table table) {
         Map<String, String> templateElements = new HashMap<>();
 
-        templateElements.put(TemplateKeys.PACKAGE_NAME, AXBootContextConfig.getInstance().getBasePackageName());
+        templateElements.put(TemplateKeys.BASE_PACKAGE_NAME, AXBootContextConfig.getInstance().getBasePackageName());
+        templateElements.put(TemplateKeys.DOMAIN_PACKAGE_NAME, AXBootContextConfig.getInstance().getDomainPackageName());
         templateElements.put(TemplateKeys.KEY_CLASS_REF_NAME, table.keyClassRefName(className));
         templateElements.put(TemplateKeys.KEY_CLASS_NAME, table.keyClassName(className));
         templateElements.put(TemplateKeys.ENTITY_CLASS_NAME, className);
@@ -62,7 +64,8 @@ public class TemplateParser {
     public static RepositoryTemplateCode getRepositoryTemplate(String className, Table table) {
         Map<String, String> templateElements = new HashMap<>();
 
-        templateElements.put(TemplateKeys.PACKAGE_NAME, AXBootContextConfig.getInstance().getBasePackageName());
+        templateElements.put(TemplateKeys.BASE_PACKAGE_NAME, AXBootContextConfig.getInstance().getBasePackageName());
+        templateElements.put(TemplateKeys.DOMAIN_PACKAGE_NAME, AXBootContextConfig.getInstance().getDomainPackageName());
         templateElements.put(TemplateKeys.KEY_CLASS_REF_NAME, table.keyClassRefName(className));
         templateElements.put(TemplateKeys.KEY_CLASS_NAME, table.keyClassName(className));
         templateElements.put(TemplateKeys.ENTITY_CLASS_NAME, className);
@@ -76,7 +79,8 @@ public class TemplateParser {
 
         VOFields voFields = TemplateBuilder.VOTemplateBuilder.build(table);
 
-        templateElements.put(TemplateKeys.PACKAGE_NAME, AXBootContextConfig.getInstance().getBasePackageName());
+        templateElements.put(TemplateKeys.BASE_PACKAGE_NAME, AXBootContextConfig.getInstance().getBasePackageName());
+        templateElements.put(TemplateKeys.DOMAIN_PACKAGE_NAME, AXBootContextConfig.getInstance().getDomainPackageName());
         templateElements.put(TemplateKeys.ENTITY_CLASS_NAME, className);
         templateElements.put(TemplateKeys.ENTITY_CLASS_FIELD_NAME, NamingUtils.classFieldName(className));
         templateElements.put(TemplateKeys.VO_CLASS_NAME, NamingUtils.classNameWithType(className, Types.ModelExtractorTemplateSuffix.VO));
@@ -94,7 +98,8 @@ public class TemplateParser {
             apiPath = NamingUtils.classFieldName(className) + "s";
         }
 
-        templateElements.put(TemplateKeys.PACKAGE_NAME, AXBootContextConfig.getInstance().getBasePackageName());
+        templateElements.put(TemplateKeys.BASE_PACKAGE_NAME, AXBootContextConfig.getInstance().getBasePackageName());
+        templateElements.put(TemplateKeys.DOMAIN_PACKAGE_NAME, AXBootContextConfig.getInstance().getDomainPackageName());
         templateElements.put(TemplateKeys.ENTITY_CLASS_NAME, className);
         templateElements.put(TemplateKeys.API_PATH, apiPath);
         templateElements.put(TemplateKeys.ENTITY_CLASS_FIELD_NAME, NamingUtils.classFieldName(className));
@@ -108,7 +113,8 @@ public class TemplateParser {
     public static MyBatisInterfaceTemplateCode getMyBatisInterfaceTemplate(String className, Table table) {
         Map<String, String> templateElements = new HashMap<>();
 
-        templateElements.put(TemplateKeys.PACKAGE_NAME, AXBootContextConfig.getInstance().getBasePackageName());
+        templateElements.put(TemplateKeys.BASE_PACKAGE_NAME, AXBootContextConfig.getInstance().getBasePackageName());
+        templateElements.put(TemplateKeys.DOMAIN_PACKAGE_NAME, AXBootContextConfig.getInstance().getDomainPackageName());
         templateElements.put(TemplateKeys.TABLE_NAME, table.getTableName());
         templateElements.put(TemplateKeys.ENTITY_CLASS_NAME, className);
         templateElements.put(TemplateKeys.ENTITY_CLASS_FIELD_NAME, NamingUtils.classFieldName(className));
@@ -121,7 +127,8 @@ public class TemplateParser {
     public static MyBatisXMLTemplateCode getMyBatisXMLTemplate(String className, Table table) {
         Map<String, String> templateElements = new HashMap<>();
 
-        templateElements.put(TemplateKeys.PACKAGE_NAME, AXBootContextConfig.getInstance().getBasePackageName());
+        templateElements.put(TemplateKeys.BASE_PACKAGE_NAME, AXBootContextConfig.getInstance().getBasePackageName());
+        templateElements.put(TemplateKeys.DOMAIN_PACKAGE_NAME, AXBootContextConfig.getInstance().getDomainPackageName());
         templateElements.put(TemplateKeys.TABLE_NAME, table.getTableName());
         templateElements.put(TemplateKeys.ENTITY_CLASS_NAME, className);
         templateElements.put(TemplateKeys.ENTITY_CLASS_FIELD_NAME, NamingUtils.classFieldName(className));

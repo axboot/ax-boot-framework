@@ -1,5 +1,5 @@
+<%@ page import="com.chequer.axboot.admin.domain.init.DatabaseInitService" %>
 <%@ page import="com.chequer.axboot.core.context.AppContextManager" %>
-<%@ page import="com.chequer.axboot.core.db.schema.init.DatabaseInitService" %>
 <%@ page import="com.chequer.axboot.core.utils.SessionUtils" %>
 <%@ page language="java" contentType="text/html; charset=utf-8" pageEncoding="utf-8" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
