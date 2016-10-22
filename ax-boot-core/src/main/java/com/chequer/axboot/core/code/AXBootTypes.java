@@ -2,7 +2,7 @@ package com.chequer.axboot.core.code;
 
 import com.fasterxml.jackson.annotation.JsonValue;
 
-public class Types {
+public class AXBootTypes {
 
     public static final String Y = "Y";
     public static final String N = "N";
@@ -52,111 +52,6 @@ public class Types {
                     return deleted;
             }
             return null;
-        }
-    }
-
-    public enum UserStatus implements LabelEnum {
-        ACCOUNT_LOCK("ACCOUNT_LOCK"), NORMAL("NORMAL");
-
-        private final String label;
-
-        UserStatus(String label) {
-            this.label = label;
-        }
-
-        @Override
-        @JsonValue
-        public String getLabel() {
-            return label;
-        }
-    }
-
-    public enum Role implements LabelEnum {
-        SystemManager("SYSTEM_MANAGER", 1000, null),
-        AspManager("ASP_MANAGER", 900, SystemManager);
-
-        enum ComparisonType {
-            EQUAL,
-            GREATER_THAN,
-            GREATER_EQUAL,
-            LESS_THAN,
-            LESS_EQUAL;
-
-            public static Role.ComparisonType get(String comparisonTypeString) {
-                switch (comparisonTypeString) {
-                    case "eq":
-                        return EQUAL;
-
-                    case "gt":
-                        return GREATER_THAN;
-
-                    case "gte":
-                        return GREATER_EQUAL;
-
-                    case "lt":
-                        return LESS_THAN;
-
-                    case "lte":
-                        return LESS_EQUAL;
-                }
-                return null;
-            }
-        }
-
-        private final String name;
-        private final int level;
-        private final Role parent;
-
-        Role(String name, int level, Role parent) {
-            this.name = name;
-            this.level = level;
-            this.parent = parent;
-        }
-
-        @Override
-        @JsonValue
-        public String getLabel() {
-            return name;
-        }
-
-        public int getLevel() {
-            return level;
-        }
-
-        public Role getParent() {
-            return parent;
-        }
-
-        public static Role of(String name) {
-            for (Role userType : Role.values()) {
-                if (userType.getLabel().equals(name)) {
-                    return userType;
-                }
-            }
-            return null;
-        }
-
-        public static boolean checkAuthority(Role userRole, Role target, String comparisonTypeString) {
-            Role.ComparisonType comparisonType = Role.ComparisonType.get(comparisonTypeString);
-
-            switch (comparisonType) {
-                case EQUAL:
-                    return userRole.getLevel() == target.getLevel();
-
-                case GREATER_THAN:
-                    return userRole.getLevel() > target.getLevel();
-
-                case GREATER_EQUAL:
-                    return userRole.getLevel() >= target.getLevel();
-
-                case LESS_THAN:
-                    return userRole.getLevel() < target.getLevel();
-
-                case LESS_EQUAL:
-                    return userRole.getLevel() <= target.getLevel();
-            }
-
-            return false;
         }
     }
 

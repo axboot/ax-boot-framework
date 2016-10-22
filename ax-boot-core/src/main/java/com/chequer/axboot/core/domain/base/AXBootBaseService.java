@@ -1,6 +1,6 @@
 package com.chequer.axboot.core.domain.base;
 
-import com.chequer.axboot.core.code.Types;
+import com.chequer.axboot.core.code.AXBootTypes;
 import com.chequer.axboot.core.db.mapper.ColumnToBeanPropertyRowMapper;
 import com.querydsl.core.types.EntityPath;
 import com.querydsl.core.types.OrderSpecifier;
@@ -127,7 +127,7 @@ public abstract class AXBootBaseService<T, ID extends Serializable> extends AXBo
         if (var instanceof AXBootCrudModel) {
             AXBootCrudModel crudModel = (AXBootCrudModel) var;
 
-            if (crudModel.getDataStatus() == Types.DataStatus.DELETED) {
+            if (crudModel.getDataStatus() == AXBootTypes.DataStatus.DELETED) {
                 deleted = true;
             }
         }

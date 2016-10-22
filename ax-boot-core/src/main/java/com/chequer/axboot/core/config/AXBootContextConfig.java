@@ -1,7 +1,7 @@
 package com.chequer.axboot.core.config;
 
 import ch.qos.logback.classic.Level;
-import com.chequer.axboot.core.code.Types;
+import com.chequer.axboot.core.code.AXBootTypes;
 import com.chequer.axboot.core.context.AppContextManager;
 import com.chequer.axboot.core.mybatis.typehandler.*;
 import lombok.AccessLevel;
@@ -215,50 +215,50 @@ public class AXBootContextConfig implements ApplicationContextAware {
                 HibernateJpaVendorAdapter vendorAdapter = new HibernateJpaVendorAdapter();
 
                 switch (databaseType) {
-                    case Types.DatabaseType.MSSQL:
+                    case AXBootTypes.DatabaseType.MSSQL:
                         vendorAdapter.setDatabase(Database.SQL_SERVER);
                         break;
 
-                    case Types.DatabaseType.MYSQL:
+                    case AXBootTypes.DatabaseType.MYSQL:
                         vendorAdapter.setDatabase(Database.MYSQL);
                         break;
 
-                    case Types.DatabaseType.ORACLE:
+                    case AXBootTypes.DatabaseType.ORACLE:
                         vendorAdapter.setDatabase(Database.ORACLE);
                         break;
 
-                    case Types.DatabaseType.POSTGRESQL:
+                    case AXBootTypes.DatabaseType.POSTGRESQL:
                         vendorAdapter.setDatabase(Database.POSTGRESQL);
                         break;
 
-                    case Types.DatabaseType.H2:
+                    case AXBootTypes.DatabaseType.H2:
                         vendorAdapter.setDatabase(Database.H2);
                         break;
                 }
 
                 if (StringUtils.isEmpty(dialect)) {
                     switch (databaseType) {
-                        case Types.DatabaseType.MSSQL:
+                        case AXBootTypes.DatabaseType.MSSQL:
                             vendorAdapter.setDatabase(Database.SQL_SERVER);
                             vendorAdapter.setDatabasePlatform(SQLServer2005Dialect.class.getName());
                             break;
 
-                        case Types.DatabaseType.MYSQL:
+                        case AXBootTypes.DatabaseType.MYSQL:
                             vendorAdapter.setDatabase(Database.MYSQL);
                             vendorAdapter.setDatabasePlatform(MySQL57InnoDBDialect.class.getName());
                             break;
 
-                        case Types.DatabaseType.ORACLE:
+                        case AXBootTypes.DatabaseType.ORACLE:
                             vendorAdapter.setDatabase(Database.ORACLE);
                             vendorAdapter.setDatabasePlatform(Oracle10gDialect.class.getName());
                             break;
 
-                        case Types.DatabaseType.POSTGRESQL:
+                        case AXBootTypes.DatabaseType.POSTGRESQL:
                             vendorAdapter.setDatabase(Database.POSTGRESQL);
                             vendorAdapter.setDatabasePlatform(PostgreSQL9Dialect.class.getName());
                             break;
 
-                        case Types.DatabaseType.H2:
+                        case AXBootTypes.DatabaseType.H2:
                             vendorAdapter.setDatabase(Database.H2);
                             vendorAdapter.setDatabasePlatform(H2Dialect.class.getName());
                     }

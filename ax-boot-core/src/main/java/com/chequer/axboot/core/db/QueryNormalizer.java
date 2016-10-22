@@ -1,6 +1,6 @@
 package com.chequer.axboot.core.db;
 
-import com.chequer.axboot.core.code.Types;
+import com.chequer.axboot.core.code.AXBootTypes;
 import org.apache.commons.lang3.StringUtils;
 
 import java.sql.Timestamp;
@@ -79,7 +79,7 @@ public class QueryNormalizer {
 			return dumpBooleanAsTrueFalse ? ((Boolean) parameter).booleanValue() ? "true" : "false" : ((Boolean) parameter).booleanValue() ? "1" : "0";
 		}
 
-		if (Types.DatabaseType.ORACLE.equals(databaseType)) {
+		if (AXBootTypes.DatabaseType.ORACLE.equals(databaseType)) {
 			if (parameter instanceof Timestamp) {
 				return "to_timestamp('" + new SimpleDateFormat("yyyy/MM/dd HH:mm:ss.SSS").format(parameter) + "', 'yyyy/mm/dd hh24:mi:ss.ff3')";
 			}

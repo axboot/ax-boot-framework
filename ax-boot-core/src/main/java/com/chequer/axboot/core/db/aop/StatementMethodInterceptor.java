@@ -1,7 +1,7 @@
 package com.chequer.axboot.core.db.aop;
 
 
-import com.chequer.axboot.core.code.Types;
+import com.chequer.axboot.core.code.AXBootTypes;
 import com.chequer.axboot.core.db.QueryNormalizer;
 import com.chequer.axboot.core.db.SqlFormatter;
 import com.chequer.axboot.core.db.monitor.sql.SqlExecutionInfo;
@@ -155,13 +155,13 @@ public class StatementMethodInterceptor implements MethodInterceptor {
             if (sqlExecutionInfo != null) {
                 boolean timeoutException = false;
                 switch (databaseType) {
-                    case Types.DatabaseType.MYSQL:
+                    case AXBootTypes.DatabaseType.MYSQL:
                         if (exception instanceof CommunicationException && (exception.getCause() != null && exception.getCause() instanceof SocketTimeoutException)) {
                             sqlExecutionInfo.addSocketTimeoutCount();
                             timeoutException = true;
                         }
                         break;
-                    case Types.DatabaseType.ORACLE:
+                    case AXBootTypes.DatabaseType.ORACLE:
                         if (StringUtils.indexOf(exception.getMessage(), ORACLE_QUERY_TIMEOUT_CODE) != -1) {
                             sqlExecutionInfo.addQueryTimeoutCount();
                             timeoutException = true;

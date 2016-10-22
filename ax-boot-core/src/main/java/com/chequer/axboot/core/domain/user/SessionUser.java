@@ -1,6 +1,5 @@
 package com.chequer.axboot.core.domain.user;
 
-import com.chequer.axboot.core.code.Types;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
 import org.springframework.security.core.GrantedAuthority;
@@ -57,9 +56,10 @@ public class SessionUser implements UserDetails {
         authorityList.add("ROLE_" + role);
     }
 
-    public boolean hasRole(Types.Role role) {
-        return authorityList.stream().filter(a -> a.equals("ROLE_" + role.getLabel())).findAny().isPresent();
+    public boolean hasRole(String role) {
+        return authorityList.stream().filter(a -> a.equals("ROLE_" + role)).findAny().isPresent();
     }
+
     @Override
     @JsonIgnore
     public String getPassword() {
