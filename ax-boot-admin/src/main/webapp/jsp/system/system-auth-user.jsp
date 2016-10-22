@@ -20,7 +20,7 @@
             <ax:form name="searchView0">
                 <ax:tbl clazz="ax-search-tbl" minWidth="500px">
                     <ax:tr>
-                        <ax:td label='<lang data-id="검색"></lang>' width="300px">
+                        <ax:td label='검색' width="300px">
                             <input type="text" name="filter" id="filter" class="form-control" value="" placeholder="검색어를 입력하세요."/>
                         </ax:td>
                     </ax:tr>
