@@ -2,9 +2,13 @@ var fnObj = {};
 var ACTIONS = axboot.actionExtend(fnObj, {
     PAGE_SEARCH: function (caller, act, data) {
         var searchData = caller.searchView.getData();
+        var searchUrl = ["manual"];
+        if(searchData.filter){
+            searchUrl.push("search");
+        }
         axboot.ajax({
             type: "GET",
-            url: ["manual"],
+            url: searchUrl,
             data: caller.searchView.getData(),
             callback: function (res) {
                 caller.uploadView02.setData(searchData);
@@ -215,13 +219,19 @@ fnObj.pageButtonView = axboot.viewExtend({
 fnObj.searchView = axboot.viewExtend(axboot.searchView, {
     initView: function () {
         var _this = this;
+
+        this.target = $(document["searchView0"]);
+        this.target.attr("onsubmit", "return ACTIONS.dispatch(ACTIONS.PAGE_SEARCH);");
+        this.filter = $("#filter");
+
         $('[data-manual-menu-handle]').click(function () {
             _this.toggleHandle();
         });
     },
     getData: function () {
         return {
-            manualGrpCd: manualGrpCd
+            manualGrpCd: manualGrpCd,
+            filter: this.filter.val()
         }
     },
     toggleHandle: function (TF) {

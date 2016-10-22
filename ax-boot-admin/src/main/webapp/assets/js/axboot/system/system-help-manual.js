@@ -490,7 +490,11 @@ fnObj.uploadView01 = axboot.viewExtend(axboot.commonView, {
         return false;
     },
     upload: function () {
-        axMask.open();
+        var mask = axProgressMask.open();
+        setTimeout(function(){
+            mask.$mask.find('[role="progressbar"]').css({width: "90%"});
+        }, 100);
+
         var target_name = "submitwin";
 
         // iframe 생성
@@ -512,7 +516,7 @@ fnObj.uploadView01 = axboot.viewExtend(axboot.commonView, {
                 ACTIONS.dispatch(ACTIONS.UPLOAD_1_OK);
             }
             iframe.remove();
-            axMask.close();
+            axProgressMask.close();
         });
         this.target.target = target_name;
         this.target.action = axboot.getURL("/api/v1/manual/excel/uploadList");
@@ -560,7 +564,11 @@ fnObj.uploadView02 = axboot.viewExtend(axboot.commonView, {
         return false;
     },
     upload: function () {
-        axMask.open();
+        var mask = axProgressMask.open();
+        setTimeout(function(){
+            mask.$mask.find('[role="progressbar"]').css({width: "90%"});
+        }, 100);
+
         var target_name = "submitwin";
 
         // iframe 생성
@@ -582,7 +590,7 @@ fnObj.uploadView02 = axboot.viewExtend(axboot.commonView, {
                 ACTIONS.dispatch(ACTIONS.UPLOAD_2_OK);
             }
             iframe.remove();
-            axMask.close();
+            axProgressMask.close();
         });
 
         this.target.target = target_name;

@@ -1,6 +1,4 @@
 @import "../../plugins/ax5core/src/ax5-ui-mixin";
-
-
 @import "../../plugins/ax5ui-dialog/src/scss/ax5dialog_variables";
 @import "../../plugins/ax5ui-dialog/src/scss/ax5dialog";
 
@@ -14,7 +12,6 @@ $ax5mask-bg-opacity: 0.4;
 //$ax5modal-easing-time-open: 0.0S;
 @import "../../plugins/ax5ui-modal/src/scss/ax5modal_variables";
 @import "../../plugins/ax5ui-modal/src/scss/ax5modal";
-
 
 @import "../../plugins/ax5ui-calendar/src/scss/ax5calendar_variables";
 @import "../../plugins/ax5ui-calendar/src/scss/ax5calendar";
@@ -31,7 +28,7 @@ $ax5picker-easing-time-close: 0.1s;
 @import "../../plugins/ax5ui-menu/src/scss/ax5menu";
 
 .ax5-ui-menubar {
-    &.axboot{
+    &.axboot {
         @include menubar-variant(#2C2C2C, #979797, #fff, #fff, #2c2c2c, $body-bg, #3DACFC);
 
         .ax-menu-body {
@@ -48,6 +45,7 @@ $ax5picker-easing-time-close: 0.1s;
 
     }
 }
+
 .ax5-ui-menu {
     &.info {
         .ax-menu-body {
@@ -122,13 +120,13 @@ $ax5layout-tab-panel-label-item-active-bg-colors: (#fff, #fff);
 @import "../../plugins/ax5ui-layout/src/scss/ax5layout";
 
 [data-ax5layout] {
-    > .split-panel-vertical[data-splitter]{
+    > .split-panel-vertical[data-splitter] {
         z-index: auto;
         @include ax-background(left #eee #ccc);
         border: 1px solid #b5b5b5;
         border-radius: 3px;
     }
-    > .split-panel-horizontal[data-splitter]{
+    > .split-panel-horizontal[data-splitter] {
         z-index: auto;
         @include ax-background(top #eee #ccc);
         border: 1px solid #b5b5b5;
@@ -141,14 +139,37 @@ $ax5layout-tab-panel-label-item-active-bg-colors: (#fff, #fff);
         background: #7a0000;
     }
 }
-.ax-mask.form-mask{
+
+.ax-mask.form-mask {
     .ax-mask-bg {
-        background: #fff;
-        opacity: 0.8;
+        background: transparent;
+        //opacity: 0.1;
     }
-    .ax-mask-content{
+    .ax-mask-content {
         color: #000;
         text-shadow: none;
         font-size: 20px;
+    }
+}
+
+.ax-mask.progress-mask {
+    z-index: 1001;
+    .ax-mask-bg {
+
+    }
+    .ax-mask-content {
+        .progress {
+            display: block;
+            width: 250px;
+            margin: 0 auto;
+            display: block;
+            height: 10px;
+            border-radius: 5px;
+
+            [role="progressbar"] {
+                display: block;
+                @include transition(all 10s $ease-out-sine);
+            }
+        }
     }
 }

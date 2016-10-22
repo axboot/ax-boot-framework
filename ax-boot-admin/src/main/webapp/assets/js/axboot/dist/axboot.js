@@ -1964,6 +1964,14 @@ axboot.preparePlugin = function () {
             content: '<i class="cqc-chequer cqc-50x cqc-zoom-in-out" style="color: #ccc;"></i>'
         });
         /**
+         * 프로그래스바 형태의 마스크
+         * @var {ax5ui} axProgressMask
+         */
+        window.axProgressMask = new ax5.ui.mask({
+            theme: "progress-mask",
+            content: '<div class="progress">' + '<div class="progress-bar progress-bar-info progress-bar-striped active" role="progressbar" style="width: 0%">' + '</div>' + '</div>'
+        });
+        /**
          * 기본 모달
          * @var {ax5ui} axModal
          */
