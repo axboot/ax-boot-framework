@@ -3,18 +3,26 @@
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 
+    <groupId>com.chequer.axboot</groupId>
     <artifactId>ax-boot-core</artifactId>
     <name>AX Boot Core</name>
     <description>AX Boot Core</description>
-    <version>2.0</version>
+    <version>2.0.2</version>
     <url>http://www.axboot.com</url>
     <packaging>jar</packaging>
     <modelVersion>4.0.0</modelVersion>
 
+    <distributionManagement>
+        <repository>
+            <id>axboot-release</id>
+            <url>http://nexus.axboot.com/content/repositories/releases</url>
+        </repository>
+    </distributionManagement>
+
     <parent>
-        <groupId>com.chequer.axboot</groupId>
-        <artifactId>ax-boot-framework</artifactId>
-        <version>1.0.0</version>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-parent</artifactId>
+        <version>1.4.1.RELEASE</version>
     </parent>
 
     <repositories>
@@ -31,8 +39,85 @@
         </repository>
     </repositories>
 
+    <properties>
+        <apache.commons.lang.version>3.4</apache.commons.lang.version>
+        <apache.commons.collections.version>4.1</apache.commons.collections.version>
+        <apache.commons.io.version>2.4</apache.commons.io.version>
+        <apache.commons.codec.version>1.10</apache.commons.codec.version>
+        <apache.commons.compress.version>1.11</apache.commons.compress.version>
+        <apache.commons.csv.version>1.2</apache.commons.csv.version>
+        <apache.commons.dbcp2.version>2.1.1</apache.commons.dbcp2.version>
+        <apache.commons.dbutils.version>1.6</apache.commons.dbutils.version>
+        <apache.commons.pool2.version>2.4.2</apache.commons.pool2.version>
+        <apache.commons.net.version>3.4</apache.commons.net.version>
+        <apache.commons.beanutils.version>1.9.2</apache.commons.beanutils.version>
+        <apache.poi.version>3.13</apache.poi.version>
+        <aspectjrt.version>1.8.9</aspectjrt.version>
+
+        <barcode4j.version>2.1</barcode4j.version>
+        <bitwalker.userAgentUtil.version>1.18</bitwalker.userAgentUtil.version>
+
+        <commonmark.version>0.6.0</commonmark.version>
+        <excel.parser.version>1.0</excel.parser.version>
+
+        <hibernate.version>5.2.2.Final</hibernate.version>
+
+        <gm4java.version>1.1.0</gm4java.version>
+        <groovy.version>2.4.6</groovy.version>
+        <guava.version>19.0</guava.version>
+
+        <javax.inject.version>1</javax.inject.version>
+        <jni4.net.version>0.8.8.0</jni4.net.version>
+
+        <oracle.jdbc.version>12.1.0.1</oracle.jdbc.version>
+
+        <pdf.box.version>2.0.3</pdf.box.version>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+        <project.version>1.0</project.version>
+        <jsp.api.version>2.0</jsp.api.version>
+        <java.version>1.8</java.version>
+        <javax.el.api.version>3.0.1-b04</javax.el.api.version>
+        <jxls.core.version>2.2.9</jxls.core.version>
+        <jxls.poi.version>1.0.8</jxls.poi.version>
+        <jxls.jexcel.version>1.0.5</jxls.jexcel.version>
+        <jxls.reader.version>2.0.2</jxls.reader.version>
+
+        <h2.version>1.4.192</h2.version>
+
+        <lombok.version>1.16.8</lombok.version>
+
+        <modelmapper.version>0.7.5</modelmapper.version>
+        <mustache.complier.version>0.9.3</mustache.complier.version>
+        <mybatis.version>3.3.0</mybatis.version>
+        <mybatis.spring.version>1.2.3</mybatis.spring.version>
+        <mysql.connector.version>5.1.37</mysql.connector.version>
+
+        <reflections.version>0.9.10</reflections.version>
+
+        <thumbnailator.version>0.4.8</thumbnailator.version>
+
+        <phantom.ghost.driver.version>1.1.0</phantom.ghost.driver.version>
+        <postgresql.jdbc.version>9.4-1206-jdbc42</postgresql.jdbc.version>
+        <proguard.version>4.4</proguard.version>
+        <qrgen.version>2.0</qrgen.version>
+        <querydsl.version>4.1.4</querydsl.version>
+
+        <spring.boot.version>1.4.0.RELEASE</spring.boot.version>
+        <simple.xml.version>2.7.1</simple.xml.version>
+        <slack.webhook.version>1.1.1</slack.webhook.version>
+        <swagger.version>1.0.2</swagger.version>
+
+        <taglibs.standard.version>1.2.5</taglibs.standard.version>
+
+        <xml.apis.version>1.4.01</xml.apis.version>
+        <ztzip.version>1.9</ztzip.version>
+        <maven.test.skip>true</maven.test.skip>
+        <disable.checks>true</disable.checks>
+        <main.basedir>${basedir}</main.basedir>
+    </properties>
+
     <dependencies>
-        <!-- Spring -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot</artifactId>
@@ -83,6 +168,7 @@
             <groupId>com.fasterxml.jackson.core</groupId>
             <artifactId>jackson-annotations</artifactId>
         </dependency>
+
         <dependency>
             <groupId>com.fasterxml.jackson.core</groupId>
             <artifactId>jackson-core</artifactId>
@@ -112,62 +198,75 @@
         <dependency>
             <groupId>com.mangofactory</groupId>
             <artifactId>swagger-springmvc</artifactId>
+            <version>${swagger.version}</version>
         </dependency>
 
         <!-- Apache Commons -->
         <dependency>
             <groupId>org.apache.commons</groupId>
             <artifactId>commons-lang3</artifactId>
+            <version>${apache.commons.lang.version}</version>
         </dependency>
 
         <dependency>
             <groupId>org.apache.commons</groupId>
             <artifactId>commons-collections4</artifactId>
+            <version>${apache.commons.collections.version}</version>
         </dependency>
 
         <dependency>
             <groupId>org.apache.commons</groupId>
             <artifactId>commons-compress</artifactId>
+            <version>${apache.commons.compress.version}</version>
         </dependency>
 
         <dependency>
             <groupId>org.apache.commons</groupId>
             <artifactId>commons-csv</artifactId>
+            <version>${apache.commons.csv.version}</version>
         </dependency>
 
         <dependency>
             <groupId>commons-net</groupId>
             <artifactId>commons-net</artifactId>
+            <version>${apache.commons.net.version}</version>
         </dependency>
+
 
         <dependency>
             <groupId>commons-io</groupId>
             <artifactId>commons-io</artifactId>
+            <version>${apache.commons.io.version}</version>
         </dependency>
 
         <dependency>
             <groupId>org.apache.commons</groupId>
             <artifactId>commons-dbcp2</artifactId>
+            <version>${apache.commons.dbcp2.version}</version>
         </dependency>
 
         <dependency>
             <groupId>commons-dbutils</groupId>
             <artifactId>commons-dbutils</artifactId>
+            <version>${apache.commons.dbutils.version}</version>
         </dependency>
 
         <dependency>
             <groupId>commons-codec</groupId>
             <artifactId>commons-codec</artifactId>
+            <version>${apache.commons.codec.version}</version>
         </dependency>
 
         <dependency>
             <groupId>org.apache.commons</groupId>
             <artifactId>commons-pool2</artifactId>
+            <version>${apache.commons.pool2.version}</version>
         </dependency>
 
         <dependency>
             <groupId>commons-beanutils</groupId>
             <artifactId>commons-beanutils</artifactId>
+            <version>${apache.commons.beanutils.version}</version>
         </dependency>
         <!-- Apache Commons -->
 
@@ -175,11 +274,13 @@
         <dependency>
             <groupId>org.apache.poi</groupId>
             <artifactId>poi</artifactId>
+            <version>${apache.poi.version}</version>
         </dependency>
 
         <dependency>
             <groupId>org.apache.poi</groupId>
             <artifactId>poi-ooxml</artifactId>
+            <version>${apache.poi.version}</version>
         </dependency>
         <!-- Apache POI -->
 
@@ -187,11 +288,13 @@
         <dependency>
             <groupId>org.mybatis</groupId>
             <artifactId>mybatis</artifactId>
+            <version>${mybatis.version}</version>
         </dependency>
 
         <dependency>
             <groupId>org.mybatis</groupId>
             <artifactId>mybatis-spring</artifactId>
+            <version>${mybatis.spring.version}</version>
         </dependency>
         <!-- MyBatis -->
 
@@ -199,36 +302,43 @@
         <dependency>
             <groupId>javax.inject</groupId>
             <artifactId>javax.inject</artifactId>
+            <version>${javax.inject.version}</version>
         </dependency>
 
         <dependency>
             <groupId>com.google.guava</groupId>
             <artifactId>guava</artifactId>
+            <version>${guava.version}</version>
         </dependency>
 
         <dependency>
             <groupId>org.modelmapper</groupId>
             <artifactId>modelmapper</artifactId>
+            <version>${modelmapper.version}</version>
         </dependency>
 
         <dependency>
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>
+            <version>${lombok.version}</version>
         </dependency>
 
         <dependency>
             <groupId>eu.bitwalker</groupId>
             <artifactId>UserAgentUtils</artifactId>
+            <version>${bitwalker.userAgentUtil.version}</version>
         </dependency>
 
         <dependency>
             <groupId>net.gpedro.integrations.slack</groupId>
             <artifactId>slack-webhook</artifactId>
+            <version>${slack.webhook.version}</version>
         </dependency>
 
         <dependency>
             <groupId>xml-apis</groupId>
             <artifactId>xml-apis</artifactId>
+            <version>${xml.apis.version}</version>
         </dependency>
 
         <dependency>
@@ -246,16 +356,19 @@
         <dependency>
             <groupId>net.sf.barcode4j</groupId>
             <artifactId>barcode4j</artifactId>
+            <version>${barcode4j.version}</version>
         </dependency>
 
         <dependency>
             <groupId>net.glxn.qrgen</groupId>
             <artifactId>javase</artifactId>
+            <version>${qrgen.version}</version>
         </dependency>
 
         <dependency>
             <groupId>com.sharneng</groupId>
             <artifactId>gm4java</artifactId>
+            <version>${gm4java.version}</version>
         </dependency>
         <!-- Utils -->
 
@@ -263,29 +376,33 @@
         <dependency>
             <groupId>mysql</groupId>
             <artifactId>mysql-connector-java</artifactId>
+            <version>${mysql.connector.version}</version>
         </dependency>
 
         <dependency>
             <groupId>com.h2database</groupId>
             <artifactId>h2</artifactId>
+            <version>${h2.version}</version>
         </dependency>
 
-        <!-- DB -->
 
         <!-- JXLS -->
         <dependency>
             <groupId>org.jxls</groupId>
             <artifactId>jxls</artifactId>
+            <version>${jxls.core.version}</version>
         </dependency>
 
         <dependency>
             <groupId>org.jxls</groupId>
             <artifactId>jxls-poi</artifactId>
+            <version>${jxls.poi.version}</version>
         </dependency>
 
         <dependency>
             <groupId>org.jxls</groupId>
             <artifactId>jxls-jexcel</artifactId>
+            <version>${jxls.jexcel.version}</version>
         </dependency>
 
         <dependency>
@@ -297,21 +414,7 @@
         <dependency>
             <groupId>org.javafunk</groupId>
             <artifactId>excel-parser</artifactId>
-        </dependency>
-
-        <dependency>
-            <groupId>org.hibernate</groupId>
-            <artifactId>hibernate-core</artifactId>
-        </dependency>
-
-        <dependency>
-            <groupId>org.hibernate</groupId>
-            <artifactId>hibernate-java8</artifactId>
-        </dependency>
-
-        <dependency>
-            <groupId>org.hibernate</groupId>
-            <artifactId>hibernate-validator</artifactId>
+            <version>${excel.parser.version}</version>
         </dependency>
         <!-- JXLS -->
 
@@ -319,39 +422,46 @@
         <dependency>
             <groupId>org.codehaus.groovy</groupId>
             <artifactId>groovy-all</artifactId>
+            <version>${groovy.version}</version>
         </dependency>
         <!-- Groovy -->
 
         <dependency>
             <groupId>net.sf.jni4net</groupId>
             <artifactId>jni4net.j</artifactId>
-        </dependency>
-
-        <dependency>
-            <groupId>org.aspectj</groupId>
-            <artifactId>aspectjrt</artifactId>
+            <version>${jni4.net.version}</version>
         </dependency>
 
         <dependency>
             <groupId>org.simpleframework</groupId>
             <artifactId>simple-xml</artifactId>
+            <version>${simple.xml.version}</version>
         </dependency>
 
         <dependency>
             <groupId>javax.servlet.jsp</groupId>
             <artifactId>jsp-api</artifactId>
+            <version>${jsp.api.version}</version>
             <scope>provided</scope>
         </dependency>
 
         <dependency>
             <groupId>javax.el</groupId>
             <artifactId>javax.el-api</artifactId>
+            <version>${javax.el.api.version}</version>
             <scope>provided</scope>
         </dependency>
 
         <dependency>
             <groupId>com.github.spullara.mustache.java</groupId>
             <artifactId>compiler</artifactId>
+            <version>${mustache.complier.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.apache.taglibs</groupId>
+            <artifactId>taglibs-standard-impl</artifactId>
+            <version>${taglibs.standard.version}</version>
         </dependency>
 
         <dependency>
@@ -359,65 +469,160 @@
             <artifactId>standard</artifactId>
             <version>1.1.2</version>
         </dependency>
+
         <dependency>
-            <groupId>org.apache.tomcat.embed</groupId>
-            <artifactId>tomcat-embed-jasper</artifactId>
+            <groupId>org.hibernate</groupId>
+            <artifactId>hibernate-core</artifactId>
+            <version>${hibernate.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.hibernate</groupId>
+            <artifactId>hibernate-java8</artifactId>
+            <version>${hibernate.version}</version>
         </dependency>
 
         <dependency>
             <groupId>com.querydsl</groupId>
-            <artifactId>querydsl-core</artifactId>
+            <artifactId>querydsl-apt</artifactId>
+            <version>${querydsl.version}</version>
+            <scope>provided</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>com.querydsl</groupId>
+            <artifactId>querydsl-sql</artifactId>
+            <version>${querydsl.version}</version>
         </dependency>
 
         <dependency>
             <groupId>com.querydsl</groupId>
             <artifactId>querydsl-jpa</artifactId>
+            <version>${querydsl.version}</version>
         </dependency>
 
         <dependency>
             <groupId>org.reflections</groupId>
             <artifactId>reflections</artifactId>
+            <version>${reflections.version}</version>
         </dependency>
 
         <dependency>
             <groupId>com.atlassian.commonmark</groupId>
             <artifactId>commonmark</artifactId>
+            <version>${commonmark.version}</version>
         </dependency>
 
         <dependency>
             <groupId>com.atlassian.commonmark</groupId>
             <artifactId>commonmark-ext-gfm-tables</artifactId>
+            <version>${commonmark.version}</version>
         </dependency>
 
         <dependency>
             <groupId>com.atlassian.commonmark</groupId>
             <artifactId>commonmark-ext-autolink</artifactId>
+            <version>${commonmark.version}</version>
         </dependency>
 
         <dependency>
             <groupId>com.atlassian.commonmark</groupId>
             <artifactId>commonmark-ext-gfm-strikethrough</artifactId>
+            <version>${commonmark.version}</version>
         </dependency>
 
         <dependency>
             <groupId>org.zeroturnaround</groupId>
             <artifactId>zt-zip</artifactId>
+            <version>${ztzip.version}</version>
         </dependency>
 
         <dependency>
             <groupId>net.coobird</groupId>
             <artifactId>thumbnailator</artifactId>
+            <version>${thumbnailator.version}</version>
         </dependency>
 
         <dependency>
             <groupId>org.apache.pdfbox</groupId>
             <artifactId>pdfbox</artifactId>
+            <version>${pdf.box.version}</version>
         </dependency>
 
         <dependency>
             <groupId>org.apache.pdfbox</groupId>
             <artifactId>pdfbox-tools</artifactId>
+            <version>${pdf.box.version}</version>
         </dependency>
 
     </dependencies>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.codehaus.gmavenplus</groupId>
+                <artifactId>gmavenplus-plugin</artifactId>
+                <version>1.5</version>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>addSources</goal>
+                            <goal>addTestSources</goal>
+                            <goal>generateStubs</goal>
+                            <goal>compile</goal>
+                            <goal>testGenerateStubs</goal>
+                            <goal>testCompile</goal>
+                            <goal>removeStubs</goal>
+                            <goal>removeTestStubs</goal>
+                        </goals>
+                    </execution>
+                </executions>
+                <dependencies>
+                    <dependency>
+                        <groupId>org.codehaus.groovy</groupId>
+                        <artifactId>groovy-all</artifactId>
+                        <version>${groovy.version}</version>
+                        <scope>runtime</scope>
+                    </dependency>
+                </dependencies>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>3.1</version>
+                <configuration>
+                    <source>${java.version}</source>
+                    <target>${java.version}</target>
+                    <showWarnings>true</showWarnings>
+                    <showDeprecation>true</showDeprecation>
+                    <encoding>UTF-8</encoding>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-surefire-plugin</artifactId>
+                <version>2.16</version>
+                <configuration>
+                    <argLine>
+                        -Dfile.encoding=UTF-8
+                    </argLine>
+                </configuration>
+            </plugin>
+        </plugins>
+
+        <resources>
+            <resource>
+                <directory>src/main/resources</directory>
+            </resource>
+            <resource>
+                <directory>src/main/java</directory>
+            </resource>
+        </resources>
+
+        <testResources>
+            <testResource>
+                <directory>src/test/resources</directory>
+            </testResource>
+        </testResources>
+    </build>
 </project>
