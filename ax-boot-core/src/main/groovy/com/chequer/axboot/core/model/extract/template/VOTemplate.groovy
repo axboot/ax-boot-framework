@@ -5,7 +5,7 @@ class VOTemplate {
     public static final String VO_TEMPLATE =
 '''
 import com.chequer.axboot.core.utils.ModelMapperUtils;
-import ${packageName}.vo.BaseVO;
+import com.chequer.axboot.core.vo.BaseVO;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 

@@ -4,7 +4,7 @@ class ServiceTemplate {
 
     public static final String SERVICE_TEMPLATE =
 '''
-import com.chequer.axboot.core.domain.BaseService;
+import com.chequer.axboot.admin.domain.BaseService;
 import org.springframework.stereotype.Service;
 import javax.inject.Inject;
 
@@ -17,6 +17,10 @@ public class ${serviceClassName} extends BaseService<${entityClassName}, ${keyCl
     public ${serviceClassName}(${repositoryClassName} ${repositoryClassFieldName}) {
         super(${repositoryClassFieldName});
         this.${repositoryClassFieldName} = ${repositoryClassFieldName};
+    }
+
+    public List<${entityClassName}> gets(RequestParams<${entityClassName}> requestParams) {
+        return null;
     }
 }
 '''

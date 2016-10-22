@@ -147,7 +147,7 @@ public class RequestParams<T> {
 
             String className = clazz.getSimpleName();
 
-            Class<EntityPathBase> queryDslClass = (Class<EntityPathBase>) ClassUtils.getClass(String.format("com.chequer.axboot.core.domain.%s" + ".Q%s", className.toLowerCase(), className));
+            Class<EntityPathBase> queryDslClass = (Class<EntityPathBase>) ClassUtils.getClass(String.format("com.chequer.axboot.admin.domain.%s" + ".Q%s", className.toLowerCase(), className));
 
             PathBuilder entityPath = new PathBuilder(queryDslClass, "entity");
 

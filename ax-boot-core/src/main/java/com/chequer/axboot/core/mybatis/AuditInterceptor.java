@@ -1,6 +1,6 @@
 package com.chequer.axboot.core.mybatis;
 
-import com.chequer.axboot.core.domain.BaseJpaModel;
+import com.chequer.axboot.core.domain.base.AXBootBaseJpaModel;
 import org.apache.ibatis.executor.Executor;
 import org.apache.ibatis.mapping.MappedStatement;
 import org.apache.ibatis.plugin.*;
@@ -18,14 +18,14 @@ public class AuditInterceptor implements Interceptor {
     public Object intercept(Invocation invocation) throws Throwable {
         Object[] args = invocation.getArgs();
         for (Object obj : args) {
-            if (obj instanceof BaseJpaModel) {
+            if (obj instanceof AXBootBaseJpaModel) {
                 Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
                 if (authentication != null) {
                     Object principal = authentication.getPrincipal();
                     if (principal instanceof UserDetails) {
                         String username = ((UserDetails) principal).getUsername();
-                        ((BaseJpaModel) obj).setCreatedBy(username);
-                        ((BaseJpaModel) obj).setUpdatedBy(username);
+                        ((AXBootBaseJpaModel) obj).setCreatedBy(username);
+                        ((AXBootBaseJpaModel) obj).setUpdatedBy(username);
                     }
                 }
             }

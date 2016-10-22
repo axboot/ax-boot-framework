@@ -5,8 +5,8 @@ import ch.qos.logback.classic.spi.StackTraceElementProxy;
 import ch.qos.logback.core.UnsynchronizedAppenderBase;
 import ch.qos.logback.core.util.ContextUtil;
 import com.chequer.axboot.core.config.AXBootContextConfig;
-import com.chequer.axboot.core.domain.log.ErrorLog;
-import com.chequer.axboot.core.domain.log.ErrorLogService;
+import com.chequer.axboot.core.domain.log.AXBootErrorLog;
+import com.chequer.axboot.core.domain.log.AXBootErrorLogService;
 import com.chequer.axboot.core.utils.JsonUtils;
 import com.chequer.axboot.core.utils.MDCUtil;
 import com.chequer.axboot.core.utils.PhaseUtils;
@@ -16,7 +16,9 @@ import net.gpedro.integrations.slack.SlackApi;
 import net.gpedro.integrations.slack.SlackAttachment;
 import net.gpedro.integrations.slack.SlackField;
 import net.gpedro.integrations.slack.SlackMessage;
+import org.apache.commons.lang3.StringUtils;
 
+import javax.annotation.PostConstruct;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
@@ -28,18 +30,20 @@ import java.util.List;
 @Getter
 public class AXBootLogbackAppender extends UnsynchronizedAppenderBase<ILoggingEvent> {
 
-    private ErrorLogService errorLogService;
+    private AXBootErrorLogService errorLogService;
 
     private AXBootContextConfig axBootContextConfig;
 
     private AXBootContextConfig.Logging axBootLoggingConfig;
 
-    public AXBootLogbackAppender() {
+    public AXBootLogbackAppender(AXBootErrorLogService axBootErrorLogService, AXBootContextConfig axBootContextConfig) {
+        this.errorLogService = axBootErrorLogService;
+        this.axBootContextConfig = axBootContextConfig;
+        this.axBootLoggingConfig = axBootContextConfig.getLoggingConfig();
     }
 
-    public AXBootLogbackAppender(ErrorLogService errorLogService, AXBootContextConfig axBootContextConfig) {
-        this.errorLogService = errorLogService;
-        this.axBootContextConfig = axBootContextConfig;
+    @PostConstruct
+    public void created() {
         this.axBootLoggingConfig = axBootContextConfig.getLoggingConfig();
     }
 
@@ -51,7 +55,7 @@ public class AXBootLogbackAppender extends UnsynchronizedAppenderBase<ILoggingEv
     @Override
     protected void append(ILoggingEvent loggingEvent) {
         if (loggingEvent.getLevel().isGreaterOrEqual(axBootLoggingConfig.getLevel())) {
-            ErrorLog errorLog = getErrorLog(loggingEvent);
+            AXBootErrorLog errorLog = getErrorLog(loggingEvent);
 
             if (axBootLoggingConfig.getDatabase().isEnabled()) {
                 if (axBootLoggingConfig.getSlack().isEnabled()) {
@@ -66,7 +70,7 @@ public class AXBootLogbackAppender extends UnsynchronizedAppenderBase<ILoggingEv
         }
     }
 
-    private void toSlack(ErrorLog errorLog) {
+    private void toSlack(AXBootErrorLog errorLog) {
         SlackApi slackApi = new SlackApi(axBootLoggingConfig.getSlack().getWebHookUrl());
 
         List<SlackField> fields = new ArrayList<>();
@@ -125,16 +129,16 @@ public class AXBootLogbackAppender extends UnsynchronizedAppenderBase<ILoggingEv
 
         String title = errorLog.getMessage();
 
-        if (axBootLoggingConfig.getDatabase().isEnabled()) {
-            title = "상세 로그 보기 / [" + errorLog.getId() + "] ";
-        }
-
         SlackAttachment slackAttachment = new SlackAttachment();
         slackAttachment.setFallback("에러발생!! 확인요망");
         slackAttachment.setColor("danger");
         slackAttachment.setFields(fields);
         slackAttachment.setTitle(title);
-        slackAttachment.setTitleLink("http://demo.axboot.com");
+
+        if (StringUtils.isNotEmpty(axBootContextConfig.getLoggingConfig().getAdminUrl())) {
+            slackAttachment.setTitleLink(axBootContextConfig.getLoggingConfig().getAdminUrl());
+        }
+
         slackAttachment.setText(errorLog.getTrace());
 
         SlackMessage slackMessage = new SlackMessage("");
@@ -144,6 +148,7 @@ public class AXBootLogbackAppender extends UnsynchronizedAppenderBase<ILoggingEv
         if (!axBootLoggingConfig.getSlack().getChannel().startsWith("#")) {
             channel = "#" + channel;
         }
+
         slackMessage.setChannel(channel);
         slackMessage.setUsername(String.format("[%s] - ErrorReportBot", errorLog.getPhase()));
         slackMessage.setIcon(":exclamation:");
@@ -152,12 +157,12 @@ public class AXBootLogbackAppender extends UnsynchronizedAppenderBase<ILoggingEv
         slackApi.call(slackMessage);
     }
 
-    private void toDatabase(ErrorLog errorLog) {
+    private void toDatabase(AXBootErrorLog errorLog) {
         errorLogService.save(errorLog);
     }
 
-    public ErrorLog getErrorLog(ILoggingEvent loggingEvent) {
-        ErrorLog errorLog = new ErrorLog();
+    public AXBootErrorLog getErrorLog(ILoggingEvent loggingEvent) {
+        AXBootErrorLog errorLog = new AXBootErrorLog();
         errorLog.setPhase(PhaseUtils.phase());
         errorLog.setSystem(axBootContextConfig.getApplication().getName());
         errorLog.setLoggerName(loggingEvent.getLoggerName());

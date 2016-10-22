@@ -1,6 +1,5 @@
 package com.chequer.axboot.core.db.schema;
 
-import com.chequer.axboot.core.code.GlobalConstants;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.boot.Metadata;
@@ -64,7 +63,7 @@ public class SchemaGeneratorBase {
 
         MetadataSources metadataSources = new MetadataSources(standardServiceRegistry);
 
-        new Reflections(GlobalConstants.CORE_PACKAGE)
+        new Reflections()
                 .getTypesAnnotatedWith(Entity.class)
                 .forEach(metadataSources::addAnnotatedClass);
 
@@ -74,7 +73,7 @@ public class SchemaGeneratorBase {
     public List<String> getTableList() {
         List<String> tableName = new ArrayList();
 
-        new Reflections(GlobalConstants.CORE_PACKAGE)
+        new Reflections()
                 .getTypesAnnotatedWith(Entity.class)
                 .forEach(clazz -> {
                     if (clazz.isAnnotationPresent(Table.class)) {

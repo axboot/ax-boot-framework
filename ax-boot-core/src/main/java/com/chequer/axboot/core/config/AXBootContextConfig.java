@@ -1,7 +1,6 @@
 package com.chequer.axboot.core.config;
 
 import ch.qos.logback.classic.Level;
-import com.chequer.axboot.core.code.GlobalConstants;
 import com.chequer.axboot.core.code.Types;
 import com.chequer.axboot.core.context.AppContextManager;
 import com.chequer.axboot.core.mybatis.typehandler.*;
@@ -40,9 +39,12 @@ public class AXBootContextConfig implements ApplicationContextAware {
     @Getter(AccessLevel.NONE)
     private String serverName;
 
-    private String packageName;
+    private String basePackageName;
+
+    private String domainPackageName;
 
     private static ApplicationContext applicationContext;
+
 
     public static synchronized AXBootContextConfig getInstance() {
         if (instance == null) {
@@ -114,6 +116,8 @@ public class AXBootContextConfig implements ApplicationContextAware {
         private Slack slack;
 
         private Database database;
+
+        private String adminUrl;
 
         @Data
         public static class Slack {
@@ -263,7 +267,7 @@ public class AXBootContextConfig implements ApplicationContextAware {
                         vendorAdapter.setDatabasePlatform(Class.forName("org.hibernate.dialect." + dialect).getName());
                     } catch (ClassNotFoundException e) {
                         try {
-                            vendorAdapter.setDatabasePlatform(Class.forName(String.format("%s.db.dialect.%s", GlobalConstants.CORE_PACKAGE, dialect)).getName());
+                            vendorAdapter.setDatabasePlatform(Class.forName(String.format("com.chequer.axboot.core.db.dialect.%s", dialect)).getName());
                         } catch (ClassNotFoundException e1) {
                             e1.printStackTrace();
                         }

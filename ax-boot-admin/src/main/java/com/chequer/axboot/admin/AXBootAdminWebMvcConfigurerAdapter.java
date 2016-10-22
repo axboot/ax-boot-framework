@@ -1,5 +1,7 @@
 package com.chequer.axboot.admin;
 
+import com.chequer.axboot.core.filters.AXBootConfigFilter;
+import com.chequer.axboot.core.filters.AXBootCorsFilter;
 import com.chequer.axboot.core.filters.MultiReadableHttpServletRequestFilter;
 import com.chequer.axboot.core.json.ContentTypeSwitchableMappingJackson2JsonView;
 import com.chequer.axboot.core.parameter.RequestParamsArgumentResolver;
@@ -129,6 +131,16 @@ public class AXBootAdminWebMvcConfigurerAdapter extends WebMvcConfigurerAdapter 
         registrationBean.setFilter(multiReadableHttpServletRequestFilter);
         registrationBean.setOrder(Ordered.HIGHEST_PRECEDENCE);
         return registrationBean;
+    }
+
+    @Bean
+    public AXBootCorsFilter corsFilter() {
+        return new AXBootCorsFilter();
+    }
+
+    @Bean
+    public AXBootConfigFilter configFilter() {
+        return new AXBootConfigFilter();
     }
 
     @Bean

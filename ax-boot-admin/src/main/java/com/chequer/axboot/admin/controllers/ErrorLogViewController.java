@@ -1,10 +1,10 @@
 package com.chequer.axboot.admin.controllers;
 
+import com.chequer.axboot.admin.domain.log.ErrorLog;
+import com.chequer.axboot.admin.domain.log.ErrorLogService;
 import com.chequer.axboot.core.api.response.ApiResponse;
 import com.chequer.axboot.core.api.response.Responses;
 import com.chequer.axboot.core.controllers.BaseController;
-import com.chequer.axboot.core.domain.log.ErrorLog;
-import com.chequer.axboot.core.domain.log.ErrorLogService;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Controller;
