@@ -1,6 +1,7 @@
 package com.chequer.axboot.admin.domain.file;
 
 import com.chequer.axboot.admin.domain.BaseService;
+import com.chequer.axboot.core.code.AXBootTypes;
 import com.chequer.axboot.core.code.Types;
 import com.chequer.axboot.core.parameter.RequestParams;
 import com.chequer.axboot.core.utils.EncodeUtils;
@@ -284,7 +285,7 @@ public class CommonFileService extends BaseService<CommonFile, Long> implements 
         }
 
         if (isNotEmpty(delYn)) {
-            Types.Deleted deleted = Types.Deleted.get(delYn);
+            AXBootTypes.Deleted deleted = AXBootTypes.Deleted.get(delYn);
             builder.and(qCommonFile.delYn.eq(deleted));
         }
 

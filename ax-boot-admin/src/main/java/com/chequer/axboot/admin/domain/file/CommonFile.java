@@ -3,7 +3,7 @@ package com.chequer.axboot.admin.domain.file;
 import com.chequer.axboot.admin.domain.BaseJpaModel;
 import com.chequer.axboot.core.annotations.ColumnPosition;
 import com.chequer.axboot.core.annotations.Comment;
-import com.chequer.axboot.core.code.Types;
+import com.chequer.axboot.core.code.AXBootTypes;
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -78,7 +78,7 @@ public class CommonFile extends BaseJpaModel<Long> {
     @Comment(value = "삭제여부")
     @Type(type = "labelEnum")
     @ColumnPosition(9)
-    private Types.Deleted delYn = Types.Deleted.NO;
+    private AXBootTypes.Deleted delYn = AXBootTypes.Deleted.NO;
 
     @Column(name = "FILE_DESC", columnDefinition = "TEXT")
     @Comment(value = "설명")

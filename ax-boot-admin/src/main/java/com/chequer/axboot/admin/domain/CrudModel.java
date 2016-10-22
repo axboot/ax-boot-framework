@@ -1,6 +1,6 @@
 package com.chequer.axboot.admin.domain;
 
-import com.chequer.axboot.core.code.Types;
+import com.chequer.axboot.core.code.AXBootTypes;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;
@@ -11,20 +11,20 @@ import javax.persistence.Transient;
 public abstract class CrudModel {
 
     @Transient
-    public Types.DataStatus getDataStatus() {
+    public AXBootTypes.DataStatus getDataStatus() {
         if (__deleted__) {
-            return Types.DataStatus.DELETED;
+            return AXBootTypes.DataStatus.DELETED;
         }
 
         if (__created__) {
-            return Types.DataStatus.CREATED;
+            return AXBootTypes.DataStatus.CREATED;
         }
 
         if (__modified__) {
-            return Types.DataStatus.MODIFIED;
+            return AXBootTypes.DataStatus.MODIFIED;
         }
 
-        return Types.DataStatus.ORIGIN;
+        return AXBootTypes.DataStatus.ORIGIN;
     }
 
     @Transient

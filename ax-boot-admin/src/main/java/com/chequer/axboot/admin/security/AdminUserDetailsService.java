@@ -6,7 +6,7 @@ import com.chequer.axboot.admin.domain.user.auth.UserAuth;
 import com.chequer.axboot.admin.domain.user.auth.UserAuthService;
 import com.chequer.axboot.admin.domain.user.role.UserRole;
 import com.chequer.axboot.admin.domain.user.role.UserRoleService;
-import com.chequer.axboot.core.code.Types;
+import com.chequer.axboot.core.code.AXBootTypes;
 import com.chequer.axboot.core.domain.user.SessionUser;
 import com.chequer.axboot.core.utils.DateTimeUtils;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -39,11 +39,11 @@ public class AdminUserDetailsService implements UserDetailsService {
             throw new UsernameNotFoundException("사용자 정보를 확인하세요.");
         }
 
-        if (user.getUseYn() == Types.Used.NO) {
+        if (user.getUseYn() == AXBootTypes.Used.NO) {
             throw new UsernameNotFoundException("존재하지 않는 사용자 입니다.");
         }
 
-        if (user.getDelYn() == Types.Deleted.YES) {
+        if (user.getDelYn() == AXBootTypes.Deleted.YES) {
             throw new UsernameNotFoundException("존재하지 않는 사용자 입니다.");
         }
 

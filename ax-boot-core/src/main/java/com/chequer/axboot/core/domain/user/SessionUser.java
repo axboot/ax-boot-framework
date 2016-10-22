@@ -6,10 +6,7 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
-import java.util.Locale;
+import java.util.*;
 
 @Data
 public class SessionUser implements UserDetails {
@@ -39,6 +36,12 @@ public class SessionUser implements UserDetails {
     private String menuHash;
 
     private long expires;
+
+    private Map<String, Object> details = new HashMap<>();
+
+    public void addDetails(String key, String value) {
+        details.put(key, value);
+    }
 
     private List<String> authorityList = new ArrayList<>();
 

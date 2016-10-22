@@ -1,7 +1,7 @@
 package com.chequer.axboot.admin.domain.code;
 
 import com.chequer.axboot.admin.domain.BaseService;
-import com.chequer.axboot.core.code.Types;
+import com.chequer.axboot.core.code.AXBootTypes;
 import com.chequer.axboot.core.parameter.RequestParams;
 import com.querydsl.core.BooleanBuilder;
 import org.springframework.stereotype.Service;
@@ -34,7 +34,7 @@ public class CommonCodeService extends BaseService<CommonCode, CommonCodeId> {
         }
 
         if (isNotEmpty(useYn)) {
-            Types.Used used = Types.Used.get(useYn);
+            AXBootTypes.Used used = AXBootTypes.Used.get(useYn);
             builder.and(qCommonCode.useYn.eq(used));
         }
 

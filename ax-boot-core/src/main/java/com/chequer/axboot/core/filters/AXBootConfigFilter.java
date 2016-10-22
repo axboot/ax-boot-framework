@@ -25,7 +25,7 @@ public class AXBootConfigFilter implements Filter {
             }
             servletRequest.setAttribute("config", config);
         } catch (Exception e) {
-            // ignore
+            e.printStackTrace();
         }
 
         filterChain.doFilter(servletRequest, servletResponse);

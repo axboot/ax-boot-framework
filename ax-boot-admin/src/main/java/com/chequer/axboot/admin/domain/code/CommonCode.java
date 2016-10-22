@@ -2,7 +2,7 @@ package com.chequer.axboot.admin.domain.code;
 
 import com.chequer.axboot.admin.domain.BaseJpaModel;
 import com.chequer.axboot.core.annotations.ColumnPosition;
-import com.chequer.axboot.core.code.Types;
+import com.chequer.axboot.core.code.AXBootTypes;
 import lombok.Getter;
 import lombok.Setter;
 import org.hibernate.annotations.DynamicInsert;
@@ -79,7 +79,7 @@ public class CommonCode extends BaseJpaModel<CommonCodeId> {
     @Column(name = "USE_YN", length = 1)
     @Type(type = "labelEnum")
     @ColumnPosition(13)
-    private Types.Used useYn = Types.Used.YES;
+    private AXBootTypes.Used useYn = AXBootTypes.Used.YES;
 
     @Override
     public CommonCodeId getId() {

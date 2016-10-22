@@ -14,6 +14,7 @@ import com.chequer.axboot.admin.domain.user.auth.menu.AuthGroupMenu;
 import com.chequer.axboot.admin.domain.user.auth.menu.AuthGroupMenuService;
 import com.chequer.axboot.admin.domain.user.role.UserRole;
 import com.chequer.axboot.admin.domain.user.role.UserRoleService;
+import com.chequer.axboot.core.code.AXBootTypes;
 import com.chequer.axboot.core.code.Types;
 import com.chequer.axboot.core.db.schema.SchemaGenerator;
 import com.chequer.axboot.core.model.extract.service.jdbc.JdbcMetadataService;
@@ -178,8 +179,8 @@ public class DatabaseInitService {
         user.setUserStatus(Types.UserStatus.NORMAL);
         user.setLocale("ko_KR");
         user.setMenuGrpCd("SYSTEM_MANAGER");
-        user.setUseYn(Types.Used.YES);
-        user.setDelYn(Types.Deleted.NO);
+        user.setUseYn(AXBootTypes.Used.YES);
+        user.setDelYn(AXBootTypes.Deleted.NO);
         userService.save(user);
 
         UserRole aspAccess = new UserRole();

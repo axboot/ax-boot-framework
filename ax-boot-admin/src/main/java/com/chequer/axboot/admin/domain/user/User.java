@@ -5,6 +5,7 @@ import com.chequer.axboot.admin.domain.user.auth.UserAuth;
 import com.chequer.axboot.admin.domain.user.role.UserRole;
 import com.chequer.axboot.core.annotations.ColumnPosition;
 import com.chequer.axboot.core.annotations.Comment;
+import com.chequer.axboot.core.code.AXBootTypes;
 import com.chequer.axboot.core.code.Types;
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
@@ -95,13 +96,13 @@ public class User extends BaseJpaModel<String> {
     @Comment(value = "사용여부")
     @Type(type = "labelEnum")
     @ColumnPosition(13)
-    private Types.Used useYn = Types.Used.YES;
+    private AXBootTypes.Used useYn = AXBootTypes.Used.YES;
 
     @Column(name = "DEL_YN", length = 1)
     @Comment(value = "삭제여부")
     @Type(type = "labelEnum")
     @ColumnPosition(14)
-    private Types.Deleted delYn = Types.Deleted.NO;
+    private AXBootTypes.Deleted delYn = AXBootTypes.Deleted.NO;
 
     @Transient
     private List<UserRole> roleList;

@@ -7,7 +7,7 @@ import com.chequer.axboot.admin.domain.program.menu.Menu;
 import com.chequer.axboot.admin.domain.program.menu.MenuService;
 import com.chequer.axboot.admin.domain.user.auth.menu.AuthGroupMenu;
 import com.chequer.axboot.admin.domain.user.auth.menu.AuthGroupMenuService;
-import com.chequer.axboot.core.code.Types;
+import com.chequer.axboot.core.code.AXBootTypes;
 import com.chequer.axboot.core.domain.user.SessionUser;
 import com.chequer.axboot.core.session.JWTSessionHandler;
 import com.chequer.axboot.core.utils.*;
@@ -90,7 +90,7 @@ public class AdminTokenAuthenticationService {
                     requestUtils.setAttribute("pageName", menu.getMenuNm());
                     requestUtils.setAttribute("pageRemark", program.getRemark());
 
-                    if (program.getAuthCheck().equals(Types.Used.YES.getLabel())) {
+                    if (program.getAuthCheck().equals(AXBootTypes.Used.YES.getLabel())) {
                         AuthGroupMenu authGroupMenu = authGroupMenuService.getCurrentAuthGroupMenu(menuId, user);
                         if (authGroupMenu == null) {
                             throw new AccessDeniedException("Access is denied");

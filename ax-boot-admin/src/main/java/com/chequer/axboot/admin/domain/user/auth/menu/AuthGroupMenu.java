@@ -4,7 +4,7 @@ import com.chequer.axboot.admin.domain.BaseJpaModel;
 import com.chequer.axboot.admin.domain.program.Program;
 import com.chequer.axboot.core.annotations.ColumnPosition;
 import com.chequer.axboot.core.annotations.Comment;
-import com.chequer.axboot.core.code.Types;
+import com.chequer.axboot.core.code.AXBootTypes;
 import lombok.*;
 import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.DynamicUpdate;
@@ -39,50 +39,50 @@ public class AuthGroupMenu extends BaseJpaModel<AuthGroupMenu.AuthGroupMenuId> {
     @Column(name = "SCH_AH", length = 1)
     @Comment(value = "조회권한")
     @ColumnPosition(3)
-    private String schAh = Types.Used.NO.getLabel();
+    private String schAh = AXBootTypes.Used.NO.getLabel();
 
     @Column(name = "SAV_AH", length = 1)
     @Comment(value = "저장권한")
     @ColumnPosition(4)
-    private String savAh = Types.Used.NO.getLabel();
+    private String savAh = AXBootTypes.Used.NO.getLabel();
 
     @Column(name = "EXL_AH", length = 1)
     @Comment(value = "엑셀권한")
     @ColumnPosition(5)
-    private String exlAh = Types.Used.NO.getLabel();
+    private String exlAh = AXBootTypes.Used.NO.getLabel();
 
     @Column(name = "DEL_AH", length = 1)
     @Comment(value = "삭제권한")
     @ColumnPosition(6)
-    private String delAh = Types.Used.NO.getLabel();
+    private String delAh = AXBootTypes.Used.NO.getLabel();
 
     @Column(name = "FN1_AH", length = 1)
     @Comment(value = "기능키1권한")
     @ColumnPosition(7)
-    private String fn1Ah = Types.Used.NO.getLabel();
+    private String fn1Ah = AXBootTypes.Used.NO.getLabel();
 
     @Column(name = "FN2_AH", length = 1)
     @Comment(value = "기능키2권한")
     @ColumnPosition(8)
-    private String fn2Ah = Types.Used.NO.getLabel();
+    private String fn2Ah = AXBootTypes.Used.NO.getLabel();
 
     @Column(name = "FN3_AH", length = 1)
     @Comment(value = "기능키3권한")
     @ColumnPosition(9)
-    private String fn3Ah = Types.Used.NO.getLabel();
+    private String fn3Ah = AXBootTypes.Used.NO.getLabel();
 
     @Column(name = "FN4_AH", length = 1)
     @Comment(value = "기능키4권한")
     @ColumnPosition(10)
-    private String fn4Ah = Types.Used.NO.getLabel();
+    private String fn4Ah = AXBootTypes.Used.NO.getLabel();
 
     @Column(name = "FN5_AH", length = 1)
     @Comment(value = "기능키5권한")
     @ColumnPosition(11)
-    private String fn5Ah = Types.Used.NO.getLabel();
+    private String fn5Ah = AXBootTypes.Used.NO.getLabel();
 
     @Transient
-    private Types.Used useYn;
+    private AXBootTypes.Used useYn;
 
     public void updateAuthorization(AuthGroupMenu authGroupMenu) {
         this.schAh = positive(this.schAh, authGroupMenu.getSchAh());

@@ -9,7 +9,7 @@ import com.chequer.axboot.admin.domain.user.QUser;
 import com.chequer.axboot.admin.domain.user.auth.QUserAuth;
 import com.chequer.axboot.admin.domain.user.auth.menu.QAuthGroupMenu;
 import com.chequer.axboot.admin.domain.user.role.QUserRole;
-import com.chequer.axboot.core.code.Types;
+import com.chequer.axboot.core.code.AXBootTypes;
 import com.chequer.axboot.core.db.mapper.ColumnToBeanPropertyRowMapper;
 import com.querydsl.core.types.EntityPath;
 import com.querydsl.core.types.OrderSpecifier;
@@ -146,7 +146,7 @@ public class BaseService<T, ID extends Serializable> extends FilterService<T> {
         if (var instanceof CrudModel) {
             CrudModel crudModel = (CrudModel) var;
 
-            if (crudModel.getDataStatus() == Types.DataStatus.DELETED) {
+            if (crudModel.getDataStatus() == AXBootTypes.DataStatus.DELETED) {
                 deleted = true;
             }
         }

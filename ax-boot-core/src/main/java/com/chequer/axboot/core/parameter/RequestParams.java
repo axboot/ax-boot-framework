@@ -29,6 +29,10 @@ public class RequestParams<T> {
         this.map = new HashMap<>();
     }
 
+    public RequestParams() {
+        this.map = new HashMap<>();
+    }
+
     public void put(String key, Object value) {
         this.map.put(key, value);
     }

@@ -4,7 +4,7 @@ import com.chequer.axboot.admin.domain.BaseService;
 import com.chequer.axboot.admin.domain.program.ProgramService;
 import com.chequer.axboot.admin.domain.program.menu.Menu;
 import com.chequer.axboot.admin.domain.program.menu.MenuService;
-import com.chequer.axboot.core.code.Types;
+import com.chequer.axboot.core.code.AXBootTypes;
 import com.chequer.axboot.core.domain.user.SessionUser;
 import com.chequer.axboot.core.parameter.RequestParams;
 import com.querydsl.core.BooleanBuilder;
@@ -66,7 +66,7 @@ public class AuthGroupMenuService extends BaseService<AuthGroupMenu, AuthGroupMe
     @Transactional
     public void saveAuth(List<AuthGroupMenu> authGroupMenuList) {
         for (AuthGroupMenu authGroupMenu : authGroupMenuList) {
-            if (authGroupMenu.getUseYn() == Types.Used.NO) {
+            if (authGroupMenu.getUseYn() == AXBootTypes.Used.NO) {
                 delete(authGroupMenu);
             } else {
                 save(authGroupMenu);
