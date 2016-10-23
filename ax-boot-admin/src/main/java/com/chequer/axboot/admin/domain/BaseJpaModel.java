@@ -4,6 +4,7 @@ import com.chequer.axboot.admin.domain.user.User;
 import com.chequer.axboot.core.annotations.ColumnPosition;
 import com.chequer.axboot.core.db.type.LabelEnumType;
 import com.chequer.axboot.core.db.type.MySQLJSONUserType;
+import com.chequer.axboot.core.domain.base.AXBootCrudModel;
 import com.chequer.axboot.core.utils.SessionUtils;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Getter;
@@ -28,7 +29,7 @@ import java.time.Instant;
 @MappedSuperclass
 @DynamicInsert
 @DynamicUpdate
-public abstract class BaseJpaModel<PK extends Serializable> extends CrudModel implements Persistable<PK>, Serializable {
+public abstract class BaseJpaModel<PK extends Serializable> extends AXBootCrudModel implements Persistable<PK>, Serializable {
 
     @Override
     @JsonIgnore

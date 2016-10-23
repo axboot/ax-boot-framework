@@ -1,5 +1,6 @@
 package com.chequer.axboot.admin.domain;
 
+import com.chequer.axboot.core.domain.base.AXBootCrudModel;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Getter;
 import lombok.Setter;
@@ -15,12 +16,12 @@ import java.io.Serializable;
 @MappedSuperclass
 @DynamicInsert
 @DynamicUpdate
-public abstract class SimpleJpaModel<PK extends Serializable> extends CrudModel implements Persistable<PK>, Serializable {
+public abstract class SimpleJpaModel<PK extends Serializable> extends AXBootCrudModel implements Persistable<PK>, Serializable {
 
-	@Override
-	@JsonIgnore
-	public boolean isNew() {
-		return null == getId();
-	}
+    @Override
+    @JsonIgnore
+    public boolean isNew() {
+        return null == getId();
+    }
 
 }

@@ -8,9 +8,7 @@ import com.chequer.axboot.core.db.monitor.SqlMonitoringService;
 import com.chequer.axboot.core.domain.log.AXBootErrorLogService;
 import com.chequer.axboot.core.logback.AXBootLogbackAppender;
 import com.chequer.axboot.core.model.extract.service.jdbc.JdbcMetadataService;
-import com.chequer.axboot.core.mybatis.AXBootMyBatisAuditInterceptor;
 import com.chequer.axboot.core.mybatis.MyBatisMapper;
-import org.apache.ibatis.plugin.Interceptor;
 import org.apache.ibatis.session.SqlSessionFactory;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.convention.MatchingStrategies;
@@ -88,7 +86,6 @@ public class CoreApplicationContext {
         sqlSessionFactoryBean.setDataSource(dataSource);
         sqlSessionFactoryBean.setTypeAliasesPackage(GlobalConstants.DOMAIN_PACKAGE);
         sqlSessionFactoryBean.setTypeHandlers(axBootContextConfig.getMyBatisTypeHandlers());
-        sqlSessionFactoryBean.setPlugins(new Interceptor[]{new AXBootMyBatisAuditInterceptor()});
         sqlSessionFactoryBean.setTransactionFactory(springManagedTransactionFactory);
         return sqlSessionFactoryBean.getObject();
     }

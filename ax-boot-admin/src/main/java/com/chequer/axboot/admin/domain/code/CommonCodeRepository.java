@@ -1,8 +1,8 @@
 package com.chequer.axboot.admin.domain.code;
 
-import com.chequer.axboot.admin.domain.JPAQueryDSLRepository;
+import com.chequer.axboot.core.domain.base.AXBootJPAQueryDSLRepository;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public interface CommonCodeRepository extends JPAQueryDSLRepository<CommonCode, CommonCodeId> {
+public interface CommonCodeRepository extends AXBootJPAQueryDSLRepository<CommonCode, CommonCodeId> {
 }

@@ -1,8 +1,8 @@
 package com.chequer.axboot.admin.domain.user.auth.menu;
 
-import com.chequer.axboot.admin.domain.JPAQueryDSLRepository;
+import com.chequer.axboot.core.domain.base.AXBootJPAQueryDSLRepository;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public interface AuthGroupMenuRepository extends JPAQueryDSLRepository<AuthGroupMenu, AuthGroupMenu.AuthGroupMenuId> {
+public interface AuthGroupMenuRepository extends AXBootJPAQueryDSLRepository<AuthGroupMenu, AuthGroupMenu.AuthGroupMenuId> {
 }

@@ -12,23 +12,23 @@ import java.util.List;
 @Service
 public class ChildSampleService extends BaseService<ChildSample, String> {
 
-	private ChildSampleRepository childRepository;
+    private ChildSampleRepository childRepository;
 
-	@Inject
-	public ChildSampleService(ChildSampleRepository childRepository) {
-		super(childRepository);
-		this.childRepository = childRepository;
-	}
+    @Inject
+    public ChildSampleService(ChildSampleRepository childRepository) {
+        super(childRepository);
+        this.childRepository = childRepository;
+    }
 
 
-	public Page<ChildSample> findByParentKeyWithPaging(String parentKey, Pageable pageable) {
-		return childRepository.findByParentKey(parentKey, pageable);
-	}
+    public Page<ChildSample> findByParentKeyWithPaging(String parentKey, Pageable pageable) {
+        return childRepository.findByParentKey(parentKey, pageable);
+    }
 
-	@Transactional
-	public void deleteByKeys(List<String> keys) {
-		for (String key : keys) {
-			delete(key);
-		}
-	}
+    @Transactional
+    public void deleteByKeys(List<String> keys) {
+        for (String key : keys) {
+            delete(key);
+        }
+    }
 }

@@ -1,14 +1,8 @@
 package com.chequer.axboot.admin.domain.program;
 
-import com.chequer.axboot.admin.domain.JPAQueryDSLRepository;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
+import com.chequer.axboot.core.domain.base.AXBootJPAQueryDSLRepository;
 import org.springframework.stereotype.Repository;
 
-import java.util.List;
-
 @Repository
-public interface ProgramRepository extends JPAQueryDSLRepository<Program, String> {
-    Page<Program> findByProgCdContainingOrProgNmContaining(String progCd, String progNm, Pageable pageable);
-    List<Program> findByProgCdContainingOrProgNmContaining(String progCd, String progNm);
+public interface ProgramRepository extends AXBootJPAQueryDSLRepository<Program, String> {
 }
