@@ -392,6 +392,7 @@ fnObj.formView01 = axboot.viewExtend(axboot.formView, {
         this.modelFormatter = new axboot.modelFormatter(this.model); // 모델 포메터 시작
 
         this.editor = CKEDITOR.replace('editor1', {
+            //skin : 'moono-dark',
             language: 'korean',
             extraPlugins: 'uploadimage,filemanager,notification',
             filebrowserBrowseUrl: CONTEXT_PATH + '/ckeditor/fileBrowser?targetType=CKEDITOR&targetId=' + menuId,

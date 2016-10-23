@@ -57,7 +57,7 @@
                     <div class="right">
                         <button type="button" class="btn btn-default" data-form-view-01-btn="form-clear">
                             <i class="cqc-erase"></i>
-                            <lang data-id="신규"></lang>
+                            신규
                         </button>
                     </div>
                 </div>
