@@ -23,7 +23,7 @@ ${importPackages}
 @Table(name = "${tableName}")
 @Comment(value = "${tableComment}")
 @Alias("${entityClassFieldName}")${annotations}
-public class ${entityClassName} extends BaseJpaModel<${keyClassRefName}> {
+public class ${entityClassName} extends AXBootBaseJpaModel<${keyClassRefName}> {
 ${entityFields}
 
     @Override
@@ -35,7 +35,7 @@ ${entityFields}
 
     public static String COMPOSITE_KEY_ENTITY_CLASS_TEMPLATE =
 '''
-import ${packageName}.core.domain.BaseJpaModel;
+import com.chequer.axboot.core.domain.base.AXBootBaseJpaModel;
 import lombok.*;
 import org.apache.ibatis.type.Alias;
 import org.hibernate.annotations.DynamicInsert;
@@ -54,7 +54,7 @@ ${importPackages}
 @Comment(value = "${tableComment}")
 @IdClass(${keyClassRefName}.class)
 @Alias("${entityClassFieldName}")
-public class ${entityClassName} extends BaseJpaModel<${keyClassRefName}> {
+public class ${entityClassName} extends AXBootBaseJpaModel<${keyClassRefName}> {
 ${entityFields}
 
     @Override

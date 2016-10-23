@@ -20,7 +20,9 @@ import javax.inject.Inject;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import java.io.Serializable;
+import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 
@@ -147,7 +149,7 @@ public abstract class AXBootBaseService<T, ID extends Serializable> extends AXBo
     }
 
     @Transactional
-    public <S extends T> List<S> save(List<S> vars) {
+    public <S extends T> Collection<S> save(Collection<S> vars) {
         vars.forEach(this::save);
         return vars;
     }
@@ -202,6 +204,19 @@ public abstract class AXBootBaseService<T, ID extends Serializable> extends AXBo
             return 0;
         }
         return _long;
+    }
+
+    public int getInt(BigDecimal bigDecimal) {
+        if (bigDecimal == null)
+            return 0;
+        return bigDecimal.intValue();
+    }
+
+    public long getLong(BigDecimal bigDecimal) {
+        if (bigDecimal == null)
+            return 0;
+
+        return bigDecimal.longValue();
     }
 
     protected String like(String field) {
