@@ -1,10 +1,10 @@
 package com.chequer.axboot.admin.controllers;
 
+import com.chequer.axboot.admin.domain.program.Program;
+import com.chequer.axboot.admin.domain.program.ProgramService;
 import com.chequer.axboot.core.api.response.ApiResponse;
 import com.chequer.axboot.core.api.response.Responses;
 import com.chequer.axboot.core.controllers.BaseController;
-import com.chequer.axboot.core.domain.program.Program;
-import com.chequer.axboot.core.domain.program.ProgramService;
 import com.chequer.axboot.core.parameter.RequestParams;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestBody;

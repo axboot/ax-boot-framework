@@ -6,10 +6,7 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
-import java.util.Locale;
+import java.util.*;
 
 @Data
 public class SessionUser implements UserDetails {
@@ -40,6 +37,23 @@ public class SessionUser implements UserDetails {
 
     private long expires;
 
+    private Map<String, Object> details = new HashMap<>();
+
+    public String getDetailByString(String key) {
+        return getDetail(key) == null ? "" : (String) getDetail(key);
+    }
+
+    public Object getDetail(String key) {
+        if (details.containsKey(key)) {
+            return details.get(key);
+        }
+        return null;
+    }
+
+    public void addDetails(String key, String value) {
+        details.put(key, value);
+    }
+
     private List<String> authorityList = new ArrayList<>();
 
     private List<String> authGroupList = new ArrayList<>();
@@ -54,6 +68,10 @@ public class SessionUser implements UserDetails {
 
     public void addAuthority(String role) {
         authorityList.add("ROLE_" + role);
+    }
+
+    public boolean hasRole(String role) {
+        return authorityList.stream().filter(a -> a.equals("ROLE_" + role)).findAny().isPresent();
     }
 
     @Override

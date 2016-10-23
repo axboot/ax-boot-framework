@@ -1,6 +1,7 @@
 package com.chequer.axboot.core.api;
 
 import com.chequer.axboot.core.utils.JsonUtils;
+import com.fasterxml.jackson.databind.JsonNode;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
@@ -11,10 +12,8 @@ import org.springframework.web.client.RestTemplate;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import java.net.URI;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
+
 
 public class Api {
 
@@ -84,6 +83,12 @@ public class Api {
         try {
             String json = getString(url);
 
+            if (json.contains("page") && json.contains("list")) {
+                JsonNode jsonNode = JsonUtils.fromJson(json);
+
+                json = jsonNode.findPath("list").toString();
+            }
+
             if (json.startsWith("[") && json.endsWith("]")) {
                 List<Map<String, Object>> listMapType = JsonUtils.fromJsonToList(json);
                 request.setAttribute(key, listMapType);
@@ -94,6 +99,22 @@ public class Api {
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+    public List<Map<String, Object>> map(String url) {
+        String json = getString(url);
+
+        if (json.contains("page") && json.contains("list")) {
+            JsonNode jsonNode = JsonUtils.fromJson(json);
+
+            json = jsonNode.findPath("list").toString();
+        }
+
+        if (json.startsWith("[") && json.endsWith("]")) {
+            return JsonUtils.fromJsonToList(json);
+        }
+
+        return Collections.emptyList();
     }
 
     public <T> T getObject(HttpMethod method, String url, Class<T> clazz) {

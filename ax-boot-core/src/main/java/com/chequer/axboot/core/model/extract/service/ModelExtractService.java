@@ -1,8 +1,8 @@
 package com.chequer.axboot.core.model.extract.service;
 
 import com.chequer.axboot.core.api.ApiException;
+import com.chequer.axboot.core.code.AXBootTypes;
 import com.chequer.axboot.core.code.ApiStatus;
-import com.chequer.axboot.core.code.Types;
 import com.chequer.axboot.core.config.AXBootContextConfig;
 import com.chequer.axboot.core.model.JPAMvcModelExtractedCode;
 import com.chequer.axboot.core.model.extract.metadata.Table;
@@ -73,25 +73,25 @@ public class ModelExtractService {
         Table table = jdbcMetadataService.getTable(tableName);
 
         switch (templateType) {
-            case Types.ModelExtractorTemplate.CONTROLLER:
+            case AXBootTypes.ModelExtractorTemplate.CONTROLLER:
                 return TemplateParser.getControllerTemplate(className, apiPath, table);
 
-            case Types.ModelExtractorTemplate.VO:
+            case AXBootTypes.ModelExtractorTemplate.VO:
                 return TemplateParser.getVoTemplate(className, table);
 
-            case Types.ModelExtractorTemplate.ENTITY:
+            case AXBootTypes.ModelExtractorTemplate.ENTITY:
                 return TemplateParser.getEntityTemplate(className, table);
 
-            case Types.ModelExtractorTemplate.SERVICE:
+            case AXBootTypes.ModelExtractorTemplate.SERVICE:
                 return TemplateParser.getServiceTemplate(className, table);
 
-            case Types.ModelExtractorTemplate.REPOSITORY:
+            case AXBootTypes.ModelExtractorTemplate.REPOSITORY:
                 return TemplateParser.getRepositoryTemplate(className, table);
 
-            case Types.ModelExtractorTemplate.MYBATIS_INTERFACE:
+            case AXBootTypes.ModelExtractorTemplate.MYBATIS_INTERFACE:
                 return TemplateParser.getMyBatisInterfaceTemplate(className, table);
 
-            case Types.ModelExtractorTemplate.MYBATIS_XML:
+            case AXBootTypes.ModelExtractorTemplate.MYBATIS_XML:
                 return TemplateParser.getMyBatisXMLTemplate(className, table);
         }
 

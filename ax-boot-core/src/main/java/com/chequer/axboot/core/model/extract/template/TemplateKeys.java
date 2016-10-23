@@ -7,7 +7,9 @@ public class TemplateKeys {
 
 	public static final String ANNOTATIONS = "annotations";
 
-	public static final String PACKAGE_NAME = "packageName";
+	public static final String BASE_PACKAGE_NAME = "packageName";
+
+	public static final String DOMAIN_PACKAGE_NAME = "domainPackageName";
 
 	public static final String ENTITY_FIELDS = "entityFields";
 

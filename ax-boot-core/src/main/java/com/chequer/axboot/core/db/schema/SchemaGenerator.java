@@ -4,8 +4,8 @@ import com.chequer.axboot.core.annotations.ColumnPosition;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.hibernate.boot.spi.MetadataImplementor;
 import org.hibernate.tool.hbm2ddl.SchemaExport;
-import org.hibernate.tool.schema.TargetType;
 import org.springframework.boot.orm.jpa.hibernate.SpringNamingStrategy;
 import org.springframework.stereotype.Component;
 
@@ -23,14 +23,19 @@ import static java.util.stream.Collectors.toList;
 public class SchemaGenerator extends SchemaGeneratorBase {
 
     public void createSchema() throws IOException, ClassNotFoundException {
-        SchemaExport schemaExport = new SchemaExport();
+        SchemaExport export = new SchemaExport((MetadataImplementor) getMetaData());
         String scriptOutputPath = System.getProperty("java.io.tmpdir") + "/schema.sql";
-
+        /*
+        SchemaExport schemaExport = new SchemaExport();
         FileUtils.deleteQuietly(new File(scriptOutputPath));
-
         EnumSet<TargetType> targetTypes = EnumSet.of(TargetType.SCRIPT);
         schemaExport.setOutputFile(scriptOutputPath);
         schemaExport.createOnly(targetTypes, getMetaData());
+        */
+        export.setOutputFile(scriptOutputPath);
+        export.create(false, true);
+
+        FileUtils.deleteQuietly(new File(scriptOutputPath));
 
         List<String> DDLs = IOUtils.readLines(new FileInputStream(scriptOutputPath), "UTF-8");
         List<String> convertedDDLs = new ArrayList<>();

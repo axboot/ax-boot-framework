@@ -1,10 +1,10 @@
 package com.chequer.axboot.admin.controllers;
 
+import com.chequer.axboot.admin.domain.user.User;
+import com.chequer.axboot.admin.domain.user.UserService;
 import com.chequer.axboot.core.api.response.ApiResponse;
 import com.chequer.axboot.core.api.response.Responses;
 import com.chequer.axboot.core.controllers.BaseController;
-import com.chequer.axboot.core.domain.user.User;
-import com.chequer.axboot.core.domain.user.UserService;
 import com.chequer.axboot.core.parameter.RequestParams;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestBody;

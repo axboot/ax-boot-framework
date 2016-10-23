@@ -8,7 +8,7 @@ class MyBatisXMLTemplate {
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
-<mapper namespace="${packageName}.core.domain.${entityClassFieldName}.${entityClassName}Mapper">
+<mapper namespace="${domainPackageName}.${entityClassFieldName}.${entityClassName}Mapper">
 
     <select id="findAll" resultType="${entityClassFieldName}" parameterType="${entityClassFieldName}" statementType="PREPARED">
         SELECT

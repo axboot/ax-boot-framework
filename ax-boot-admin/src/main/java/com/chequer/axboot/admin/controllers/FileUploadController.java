@@ -1,10 +1,10 @@
 package com.chequer.axboot.admin.controllers;
 
+import com.chequer.axboot.admin.domain.file.CommonFile;
+import com.chequer.axboot.admin.domain.file.CommonFileService;
+import com.chequer.axboot.admin.domain.file.UploadParameters;
 import com.chequer.axboot.core.api.response.Responses;
 import com.chequer.axboot.core.controllers.BaseController;
-import com.chequer.axboot.core.domain.file.CommonFile;
-import com.chequer.axboot.core.domain.file.CommonFileService;
-import com.chequer.axboot.core.domain.file.UploadParameters;
 import com.chequer.axboot.core.parameter.RequestParams;
 import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;

@@ -1,4 +1,4 @@
-package com.chequer.axboot.core.domain.manual;
+package com.chequer.axboot.admin.domain.manual;
 
 import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.pdmodel.font.PDType0Font;

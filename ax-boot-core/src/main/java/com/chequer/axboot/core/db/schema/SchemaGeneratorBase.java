@@ -1,6 +1,5 @@
 package com.chequer.axboot.core.db.schema;
 
-import com.chequer.axboot.core.code.GlobalConstants;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.boot.Metadata;
@@ -10,6 +9,7 @@ import org.hibernate.boot.registry.BootstrapServiceRegistryBuilder;
 import org.hibernate.boot.registry.StandardServiceRegistry;
 import org.hibernate.boot.registry.StandardServiceRegistryBuilder;
 import org.hibernate.internal.SessionFactoryImpl;
+import org.hibernate.metadata.ClassMetadata;
 import org.reflections.Reflections;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
@@ -20,11 +20,10 @@ import javax.persistence.Entity;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Table;
-import javax.persistence.metamodel.EntityType;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Properties;
-import java.util.Set;
 
 public class SchemaGeneratorBase {
 
@@ -64,7 +63,7 @@ public class SchemaGeneratorBase {
 
         MetadataSources metadataSources = new MetadataSources(standardServiceRegistry);
 
-        new Reflections(GlobalConstants.CORE_PACKAGE)
+        new Reflections()
                 .getTypesAnnotatedWith(Entity.class)
                 .forEach(metadataSources::addAnnotatedClass);
 
@@ -74,7 +73,7 @@ public class SchemaGeneratorBase {
     public List<String> getTableList() {
         List<String> tableName = new ArrayList();
 
-        new Reflections(GlobalConstants.CORE_PACKAGE)
+        new Reflections()
                 .getTypesAnnotatedWith(Entity.class)
                 .forEach(clazz -> {
                     if (clazz.isAnnotationPresent(Table.class)) {
@@ -87,8 +86,30 @@ public class SchemaGeneratorBase {
 
     protected String getEntityClassName(String tableName) {
         SessionFactory sessionFactory = entityManagerFactory.unwrap(SessionFactory.class);
-        Set<EntityType<?>> entities = sessionFactory.getMetamodel().getEntities();
+        //Set<EntityType<?>> entities = sessionFactory.getMetamodel().getEntities();
 
+        Map<String, ClassMetadata> classMetadataMap = sessionFactory.getAllClassMetadata();
+
+        for (String key : classMetadataMap.keySet()) {
+            try {
+                Class<?> entityClass = Class.forName(key);
+
+                if (entityClass.isAnnotationPresent(Table.class)) {
+                    String entityTableName = entityClass.getAnnotation(Table.class).name();
+                    if (entityTableName.toLowerCase().equals(tableName.toLowerCase())) {
+                        return entityClass.getName();
+                    }
+                } else {
+                    if (entityClass.getName().equals(tableName)) {
+                        return entityClass.getName();
+                    }
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+
+        /*
         for (EntityType<?> entityType : entities) {
             Class<?> entityClass = entityType.getJavaType();
 
@@ -103,6 +124,7 @@ public class SchemaGeneratorBase {
                 }
             }
         }
+        */
         return null;
     }
 }

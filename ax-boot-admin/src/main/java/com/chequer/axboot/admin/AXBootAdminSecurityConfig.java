@@ -1,9 +1,9 @@
 package com.chequer.axboot.admin;
 
-import com.chequer.axboot.admin.filters.LogbackMdcFilter;
+import com.chequer.axboot.admin.code.GlobalConstants;
+import com.chequer.axboot.admin.domain.user.UserService;
 import com.chequer.axboot.admin.security.*;
-import com.chequer.axboot.core.code.GlobalConstants;
-import com.chequer.axboot.core.domain.user.UserService;
+import com.chequer.axboot.core.filters.AXBootLogbackMdcFilter;
 import com.chequer.axboot.core.utils.CookieUtils;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -96,7 +96,7 @@ public class AXBootAdminSecurityConfig extends WebSecurityConfigurerAdapter {
 
                 .addFilterBefore(new AdminLoginFilter(LOGIN_API, tokenAuthenticationService, userService, authenticationManager(), new AdminAuthenticationEntryPoint()), UsernamePasswordAuthenticationFilter.class)
                 .addFilterBefore(new AdminAuthenticationFilter(tokenAuthenticationService), UsernamePasswordAuthenticationFilter.class)
-                .addFilterAfter(new LogbackMdcFilter(), UsernamePasswordAuthenticationFilter.class);
+                .addFilterAfter(new AXBootLogbackMdcFilter(), UsernamePasswordAuthenticationFilter.class);
 
     }
 

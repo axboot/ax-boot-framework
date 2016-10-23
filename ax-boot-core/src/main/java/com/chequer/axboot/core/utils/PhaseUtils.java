@@ -1,7 +1,7 @@
 package com.chequer.axboot.core.utils;
 
 
-import com.chequer.axboot.core.code.Types;
+import com.chequer.axboot.core.code.AXBootTypes;
 import org.springframework.context.EnvironmentAware;
 import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Component;
@@ -18,7 +18,7 @@ public class PhaseUtils implements EnvironmentAware {
 
     public static String phase() {
         String[] activeProfiles = environment.getActiveProfiles();
-        String activeProfile = Types.ApplicationProfile.LOCAL;
+        String activeProfile = AXBootTypes.ApplicationProfile.LOCAL;
 
         if (activeProfiles != null && activeProfiles.length > 0) {
             activeProfile = activeProfiles[0];
@@ -27,16 +27,20 @@ public class PhaseUtils implements EnvironmentAware {
         return activeProfile;
     }
 
+    public static boolean isLocal() {
+        return phase().equals(AXBootTypes.ApplicationProfile.LOCAL);
+    }
+
     public static boolean isAlpha() {
-        return phase().equals(Types.ApplicationProfile.ALPHA);
+        return phase().equals(AXBootTypes.ApplicationProfile.ALPHA);
     }
 
     public static boolean isBeta() {
-        return phase().equals(Types.ApplicationProfile.BETA);
+        return phase().equals(AXBootTypes.ApplicationProfile.BETA);
     }
 
     public static boolean isProduction() {
-        return phase().equals(Types.ApplicationProfile.PRODUCTION);
+        return phase().equals(AXBootTypes.ApplicationProfile.PRODUCTION);
     }
 
     public static Environment getEnvironment() {

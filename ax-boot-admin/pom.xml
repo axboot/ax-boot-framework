@@ -4,7 +4,7 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <artifactId>ax-boot-admin</artifactId>
-    <version>1.0</version>
+    <version>2.0.0</version>
     <packaging>war</packaging>
     <name>AX-Boot Admin</name>
     <description>AX-Boot Admin Application</description>
@@ -12,14 +12,14 @@
     <parent>
         <groupId>com.chequer.axboot</groupId>
         <artifactId>ax-boot-framework</artifactId>
-        <version>1.0.0</version>
+        <version>2.0.0</version>
     </parent>
 
     <dependencies>
         <dependency>
             <groupId>com.chequer.axboot</groupId>
             <artifactId>ax-boot-core</artifactId>
-            <version>1.0</version>
+            <version>2.0.27</version>
         </dependency>
 
         <dependency>
@@ -61,10 +61,43 @@
             <scope>provided</scope>
         </dependency>
 
+        <dependency>
+            <groupId>com.querydsl</groupId>
+            <artifactId>querydsl-apt</artifactId>
+            <scope>provided</scope>
+        </dependency>
+
     </dependencies>
 
     <build>
         <finalName>axboot-admin</finalName>
+
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <configuration>
+                    <source>1.8</source>
+                    <target>1.8</target>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>com.mysema.maven</groupId>
+                <artifactId>apt-maven-plugin</artifactId>
+                <version>1.0.9</version>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>process</goal>
+                        </goals>
+                        <configuration>
+                            <outputDirectory>target/generated-sources/java</outputDirectory>
+                            <processor>com.querydsl.apt.jpa.JPAAnnotationProcessor</processor>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
     </build>
 
 </project>
