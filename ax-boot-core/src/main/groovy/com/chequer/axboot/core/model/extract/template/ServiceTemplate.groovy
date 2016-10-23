@@ -3,8 +3,8 @@ package com.chequer.axboot.core.model.extract.template
 class ServiceTemplate {
 
     public static final String SERVICE_TEMPLATE =
-'''
-import com.chequer.axboot.admin.domain.BaseService;
+            '''
+import com.chequer.axboot.core.domain.base.AXBootBaseService;
 import org.springframework.stereotype.Service;
 import javax.inject.Inject;
 

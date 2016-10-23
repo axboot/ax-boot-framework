@@ -2,6 +2,7 @@ package com.chequer.axboot.core.domain.base;
 
 import com.chequer.axboot.core.code.AXBootTypes;
 import com.chequer.axboot.core.db.mapper.ColumnToBeanPropertyRowMapper;
+import com.chequer.axboot.core.parameter.RequestParams;
 import com.querydsl.core.types.EntityPath;
 import com.querydsl.core.types.OrderSpecifier;
 import com.querydsl.core.types.Predicate;
@@ -25,6 +26,10 @@ import java.util.List;
 
 
 public abstract class AXBootBaseService<T, ID extends Serializable> extends AXBootFilterService<T> {
+
+    public AXBootBaseService() {
+
+    }
 
     protected AXBootJPAQueryDSLRepository<T, ID> repository;
 
@@ -199,6 +204,10 @@ public abstract class AXBootBaseService<T, ID extends Serializable> extends AXBo
         return _long;
     }
 
+    protected String like(String field) {
+        return "%" + field + "%";
+    }
+
     public boolean isNotEmpty(String value) {
         return StringUtils.isNotEmpty(value);
     }
@@ -253,5 +262,10 @@ public abstract class AXBootBaseService<T, ID extends Serializable> extends AXBo
 
     protected <T> T queryObject(String query, Class<T> clazz) {
         return jdbcTemplate.queryForObject(query, clazz);
+    }
+
+
+    public RequestParams<T> buildRequestParams() {
+        return new RequestParams<>();
     }
 }
