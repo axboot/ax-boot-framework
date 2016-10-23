@@ -39,6 +39,17 @@ public class SessionUser implements UserDetails {
 
     private Map<String, Object> details = new HashMap<>();
 
+    public String getDetailByString(String key) {
+        return getDetail(key) == null ? "" : (String) getDetail(key);
+    }
+
+    public Object getDetail(String key) {
+        if (details.containsKey(key)) {
+            return details.get(key);
+        }
+        return null;
+    }
+
     public void addDetails(String key, String value) {
         details.put(key, value);
     }

@@ -27,6 +27,10 @@ public class PhaseUtils implements EnvironmentAware {
         return activeProfile;
     }
 
+    public static boolean isLocal() {
+        return phase().equals(AXBootTypes.ApplicationProfile.LOCAL);
+    }
+
     public static boolean isAlpha() {
         return phase().equals(AXBootTypes.ApplicationProfile.ALPHA);
     }
