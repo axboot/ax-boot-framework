@@ -12,6 +12,7 @@
   "layout": {
     "leftSideMenu": "visible"
   },
+  "sessionCookie": "a_x_b_a_a_t_k",
   "extendedCss": [
     "/assets/css/axboot.css"
   ]
