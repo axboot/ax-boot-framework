@@ -111,9 +111,9 @@ public class AdminTokenAuthenticationService {
                 List<Menu> menuList = menuService.getAuthorizedMenuList(user.getMenuGrpCd(), user.getAuthGroupList());
                 requestUtils.setAttribute("menuJson", JsonUtils.toJson(menuList));
             }
-
-            setUserEnvironments(user, response);
         }
+
+        setUserEnvironments(user, response);
 
         return new AdminUserAuthentication(user);
     }
