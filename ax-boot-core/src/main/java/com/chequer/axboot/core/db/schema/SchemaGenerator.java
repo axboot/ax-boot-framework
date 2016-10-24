@@ -31,7 +31,7 @@ public class SchemaGenerator extends SchemaGeneratorBase {
         schemaExport.createOnly(targetTypes, getMetaData());
         */
         export.setOutputFile(scriptOutputPath);
-        export.create(false, true);
+        export.create(true, true);
 
         List<String> DDLs = IOUtils.readLines(new FileInputStream(scriptOutputPath), "UTF-8");
         List<String> convertedDDLs = new ArrayList<>();
