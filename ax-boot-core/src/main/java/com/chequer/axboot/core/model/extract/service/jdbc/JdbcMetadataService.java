@@ -53,7 +53,7 @@ public class JdbcMetadataService {
         Connection connection = null;
 
         if ("oracle".equals(getDatabaseType())) {
-            return axBootContextConfig.getDataSourceConfig().getUsername();
+            return axBootContextConfig.getDataSourceConfig().getUsername().toUpperCase();
         }
         try {
             return connection.getCatalog().toString();
