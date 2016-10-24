@@ -106,10 +106,9 @@ axboot.init = function () {
         var debounceFn = ax5.util.debounce(function (val) {
             axboot.pageResize();
             axboot.pageAutoHeight.align();
-            setTimeout(function () {
-                $('[data-ax5layout]').ax5layout("align", true);
-            });
-        }, 100);
+            $('[data-ax5layout]').ax5layout("reset");
+        }, 20);
+
         $(window).resize(function () {
             debounceFn();
         });
@@ -2085,6 +2084,16 @@ axboot.preparePlugin = function () {
         pageStart: pageStart
     };
 }();
+axboot.requireSession = function (_cookieName) {
+    if (!ax5.util.getCookie(_cookieName)) {
+        if (window.opener) {
+            window.close();
+            window.opener.top.location.href = "/";
+        } else if (top != window) {
+            top.location.href = "/";
+        }
+    }
+};
 axboot.treeBuilder = function () {
     /* http://www.treejs.cn/v3/api.php 를 참고하세요. */
 

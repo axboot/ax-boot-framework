@@ -392,8 +392,9 @@ $hover-types: (
                     border-radius: 0px;
                     margin: 1px 0px 1px -0.5em;
 
-                    background: #eee;
-                    border: 1px solid #ccc;
+                    @include ax-background(top, $ax5combobox-label-bg-colors);
+                    border: $ax5combobox-label-border;
+                    color: $ax5combobox-label-color;
                     border-radius: 3px;
                     margin-left: 0px;
                     margin-right: 3px;

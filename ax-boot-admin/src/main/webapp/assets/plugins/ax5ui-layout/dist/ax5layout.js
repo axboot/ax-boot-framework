@@ -7,7 +7,7 @@
 
     UI.addClass({
         className: "layout",
-        version: "1.3.2"
+        version: "${VERSION}"
     }, function () {
         /**
          * @class ax5layout
@@ -85,16 +85,17 @@
                     return panel ? panel.__height + (panel.split ? item.splitter.size : 0) : 0;
                 }
             },
+                getPixel = function getPixel(size, parentSize) {
+                if (size == "*") {
+                    return;
+                } else if (U.right(size, 1) == "%") {
+                    return parentSize * U.number(size) / 100;
+                } else {
+                    return Number(size);
+                }
+            },
                 alignLayout = function () {
-                var getPixel = function getPixel(size, parentSize) {
-                    if (size == "*") {
-                        return;
-                    } else if (U.right(size, 1) == "%") {
-                        return parentSize * U.number(size) / 100;
-                    } else {
-                        return Number(size);
-                    }
-                };
+
                 var beforeSetCSS = {
                     "split": {
                         "horizontal": function horizontal(item, panel, panelIndex) {
@@ -573,15 +574,7 @@
                 return "\n<div data-tab-panel-label-holder=\"{{id}}\">\n    <div data-tab-panel-label-border=\"{{id}}\"></div>\n    <div data-tab-panel-label-table=\"{{id}}\">\n        <div data-tab-panel-aside=\"left\"></div>\n    {{#tabPanel}}\n        <div data-tab-panel-label=\"{{panelIndex}}\" data-tab-active=\"{{active}}\">\n            <div data-tab-label=\"{{panelIndex}}\">{{{label}}}</div>\n        </div>\n    {{/tabPanel}}\n        <div data-tab-panel-aside=\"right\"></div>\n    </div>\n</div>\n";
             },
                 bindLayoutTarget = function () {
-                var getPixel = function getPixel(size, parentSize) {
-                    if (size == "*") {
-                        return;
-                    } else if (U.right(size, 1) == "%") {
-                        return parentSize * U.number(size) / 100;
-                    } else {
-                        return Number(size);
-                    }
-                };
+
                 var applyLayout = {
                     "dock-panel": function dockPanel(queIdx) {
                         var item = this.queue[queIdx];
@@ -625,6 +618,7 @@
                         var item = this.queue[queIdx];
                         item.splitPanel = [];
                         item.$target.find('>[data-split-panel], >[data-splitter]').each(function (ELIndex) {
+
                             var panelInfo = {};
                             (function (data) {
                                 if (U.isObject(data) && !data.error) {
@@ -637,6 +631,7 @@
                             panelInfo.panelIndex = ELIndex;
 
                             if (this.getAttribute("data-splitter")) {
+
                                 panelInfo.splitter = true;
                                 panelInfo.$target.bind(ENM["mousedown"], function (e) {
                                     if (panelInfo.panelIndex > 0 && panelInfo.panelIndex < item.splitPanel.length - 1) {
@@ -649,6 +644,7 @@
                                 });
                                 panelInfo.resizerType = "split";
                             } else {
+
                                 if (item.oriental == "horizontal") {
                                     panelInfo.__height = getPixel(panelInfo.height, item.targetDimension.height);
                                 } else {
@@ -919,19 +915,25 @@
                             }
                         });
                     },
-                    "split-panel": function splitPanel() {},
+                    "split-panel": function splitPanel(item) {
+                        item.splitPanel.forEach(function (panel) {
+                            if (item.oriental == "vertical") {
+                                panel.__width = getPixel(panel.width, item.targetDimension.width);
+                            } else if (item.oriental == "horizontal") {
+                                panel.__height = getPixel(panel.height, item.targetDimension.height);
+                            }
+                        });
+                    },
                     "tab-panel": function tabPanel() {}
                 };
 
                 return function (boundID, callback) {
                     var queIdx = U.isNumber(boundID) ? boundID : getQueIdx.call(this, boundID);
-                    if (queIdx === -1) {
-                        console.log(ax5.info.getError("ax5layout", "402", "reset"));
-                        return;
+                    if (queIdx === -1) {} else {
+                        resetLayoutPanel[this.queue[queIdx].layout].call(this, this.queue[queIdx]);
+                        alignLayout.call(this, queIdx, callback);
                     }
 
-                    resetLayoutPanel[this.queue[queIdx].layout].call(this, this.queue[queIdx]);
-                    alignLayout.call(this, queIdx, callback);
                     return this;
                 };
             }();

@@ -156,7 +156,7 @@
         return returnList;
     };
 
-    var add = function (_row, _dindex) {
+    var add = function (_row, _dindex, _options) {
         var list = (this.config.body.grouping) ? clearGroupingData.call(this, this.list) : this.list;
         var processor = {
             "first": function () {
@@ -186,7 +186,7 @@
                     list
                 )
             );
-        } else if (Object.keys(this.sortInfo).length) {
+        } else if (_options && _options.sort && Object.keys(this.sortInfo).length) {
             list = sort.call(this,
                 this.sortInfo,
                 list

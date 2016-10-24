@@ -168,8 +168,10 @@
                     border-right: $ax5layout-tab-panel-label-item-border-right;
                     border-bottom: $ax5layout-tab-panel-label-item-border-bottom;
                     @include ax-background(top, $ax5layout-tab-panel-label-item-bg-colors);
+                    color: $ax5layout-tab-panel-label-item-color;
                     &:hover {
                         @include ax-background(top, $ax5layout-tab-panel-label-item-hover-bg-colors);
+                        color: $ax5layout-tab-panel-label-item-hover-color;
                     }
                 }
 
@@ -177,13 +179,14 @@
                     [data-tab-label] {
                         @include ax-background(top, $ax5layout-tab-panel-label-item-active-bg-colors);
                         border-bottom: 1px solid $ax5layout-tab-panel-label-border-bg;
+                        color: $ax5layout-tab-panel-label-item-active-color;
                     }
                 }
             }
             [data-tab-panel-aside="left"] {
                 display: table-cell;
                 width: 5px;
-                border-right: 1px solid #D4D4D4;
+                border-right: $ax5layout-tab-panel-label-item-border-right;
             }
             [data-tab-panel-aside="right"] {
                 display: table-cell;

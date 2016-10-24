@@ -142,8 +142,8 @@ $ax5layout-tab-panel-label-item-active-bg-colors: (#fff, #fff);
 
 .ax-mask.form-mask {
     .ax-mask-bg {
-        background: transparent;
-        //opacity: 0.1;
+        background: $body-bg;
+        opacity: 0.3;
     }
     .ax-mask-content {
         color: #000;
