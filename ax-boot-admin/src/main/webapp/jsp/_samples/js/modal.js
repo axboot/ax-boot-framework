@@ -65,6 +65,8 @@ var CODE = {};
 // fnObj 기본 함수 스타트와 리사이즈
 fnObj.pageStart = function () {
     var _this = this;
+    
+    console.log(parent.axboot.modal.getData());
 
     _this.pageButtonView.initView();
     _this.searchView.initView();
