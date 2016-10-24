@@ -17,7 +17,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
 
     UI.addClass({
         className: "grid",
-        version: "1.3.2"
+        version: "${VERSION}"
     }, function () {
         /**
          * @class ax5grid
@@ -1051,14 +1051,16 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
              * @method ax5grid.addRow
              * @param {Object} _row
              * @param {Number|String} [_dindex=last]
+             * @param {Object} [_options] - options of addRow
+             * @param {Boolean} [_options.sort] - sortData
              * @returns {ax5grid}
              * @example
              * ```js
              * ax5Grid.addRow($.extend({}, {...}), "first");
              * ```
              */
-            this.addRow = function (_row, _dindex) {
-                GRID.data.add.call(this, _row, _dindex);
+            this.addRow = function (_row, _dindex, _options) {
+                GRID.data.add.call(this, _row, _dindex, _options);
                 alignGrid.call(this);
                 GRID.body.repaint.call(this, "reset");
                 GRID.body.moveFocus.call(this, this.config.body.grouping ? "START" : "END");
@@ -3376,7 +3378,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
         return returnList;
     };
 
-    var add = function add(_row, _dindex) {
+    var add = function add(_row, _dindex, _options) {
         var list = this.config.body.grouping ? clearGroupingData.call(this, this.list) : this.list;
         var processor = {
             "first": function first() {
@@ -3401,7 +3403,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
 
         if (this.config.body.grouping) {
             list = initData.call(this, sort.call(this, this.sortInfo, list));
-        } else if (Object.keys(this.sortInfo).length) {
+        } else if (_options && _options.sort && Object.keys(this.sortInfo).length) {
             list = sort.call(this, this.sortInfo, list);
         }
 

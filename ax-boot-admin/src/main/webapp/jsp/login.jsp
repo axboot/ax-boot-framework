@@ -38,6 +38,9 @@
     </jsp:attribute>
 
     <jsp:attribute name="js">
+        <script>
+            axboot.requireSession('${config.sessionCookie}');
+        </script>
         <script type="text/javascript" src="<c:url value='/assets/js/axboot/dist/good-words.js' />"></script>
     </jsp:attribute>
 
@@ -45,6 +48,7 @@
         <script type="text/javascript">
             var fnObj = {
                 pageStart: function () {
+
                     $("#good_words").html(goodWords.get());
                 },
                 login: function () {

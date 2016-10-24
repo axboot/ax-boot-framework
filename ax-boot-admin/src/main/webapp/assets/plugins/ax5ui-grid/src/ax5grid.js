@@ -1070,14 +1070,16 @@
              * @method ax5grid.addRow
              * @param {Object} _row
              * @param {Number|String} [_dindex=last]
+             * @param {Object} [_options] - options of addRow
+             * @param {Boolean} [_options.sort] - sortData
              * @returns {ax5grid}
              * @example
              * ```js
              * ax5Grid.addRow($.extend({}, {...}), "first");
              * ```
              */
-            this.addRow = function (_row, _dindex) {
-                GRID.data.add.call(this, _row, _dindex);
+            this.addRow = function (_row, _dindex, _options) {
+                GRID.data.add.call(this, _row, _dindex, _options);
                 alignGrid.call(this);
                 GRID.body.repaint.call(this, "reset");
                 GRID.body.moveFocus.call(this, (this.config.body.grouping) ? "START" : "END");

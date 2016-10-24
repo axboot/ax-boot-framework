@@ -375,7 +375,7 @@
             border: 0px none;
             border-bottom: $ax5grid-header-column-border;
             @include gridPanel("header");
-
+            color: $ax5grid-header-column-color;
             [data-ax5grid-column-resizer] {
                 position: absolute;
                 right: 0;

@@ -28,7 +28,7 @@ axboot.init = function () {
     axboot.pageAutoHeight.init();
     axboot.pageAutoHeight.align();
 
-    setTimeout(function(){
+    setTimeout(function () {
         $('[data-ax5layout]').ax5layout({
             splitter: {
                 size: 6
@@ -47,13 +47,13 @@ axboot.init = function () {
                 });
                 if (ax5.ui.grid_instance) {
                     var gi = ax5.ui.grid_instance.length;
-                    while(gi--){
+                    while (gi--) {
                         ax5.ui.grid_instance[gi].setHeight(ax5.ui.grid_instance[gi].$target.height());
                     }
                 }
-                if(ax5.ui.mask_instance){
+                if (ax5.ui.mask_instance) {
                     var mi = ax5.ui.mask_instance.length;
-                    while(mi--){
+                    while (mi--) {
                         ax5.ui.mask_instance[mi].align();
                     }
                 }
@@ -89,24 +89,23 @@ axboot.init = function () {
             // API : /api/v1/commonCodes/getAllByMap
             axboot.ajax({
                 url: "/api/v1/commonCodes/getAllByMap",
-                callback: function(res){
+                callback: function (res) {
                     parent.COMMON_CODE = axboot.convertCode(res);
                     axboot.pageStart();
                 },
                 options: {nomask: true}
             });
-        }else{
+        } else {
             parent.COMMON_CODE = axboot.convertCode(parent.COMMON_CODE);
             axboot.pageStart();
         }
 
-        var debounceFn = ax5.util.debounce(function( val ) {
+        var debounceFn = ax5.util.debounce(function (val) {
             axboot.pageResize();
             axboot.pageAutoHeight.align();
-            setTimeout(function(){
-                $('[data-ax5layout]').ax5layout("align", true);
-            });
-        }, 100);
+            $('[data-ax5layout]').ax5layout("reset");
+        }, 20);
+
         $(window).resize(function () {
             debounceFn();
         });

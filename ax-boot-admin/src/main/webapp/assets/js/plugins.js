@@ -14709,7 +14709,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
          * ax5 version
          * @member {String} ax5.info.version
          */
-        var version = "1.3.2";
+        var version = "1.3.4";
 
         /**
          * ax5 library path
@@ -17751,7 +17751,7 @@ ax5.ui = function () {
 
     UI.addClass({
         className: "dialog",
-        version: "1.3.2"
+        version: "1.3.4"
     }, function () {
         /**
          * @class ax5dialog
@@ -18290,7 +18290,7 @@ ax5.ui = function () {
 
     UI.addClass({
         className: "mask",
-        version: "${VERSION}"
+        version: "1.3.4"
     }, function () {
         /**
          * @class ax5mask
@@ -18621,7 +18621,7 @@ ax5.ui = function () {
 
     UI.addClass({
         className: "toast",
-        version: "1.3.2"
+        version: "1.3.4"
     }, function () {
         /**
          * @class ax5toast
@@ -18985,7 +18985,7 @@ ax5.ui = function () {
 
     UI.addClass({
         className: "modal",
-        version: "1.3.2"
+        version: "1.3.4"
     }, function () {
         /**
          * @class ax5modal
@@ -19611,7 +19611,7 @@ ax5.ui = function () {
 
     UI.addClass({
         className: "calendar",
-        version: "1.3.2"
+        version: "1.3.4"
     }, function () {
 
         /**
@@ -20648,7 +20648,7 @@ ax5.ui = function () {
 
     UI.addClass({
         className: "picker",
-        version: "1.3.2"
+        version: "1.3.4"
     }, function () {
         /**
          * @class ax5picker
@@ -21606,7 +21606,7 @@ jQuery.fn.ax5picker = function () {
 
     UI.addClass({
         className: "formatter",
-        version: "1.3.2"
+        version: "1.3.4"
     }, function () {
         var TODAY = new Date();
         var setSelectionRange = function setSelectionRange(input, pos) {
@@ -22244,7 +22244,7 @@ jQuery.fn.ax5formatter = function () {
 
     UI.addClass({
         className: "menu",
-        version: "1.3.2"
+        version: "1.3.4"
     }, function () {
         /**
          * @class ax5.ui.menu
@@ -23039,7 +23039,7 @@ jQuery.fn.ax5formatter = function () {
 
     UI.addClass({
         className: "select",
-        version: "1.3.2"
+        version: "1.3.4"
     }, function () {
         /**
          * @class ax5select
@@ -24181,7 +24181,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
 
     UI.addClass({
         className: "grid",
-        version: "1.3.2"
+        version: "${VERSION}"
     }, function () {
         /**
          * @class ax5grid
@@ -25215,14 +25215,16 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
              * @method ax5grid.addRow
              * @param {Object} _row
              * @param {Number|String} [_dindex=last]
+             * @param {Object} [_options] - options of addRow
+             * @param {Boolean} [_options.sort] - sortData
              * @returns {ax5grid}
              * @example
              * ```js
              * ax5Grid.addRow($.extend({}, {...}), "first");
              * ```
              */
-            this.addRow = function (_row, _dindex) {
-                GRID.data.add.call(this, _row, _dindex);
+            this.addRow = function (_row, _dindex, _options) {
+                GRID.data.add.call(this, _row, _dindex, _options);
                 alignGrid.call(this);
                 GRID.body.repaint.call(this, "reset");
                 GRID.body.moveFocus.call(this, this.config.body.grouping ? "START" : "END");
@@ -27540,7 +27542,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
         return returnList;
     };
 
-    var add = function add(_row, _dindex) {
+    var add = function add(_row, _dindex, _options) {
         var list = this.config.body.grouping ? clearGroupingData.call(this, this.list) : this.list;
         var processor = {
             "first": function first() {
@@ -27565,7 +27567,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
 
         if (this.config.body.grouping) {
             list = initData.call(this, sort.call(this, this.sortInfo, list));
-        } else if (Object.keys(this.sortInfo).length) {
+        } else if (_options && _options.sort && Object.keys(this.sortInfo).length) {
             list = sort.call(this, this.sortInfo, list);
         }
 
@@ -29335,7 +29337,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
 
     UI.addClass({
         className: "combobox",
-        version: "1.3.2"
+        version: "1.3.4"
     }, function () {
         /**
          * @class ax5combobox
@@ -30987,7 +30989,7 @@ jQuery.fn.ax5combobox = function () {
 
     UI.addClass({
         className: "layout",
-        version: "1.3.2"
+        version: "${VERSION}"
     }, function () {
         /**
          * @class ax5layout
@@ -31065,16 +31067,17 @@ jQuery.fn.ax5combobox = function () {
                     return panel ? panel.__height + (panel.split ? item.splitter.size : 0) : 0;
                 }
             },
+                getPixel = function getPixel(size, parentSize) {
+                if (size == "*") {
+                    return;
+                } else if (U.right(size, 1) == "%") {
+                    return parentSize * U.number(size) / 100;
+                } else {
+                    return Number(size);
+                }
+            },
                 alignLayout = function () {
-                var getPixel = function getPixel(size, parentSize) {
-                    if (size == "*") {
-                        return;
-                    } else if (U.right(size, 1) == "%") {
-                        return parentSize * U.number(size) / 100;
-                    } else {
-                        return Number(size);
-                    }
-                };
+
                 var beforeSetCSS = {
                     "split": {
                         "horizontal": function horizontal(item, panel, panelIndex) {
@@ -31553,15 +31556,7 @@ jQuery.fn.ax5combobox = function () {
                 return "\n<div data-tab-panel-label-holder=\"{{id}}\">\n    <div data-tab-panel-label-border=\"{{id}}\"></div>\n    <div data-tab-panel-label-table=\"{{id}}\">\n        <div data-tab-panel-aside=\"left\"></div>\n    {{#tabPanel}}\n        <div data-tab-panel-label=\"{{panelIndex}}\" data-tab-active=\"{{active}}\">\n            <div data-tab-label=\"{{panelIndex}}\">{{{label}}}</div>\n        </div>\n    {{/tabPanel}}\n        <div data-tab-panel-aside=\"right\"></div>\n    </div>\n</div>\n";
             },
                 bindLayoutTarget = function () {
-                var getPixel = function getPixel(size, parentSize) {
-                    if (size == "*") {
-                        return;
-                    } else if (U.right(size, 1) == "%") {
-                        return parentSize * U.number(size) / 100;
-                    } else {
-                        return Number(size);
-                    }
-                };
+
                 var applyLayout = {
                     "dock-panel": function dockPanel(queIdx) {
                         var item = this.queue[queIdx];
@@ -31605,6 +31600,7 @@ jQuery.fn.ax5combobox = function () {
                         var item = this.queue[queIdx];
                         item.splitPanel = [];
                         item.$target.find('>[data-split-panel], >[data-splitter]').each(function (ELIndex) {
+
                             var panelInfo = {};
                             (function (data) {
                                 if (U.isObject(data) && !data.error) {
@@ -31617,6 +31613,7 @@ jQuery.fn.ax5combobox = function () {
                             panelInfo.panelIndex = ELIndex;
 
                             if (this.getAttribute("data-splitter")) {
+
                                 panelInfo.splitter = true;
                                 panelInfo.$target.bind(ENM["mousedown"], function (e) {
                                     if (panelInfo.panelIndex > 0 && panelInfo.panelIndex < item.splitPanel.length - 1) {
@@ -31629,6 +31626,7 @@ jQuery.fn.ax5combobox = function () {
                                 });
                                 panelInfo.resizerType = "split";
                             } else {
+
                                 if (item.oriental == "horizontal") {
                                     panelInfo.__height = getPixel(panelInfo.height, item.targetDimension.height);
                                 } else {
@@ -31899,19 +31897,25 @@ jQuery.fn.ax5combobox = function () {
                             }
                         });
                     },
-                    "split-panel": function splitPanel() {},
+                    "split-panel": function splitPanel(item) {
+                        item.splitPanel.forEach(function (panel) {
+                            if (item.oriental == "vertical") {
+                                panel.__width = getPixel(panel.width, item.targetDimension.width);
+                            } else if (item.oriental == "horizontal") {
+                                panel.__height = getPixel(panel.height, item.targetDimension.height);
+                            }
+                        });
+                    },
                     "tab-panel": function tabPanel() {}
                 };
 
                 return function (boundID, callback) {
                     var queIdx = U.isNumber(boundID) ? boundID : getQueIdx.call(this, boundID);
-                    if (queIdx === -1) {
-                        console.log(ax5.info.getError("ax5layout", "402", "reset"));
-                        return;
+                    if (queIdx === -1) {} else {
+                        resetLayoutPanel[this.queue[queIdx].layout].call(this, this.queue[queIdx]);
+                        alignLayout.call(this, queIdx, callback);
                     }
 
-                    resetLayoutPanel[this.queue[queIdx].layout].call(this, this.queue[queIdx]);
-                    alignLayout.call(this, queIdx, callback);
                     return this;
                 };
             }();
@@ -32016,7 +32020,7 @@ jQuery.fn.ax5layout = function () {
 
     UI.addClass({
         className: "binder",
-        version: "1.3.2"
+        version: "1.3.4"
     }, function () {
 
         /**
@@ -32973,7 +32977,7 @@ jQuery.fn.ax5layout = function () {
 
     UI.addClass({
         className: "autocomplete",
-        version: "1.3.2"
+        version: "1.3.4"
     }, function () {
         /**
          * @class ax5autocomplete
