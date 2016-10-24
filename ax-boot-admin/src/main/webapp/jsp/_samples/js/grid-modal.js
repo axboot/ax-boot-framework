@@ -57,7 +57,7 @@ var ACTIONS = axboot.actionExtend(fnObj, {
         axboot.modal.open({
             modalType: "ZIPCODE",
             param: "",
-            modalSendData: function(){
+            sendData: function(){
                 return {};
             },
             callback: function (data) {
@@ -73,8 +73,10 @@ var ACTIONS = axboot.actionExtend(fnObj, {
         axboot.modal.open({
             modalType: "SAMPLE-MODAL",
             param: "",
-            modalSendData: function(){
-                return {};
+            sendData: function(){
+                return {
+                    "sendData": "AX5UI"
+                };
             },
             callback: function (data) {
                 caller.formView01.setEtc3Value({
