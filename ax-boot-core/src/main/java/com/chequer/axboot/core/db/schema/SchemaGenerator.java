@@ -35,10 +35,10 @@ public class SchemaGenerator extends SchemaGeneratorBase {
         export.setOutputFile(scriptOutputPath);
         export.create(false, true);
 
-        FileUtils.deleteQuietly(new File(scriptOutputPath));
-
         List<String> DDLs = IOUtils.readLines(new FileInputStream(scriptOutputPath), "UTF-8");
         List<String> convertedDDLs = new ArrayList<>();
+
+        FileUtils.deleteQuietly(new File(scriptOutputPath));
 
         for (String DDL : DDLs) {
             if (!DDL.toLowerCase().contains("foreign key")) {
