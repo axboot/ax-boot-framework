@@ -1,9 +1,4 @@
-package com.chequer.axboot.core.model.extract.template
-
-class MyBatisXMLTemplate {
-
-    public static MYBATIS_XML_TEMPLATE =
-'''<?xml version="1.0" encoding="UTF-8" ?>
+<?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
@@ -49,5 +44,3 @@ class MyBatisXMLTemplate {
         )
     </update>
 </mapper>
-'''
-}

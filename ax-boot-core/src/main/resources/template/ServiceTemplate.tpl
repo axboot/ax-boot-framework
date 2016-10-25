@@ -1,9 +1,3 @@
-package com.chequer.axboot.core.model.extract.template
-
-class ServiceTemplate {
-
-    public static final String SERVICE_TEMPLATE =
-            '''
 import org.springframework.stereotype.Service;
 import ${domainPackageName}.BaseService;
 import javax.inject.Inject;
@@ -23,6 +17,4 @@ public class ${serviceClassName} extends BaseService<${entityClassName}, ${keyCl
     public List<${entityClassName}> gets(RequestParams<${entityClassName}> requestParams) {
         return findAll();
     }
-}
-'''
 }

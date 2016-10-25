@@ -1,9 +1,3 @@
-package com.chequer.axboot.core.model.extract.template
-
-class GoEntityTemplates {
-
-    public static String ENTITY_CLASS_TEMPLATE =
-            '''
 package models
 
 import "time"
@@ -14,7 +8,4 @@ ${entityFields}
 
 func (${entityClassName}) TableName() string {
     return "${tableName}"
-}
-
-'''
 }

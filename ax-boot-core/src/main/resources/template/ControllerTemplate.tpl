@@ -1,9 +1,3 @@
-package com.chequer.axboot.core.model.extract.template
-
-class ControllerTemplate {
-
-    public static CONTROLLER_TEMPLATE =
-            '''
 import com.chequer.axboot.core.api.response.Responses;
 import com.chequer.axboot.core.controllers.BaseController;
 import com.chequer.axboot.core.parameter.RequestParams;
@@ -33,6 +27,4 @@ public class ${controllerClassName} extends BaseController {
         ${serviceClassFieldName}.save(request);
         return request;
     }
-}
-'''
 }

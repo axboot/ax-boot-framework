@@ -1,9 +1,3 @@
-package com.chequer.axboot.core.model.extract.template
-
-class MyBatisInterfaceTemplate {
-
-    public static MYBATIS_INTERFACE_TEMPLATE =
-            '''
 import com.chequer.axboot.core.mybatis.MyBatisMapper;
 import java.util.List;
 
@@ -19,6 +13,4 @@ public interface ${entityClassName}Mapper extends MyBatisMapper {
     int delete(${entityClassName} ${entityClassFieldName});
 
     int insert(${entityClassName} ${entityClassFieldName});
-}
-'''
 }

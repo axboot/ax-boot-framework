@@ -8,16 +8,52 @@ import com.chequer.axboot.core.model.extract.template.fields.KeyFields;
 import com.chequer.axboot.core.model.extract.template.fields.VOFields;
 import com.chequer.axboot.core.model.extract.template.file.*;
 import com.chequer.axboot.core.utils.NamingUtils;
+import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.text.StrSubstitutor;
+import org.springframework.core.io.ClassPathResource;
 
 import java.util.HashMap;
 import java.util.Map;
 
 public class TemplateParser {
 
+    public static String getTemplate(String type) {
+        try {
+            switch (type) {
+                case Templates.COMPOSITE_KEY_ENTITY_CLASS_TEMPLATE:
+                    return IOUtils.toString(new ClassPathResource("/template/ComposeKeyEntityTemplate.tpl").getInputStream(), "UTF-8");
+
+                case Templates.SINGLE_KEY_ENTITY_CLASS_TEMPLATE :
+                    return IOUtils.toString(new ClassPathResource("/template/EntityTemplates.tpl").getInputStream(), "UTF-8");
+
+                case Templates.SERVICE_TEMPLATE:
+                    return IOUtils.toString(new ClassPathResource("/template/ServiceTemplate.tpl").getInputStream(), "UTF-8");
+
+                case Templates.REPOSITORY_TEMPLATE:
+                    return IOUtils.toString(new ClassPathResource("/template/RepositoryTemplate.tpl").getInputStream(), "UTF-8");
+
+                case Templates.CONTROLLER_TEMPLATE:
+                    return IOUtils.toString(new ClassPathResource("/template/ControllerTemplate.tpl").getInputStream(), "UTF-8");
+
+                case Templates.VO_TEMPLATE:
+                    return IOUtils.toString(new ClassPathResource("/template/VOTemplate.tpl").getInputStream(), "UTF-8");
+
+                case Templates.MYBATIS_INTERFACE_TEMPLATE:
+                    return IOUtils.toString(new ClassPathResource("/template/MyBatisInterfaceTemplate.tpl").getInputStream(), "UTF-8");
+
+                case Templates.MYBATIS_XML_TEMPLATE:
+                    return IOUtils.toString(new ClassPathResource("/template/MyBatisXMLTemplate.tpl").getInputStream(), "UTF-8");
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return "";
+    }
+
     public static EntityTemplateCode getEntityTemplate(String className, Table table) {
-        String template = EntityTemplates.SINGLE_KEY_ENTITY_CLASS_TEMPLATE;
+        String template = getTemplate(Templates.SINGLE_KEY_ENTITY_CLASS_TEMPLATE);
 
         EntityFields entityFields = TemplateBuilder.EntityTemplateBuilder.build(table);
 
@@ -37,7 +73,7 @@ public class TemplateParser {
         templateElements.put(TemplateKeys.ANNOTATIONS, entityFields.getAnnotations());
 
         if (table.keyType().equals(Table.Key.COMPOSITE)) {
-            template = EntityTemplates.COMPOSITE_KEY_ENTITY_CLASS_TEMPLATE;
+            template = getTemplate(Templates.COMPOSITE_KEY_ENTITY_CLASS_TEMPLATE);
 
             KeyFields keyFields = TemplateBuilder.KeyTemplateBuilder.build(table);
             templateElements.put(TemplateKeys.KEY_FIELDS, keyFields.getCode());
@@ -58,7 +94,7 @@ public class TemplateParser {
         templateElements.put(TemplateKeys.REPOSITORY_CLASS_NAME, NamingUtils.classNameWithType(className, AXBootTypes.ModelExtractorTemplateSuffix.REPOSITORY));
         templateElements.put(TemplateKeys.REPOSITORY_CLASS_FIELD_NAME, NamingUtils.classFieldNameWithType(className, AXBootTypes.ModelExtractorTemplateSuffix.REPOSITORY));
 
-        return ServiceTemplateCode.of(new StrSubstitutor(templateElements).replace(ServiceTemplate.SERVICE_TEMPLATE), NamingUtils.classFileNameWithType(className, AXBootTypes.ModelExtractorTemplateSuffix.SERVICE));
+        return ServiceTemplateCode.of(new StrSubstitutor(templateElements).replace(getTemplate(Templates.SERVICE_TEMPLATE)), NamingUtils.classFileNameWithType(className, AXBootTypes.ModelExtractorTemplateSuffix.SERVICE));
     }
 
     public static RepositoryTemplateCode getRepositoryTemplate(String className, Table table) {
@@ -71,7 +107,7 @@ public class TemplateParser {
         templateElements.put(TemplateKeys.ENTITY_CLASS_NAME, className);
         templateElements.put(TemplateKeys.REPOSITORY_CLASS_NAME, NamingUtils.classNameWithType(className, AXBootTypes.ModelExtractorTemplateSuffix.REPOSITORY));
 
-        return RepositoryTemplateCode.of(new StrSubstitutor(templateElements).replace(RepositoryTemplate.REPOSITORY_TEMPLATE), NamingUtils.classFileNameWithType(className, AXBootTypes.ModelExtractorTemplateSuffix.REPOSITORY));
+        return RepositoryTemplateCode.of(new StrSubstitutor(templateElements).replace(getTemplate(Templates.REPOSITORY_TEMPLATE)), NamingUtils.classFileNameWithType(className, AXBootTypes.ModelExtractorTemplateSuffix.REPOSITORY));
     }
 
     public static VOTemplateCode getVoTemplate(String className, Table table) {
@@ -88,7 +124,7 @@ public class TemplateParser {
         templateElements.put(TemplateKeys.VO_FIELDS, voFields.getCode());
         templateElements.put(TemplateKeys.IMPORT_PACKAGES, voFields.getImportPackages());
 
-        return VOTemplateCode.of(new StrSubstitutor(templateElements).replace(VOTemplate.VO_TEMPLATE), NamingUtils.classFileNameWithType(className, AXBootTypes.ModelExtractorTemplateSuffix.VO));
+        return VOTemplateCode.of(new StrSubstitutor(templateElements).replace(getTemplate(Templates.VO_TEMPLATE)), NamingUtils.classFileNameWithType(className, AXBootTypes.ModelExtractorTemplateSuffix.VO));
     }
 
     public static ControllerTemplateCode getControllerTemplate(String className, String apiPath, Table table) {
@@ -107,7 +143,7 @@ public class TemplateParser {
         templateElements.put(TemplateKeys.SERVICE_CLASS_NAME, NamingUtils.classNameWithType(className, AXBootTypes.ModelExtractorTemplateSuffix.SERVICE));
         templateElements.put(TemplateKeys.SERVICE_CLASS_FIELD_NAME, NamingUtils.classFieldNameWithType(className, AXBootTypes.ModelExtractorTemplateSuffix.SERVICE));
 
-        return ControllerTemplateCode.of(new StrSubstitutor(templateElements).replace(ControllerTemplate.CONTROLLER_TEMPLATE), NamingUtils.classFileNameWithType(className, AXBootTypes.ModelExtractorTemplateSuffix.CONTROLLER));
+        return ControllerTemplateCode.of(new StrSubstitutor(templateElements).replace(getTemplate(Templates.CONTROLLER_TEMPLATE)), NamingUtils.classFileNameWithType(className, AXBootTypes.ModelExtractorTemplateSuffix.CONTROLLER));
     }
 
     public static MyBatisInterfaceTemplateCode getMyBatisInterfaceTemplate(String className, Table table) {
@@ -121,7 +157,7 @@ public class TemplateParser {
         templateElements.put(TemplateKeys.MYBATIS_CLASS_NAME, NamingUtils.classNameWithType(className, AXBootTypes.ModelExtractorTemplateSuffix.MYBATIS));
         templateElements.put(TemplateKeys.MYBATIS_CLASS_FIELD_NAME, NamingUtils.classFieldNameWithType(className, AXBootTypes.ModelExtractorTemplateSuffix.MYBATIS));
 
-        return MyBatisInterfaceTemplateCode.of(new StrSubstitutor(templateElements).replace(MyBatisInterfaceTemplate.MYBATIS_INTERFACE_TEMPLATE), NamingUtils.classFileNameWithType(className, AXBootTypes.ModelExtractorTemplateSuffix.MYBATIS));
+        return MyBatisInterfaceTemplateCode.of(new StrSubstitutor(templateElements).replace(getTemplate(Templates.MYBATIS_INTERFACE_TEMPLATE)), NamingUtils.classFileNameWithType(className, AXBootTypes.ModelExtractorTemplateSuffix.MYBATIS));
     }
 
     public static MyBatisXMLTemplateCode getMyBatisXMLTemplate(String className, Table table) {
@@ -140,6 +176,6 @@ public class TemplateParser {
         templateElements.put(TemplateKeys.SET_COLUMNS, table.setColumns());
         templateElements.put(TemplateKeys.ID_WHERE, table.idWhere());
 
-        return MyBatisXMLTemplateCode.of(new StrSubstitutor(templateElements).replace(MyBatisXMLTemplate.MYBATIS_XML_TEMPLATE), NamingUtils.xmlFileNameWithType(className, AXBootTypes.ModelExtractorTemplateSuffix.MYBATIS));
+        return MyBatisXMLTemplateCode.of(new StrSubstitutor(templateElements).replace(getTemplate(Templates.MYBATIS_XML_TEMPLATE)), NamingUtils.xmlFileNameWithType(className, AXBootTypes.ModelExtractorTemplateSuffix.MYBATIS));
     }
 }

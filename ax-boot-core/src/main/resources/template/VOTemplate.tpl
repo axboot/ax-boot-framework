@@ -1,9 +1,3 @@
-package com.chequer.axboot.core.model.extract.template
-
-class VOTemplate {
-
-    public static final String VO_TEMPLATE =
-'''
 import com.chequer.axboot.core.utils.ModelMapperUtils;
 import com.chequer.axboot.core.vo.BaseVO;
 import lombok.Data;
@@ -30,6 +24,4 @@ ${voFields}
     public static List<${voClassName}> of(Page<${entityClassName}> ${entityClassFieldName}Page) {
         return ${entityClassFieldName}Page.getContent().stream().map(${entityClassFieldName} -> of(${entityClassFieldName})).collect(toList());
     }
-}
-'''
 }
