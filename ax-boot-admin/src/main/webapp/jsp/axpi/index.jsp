@@ -4,16 +4,21 @@
 <html>
 <head>
     <title>Database Schema to JPA Objects</title>
+
+    <link rel="stylesheet" type="text/css" href="/jsp/axpi/plugins/prettify/github.css">
+    <link rel="stylesheet" type="text/css" href="/jsp/axpi/plugins/ax5/css/jellyfish/ax5.min.css">
+    <link rel="stylesheet" type="text/css" href="/jsp/axpi/css/app.css">
+    <link rel="stylesheet" type="text/css" href="http://cdno.axisj.com/axicon/axicon.css">
+
     <style type="text/css">
         pre {
             padding: 10px;
             border: 1px solid #bbbbbb;
         }
+        a:hover{
+            color: #0F6AB4;
+        }
     </style>
-    <link rel="stylesheet" type="text/css" href="/jsp/axpi/plugins/prettify/github.css">
-    <link rel="stylesheet" type="text/css" href="/jsp/axpi/plugins/ax5/css/jellyfish/ax5.min.css">
-    <link rel="stylesheet" type="text/css" href="/jsp/axpi/css/app.css">
-    <link rel="stylesheet" type="text/css" href="http://cdno.axisj.com/axicon/axicon.css">
 
     <script type="text/javascript" src="/jsp/axpi/plugins/prettify/prettify.js"></script>
     <script type="text/javascript" src="/jsp/axpi/plugins/ax5/ax5.min.js"></script>
