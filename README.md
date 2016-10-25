@@ -25,8 +25,8 @@
 - Gulp
 
 ## Getting Started
-- [AXBoot Documentation](http://api.axboot.com target="_blank)
-- [AX5UI Framework](http://ax5.io target="_blank)
+- [AXBoot Documentation](http://api.axboot.com)
+- [AX5UI Framework](http://ax5.io)
 
 ## Themes
  - https://github.com/axboot/ax-boot-themes
