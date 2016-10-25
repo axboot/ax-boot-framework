@@ -86,6 +86,7 @@ public class JdbcMetadataService {
 
             for (Table table : tables) {
                 table.setColumns(getColumns(table.getTableName()));
+                table.setClassName(NamingUtils.className(table.getTableName()));
             }
 
             DbUtils.closeQuietly(resultSet);

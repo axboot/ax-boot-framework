@@ -45,6 +45,7 @@ public class ModelExtractController extends BaseController {
             modelAndView.addObject("jpaMvcModel", jpaMvcModelExtractedCode);
             modelAndView.addObject("downloadLink", String.format("/modelExtractor/download?tableName=%s&className=%s&apiPath=%s&templateType", tableName, className, apiPath));
         } catch (Exception e) {
+            e.printStackTrace();
             modelAndView.addObject("error", e.getMessage());
         }
 
