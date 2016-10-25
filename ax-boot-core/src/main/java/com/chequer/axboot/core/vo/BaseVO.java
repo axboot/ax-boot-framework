@@ -1,27 +1,51 @@
 package com.chequer.axboot.core.vo;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import javax.persistence.Transient;
 import java.time.LocalDateTime;
 
 @Data
 @NoArgsConstructor
 public class BaseVO {
+	@Transient
+	@JsonProperty("__deleted__")
+	protected boolean __deleted__;
 
-	public Boolean deleted;
+	@Transient
+	@JsonProperty("__created__")
+	protected boolean __created__;
 
-	public Boolean added;
+	@Transient
+	@JsonProperty("__modified__")
+	protected boolean __modified__;
 
-	public LocalDateTime insDt;
+	@Transient
+	@JsonIgnore
+	public boolean isDeleted() {
+		return __deleted__;
+	}
 
-	public String insUserCd;
+	@Transient
+	@JsonIgnore
+	public boolean isCreated() {
+		return __created__;
+	}
 
-	public String insUserNm;
+	@Transient
+	@JsonIgnore
+	public boolean isModified() {
+		return __modified__;
+	}
 
-	public LocalDateTime uptDt;
+	public LocalDateTime createdAt;
 
-	public String uptUserCd;
+	public String createdBy;
 
-	public String uptUserNm;
+	public LocalDateTime updatedAt;
+
+	public String updatedBy;
 }

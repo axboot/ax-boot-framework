@@ -5,17 +5,15 @@ class ControllerTemplate {
     public static CONTROLLER_TEMPLATE =
             '''
 import com.chequer.axboot.core.api.response.Responses;
-import com.chequer.axboot.core.api.response.ApiResponse;
 import com.chequer.axboot.core.controllers.BaseController;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.web.bind.fieldAnnotation.*;
+import com.chequer.axboot.core.parameter.RequestParams;
 import org.springframework.stereotype.Controller;
-import org.springframework.data.domain.Pageable;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
 
 import javax.inject.Inject;
 import java.util.List;
-
 
 @Controller
 @RequestMapping(value = "/api/v1/${apiPath}")

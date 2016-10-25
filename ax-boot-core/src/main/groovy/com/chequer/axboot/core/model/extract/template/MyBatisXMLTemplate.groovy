@@ -48,7 +48,6 @@ class MyBatisXMLTemplate {
             ${values}
         )
     </update>
-
 </mapper>
 '''
 }

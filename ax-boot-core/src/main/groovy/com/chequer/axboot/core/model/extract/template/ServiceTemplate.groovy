@@ -4,10 +4,11 @@ class ServiceTemplate {
 
     public static final String SERVICE_TEMPLATE =
             '''
-import com.chequer.axboot.core.domain.base.AXBootBaseService;
 import org.springframework.stereotype.Service;
+import ${domainPackageName}.BaseService;
 import javax.inject.Inject;
-
+import com.chequer.axboot.core.parameter.RequestParams;
+import java.util.List;
 
 @Service
 public class ${serviceClassName} extends BaseService<${entityClassName}, ${keyClassRefName}> {
@@ -20,7 +21,7 @@ public class ${serviceClassName} extends BaseService<${entityClassName}, ${keyCl
     }
 
     public List<${entityClassName}> gets(RequestParams<${entityClassName}> requestParams) {
-        return null;
+        return findAll();
     }
 }
 '''

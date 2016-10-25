@@ -65,7 +65,7 @@
 
                 <article class="content">
                     <h3 data-menu-item="MyBatis-XML">MyBatis-XML / <a href="${downloadLink}=MyBatisXML">Download</a></h3>
-                    <xmp class="prettyprint linenums">${jpaMvcModel.getMyBatisXML().code()}></xmp>
+                    <xmp class="prettyprint linenums">${jpaMvcModel.getMyBatisXML().code()}</xmp>
                 </article>
 
             </div>

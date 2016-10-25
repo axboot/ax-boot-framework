@@ -4,8 +4,8 @@ class EntityTemplates {
 
     public static String SINGLE_KEY_ENTITY_CLASS_TEMPLATE =
 '''
-import com.chequer.axboot.core.domain.base.AXBootBaseJpaModel;
 import com.chequer.axboot.core.annotations.ColumnPosition;
+import ${domainPackageName}.SimpleJpaModel;
 import lombok.*;
 import org.apache.ibatis.type.Alias;
 import org.hibernate.annotations.DynamicInsert;
@@ -23,7 +23,7 @@ ${importPackages}
 @Table(name = "${tableName}")
 @Comment(value = "${tableComment}")
 @Alias("${entityClassFieldName}")${annotations}
-public class ${entityClassName} extends AXBootBaseJpaModel<${keyClassRefName}> {
+public class ${entityClassName} extends SimpleJpaModel<${keyClassRefName}> {
 ${entityFields}
 
     @Override
@@ -35,13 +35,15 @@ ${entityFields}
 
     public static String COMPOSITE_KEY_ENTITY_CLASS_TEMPLATE =
 '''
-import com.chequer.axboot.core.domain.base.AXBootBaseJpaModel;
+import com.chequer.axboot.core.annotations.ColumnPosition;
+import ${domainPackageName}.SimpleJpaModel;
 import lombok.*;
 import org.apache.ibatis.type.Alias;
 import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.DynamicUpdate;
-import ${packageName}.core.annotations.Comment;
+import com.chequer.axboot.core.annotations.Comment;
 import javax.persistence.*;
+import java.io.Serializable;
 ${importPackages}
 
 @Setter
@@ -54,7 +56,7 @@ ${importPackages}
 @Comment(value = "${tableComment}")
 @IdClass(${keyClassRefName}.class)
 @Alias("${entityClassFieldName}")
-public class ${entityClassName} extends AXBootBaseJpaModel<${keyClassRefName}> {
+public class ${entityClassName} extends SimpleJpaModel<${keyClassRefName}> {
 ${entityFields}
 
     @Override
