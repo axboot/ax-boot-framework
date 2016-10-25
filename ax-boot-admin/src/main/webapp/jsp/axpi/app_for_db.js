@@ -13,13 +13,13 @@ ax5.dom.ready(function () {
             var tables = ax5.util.parse_json(response), po = [];
 
             tables.forEach(function (tbl, idx) {
-                if(!tbl.comments) {
+                if (!tbl.comments) {
                     tbl.comments = '';
                 }
 
-                var link = "<a href='/modelExtractor?tableName=" + tbl.tableName +"&className="+tbl.tableName+"' target=_blank>";
+                var link = "<a href='/modelExtractor?tableName=" + tbl.tableName + "&className=" + tbl.className + "' title='클릭하면 파일을 다운로드 합니다.' target=_blank>";
                 po.push('<article class="content">');
-                po.push(link + '	<h3 data-menu-item="' + tbl.tableName + '">' + tbl.tableName + '</h3></a>');
+                po.push(link + '	<h3 style="text-decoration: underline;" data-menu-item="' + tbl.tableName + '">' + tbl.tableName + '(' + tbl.className + ') <i class="axi axi-file-download"></i> </h3></a>');
                 po.push('   <p>' + tbl.comments + '</p>');
                 //tbl.json
 
@@ -40,11 +40,11 @@ ax5.dom.ready(function () {
                 po.push('</thead>');
                 po.push('<tbody>');
                 tbl.columns.forEach(function (columns) {
-                    if(!columns.extra) {
+                    if (!columns.extra) {
                         columns.extra = '';
                     }
 
-                    if(!columns.comments) {
+                    if (!columns.comments) {
                         columns.comments = '';
                     }
 
@@ -108,7 +108,7 @@ ax5.dom.ready(function () {
                         dom.before(el, '<div style="position:relative;left:0px;top:-75px;" id="' + el_name + '"></div>');
 
                         link_text = dom.attr(el, "data-value");
-                        if (!link_text) link_text = ax5.util.left(el.innerHTML, "/");
+                        if (!link_text) link_text = el.innerText;
                         po.push('<li id="menu-' + el_name + '"><a href="#' + el_name + '">' + link_text + '</a></li>');
                         prev_tag = el.tagName;
                     }
