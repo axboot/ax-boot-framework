@@ -33,6 +33,8 @@ public class Table {
 
     private List<Column> columns;
 
+    private String className;
+
     public String keyType() {
         if (ArrayUtils.isNotEmpty(columns)) {
             return columns.stream().filter(Column::isKey).count() == 1 ? Table.Key.SINGLE : Table.Key.COMPOSITE;

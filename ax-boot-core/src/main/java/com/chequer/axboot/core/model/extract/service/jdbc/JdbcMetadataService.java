@@ -6,6 +6,7 @@ import com.chequer.axboot.core.model.extract.metadata.Column;
 import com.chequer.axboot.core.model.extract.metadata.Database;
 import com.chequer.axboot.core.model.extract.metadata.PrimaryKey;
 import com.chequer.axboot.core.model.extract.metadata.Table;
+import com.chequer.axboot.core.utils.NamingUtils;
 import org.apache.commons.dbutils.DbUtils;
 import org.springframework.jdbc.core.JdbcTemplate;
 
@@ -106,6 +107,7 @@ public class JdbcMetadataService {
                 table = new ColumnToBeanPropertyRowMapper<>(Table.class).mapRow(resultSet, 0);
                 table.setColumns(getColumns(tableName));
             }
+            table.setClassName(NamingUtils.className(tableName));
             DbUtils.closeQuietly(resultSet);
         } catch (Exception e) {
             e.printStackTrace();
