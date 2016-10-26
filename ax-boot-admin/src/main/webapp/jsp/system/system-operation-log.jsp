@@ -22,37 +22,31 @@
 
         <ax:page-buttons></ax:page-buttons>
 
-        <div role="page-header">
-            <ax:form name="searchView0">
-                <ax:tbl clazz="ax-search-tbl" minWidth="500px">
-                    <ax:tr>
-                        <ax:td label='<lang data-id="검색"></lang>' width="300px">
-                            <input type="text" name="filter" id="filter" class="form-control" value="" placeholder="검색어를 입력하세요."/>
-                        </ax:td>
-                    </ax:tr>
-                </ax:tbl>
-            </ax:form>
-            <div class="H10"></div>
-        </div>
-
-
         <ax:split-layout name="ax1" oriental="horizontal">
-            <ax:split-panel height="300" style="padding-bottom: 10px;">
+            <ax:split-panel height="*" style="padding-bottom: 5px;">
                 <div class="ax-button-group" data-fit-height-aside="grid-view-01">
-                    <div class="left">
-                        <h2><i class="cqc-list"></i>
-                            에러목록
-                        </h2>
-                    </div>
+
+                    <ax:tbl clazz="ax-search-box" style="width:300px;margin-bottom: 7px;">
+                        <ax:form name="searchView0">
+                            <div class="input-group">
+                                <input type="text" name="filter" id="filter" class="form-control" value="" placeholder="검색어를 입력하세요."/>
+                                <span class="input-group-btn">
+                                    <button class="btn btn-primary">확인</button>
+                                </span>
+                            </div>
+                        </ax:form>
+                    </ax:tbl>
+
                     <div class="right">
                         <button type="button" class="btn btn-default" data-grid-view-01-btn="remove"><i class="cqc-circle-with-minus"></i> 삭제</button>
                         <button type="button" class="btn btn-default" data-grid-view-01-btn="removeAll"><i class="cqc-circle-with-minus"></i> 전체삭제</button>
                     </div>
                 </div>
                 <div data-ax5grid="grid-view-01" data-fit-height-content="grid-view-01" style="height: 300px;"></div>
+
             </ax:split-panel>
             <ax:splitter></ax:splitter>
-            <ax:split-panel height="*" style="padding-top: 10px;padding-right: 5px;" scroll="scroll">
+            <ax:split-panel height="*" style="padding-top: 10px;" scroll="scroll">
 
                 <ax:form name="formView01">
                     <div class="ax-button-group">
@@ -103,8 +97,6 @@
 
             </ax:split-panel>
         </ax:split-layout>
-
-
 
 
     </jsp:body>

@@ -112,4 +112,10 @@ $ax-search-tbl-label-color: #363636;
             }
         }
     }
+    &.ax-search-box{
+        @include ax-background(top, $ax-search-tbl-label-bg-colors);
+        border: $ax-search-tbl-border;
+        padding: 5px;
+        border-radius: 5px;
+    }
 }
