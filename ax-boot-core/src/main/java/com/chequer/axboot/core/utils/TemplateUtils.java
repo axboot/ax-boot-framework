@@ -23,8 +23,10 @@ public class TemplateUtils {
             String fileBasePath = servletBasePath + "/src/main/webapp/";
 
             String jsPath = getJsPath(jspPath);
+            String defaultJsPath = getDefaultJsPath(jspPath);
 
             File jspFile = new File(fileBasePath + jspPath);
+            File defaultJsFile = new File(fileBasePath + defaultJsPath);
             File jsFile = new File(fileBasePath + jsPath);
 
             if (!jspFile.exists()) {
@@ -35,7 +37,7 @@ public class TemplateUtils {
                 FileUtils.write(jspFile, jspTemplate, "UTF-8");
             }
 
-            if (!jsFile.exists()) {
+            if (!jsFile.exists() && !defaultJsFile.exists()) {
                 FileUtils.forceMkdir(jsFile.getParentFile());
                 String jsTemplate = IOUtils.toString(new ClassPathResource("/template/JSBasicTemplate.tpl", loader).getInputStream(), "UTF-8");
                 FileUtils.write(jsFile, jsTemplate, "UTF-8");
@@ -51,6 +53,11 @@ public class TemplateUtils {
 
     public static String getJsPath(String programPath) {
         int end = programPath.indexOf(".jsp");
-        return "/assets/js/view/" + programPath.substring(4, end) + ".js";
+        return "/assets/js/view/" + programPath.substring(5, end) + ".js";
+    }
+
+    public static String getDefaultJsPath(String programPath) {
+        int end = programPath.indexOf(".jsp");
+        return "/assets/js/axboot/" + programPath.substring(5, end) + ".js";
     }
 }
