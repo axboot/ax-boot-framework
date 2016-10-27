@@ -10,6 +10,8 @@
 <%@ attribute name="active" %>
 <%
     TagUtils tagUtils = new TagUtils(getParent());
+    //String _oriental = tagUtils.getParentAttribute("oriental");
+
 
     if (StringUtils.isEmpty(active)) {
         active = "false";

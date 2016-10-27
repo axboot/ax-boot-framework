@@ -15,23 +15,15 @@ import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
-import java.util.*;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.UUID;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 
 @Service
 public class ProjectGenerator {
-
-    public static final List<String> templateProcessTargetFiles = Arrays.asList(
-            "frame.tag",
-            "common-code.tag",
-            "login.jsp",
-            "axboot.json",
-            "pom.xml",
-            "axboot-common.properties"
-    );
 
     public void generate(ProjectGenerateRequest projectGenerateRequest, HttpServletRequest request, HttpServletResponse response) throws IOException {
         String packageName = projectGenerateRequest.getPackageName();
@@ -107,15 +99,10 @@ public class ProjectGenerator {
 
     public byte[] getBytes(File file, Map<String, String> values) throws IOException {
         StrSubstitutor strSubstitutor = new StrSubstitutor(values);
-        String ext = FilenameUtils.getExtension(file.getName()).toLowerCase();
 
-        if (templateProcessTargetFiles.contains(FilenameUtils.getName(file.getName())) || "java".equals(ext)) {
-            String template = FileUtils.readFileToString(file, "UTF-8");
-            template = strSubstitutor.replace(template);
+        String template = FileUtils.readFileToString(file, "UTF-8");
+        template = strSubstitutor.replace(template);
 
-            return template.getBytes("UTF-8");
-        }
-
-        return IOUtils.toByteArray(new FileInputStream(file));
+        return template.getBytes("UTF-8");
     }
 }

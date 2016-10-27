@@ -1,5 +1,5 @@
-<%@ tag import="com.chequer.axboot.admin.domain.code.CommonCode" %>
-<%@ tag import="com.chequer.axboot.admin.utils.CommonCodeUtils" %>
+<%@ tag import="$" %>
+<%@ tag import="$" %>
 <%@ tag import="org.apache.commons.lang3.StringUtils" %>
 <%@ tag import="java.util.List" %>
 <%@ tag language="java" pageEncoding="UTF-8" body-content="empty" %>
