@@ -92,28 +92,28 @@
                         <form method="get" action="/api/v1/project" enctype="application/x-www-form-urlencoded" class="registration-form">
                             <div class="form-group">
                                 <label class="sr-only" for="form-01">Maven Group</label>
-                                <input type="text" name="groupId" placeholder="Maven Group ID (example: com.chequer.axboot)" class="form-control" id="form-01"/>
-                                <p style="padding: 5px;" class="text-primary">ex) com.axisj.axboot</p>
+                                <input type="text" name="groupId" placeholder="Maven Group ID" class="form-control" id="form-01"/>
+                                <p style="padding: 5px;" class="text-primary">ex) com.chequer.axboot</p>
                             </div>
                             <div class="form-group">
                                 <label class="sr-only" for="form-03">Maven Artifact</label>
-                                <input type="text" name="artifactId" placeholder="Maven Artifcat ID (example : admin)" class="form-control" id="form-02"/>
+                                <input type="text" name="artifactId" placeholder="Maven Artifcat ID" class="form-control" id="form-02"/>
                                 <p style="padding: 5px;" class="text-primary">ex) axboot</p>
                             </div>
                             <div class="form-group">
                                 <label class="sr-only" for="form-02">Project Name</label>
-                                <input type="text" name="projectName" placeholder="Project Name (example : AXBoot Admin)" class="form-control" id="form-03"/>
-                                <p style="padding: 5px;" class="text-primary">ex) 엑스부트 프로젝트</p>
+                                <input type="text" name="projectName" placeholder="Project Name" class="form-control" id="form-03"/>
+                                <p style="padding: 5px;" class="text-primary">ex) AXBoot Admin</p>
                             </div>
                             <div class="form-group">
                                 <label class="sr-only" for="form-04">Description</label>
-                                <input type="text" name="description" placeholder="Project Description (example : AXBoot Admin Project)" class="form-control" id="form-04"/>
-                                <p style="padding: 5px;" class="text-primary">ex) 프로젝트 설명</p>
+                                <input type="text" name="description" placeholder="Project Description" class="form-control" id="form-04"/>
+                                <p style="padding: 5px;" class="text-primary">ex) AXBoot Admin Project</p>
                             </div>
                             <div class="form-group">
                                 <label class="sr-only" for="form-05">Package Name</label>
-                                <input type="text" name="packageName" placeholder="Package of Source Code (example : com.chequer.axboot.admin)" class="form-control" id="form-05"/>
-                                <p style="padding: 5px;" class="text-primary">ex) com.axisj.axboot</p>
+                                <input type="text" name="packageName" placeholder="Package of Source Code" class="form-control" id="form-05"/>
+                                <p style="padding: 5px;" class="text-primary">ex) com.chequer.axboot</p>
                             </div>
 
                             <button type="submit" class="btn">Generate Project</button>

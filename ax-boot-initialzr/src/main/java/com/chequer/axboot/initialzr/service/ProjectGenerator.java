@@ -33,7 +33,7 @@ public class ProjectGenerator {
         String description = projectGenerateRequest.getDescription();
         String groupId = projectGenerateRequest.getGroupId();
 
-        String encodedFileName = EncodeUtils.encodeDownloadFileName(projectName + "_" + DateUtils.getDateYyyyMmddWithoutDash() + ".zip");
+        String encodedFileName = EncodeUtils.encodeDownloadFileName(artifactId + "_" + DateUtils.getDateYyyyMmddWithoutDash() + ".zip");
         response.setHeader("Content-Disposition", "attachment; filename=" + encodedFileName);
         response.setContentType("application/zip");
 
