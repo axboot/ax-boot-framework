@@ -4,6 +4,7 @@ import com.chequer.axboot.admin.domain.BaseService;
 import com.chequer.axboot.admin.domain.user.auth.menu.AuthGroupMenu;
 import com.chequer.axboot.admin.domain.user.auth.menu.AuthGroupMenuService;
 import com.chequer.axboot.core.parameter.RequestParams;
+import com.chequer.axboot.core.utils.TemplateUtils;
 import com.querydsl.core.BooleanBuilder;
 import org.apache.commons.io.FilenameUtils;
 import org.springframework.stereotype.Service;
@@ -55,10 +56,13 @@ public class ProgramService extends BaseService<Program, String> {
 
             // 저장 처리
             else {
+                TemplateUtils.makeFile(program.getProgPh());
+
                 // 신규 저장일 경우
                 if (isEmpty(program.getProgCd())) {
                     program.setProgCd(FilenameUtils.getBaseName(program.getProgPh()));
                     save(program);
+
                 } else {
                     // 신규 저장이 아닐 경우
 
