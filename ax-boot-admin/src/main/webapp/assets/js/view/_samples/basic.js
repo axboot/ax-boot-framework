@@ -3,28 +3,37 @@ var ACTIONS = axboot.actionExtend(fnObj, {
     PAGE_SEARCH: function (caller, act, data) {
         axboot.ajax({
             type: "GET",
-            url: ["programs"],
+            url: ["samples", "parent"],
             data: caller.searchView.getData(),
             callback: function (res) {
                 caller.gridView01.setData(res);
+            },
+            options: {
+                // axboot.ajax 함수에 2번째 인자는 필수가 아닙니다. ajax의 옵션을 전달하고자 할때 사용합니다.
+                onError: function (err) {
+                    console.log(err);
+                }
             }
         });
 
         return false;
     },
     PAGE_SAVE: function (caller, act, data) {
-        var saveList = [].concat(caller.gridView01.getData());
+        var saveList = [].concat(caller.gridView01.getData("modified"));
         saveList = saveList.concat(caller.gridView01.getData("deleted"));
 
         axboot.ajax({
             type: "PUT",
-            url: ["programs"],
+            url: ["samples", "parent"],
             data: JSON.stringify(saveList),
             callback: function (res) {
                 ACTIONS.dispatch(ACTIONS.PAGE_SEARCH);
                 axToast.push("저장 되었습니다");
             }
         });
+    },
+    ITEM_CLICK: function (caller, act, data) {
+
     },
     ITEM_ADD: function (caller, act, data) {
         caller.gridView01.addRow();
@@ -65,6 +74,9 @@ fnObj.pageButtonView = axboot.viewExtend({
             },
             "save": function () {
                 ACTIONS.dispatch(ACTIONS.PAGE_SAVE);
+            },
+            "excel": function () {
+
             }
         });
     }
@@ -96,25 +108,19 @@ fnObj.searchView = axboot.viewExtend(axboot.searchView, {
 fnObj.gridView01 = axboot.viewExtend(axboot.gridView, {
     initView: function () {
         var _this = this;
+
         this.target = axboot.gridBuilder({
             showRowSelector: true,
-            frozenColumnIndex: 2,
+            frozenColumnIndex: 0,
             multipleSelect: true,
             target: $('[data-ax5grid="grid-view-01"]'),
             columns: [
-                {key: "progNm", label: "프로그램명", width: 160, align: "left", editor: "text"},
-                {key: "progPh", label: "경로", width: 350, align: "left", editor: "text"},
-                {key: "authCheck", label: "권한체크여부", width: 80, align: "center", editor: "checkYn"},
-                {key: "schAh", label: "조회", width: 50, align: "center", editor: "checkYn"},
-                {key: "savAh", label: "저장", width: 50, align: "center", editor: "checkYn"},
-                {key: "exlAh", label: "엑셀", width: 50, align: "center", editor: "checkYn"},
-                {key: "delAh", label: "삭제", width: 50, align: "center", editor: "checkYn"},
-                {key: "fn1Ah", label: "FN1", width: 50, align: "center", editor: "checkYn"},
-                {key: "fn2Ah", label: "FN2", width: 50, align: "center", editor: "checkYn"},
-                {key: "fn3Ah", label: "FN3", width: 50, align: "center", editor: "checkYn"},
-                {key: "fn4Ah", label: "FN4", width: 50, align: "center", editor: "checkYn"},
-                {key: "fn5Ah", label: "FN5", width: 50, align: "center", editor: "checkYn"},
-                {key: "remark", label: "설명", width: 300, editor: "text"}
+                {key: "key", label: "KEY", width: 160, align: "left", editor: "text"},
+                {key: "value", label: "VALUE", width: 350, align: "left", editor: "text"},
+                {key: "etc1", label: "ETC1", width: 100, align: "center", editor: "text"},
+                {key: "ect2", label: "ETC2", width: 100, align: "center", editor: "text"},
+                {key: "ect3", label: "ETC3", width: 100, align: "center", editor: "text"},
+                {key: "ect4", label: "ETC4", width: 100, align: "center", editor: "text"}
             ],
             body: {
                 onClick: function () {
@@ -138,7 +144,8 @@ fnObj.gridView01 = axboot.viewExtend(axboot.gridView, {
 
         if (_type == "modified" || _type == "deleted") {
             list = ax5.util.filter(_list, function () {
-                return this.progNm && this.progPh;
+                delete this.deleted;
+                return this.key;
             });
         } else {
             list = _list;
@@ -146,6 +153,6 @@ fnObj.gridView01 = axboot.viewExtend(axboot.gridView, {
         return list;
     },
     addRow: function () {
-        this.target.addRow({__created__: true, useYn: "N", authCheck: "N"}, "last");
+        this.target.addRow({__created__: true}, "last");
     }
 });
