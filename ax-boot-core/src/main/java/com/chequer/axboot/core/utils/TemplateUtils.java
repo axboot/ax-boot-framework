@@ -32,13 +32,13 @@ public class TemplateUtils {
                 String jspTemplate = IOUtils.toString(new ClassPathResource("/template/JSPBasicTemplate.tpl", loader).getInputStream(), "UTF-8");
                 jspTemplate = jspTemplate.replace("@{programJSPath}", jsPath);
 
-                FileUtils.write(jspFile, jspTemplate, false);
+                FileUtils.write(jspFile, jspTemplate, "UTF-8");
             }
 
             if (!jsFile.exists()) {
                 FileUtils.forceMkdir(jsFile.getParentFile());
                 String jsTemplate = IOUtils.toString(new ClassPathResource("/template/JSBasicTemplate.tpl", loader).getInputStream(), "UTF-8");
-                FileUtils.write(jsFile, jsTemplate, false);
+                FileUtils.write(jsFile, jsTemplate, "UTF-8");
             }
         } catch (Exception e) {
             e.printStackTrace();
