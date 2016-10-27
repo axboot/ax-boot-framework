@@ -16,6 +16,7 @@
         <maven.test.skip>true</maven.test.skip>
         <disable.checks>true</disable.checks>
         <main.basedir>${basedir}</main.basedir>
+        <start-class>${package}.AXBootApplicationInitializer</start-class>
     </properties>
 
     <parent>

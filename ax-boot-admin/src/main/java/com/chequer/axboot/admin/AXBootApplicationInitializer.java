@@ -1,6 +1,7 @@
 package com.chequer.axboot.admin;
 
 import com.chequer.axboot.core.AXBootCoreConfiguration;
+import org.springframework.boot.SpringApplication;
 import org.springframework.boot.builder.SpringApplicationBuilder;
 import org.springframework.boot.web.support.SpringBootServletInitializer;
 import org.springframework.context.annotation.Configuration;
@@ -15,5 +16,9 @@ public class AXBootApplicationInitializer extends SpringBootServletInitializer i
     protected SpringApplicationBuilder configure(SpringApplicationBuilder application) {
         this.setRegisterErrorPageFilter(false);
         return application.sources(APPLICATION_SOURCES);
+    }
+
+    public static void main(String[] args) {
+        SpringApplication.run(APPLICATION_SOURCES, args);
     }
 }

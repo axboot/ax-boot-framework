@@ -1,4 +1,4 @@
-<%@ page import="$" %>
+<%@ page import="${basePackage}.domain.init.DatabaseInitService" %>
 <%@ page import="com.chequer.axboot.core.context.AppContextManager" %>
 <%@ page import="com.chequer.axboot.core.utils.SessionUtils" %>
 <%@ page language="java" contentType="text/html; charset=utf-8" pageEncoding="utf-8" %>

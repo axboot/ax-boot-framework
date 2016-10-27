@@ -2,6 +2,7 @@ package com.chequer.axboot.initialzr;
 
 import com.chequer.axboot.core.config.AXBootContextConfig;
 import com.chequer.axboot.core.model.extract.service.jdbc.JdbcMetadataService;
+import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;

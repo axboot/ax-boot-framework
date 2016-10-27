@@ -1,5 +1,5 @@
-<%@ tag import="$" %>
-<%@ tag import="$" %>
+<%@ tag import="${basePackage}.domain.code.CommonCode" %>
+<%@ tag import="${basePackage}.utils.CommonCodeUtils" %>
 <%@ tag import="org.apache.commons.lang3.StringUtils" %>
 <%@ tag import="java.util.List" %>
 <%@ tag language="java" pageEncoding="UTF-8" body-content="empty" %>

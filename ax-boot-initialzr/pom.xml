@@ -9,6 +9,10 @@
     <name>AX-Boot Initialzr</name>
     <description>AX-Boot Initialzr Application</description>
 
+    <properties>
+        <start-class>com.chequer.axboot.initialzr.AXBootInitialzrApplication</start-class>
+    </properties>
+
     <parent>
         <artifactId>ax-boot-framework</artifactId>
         <groupId>com.chequer.axboot</groupId>
