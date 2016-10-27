@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<included>
+
+    <property name="server.name" value="${server.name:-localhost}"/>
+
+    <logger name="com.mangofactory.swagger">
+        <level value="OFF" />
+    </logger>
+
+    <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder>
+            <Pattern>%d{yyyy-MM-dd HH:mm:ss} [%t] %-5level %c:%M:%L %m%n</Pattern>
+        </encoder>
+    </appender>
+
+</included>

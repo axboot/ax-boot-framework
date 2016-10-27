@@ -1,0 +1,27 @@
+.page-header {
+    margin: 0;
+    margin-bottom: 20px;
+    h1, h2, h3, h4, h5, h6 {
+        margin: 0;
+        padding: 10px;
+        i {
+            padding-top: 1px;
+        }
+    }
+}
+
+.text-align-left {
+    text-align: left;
+}
+
+.text-align-center {
+    text-align: center;
+}
+
+.text-align-right {
+    text-align: right;
+}
+
+.modal-backdrop.in{
+    display: none;
+}

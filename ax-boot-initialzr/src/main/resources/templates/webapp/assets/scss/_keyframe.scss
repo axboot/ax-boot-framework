@@ -1,0 +1,86 @@
+@include keyframes(BLINKING) {
+    0% {
+        opacity: 0.3;
+    }
+    100% {
+        opacity: 1.0;
+    }
+}
+
+@include keyframes(ZOOM-IN-OUT) {
+    0% {
+        opacity: 1.0;
+        @include transform(scale(1.0));
+    }
+    100% {
+        opacity: 0.5;
+        @include transform(scale(1.5));
+    }
+}
+
+@include keyframes(SPIN) {
+    0% {
+        @include transform(rotate(0deg));
+    }
+    100% {
+        @include transform(rotate(360deg));
+    }
+}
+
+// FADE
+@include keyframes(BODY_FADE_IN){
+    from {
+        @include opacity(0.0);
+        @include transform(translateY(-1%));
+    }
+    to {
+        @include opacity(1.0);
+        @include transform(translateY(0));
+    }
+}
+@include keyframes(BODY_FADE_OUT){
+    from {
+        @include opacity(1);
+    }
+    to {
+        @include opacity(0.0);
+        display: none;
+    }
+}
+
+@include keyframes(SLIDE-UP) {
+    0% {
+        opacity: 0.0;
+        @include transform(translateY(30px) scale(1.0));
+    }
+    100% {
+        opacity: 1.0;
+        @include transform(translateY(0%) scale(1.0));
+    }
+}
+@include keyframes(SLIDE-DOWN) {
+    0% {
+        opacity: 0.0;
+        @include transform(translateY(-30px) scale(1.0));
+    }
+    100% {
+        opacity: 1.0;
+        @include transform(translateY(0%) scale(1.0));
+    }
+}
+@include keyframes(SLIDE-IN-LEFT) {
+    0% {
+        @include transform(translateX(-30px) scale(1.0));
+    }
+    100% {
+        @include transform(translateY(0%) scale(1.0));
+    }
+}
+@include keyframes(SLIDE-IN-RIGHT) {
+    0% {
+        @include transform(translateX(30px) scale(1.0));
+    }
+    100% {
+        @include transform(translateY(0%) scale(1.0));
+    }
+}

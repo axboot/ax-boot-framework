@@ -1,0 +1,6 @@
+lang[data-id]{ font-family: 'Noto Sans Korean'; }
+lang[data-font-eng]{ font-family: 'Helvetica Neue'; }
+
+{{#@each}}
+lang[data-id="{{{@key}}}"]:before{content:'{{{@value}}}';}
+{{/@each}}

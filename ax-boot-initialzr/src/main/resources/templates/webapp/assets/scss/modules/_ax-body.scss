@@ -1,0 +1,34 @@
+html, body {
+    margin: 0;
+    padding: 0;
+    height: 100%;
+}
+
+.ax-body {
+
+    // 일반 페이지
+    .ax-header{
+
+    }
+    .ax-contents{
+
+    }
+}
+
+
+h1,h2,h3,h4,h5,h6{
+    margin: 0;
+}
+
+h1{
+    font-size: 24px;
+}
+h2{
+    font-size: 18px;
+}
+h3{
+    font-size: 16px;
+}
+
+@include W();
+@include H();

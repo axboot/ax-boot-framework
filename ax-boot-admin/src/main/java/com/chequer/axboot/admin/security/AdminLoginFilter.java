@@ -1,7 +1,8 @@
 package com.chequer.axboot.admin.security;
 
-import com.chequer.axboot.admin.domain.user.User;
 import com.chequer.axboot.admin.domain.user.UserService;
+import com.chequer.axboot.core.api.response.ApiResponse;
+import com.chequer.axboot.core.code.ApiStatus;
 import com.chequer.axboot.core.domain.user.SessionUser;
 import com.chequer.axboot.core.utils.HttpUtils;
 import com.chequer.axboot.core.utils.JsonUtils;
@@ -50,15 +51,8 @@ public class AdminLoginFilter extends AbstractAuthenticationProcessingFilter {
         final AdminUserAuthentication userAuthentication = new AdminUserAuthentication((SessionUser) authentication.getPrincipal());
         adminTokenAuthenticationService.addAuthentication(response, userAuthentication);
 
-        User user = userService.findOne(userAuthentication.getName());
-        /*
-        user.setIp(HttpUtils.getRemoteAddress(request));
-        user.setLastLoginDate(Instant.now());
-        userService.save(user);
-        */
-
         response.setContentType(HttpUtils.getJsonContentType(request));
-        response.getWriter().write(JsonUtils.toJson(user));
+        response.getWriter().write(JsonUtils.toJson(ApiResponse.of(ApiStatus.SUCCESS, "Login Success")));
         response.getWriter().flush();
     }
 

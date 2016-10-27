@@ -567,6 +567,7 @@
     <modules>
         <module>ax-boot-admin</module>
         <module>ax-boot-core</module>
+        <module>ax-boot-initialzr</module>
     </modules>
 
 </project>

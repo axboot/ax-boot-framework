@@ -1,0 +1,64 @@
+&[data-page-auto-height="true"] {
+    overflow: hidden;
+    #ax-base-root {
+        overflow: hidden;
+        height: 100%;
+    }
+    &.modalOpened {
+        overflow: auto;
+        #ax-base-root {
+            position: fixed;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+        }
+    }
+}
+
+&[data-page-auto-height="false"] {
+    overflow: auto;
+    #ax-base-root {
+        overflow: auto;
+    }
+    &.modalOpened {
+        overflow: auto;
+        #ax-base-root {
+            position: fixed;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+        }
+    }
+}
+
+
+#ax-base-root{
+    padding: 0 15px;
+    @include animation(BODY_FADE_IN 0.5s $ease-out-back forwards);
+
+    .ax-base-title{
+        display: table;
+        height: 60px;
+        .title{
+            display: table-cell;
+            font-size: 24px;
+            vertical-align: middle;
+        }
+        .desc{
+            display: table-cell;
+            vertical-align: middle;
+            padding-left: 10px;
+        }
+    }
+
+    [data-page-buttons]{
+        position: absolute;
+        right: 15px;
+        top: 15px;
+        .btn{
+            padding: 5px 10px;
+        }
+    }
+}

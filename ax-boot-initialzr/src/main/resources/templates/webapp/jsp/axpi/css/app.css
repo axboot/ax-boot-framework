@@ -1,0 +1,551 @@
+html, body {
+    margin: 0px;
+    padding: 0px;
+    font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+    font-size: 14px;
+    color: #555555;
+    height: 100%;
+    line-height: 1.6em;
+}
+
+h1, h2, h3, h4, h5, h6 {
+    margin: 0.5em auto;
+    color: #555555;
+}
+
+article h1 {
+    font-size: 2.5em;
+}
+
+article h2 {
+    font-size: 1.8em;
+}
+
+article h3 {
+    font-size: 1.5em;
+}
+
+article h4 {
+    font-size: 1.2em;
+}
+
+article h5 {
+    font-size: 1em;
+}
+
+div.block-end {
+    height: 30px;
+}
+
+pre.prettyprint {
+    border-radius: 10px;
+    margin: 20px 0;
+    -moz-tab-size: 4;
+    -o-tab-size: 4;
+    tab-size: 4;
+}
+
+.app-wrap {
+    position: relative;
+/ / width: 970 px;
+    margin: 0px;
+}
+
+.app-nav {
+    z-index: 1000;
+    position: fixed;
+    left: 0px;
+    top: 0px;
+    width: 100%;
+    min-width: 970px;
+    height: 60px;
+    color: #000;
+}
+
+.app-nav a {
+    color: inherit;
+}
+
+.app-nav .box-bg {
+    position: absolute;
+    width: 100%;
+    min-width: 970px;
+    height: 100%;
+    filter: progid:DXImageTransform.Microsoft.Alpha(Opacity=30);
+    opacity: 0.3;
+    background: rgba(255, 255, 255, 0.5);
+    box-shadow: 0px 2px 2px 0px rgba(0, 0, 0, 0.3);
+}
+
+.app-nav .box-content {
+    position: relative;
+    width: 970px;
+    margin: 0px;
+}
+
+.app-nav .box-content ul, .app-nav .box-content li {
+    margin: 0px;
+    padding: 0px;
+}
+
+.app-nav .box-content li {
+    list-style: none;
+    display: inline;
+}
+
+.app-nav .box-content .logo {
+    display: block;
+    height: 60px;
+    width: 200px;
+    line-height: 60px;
+    text-align: center;
+    font-size: 20px;
+    color: #fff;
+    font-weight: bold;
+    text-decoration: none;
+}
+
+.app-nav .box-content .menu {
+    position: absolute;
+    left: 200px;
+    top: 0px;
+}
+
+.app-nav .box-content .menu li {
+    display: block;
+    float: left;
+    height: 60px;
+    line-height: 60px;
+    text-align: center;
+    padding: 0px 20px;
+    font-size: 14px;
+    color: #fff;
+}
+
+.app-nav .box-content .menu li a {
+    text-decoration: none;
+}
+
+.app-nav .box-content .menu li.vline {
+    padding: 0px;
+    width: 1px;
+    background-image: -webkit-linear-gradient(top, rgba(255, 255, 255, 0.5), rgba(255, 255, 255, 0));
+    background-image: linear-gradient(to bottom, rgba(255, 255, 255, 0.5), rgba(255, 255, 255, 0));
+}
+
+.app-visual {
+    z-index: 900;
+    position: absolute;
+    left: 0px;
+    top: 0px;
+    width: 100%;
+    min-width: 970px;
+    height: 280px;
+    color: #fff;
+    background: #358CAE;
+    background-image: -webkit-linear-gradient(left, #358CAE, #309C80);
+    background-image: linear-gradient(to right, #358CAE, #309C80);
+}
+
+.app-visual.pinned {
+    position: fixed;
+    top: -220px;
+}
+
+.app-visual.scrolled .app-wrap {
+    -webkit-filter: blur(10px);
+    filter: blur(10px);
+}
+
+.app-visual .visual {
+    position: absolute;
+    left: 50px;
+    top: 100px;
+    width: 150px;
+    height: 126px;
+    background: url(../images/ax5dom.png) no-repeat;
+    background-size: contain;
+}
+
+.app-visual h1 {
+    color: #fff;
+    position: absolute;
+    left: 220px;
+    top: 120px;
+    font-size: 42px;
+}
+
+.app-visual h3 {
+    color: #fff;
+    position: absolute;
+    left: 220px;
+    top: 170px;
+    font-size: 16px;
+}
+
+.app-page {
+    position: relative;
+    padding: 280px 0px 0px 0px;
+}
+
+.app-page .app-content {
+    position: relative;
+/ / width: 850 px;
+
+    margin: 0px;
+    padding-left: 340px;
+    padding-right: 20px;
+}
+
+.app-page .app-content a[name] {
+    display: block;
+    height: 10px;
+}
+
+.app-page .app-content label[data-menu-item] {
+    display: none;
+}
+
+.app-page .app-content a:hover {
+    background: #eee;
+}
+
+.app-page .app-content article h1[data-menu-item] {
+    padding-top: 30px;
+}
+
+.app-page .app-content article h2[data-menu-item], .app-page .app-content article h3[data-menu-item] {
+    padding-top: 20px;
+}
+
+.app-page .app-content article.cover h1 {
+    font-size: 2.5em;
+    line-height: 1.8em;
+    border-bottom: 1px solid #eee;
+}
+
+.app-page .app-content article.content {
+    padding: 0px 0px 10px 0px;
+}
+
+.app-page .app-content .script-result, .app-page .app-content .tag-result {
+    /* Rectangle 14: */
+    background: #F2F2F2;
+    border-radius: 8px;
+    font-family: "consolas", "courier new";
+    padding: 10px 15px;
+    font-size: 1em;
+}
+
+.app-page .app-content .ax-section {
+    position: relative;
+    border: 1px solid #ccc;
+    border-radius: 10px;
+    padding: 10px;
+    font-size: 1.2em;
+}
+
+.app-page .app-content .lead {
+    font-size: 1.3em;
+    line-height: 1.5em;
+    font-weight: 200;
+}
+
+.app-page .app-content .callout {
+    padding: 20px;
+    margin: 20px 0;
+    border: 1px solid #eee;
+    border-left-width: 5px;
+    border-radius: 3px;
+}
+
+.app-page .app-content .callout h4 {
+    color: #000;
+    margin-top: 0;
+    margin-bottom: 5px;
+}
+
+.app-page .app-content .callout p {
+    color: #333;
+    margin: 0 0 10px;
+}
+
+.app-page .app-content .callout p:last-child {
+    margin-bottom: 0;
+}
+
+.app-page .app-content .callout.basic {
+    border-left-color: #32B4DC;
+}
+
+.app-page .app-content .callout.basic h4 {
+    color: #32B4DC;
+}
+
+.app-page .app-content .callout.good {
+    border-left-color: #78B43C;
+}
+
+.app-page .app-content .callout.good h4 {
+    color: #78B43C;
+}
+
+.app-page .app-content .callout.info {
+    border-left-color: #002A4F;
+}
+
+.app-page .app-content .callout.info h4 {
+    color: #002A4F;
+}
+
+.app-page .app-content .callout.warning {
+    border-left-color: #E66E3C;
+}
+
+.app-page .app-content .callout.warning h4 {
+    color: #E66E3C;
+}
+
+.app-page .app-content .callout.danger {
+    border-left-color: #a74015;
+}
+
+.app-page .app-content .callout.danger h4 {
+    color: #a74015;
+}
+
+.app-page .app-content .callout.special {
+    border-left-color: #bc4cd0;
+}
+
+.app-page .app-content .callout.special h4 {
+    color: #bc4cd0;
+}
+
+.app-page .app-content code {
+    padding: 2px 4px;
+    font-size: 90%;
+    color: #c7254e;
+    background-color: #f9f2f4;
+    border-radius: 4px;
+}
+
+.app-page .app-nav-left {
+    position: absolute;
+    top: 0px;
+    left: 0px;
+    /* Rectangle 10: */
+    width: 300px;
+    margin: 0px auto 0px auto;
+    padding: 0px 0px;
+    box-sizing: border-box;
+    overflow: auto;
+    text-align: left;
+    box-sizing: border-box;
+}
+
+.app-page .app-nav-left .nav-block {
+    position: relative;
+}
+
+.app-page .app-nav-left.pinned {
+    position: fixed;
+    top: 0px;
+}
+
+.app-page .app-nav-left a {
+    display: block;
+    line-height: 1.5em;
+    text-decoration: none;
+    color: #999EA0;
+}
+
+.app-page .app-nav-left li {
+    list-style: none;
+    text-align: left;
+}
+
+.app-page .app-nav-left ul {
+    -webkit-transition: all 0.1s ease-in;
+    -moz-transition: all 0.1s ease-in;
+    transition: all 0.1s ease-in;
+    margin: 0px;
+    padding: 0px;
+    color: #999EA0;
+}
+
+.app-page .app-nav-left ul:hover, .app-page .app-nav-left ul.open {
+    border-right: 1px solid #f3f3f3;
+    color: #777b7d;
+}
+
+.app-page .app-nav-left ul.open ul {
+    display: block;
+}
+
+.app-page .app-nav-left ul li {
+    -webkit-transition: all 0.1s ease-in;
+    -moz-transition: all 0.1s ease-in;
+    transition: all 0.1s ease-in;
+    padding: 0px 15px;
+}
+
+.app-page .app-nav-left ul li a {
+    -webkit-transition: all 0.1s ease-in;
+    -moz-transition: all 0.1s ease-in;
+    transition: all 0.1s ease-in;
+    display: block;
+    font-size: 1.2em;
+    line-height: 40px;
+    color: inherit;
+}
+
+.app-page .app-nav-left ul li:hover, .app-page .app-nav-left ul li.open {
+    background: #358CAE;
+    color: #fff;
+}
+
+.app-page .app-nav-left ul li.menu-label {
+    position: relative;
+    font-size: 1px;
+    line-height: 1px;
+    height: 1px;
+    background: #eee;
+    text-align: right;
+}
+
+.app-page .app-nav-left ul li.menu-label:hover, .app-page .app-nav-left ul li.menu-label.open {
+    background: none;
+    color: inherit;
+}
+
+.app-page .app-nav-left ul li.menu-label span {
+    display: block;
+    position: absolute;
+    right: 0px;
+    top: 0px;
+    font-size: 11px;
+    line-height: 15px;
+    text-align: center;
+    padding: 0px 5px;
+    background: #eee;
+}
+
+.app-page .app-nav-left ul ul {
+    padding: 0px 0px 0px 0px;
+    display: none;
+}
+
+.app-page .app-nav-left ul ul:hover {
+    border-right: 0px none;
+}
+
+.app-page .app-nav-left ul ul li {
+    padding-left: 30px;
+}
+
+.app-page .app-nav-left ul ul li a {
+    display: block;
+    font-size: 1em;
+    line-height: 30px;
+}
+
+.DH1 {
+    line-height: 0px;
+    height: 1px;
+}
+
+.DH10 {
+    line-height: 0px;
+    height: 10px;
+}
+
+.DH2 {
+    line-height: 0px;
+    height: 2px;
+}
+
+.DH20 {
+    line-height: 0px;
+    height: 20px;
+}
+
+.DH3 {
+    line-height: 0px;
+    height: 3px;
+}
+
+.DH30 {
+    line-height: 0px;
+    height: 30px;
+}
+
+.DH4 {
+    line-height: 0px;
+    height: 4px;
+}
+
+.DH40 {
+    line-height: 0px;
+    height: 40px;
+}
+
+.DH5 {
+    line-height: 0px;
+    height: 5px;
+}
+
+.DH50 {
+    line-height: 0px;
+    height: 50px;
+}
+
+.DH6 {
+    line-height: 0px;
+    height: 6px;
+}
+
+.DH60 {
+    line-height: 0px;
+    height: 60px;
+}
+
+.DH7 {
+    line-height: 0px;
+    height: 7px;
+}
+
+.DH70 {
+    line-height: 0px;
+    height: 70px;
+}
+
+.DH8 {
+    line-height: 0px;
+    height: 8px;
+}
+
+.DH80 {
+    line-height: 0px;
+    height: 80px;
+}
+
+.DH9 {
+    line-height: 0px;
+    height: 9px;
+}
+
+.DH90 {
+    line-height: 0px;
+    height: 90px;
+}
+
+.DH10 {
+    line-height: 0px;
+    height: 10px;
+}
+
+.DH100 {
+    line-height: 0px;
+    height: 100px;
+}
