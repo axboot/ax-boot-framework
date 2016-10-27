@@ -15,6 +15,7 @@ import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
@@ -98,11 +99,26 @@ public class ProjectGenerator {
     }
 
     public byte[] getBytes(File file, Map<String, String> values) throws IOException {
-        StrSubstitutor strSubstitutor = new StrSubstitutor(values);
+        String ext = FilenameUtils.getExtension(file.getName()).toLowerCase();
 
-        String template = FileUtils.readFileToString(file, "UTF-8");
-        template = strSubstitutor.replace(template);
+        if (ext.equals("jsp") ||
+                ext.equals("java") ||
+                ext.equals("xml") ||
+                ext.equals("properties") ||
+                ext.equals("json") ||
+                ext.equals("css") ||
+                ext.equals("scss") ||
+                ext.equals("txt") ||
+                ext.equals("js") ||
+                ext.equals("tag") ||
+                ext.equals("html")) {
+            StrSubstitutor strSubstitutor = new StrSubstitutor(values);
 
-        return template.getBytes("UTF-8");
+            String template = FileUtils.readFileToString(file, "UTF-8");
+            template = strSubstitutor.replace(template);
+
+            return template.getBytes("UTF-8");
+        }
+        return IOUtils.toByteArray(new FileInputStream(file));
     }
 }
