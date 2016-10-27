@@ -28,6 +28,7 @@ public class TemplateUtils {
             File jsFile = new File(fileBasePath + jsPath);
 
             if (!jspFile.exists()) {
+                FileUtils.forceMkdir(jspFile.getParentFile());
                 String jspTemplate = IOUtils.toString(new ClassPathResource("/template/JSPBasicTemplate.tpl", loader).getInputStream(), "UTF-8");
                 jspTemplate = jspTemplate.replace("@{programJSPath}", jsPath);
 
@@ -35,6 +36,7 @@ public class TemplateUtils {
             }
 
             if (!jsFile.exists()) {
+                FileUtils.forceMkdir(jsFile.getParentFile());
                 String jsTemplate = IOUtils.toString(new ClassPathResource("/template/JSBasicTemplate.tpl", loader).getInputStream(), "UTF-8");
                 FileUtils.write(jsFile, jsTemplate, false);
             }
