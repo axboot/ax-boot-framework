@@ -45,10 +45,10 @@
                     </span>
                     <span class="li-text">
                         &nbsp;&nbsp;&nbsp;
-                        <a href="http://www.axboot.com">http://www.axboot.com</a>
+                        <a href="http://www.axboot.com" target="_blank">http://www.axboot.com</a>
                     </span>
                     <span class="li-social">
-                        <a href="https://github.com/axboot"><i class="fa fa-github"></i></a>
+                        <a href="https://github.com/axboot" target="_blank"><i class="fa fa-github"></i></a>
                     </span>
                 </li>
             </ul>
@@ -92,23 +92,23 @@
                         <form method="get" action="/api/v1/project" enctype="application/x-www-form-urlencoded" class="registration-form">
                             <div class="form-group">
                                 <label class="sr-only" for="form-01">Maven Group</label>
-                                <input type="text" name="groupId" placeholder="Maven Group ID" class="form-control" id="form-01"/>
+                                <input type="text" name="groupId" placeholder="Maven Group ID (example: com.chequer.axboot)" class="form-control" id="form-01"/>
                             </div>
                             <div class="form-group">
                                 <label class="sr-only" for="form-03">Maven Artifact</label>
-                                <input type="text" name="artifactId" placeholder="Maven Artifcat ID" class="form-control" id="form-02"/>
+                                <input type="text" name="artifactId" placeholder="Maven Artifcat ID (example : admin)" class="form-control" id="form-02"/>
                             </div>
                             <div class="form-group">
                                 <label class="sr-only" for="form-02">Project Name</label>
-                                <input type="text" name="projectName" placeholder="Project Name" class="form-control" id="form-03"/>
+                                <input type="text" name="projectName" placeholder="Project Name (example : AXBoot Admin)" class="form-control" id="form-03"/>
                             </div>
                             <div class="form-group">
                                 <label class="sr-only" for="form-04">Description</label>
-                                <input type="text" name="description" placeholder="Project Description" class="form-control" id="form-04"/>
+                                <input type="text" name="description" placeholder="Project Description (example : AXBoot Admin Project)" class="form-control" id="form-04"/>
                             </div>
                             <div class="form-group">
                                 <label class="sr-only" for="form-05">Package Name</label>
-                                <input type="text" name="packageName" placeholder="Source Base Package Name" class="form-control" id="form-05"/>
+                                <input type="text" name="packageName" placeholder="Package of Source Code (example : com.chequer.axboot.admin)" class="form-control" id="form-05"/>
                             </div>
 
                             <button type="submit" class="btn">Generate!</button>
