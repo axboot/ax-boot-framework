@@ -1,7 +1,7 @@
-package com.chequer.axboot.admin.security;
+package ${basePackage}.security;
 
-import com.chequer.axboot.admin.AXBootAdminSecurityConfig;
-import com.chequer.axboot.admin.code.GlobalConstants;
+import ${basePackage}.AXBootSecurityConfig;
+import ${basePackage}.code.GlobalConstants;
 import com.chequer.axboot.core.api.response.ApiResponse;
 import com.chequer.axboot.core.code.ApiStatus;
 import com.chequer.axboot.core.utils.*;
@@ -14,7 +14,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
-public class AdminAuthenticationEntryPoint extends BasicAuthenticationEntryPoint {
+public class AXBootAuthenticationEntryPoint extends BasicAuthenticationEntryPoint {
 
     @Override
     public void commence(HttpServletRequest request, HttpServletResponse response, AuthenticationException authException) throws IOException, ServletException {
@@ -26,7 +26,7 @@ public class AdminAuthenticationEntryPoint extends BasicAuthenticationEntryPoint
         if (authException instanceof BadCredentialsException) {
             apiResponse = ApiResponse.error(ApiStatus.SYSTEM_ERROR, "계정정보를 확인하세요");
         } else {
-            apiResponse = ApiResponse.redirect(ContextUtil.getPagePath(AXBootAdminSecurityConfig.LOGIN_PAGE));
+            apiResponse = ApiResponse.redirect(ContextUtil.getPagePath(AXBootSecurityConfig.LOGIN_PAGE));
         }
 
         if (requestUtils.isAjax()) {
@@ -34,7 +34,7 @@ public class AdminAuthenticationEntryPoint extends BasicAuthenticationEntryPoint
             response.getWriter().write(JsonUtils.toJson(apiResponse));
             response.getWriter().flush();
         } else {
-            response.sendRedirect(ContextUtil.getPagePath(AXBootAdminSecurityConfig.LOGIN_PAGE));
+            response.sendRedirect(ContextUtil.getPagePath(AXBootSecurityConfig.LOGIN_PAGE));
         }
     }
 }

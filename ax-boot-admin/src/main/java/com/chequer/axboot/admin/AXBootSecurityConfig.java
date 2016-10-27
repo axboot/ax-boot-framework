@@ -30,7 +30,7 @@ import java.io.IOException;
 
 @EnableWebSecurity
 @Configuration
-public class AXBootAdminSecurityConfig extends WebSecurityConfigurerAdapter {
+public class AXBootSecurityConfig extends WebSecurityConfigurerAdapter {
 
     public static final String LOGIN_API = "/api/login";
     public static final String LOGOUT_API = "/api/logout";
@@ -53,7 +53,7 @@ public class AXBootAdminSecurityConfig extends WebSecurityConfigurerAdapter {
     };
 
     @Inject
-    private AdminUserDetailsService userDetailsService;
+    private AXBootUserDetailsService userDetailsService;
 
     @Inject
     private UserService userService;
@@ -62,10 +62,10 @@ public class AXBootAdminSecurityConfig extends WebSecurityConfigurerAdapter {
     private BCryptPasswordEncoder bCryptPasswordEncoder;
 
     @Inject
-    private AdminTokenAuthenticationService tokenAuthenticationService;
+    private AXBootTokenAuthenticationService tokenAuthenticationService;
 
 
-    public AXBootAdminSecurityConfig() {
+    public AXBootSecurityConfig() {
         super(true);
     }
 
@@ -91,11 +91,11 @@ public class AXBootAdminSecurityConfig extends WebSecurityConfigurerAdapter {
                 .logout().logoutUrl(LOGOUT_API).deleteCookies(GlobalConstants.ADMIN_AUTH_TOKEN_KEY, GlobalConstants.LAST_NAVIGATED_PAGE).logoutSuccessHandler(new LogoutSuccessHandler(LOGIN_PAGE))
                 .and()
 
-                .exceptionHandling().authenticationEntryPoint(new AdminAuthenticationEntryPoint()).accessDeniedHandler(new AdminAccessDeniedHandler())
+                .exceptionHandling().authenticationEntryPoint(new AXBootAuthenticationEntryPoint()).accessDeniedHandler(new AdminAccessDeniedHandler())
                 .and()
 
-                .addFilterBefore(new AdminLoginFilter(LOGIN_API, tokenAuthenticationService, userService, authenticationManager(), new AdminAuthenticationEntryPoint()), UsernamePasswordAuthenticationFilter.class)
-                .addFilterBefore(new AdminAuthenticationFilter(tokenAuthenticationService), UsernamePasswordAuthenticationFilter.class)
+                .addFilterBefore(new AXBootLoginFilter(LOGIN_API, tokenAuthenticationService, userService, authenticationManager(), new AXBootAuthenticationEntryPoint()), UsernamePasswordAuthenticationFilter.class)
+                .addFilterBefore(new AXBootAuthenticationFilter(tokenAuthenticationService), UsernamePasswordAuthenticationFilter.class)
                 .addFilterAfter(new AXBootLogbackMdcFilter(), UsernamePasswordAuthenticationFilter.class);
 
     }
@@ -121,7 +121,7 @@ public class AXBootAdminSecurityConfig extends WebSecurityConfigurerAdapter {
     }
 
     @Override
-    protected AdminUserDetailsService userDetailsService() {
+    protected AXBootUserDetailsService userDetailsService() {
         return userDetailsService;
     }
 

@@ -1,12 +1,12 @@
-package com.chequer.axboot.admin.security;
+package ${basePackage}.security;
 
-import com.chequer.axboot.admin.code.GlobalConstants;
-import com.chequer.axboot.admin.domain.program.Program;
-import com.chequer.axboot.admin.domain.program.ProgramService;
-import com.chequer.axboot.admin.domain.program.menu.Menu;
-import com.chequer.axboot.admin.domain.program.menu.MenuService;
-import com.chequer.axboot.admin.domain.user.auth.menu.AuthGroupMenu;
-import com.chequer.axboot.admin.domain.user.auth.menu.AuthGroupMenuService;
+import ${basePackage}.code.GlobalConstants;
+import ${basePackage}.domain.program.Program;
+import ${basePackage}.domain.program.ProgramService;
+import ${basePackage}.domain.program.menu.Menu;
+import ${basePackage}.domain.program.menu.MenuService;
+import ${basePackage}.domain.user.auth.menu.AuthGroupMenu;
+import ${basePackage}.domain.user.auth.menu.AuthGroupMenuService;
 import com.chequer.axboot.core.code.AXBootTypes;
 import com.chequer.axboot.core.domain.user.SessionUser;
 import com.chequer.axboot.core.session.JWTSessionHandler;
@@ -26,7 +26,7 @@ import java.io.IOException;
 import java.util.List;
 
 @Service
-public class AdminTokenAuthenticationService {
+public class AXBootTokenAuthenticationService {
 
     private final JWTSessionHandler jwtSessionHandler;
 
@@ -39,7 +39,7 @@ public class AdminTokenAuthenticationService {
     @Inject
     private MenuService menuService;
 
-    public AdminTokenAuthenticationService() {
+    public AXBootTokenAuthenticationService() {
         jwtSessionHandler = new JWTSessionHandler(DatatypeConverter.parseBase64Binary("YXhib290"));
     }
 
@@ -53,7 +53,7 @@ public class AdminTokenAuthenticationService {
         }
     }
 
-    public void addAuthentication(HttpServletResponse response, AdminUserAuthentication authentication) throws IOException {
+    public void addAuthentication(HttpServletResponse response, AXBootUserAuthentication authentication) throws IOException {
         final SessionUser user = authentication.getDetails();
         setUserEnvironments(user, response);
         SecurityContextHolder.getContext().setAuthentication(authentication);
@@ -115,7 +115,7 @@ public class AdminTokenAuthenticationService {
 
         setUserEnvironments(user, response);
 
-        return new AdminUserAuthentication(user);
+        return new AXBootUserAuthentication(user);
     }
 
     private Authentication deleteCookieAndReturnNullAuthentication(HttpServletRequest request, HttpServletResponse response) {

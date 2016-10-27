@@ -18,11 +18,11 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
-public class AdminAuthenticationFilter extends GenericFilterBean {
+public class AXBootAuthenticationFilter extends GenericFilterBean {
 
-    private final AdminTokenAuthenticationService tokenAuthenticationService;
+    private final AXBootTokenAuthenticationService tokenAuthenticationService;
 
-    public AdminAuthenticationFilter(AdminTokenAuthenticationService adminTokenAuthenticationService) {
+    public AXBootAuthenticationFilter(AXBootTokenAuthenticationService adminTokenAuthenticationService) {
         this.tokenAuthenticationService = adminTokenAuthenticationService;
     }
 

@@ -9,7 +9,7 @@ import org.springframework.web.WebApplicationInitializer;
 @Configuration
 public class AXBootApplicationInitializer extends SpringBootServletInitializer implements WebApplicationInitializer {
 
-    public static final Object[] APPLICATION_SOURCES = new Object[]{AXBootAdminApplication.class, AXBootCoreConfiguration.class};
+    public static final Object[] APPLICATION_SOURCES = new Object[]{AXBootApplication.class, AXBootCoreConfiguration.class};
 
     @Override
     protected SpringApplicationBuilder configure(SpringApplicationBuilder application) {

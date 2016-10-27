@@ -1,6 +1,6 @@
 package com.chequer.axboot.admin.security;
 
-import com.chequer.axboot.admin.AXBootAdminSecurityConfig;
+import com.chequer.axboot.admin.AXBootSecurityConfig;
 import com.chequer.axboot.core.api.response.ApiResponse;
 import com.chequer.axboot.core.utils.ContextUtil;
 import com.chequer.axboot.core.utils.HttpUtils;
@@ -18,11 +18,11 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
-public class AdminAuthenticationFilter extends GenericFilterBean {
+public class AXBootAuthenticationFilter extends GenericFilterBean {
 
-    private final AdminTokenAuthenticationService tokenAuthenticationService;
+    private final AXBootTokenAuthenticationService tokenAuthenticationService;
 
-    public AdminAuthenticationFilter(AdminTokenAuthenticationService adminTokenAuthenticationService) {
+    public AXBootAuthenticationFilter(AXBootTokenAuthenticationService adminTokenAuthenticationService) {
         this.tokenAuthenticationService = adminTokenAuthenticationService;
     }
 
@@ -45,7 +45,7 @@ public class AdminAuthenticationFilter extends GenericFilterBean {
                 response.getWriter().write(JsonUtils.toJson(apiResponse));
                 response.getWriter().flush();
             } else {
-                response.sendRedirect(ContextUtil.getPagePath(AXBootAdminSecurityConfig.ACCESS_DENIED_PAGE));
+                response.sendRedirect(ContextUtil.getPagePath(AXBootSecurityConfig.ACCESS_DENIED_PAGE));
             }
         }
     }

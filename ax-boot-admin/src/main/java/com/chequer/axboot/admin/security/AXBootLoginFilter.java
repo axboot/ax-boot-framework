@@ -1,6 +1,6 @@
-package ${basePackage}.security;
+package com.chequer.axboot.admin.security;
 
-import ${basePackage}.domain.user.UserService;
+import com.chequer.axboot.admin.domain.user.UserService;
 import com.chequer.axboot.core.api.response.ApiResponse;
 import com.chequer.axboot.core.code.ApiStatus;
 import com.chequer.axboot.core.domain.user.SessionUser;
@@ -22,13 +22,13 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
-public class AdminLoginFilter extends AbstractAuthenticationProcessingFilter {
+public class AXBootLoginFilter extends AbstractAuthenticationProcessingFilter {
 
-    private final AdminTokenAuthenticationService adminTokenAuthenticationService;
-    private final AdminAuthenticationEntryPoint adminAuthenticationEntryPoint;
+    private final AXBootTokenAuthenticationService adminTokenAuthenticationService;
+    private final AXBootAuthenticationEntryPoint adminAuthenticationEntryPoint;
     private final UserService userService;
 
-    public AdminLoginFilter(String urlMapping, AdminTokenAuthenticationService adminTokenAuthenticationService, UserService userService, AuthenticationManager authenticationManager, AdminAuthenticationEntryPoint adminAuthenticationEntryPoint) {
+    public AXBootLoginFilter(String urlMapping, AXBootTokenAuthenticationService adminTokenAuthenticationService, UserService userService, AuthenticationManager authenticationManager, AXBootAuthenticationEntryPoint adminAuthenticationEntryPoint) {
         super(new AntPathRequestMatcher(urlMapping));
 
         this.adminTokenAuthenticationService = adminTokenAuthenticationService;
@@ -48,7 +48,7 @@ public class AdminLoginFilter extends AbstractAuthenticationProcessingFilter {
     @Override
     @Transactional
     protected void successfulAuthentication(HttpServletRequest request, HttpServletResponse response, FilterChain chain, Authentication authentication) throws IOException, ServletException {
-        final AdminUserAuthentication userAuthentication = new AdminUserAuthentication((SessionUser) authentication.getPrincipal());
+        final AXBootUserAuthentication userAuthentication = new AXBootUserAuthentication((SessionUser) authentication.getPrincipal());
         adminTokenAuthenticationService.addAuthentication(response, userAuthentication);
 
         response.setContentType(HttpUtils.getJsonContentType(request));

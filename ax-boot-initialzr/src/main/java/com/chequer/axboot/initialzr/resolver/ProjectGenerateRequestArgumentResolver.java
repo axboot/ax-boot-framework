@@ -18,10 +18,10 @@ public class ProjectGenerateRequestArgumentResolver implements HandlerMethodArgu
         ProjectGenerateRequest projectCreateRequest = new ProjectGenerateRequest();
 
         projectCreateRequest.setArtifact(webRequest.getParameter("artifactId"));
-        projectCreateRequest.setGroup(webRequest.getParameter("groupId"));
+        projectCreateRequest.setGroupId(webRequest.getParameter("groupId"));
         projectCreateRequest.setDescription(webRequest.getParameter("description"));
         projectCreateRequest.setPackageName(webRequest.getParameter("packageName"));
-        projectCreateRequest.setName(webRequest.getParameter("name"));
+        projectCreateRequest.setProjectName(webRequest.getParameter("projectName"));
 
         return projectCreateRequest;
     }

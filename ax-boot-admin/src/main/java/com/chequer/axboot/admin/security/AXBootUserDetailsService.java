@@ -1,11 +1,11 @@
-package ${basePackage}.security;
+package com.chequer.axboot.admin.security;
 
-import ${basePackage}.domain.user.User;
-import ${basePackage}.domain.user.UserService;
-import ${basePackage}.domain.user.auth.UserAuth;
-import ${basePackage}.domain.user.auth.UserAuthService;
-import ${basePackage}.domain.user.role.UserRole;
-import ${basePackage}.domain.user.role.UserRoleService;
+import com.chequer.axboot.admin.domain.user.User;
+import com.chequer.axboot.admin.domain.user.UserService;
+import com.chequer.axboot.admin.domain.user.auth.UserAuth;
+import com.chequer.axboot.admin.domain.user.auth.UserAuthService;
+import com.chequer.axboot.admin.domain.user.role.UserRole;
+import com.chequer.axboot.admin.domain.user.role.UserRoleService;
 import com.chequer.axboot.core.code.AXBootTypes;
 import com.chequer.axboot.core.domain.user.SessionUser;
 import com.chequer.axboot.core.utils.DateTimeUtils;
@@ -20,7 +20,7 @@ import java.util.Locale;
 import java.util.TimeZone;
 
 @Service
-public class AdminUserDetailsService implements UserDetailsService {
+public class AXBootUserDetailsService implements UserDetailsService {
 
     @Inject
     private UserService userService;

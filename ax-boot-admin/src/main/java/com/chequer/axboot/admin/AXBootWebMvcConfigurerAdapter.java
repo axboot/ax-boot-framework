@@ -44,7 +44,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Configuration
-public class AXBootAdminWebMvcConfigurerAdapter extends WebMvcConfigurerAdapter {
+public class AXBootWebMvcConfigurerAdapter extends WebMvcConfigurerAdapter {
     @Override
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
         registry.addResourceHandler("/assets/**").addResourceLocations("/assets/");

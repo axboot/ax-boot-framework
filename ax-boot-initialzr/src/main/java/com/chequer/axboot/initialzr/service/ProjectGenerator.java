@@ -35,12 +35,12 @@ public class ProjectGenerator {
 
     public void generate(ProjectGenerateRequest projectGenerateRequest, HttpServletRequest request, HttpServletResponse response) throws IOException {
         String packageName = projectGenerateRequest.getPackageName();
-        String name = projectGenerateRequest.getName();
+        String projectName = projectGenerateRequest.getProjectName();
         String artifactId = projectGenerateRequest.getArtifact();
         String description = projectGenerateRequest.getDescription();
-        String groupId = projectGenerateRequest.getGroup();
+        String groupId = projectGenerateRequest.getGroupId();
 
-        String encodedFileName = EncodeUtils.encodeDownloadFileName(name + "_" + DateUtils.getDateYyyyMmddWithoutDash() + ".zip");
+        String encodedFileName = EncodeUtils.encodeDownloadFileName(projectName + "_" + DateUtils.getDateYyyyMmddWithoutDash() + ".zip");
         response.setHeader("Content-Disposition", "attachment; filename=" + encodedFileName);
         response.setContentType("application/zip");
 
@@ -54,7 +54,7 @@ public class ProjectGenerator {
         values.put("package", packageName);
         values.put("basePackage", packageName);
         values.put("domainPackage", packageName + ".domain");
-        values.put("name", name);
+        values.put("name", projectName);
         values.put("artifactId", artifactId);
         values.put("description", description);
         values.put("groupId", groupId);
@@ -70,7 +70,7 @@ public class ProjectGenerator {
 
             if (file.isFile()) {
                 byte[] bytes = getBytes(file, values);
-                String path = getPath(name, packageName, file);
+                String path = getPath(projectName, packageName, file);
 
                 ZipEntry entry = new ZipEntry(path);
                 entry.setSize(bytes.length);

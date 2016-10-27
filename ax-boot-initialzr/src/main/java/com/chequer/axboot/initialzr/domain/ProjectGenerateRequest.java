@@ -5,11 +5,11 @@ import lombok.Data;
 @Data
 public class ProjectGenerateRequest {
 
-    private String group;
+    private String groupId;
 
     private String artifact;
 
-    private String name;
+    private String projectName;
 
     private String description;
 

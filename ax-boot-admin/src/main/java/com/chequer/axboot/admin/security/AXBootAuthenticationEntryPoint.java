@@ -1,7 +1,7 @@
-package ${basePackage}.security;
+package com.chequer.axboot.admin.security;
 
-import ${basePackage}.AXBootSecurityConfig;
-import ${basePackage}.code.GlobalConstants;
+import com.chequer.axboot.admin.AXBootSecurityConfig;
+import com.chequer.axboot.admin.code.GlobalConstants;
 import com.chequer.axboot.core.api.response.ApiResponse;
 import com.chequer.axboot.core.code.ApiStatus;
 import com.chequer.axboot.core.utils.*;
@@ -14,7 +14,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
-public class AdminAuthenticationEntryPoint extends BasicAuthenticationEntryPoint {
+public class AXBootAuthenticationEntryPoint extends BasicAuthenticationEntryPoint {
 
     @Override
     public void commence(HttpServletRequest request, HttpServletResponse response, AuthenticationException authException) throws IOException, ServletException {

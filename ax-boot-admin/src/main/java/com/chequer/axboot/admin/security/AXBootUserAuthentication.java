@@ -1,4 +1,4 @@
-package ${basePackage}.security;
+package com.chequer.axboot.admin.security;
 
 import com.chequer.axboot.core.domain.user.SessionUser;
 import org.springframework.security.core.Authentication;
@@ -6,13 +6,13 @@ import org.springframework.security.core.GrantedAuthority;
 
 import java.util.Collection;
 
-public class AdminUserAuthentication implements Authentication {
+public class AXBootUserAuthentication implements Authentication {
 
     private final SessionUser user;
 
     private boolean authenticated = true;
 
-    public AdminUserAuthentication(SessionUser user) {
+    public AXBootUserAuthentication(SessionUser user) {
         this.user = user;
     }
 

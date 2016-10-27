@@ -2,6 +2,7 @@ package ${basePackage};
 
 import ${basePackage}.code.GlobalConstants;
 import ${basePackage}.domain.user.UserService;
+import ${basePackage}.security.*;
 import com.chequer.axboot.core.filters.AXBootLogbackMdcFilter;
 import com.chequer.axboot.core.utils.CookieUtils;
 import org.springframework.context.annotation.Bean;
@@ -52,7 +53,7 @@ public class AXBootSecurityConfig extends WebSecurityConfigurerAdapter {
     };
 
     @Inject
-    private AdminUserDetailsService userDetailsService;
+    private AXBootUserDetailsService userDetailsService;
 
     @Inject
     private UserService userService;
@@ -61,7 +62,7 @@ public class AXBootSecurityConfig extends WebSecurityConfigurerAdapter {
     private BCryptPasswordEncoder bCryptPasswordEncoder;
 
     @Inject
-    private AdminTokenAuthenticationService tokenAuthenticationService;
+    private AXBootTokenAuthenticationService tokenAuthenticationService;
 
 
     public AXBootSecurityConfig() {
@@ -90,11 +91,11 @@ public class AXBootSecurityConfig extends WebSecurityConfigurerAdapter {
                 .logout().logoutUrl(LOGOUT_API).deleteCookies(GlobalConstants.ADMIN_AUTH_TOKEN_KEY, GlobalConstants.LAST_NAVIGATED_PAGE).logoutSuccessHandler(new LogoutSuccessHandler(LOGIN_PAGE))
                 .and()
 
-                .exceptionHandling().authenticationEntryPoint(new AdminAuthenticationEntryPoint()).accessDeniedHandler(new AdminAccessDeniedHandler())
+                .exceptionHandling().authenticationEntryPoint(new AXBootAuthenticationEntryPoint()).accessDeniedHandler(new AdminAccessDeniedHandler())
                 .and()
 
-                .addFilterBefore(new AdminLoginFilter(LOGIN_API, tokenAuthenticationService, userService, authenticationManager(), new AdminAuthenticationEntryPoint()), UsernamePasswordAuthenticationFilter.class)
-                .addFilterBefore(new AdminAuthenticationFilter(tokenAuthenticationService), UsernamePasswordAuthenticationFilter.class)
+                .addFilterBefore(new AXBootLoginFilter(LOGIN_API, tokenAuthenticationService, userService, authenticationManager(), new AXBootAuthenticationEntryPoint()), UsernamePasswordAuthenticationFilter.class)
+                .addFilterBefore(new AXBootAuthenticationFilter(tokenAuthenticationService), UsernamePasswordAuthenticationFilter.class)
                 .addFilterAfter(new AXBootLogbackMdcFilter(), UsernamePasswordAuthenticationFilter.class);
 
     }
@@ -120,7 +121,7 @@ public class AXBootSecurityConfig extends WebSecurityConfigurerAdapter {
     }
 
     @Override
-    protected AdminUserDetailsService userDetailsService() {
+    protected AXBootUserDetailsService userDetailsService() {
         return userDetailsService;
     }
 
