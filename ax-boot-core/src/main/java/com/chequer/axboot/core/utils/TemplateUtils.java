@@ -20,7 +20,11 @@ public class TemplateUtils {
                 servletBasePath = servletBasePath.substring(0, servletBasePath.indexOf("/target"));
             }
 
-            String fileBasePath = servletBasePath + "/src/main/webapp/";
+            String fileBasePath = servletBasePath;
+
+            if(!fileBasePath.contains("webapp")) {
+                fileBasePath = servletBasePath + "/src/main/webapp/";
+            }
 
             String jsPath = getJsPath(jspPath);
             String defaultJsPath = getDefaultJsPath(jspPath);
