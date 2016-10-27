@@ -19611,7 +19611,7 @@ ax5.ui = function () {
 
     UI.addClass({
         className: "calendar",
-        version: "1.3.4"
+        version: "${VERSION}"
     }, function () {
 
         /**
@@ -19686,6 +19686,7 @@ ax5.ui = function () {
             this.config = {
                 clickEventName: "click",
                 theme: 'default',
+                startOfWeek: 0,
                 mode: 'day', // day|month|year,
                 dateFormat: 'yyyy-MM-dd',
                 displayDate: new Date(),
@@ -19797,6 +19798,8 @@ ax5.ui = function () {
                     tableStartDate = function () {
                     var day = monthStratDate.getDay();
                     if (day == 0) day = 7;
+                    day -= cfg.startOfWeek;
+
                     try {
                         return U.date(monthStratDate, { add: { d: -day } });
                     } finally {
@@ -19808,6 +19811,7 @@ ax5.ui = function () {
                     itemStyles = {},
                     i,
                     k,
+                    _k,
                     frameWidth = this.$["body"].width(),
                     frameHeight = Math.floor(frameWidth * (6 / 7)),
                     // 1week = 7days, 1month = 6weeks
@@ -19827,6 +19831,10 @@ ax5.ui = function () {
                     list: []
                 };
 
+                if (cfg.startOfWeek) {
+                    data.weekNames = data.weekNames.concat(data.weekNames.slice(0, cfg.startOfWeek)).splice(cfg.startOfWeek);
+                }
+
                 data.weekNames.forEach(function (n) {
                     n.colHeadHeight = U.cssNumber(cfg.dimensions.colHeadHeight);
                 });
@@ -19836,6 +19844,7 @@ ax5.ui = function () {
                 while (i < 6) {
                     k = 0;
                     while (k < 7) {
+                        _k = (7 + (k - cfg.startOfWeek)) % 7;
                         var thisDate = '' + U.date(loopDate, { "return": cfg.dateFormat }),
                             _date = {
                             'row': i,
@@ -19845,15 +19854,33 @@ ax5.ui = function () {
                             thisDataLabel: cfg.lang.dayTmpl.replace('%s', loopDate.getDate()),
                             itemStyles: U.css(itemStyles),
                             addClass: function () {
+
+                                var classNames = "";
+
                                 if (cfg.selectable) {
                                     if (self.selectableMap[thisDate]) {
-                                        return loopDate.getMonth() == thisMonth ? "live" : "";
+                                        classNames += loopDate.getMonth() == thisMonth ? " live" : "";
                                     } else {
-                                        return "disable";
+                                        classNames += " disable";
                                     }
                                 } else {
-                                    return loopDate.getMonth() == thisMonth ? thisDate == U.date(_today, { "return": "yyyyMMdd" }) ? "focus" : "live" : "";
+                                    if (loopDate.getMonth() == thisMonth) {
+                                        if (thisDate == U.date(_today, { "return": "yyyyMMdd" })) {
+                                            classNames += " focus";
+                                        } else {
+                                            classNames += " live";
+                                        }
+
+                                        if (loopDate.getDay() == 0) {
+                                            classNames += " sunday";
+                                        }
+                                        if (loopDate.getDay() == 6) {
+                                            classNames += " saturday";
+                                        }
+                                    }
                                 }
+
+                                return classNames;
                             }() + ' ' + function () {
                                 return self.markerMap[thisDate] ? self.markerMap[thisDate].theme || cfg.defaultMarkerTheme : '';
                             }() + ' ' + function () {
@@ -24181,7 +24208,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
 
     UI.addClass({
         className: "grid",
-        version: "${VERSION}"
+        version: "1.3.4"
     }, function () {
         /**
          * @class ax5grid
@@ -29337,7 +29364,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
 
     UI.addClass({
         className: "combobox",
-        version: "1.3.4"
+        version: "${VERSION}"
     }, function () {
         /**
          * @class ax5combobox
@@ -29598,7 +29625,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
 
                 try {
                     //return ax5.mustache.render(COMBOBOX.tmpl["label"].call(this, item.columnKeys), data) + "&nbsp;";
-                    return COMBOBOX.tmpl.get.call(this, "label", data, item.columnKeys);
+                    return COMBOBOX.tmpl.get.call(this, "label", data, item.columnKeys) + "&nbsp;";
                 } finally {
                     data = null;
                 }
@@ -30873,7 +30900,7 @@ jQuery.fn.ax5combobox = function () {
     };
 
     var label = function label(columnKeys) {
-        return "\n            {{#selected}}<div tabindex=\"-1\" data-ax5combobox-selected-label=\"{{@i}}\" data-ax5combobox-selected-text=\"{{text}}\">\n                <div data-ax5combobox-remove=\"true\" data-ax5combobox-remove-index=\"{{@i}}\">{{{removeIcon}}}</div>\n                <span>{{text}}</span>\n                </div>\n            {{/selected}}\n        ";
+        return "{{#selected}}<div tabindex=\"-1\" data-ax5combobox-selected-label=\"{{@i}}\" data-ax5combobox-selected-text=\"{{text}}\"><div data-ax5combobox-remove=\"true\" data-ax5combobox-remove-index=\"{{@i}}\">{{{removeIcon}}}</div><span>{{text}}</span></div>{{/selected}}";
     };
 
     COMBOBOX.tmpl = {
@@ -30989,7 +31016,7 @@ jQuery.fn.ax5combobox = function () {
 
     UI.addClass({
         className: "layout",
-        version: "${VERSION}"
+        version: "1.3.4"
     }, function () {
         /**
          * @class ax5layout

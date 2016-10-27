@@ -280,7 +280,7 @@
                         
                     try {
                         //return ax5.mustache.render(COMBOBOX.tmpl["label"].call(this, item.columnKeys), data) + "&nbsp;";
-                        return COMBOBOX.tmpl.get.call(this, "label", data, item.columnKeys);
+                        return COMBOBOX.tmpl.get.call(this, "label", data, item.columnKeys) + "&nbsp;";
                     }
                     finally {
                         data = null;

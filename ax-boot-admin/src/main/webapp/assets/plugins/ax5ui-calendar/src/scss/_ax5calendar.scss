@@ -162,6 +162,12 @@
                             span.addon {
                                 color: #A1A1A1;
                             }
+                            &.sunday {
+                                color: $ax5calendar-sun-text-color;
+                            }
+                            &.saturday {
+                                color: $ax5calendar-sat-text-color;
+                            }
                         }
                         &.focus {
                             @include ax-background($ax5calendar-focus-bg);
@@ -279,6 +285,7 @@
                         @include extend-item-theme();
                     }
 
+                    /*
                     &.calendar-col-0 {
                         .calendar-item-day.live {
                             color: $ax5calendar-sun-text-color;
@@ -291,6 +298,7 @@
                             @include extend-item-theme();
                         }
                     }
+                    */
 
                 }
             }

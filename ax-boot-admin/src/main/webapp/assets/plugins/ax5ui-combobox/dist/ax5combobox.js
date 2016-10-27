@@ -9,7 +9,7 @@
 
     UI.addClass({
         className: "combobox",
-        version: "1.3.4"
+        version: "${VERSION}"
     }, function () {
         /**
          * @class ax5combobox
@@ -270,7 +270,7 @@
 
                 try {
                     //return ax5.mustache.render(COMBOBOX.tmpl["label"].call(this, item.columnKeys), data) + "&nbsp;";
-                    return COMBOBOX.tmpl.get.call(this, "label", data, item.columnKeys);
+                    return COMBOBOX.tmpl.get.call(this, "label", data, item.columnKeys) + "&nbsp;";
                 } finally {
                     data = null;
                 }
@@ -1545,7 +1545,7 @@ jQuery.fn.ax5combobox = function () {
     };
 
     var label = function label(columnKeys) {
-        return "\n            {{#selected}}<div tabindex=\"-1\" data-ax5combobox-selected-label=\"{{@i}}\" data-ax5combobox-selected-text=\"{{text}}\">\n                <div data-ax5combobox-remove=\"true\" data-ax5combobox-remove-index=\"{{@i}}\">{{{removeIcon}}}</div>\n                <span>{{text}}</span>\n                </div>\n            {{/selected}}\n        ";
+        return "{{#selected}}<div tabindex=\"-1\" data-ax5combobox-selected-label=\"{{@i}}\" data-ax5combobox-selected-text=\"{{text}}\"><div data-ax5combobox-remove=\"true\" data-ax5combobox-remove-index=\"{{@i}}\">{{{removeIcon}}}</div><span>{{text}}</span></div>{{/selected}}";
     };
 
     COMBOBOX.tmpl = {
