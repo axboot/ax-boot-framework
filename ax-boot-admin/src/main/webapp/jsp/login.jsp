@@ -90,7 +90,7 @@
             </div>
 
             <div class="panel">
-                <div class="panel-heading">아이디와 패스워드를 입력해주세요.</div>
+                <div class="panel-heading">ID와 Password를 입력해주세요.</div>
                 <div class="panel-body">
                     <form name="login-form" class="" method="post" action="/api/login" onsubmit="return fnObj.login();" autocomplete="off">
 

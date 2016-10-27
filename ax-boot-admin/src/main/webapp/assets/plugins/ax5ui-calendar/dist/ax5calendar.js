@@ -9,7 +9,7 @@
 
     UI.addClass({
         className: "calendar",
-        version: "1.3.4"
+        version: "${VERSION}"
     }, function () {
 
         /**
@@ -84,6 +84,7 @@
             this.config = {
                 clickEventName: "click",
                 theme: 'default',
+                startOfWeek: 0,
                 mode: 'day', // day|month|year,
                 dateFormat: 'yyyy-MM-dd',
                 displayDate: new Date(),
@@ -195,6 +196,8 @@
                     tableStartDate = function () {
                     var day = monthStratDate.getDay();
                     if (day == 0) day = 7;
+                    day -= cfg.startOfWeek;
+
                     try {
                         return U.date(monthStratDate, { add: { d: -day } });
                     } finally {
@@ -206,6 +209,7 @@
                     itemStyles = {},
                     i,
                     k,
+                    _k,
                     frameWidth = this.$["body"].width(),
                     frameHeight = Math.floor(frameWidth * (6 / 7)),
                     // 1week = 7days, 1month = 6weeks
@@ -225,6 +229,10 @@
                     list: []
                 };
 
+                if (cfg.startOfWeek) {
+                    data.weekNames = data.weekNames.concat(data.weekNames.slice(0, cfg.startOfWeek)).splice(cfg.startOfWeek);
+                }
+
                 data.weekNames.forEach(function (n) {
                     n.colHeadHeight = U.cssNumber(cfg.dimensions.colHeadHeight);
                 });
@@ -234,6 +242,7 @@
                 while (i < 6) {
                     k = 0;
                     while (k < 7) {
+                        _k = (7 + (k - cfg.startOfWeek)) % 7;
                         var thisDate = '' + U.date(loopDate, { "return": cfg.dateFormat }),
                             _date = {
                             'row': i,
@@ -243,15 +252,33 @@
                             thisDataLabel: cfg.lang.dayTmpl.replace('%s', loopDate.getDate()),
                             itemStyles: U.css(itemStyles),
                             addClass: function () {
+
+                                var classNames = "";
+
                                 if (cfg.selectable) {
                                     if (self.selectableMap[thisDate]) {
-                                        return loopDate.getMonth() == thisMonth ? "live" : "";
+                                        classNames += loopDate.getMonth() == thisMonth ? " live" : "";
                                     } else {
-                                        return "disable";
+                                        classNames += " disable";
                                     }
                                 } else {
-                                    return loopDate.getMonth() == thisMonth ? thisDate == U.date(_today, { "return": "yyyyMMdd" }) ? "focus" : "live" : "";
+                                    if (loopDate.getMonth() == thisMonth) {
+                                        if (thisDate == U.date(_today, { "return": "yyyyMMdd" })) {
+                                            classNames += " focus";
+                                        } else {
+                                            classNames += " live";
+                                        }
+
+                                        if (loopDate.getDay() == 0) {
+                                            classNames += " sunday";
+                                        }
+                                        if (loopDate.getDay() == 6) {
+                                            classNames += " saturday";
+                                        }
+                                    }
                                 }
+
+                                return classNames;
                             }() + ' ' + function () {
                                 return self.markerMap[thisDate] ? self.markerMap[thisDate].theme || cfg.defaultMarkerTheme : '';
                             }() + ' ' + function () {

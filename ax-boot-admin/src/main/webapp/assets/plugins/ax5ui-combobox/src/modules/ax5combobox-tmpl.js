@@ -117,13 +117,7 @@
     };
 
     var label = function (columnKeys) {
-        return `
-            {{#selected}}<div tabindex="-1" data-ax5combobox-selected-label="{{@i}}" data-ax5combobox-selected-text="{{text}}">
-                <div data-ax5combobox-remove="true" data-ax5combobox-remove-index="{{@i}}">{{{removeIcon}}}</div>
-                <span>{{text}}</span>
-                </div>
-            {{/selected}}
-        `;
+        return `{{#selected}}<div tabindex="-1" data-ax5combobox-selected-label="{{@i}}" data-ax5combobox-selected-text="{{text}}"><div data-ax5combobox-remove="true" data-ax5combobox-remove-index="{{@i}}">{{{removeIcon}}}</div><span>{{text}}</span></div>{{/selected}}`;
     };
 
     COMBOBOX.tmpl = {
