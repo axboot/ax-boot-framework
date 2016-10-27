@@ -1,7 +1,7 @@
 {
   "name": "AXBOOT2",
   "dependencies": {
-    "jquery": "^3.1.0",
+    "jquery": "^1.12.4",
     "jquery.easy-pie-chart": "",
     "ax5core": "",
     "ax5ui-dialog": "",
@@ -20,6 +20,8 @@
     "ax5ui-binder": "",
     "bootstrap-sass": "^3.3.7",
     "bourbon": "^4.2.7",
-    "ztree_v3": "^3.5.24"
+    "ztree_v3": "^3.5.24",
+    "NotoSansKR-Hestia": "*",
+    "cheqcon": "^1.4.0"
   }
 }
