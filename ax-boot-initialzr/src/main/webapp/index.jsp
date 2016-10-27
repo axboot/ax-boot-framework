@@ -111,7 +111,7 @@
                                 <input type="text" name="packageName" placeholder="Package of Source Code (example : com.chequer.axboot.admin)" class="form-control" id="form-05"/>
                             </div>
 
-                            <button type="submit" class="btn">Generate!</button>
+                            <button type="submit" class="btn">Generate Project</button>
                         </form>
                     </div>
                 </div>
