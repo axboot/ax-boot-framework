@@ -116,7 +116,7 @@
                                 <p style="padding: 5px;" class="text-primary">ex) com.axisj.axboot</p>
                             </div>
 
-                            <button type="submit" class="btn">Generate!</button>
+                            <button type="submit" class="btn">Generate Project</button>
                         </form>
                     </div>
                 </div>
