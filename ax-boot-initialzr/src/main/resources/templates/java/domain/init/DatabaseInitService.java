@@ -198,7 +198,6 @@ public class DatabaseInitService {
         userAuthService.save(userAuth);
 
         programService.save(Program.of("api", "API", "/swagger/", "_self", "N", "Y", "Y", "N", "N", "N", "N", "N", "N", "N"));
-        programService.save(Program.of("axboot-js", "[API]axboot.js", "/jsp/_apis/axboot-js.jsp", "_self", "N", "N", "N", "N", "N", "N", "N", "N", "N", "N"));
         programService.save(Program.of("basic", "[샘플]기본템플릿", "/jsp/_samples/basic.jsp", "_self", "Y", "Y", "Y", "N", "N", "N", "N", "N", "N", "N"));
         programService.save(Program.of("grid-form", "[샘플]그리드&폼 템플릿", "/jsp/_samples/grid-form.jsp", "_self", "Y", "Y", "Y", "N", "N", "N", "N", "N", "N", "N"));
         programService.save(Program.of("grid-modal", "[샘플]모달 템플릿", "/jsp/_samples/grid-modal.jsp", "_self", "Y", "Y", "Y", "N", "N", "N", "N", "N", "N", "N"));
@@ -233,10 +232,6 @@ public class DatabaseInitService {
         menuService.save(Menu.of(15L, "SYSTEM_MANAGER", "그리드&탭폼 템플릿", 8L, 1, 6, "grid-tabform"));
         menuService.save(Menu.of(16L, "SYSTEM_MANAGER", "그리드&모달 템플릿", 8L, 1, 7, "grid-modal"));
         menuService.save(Menu.of(17L, "SYSTEM_MANAGER", "탭레이아웃", 8L, 1, 3, "tab-layout"));
-        menuService.save(Menu.of(18L, "SYSTEM_MANAGER", "AXBOOT.js", 9L, 1, 0, "axboot-js"));
-        menuService.save(Menu.of(19L, "SYSTEM_MANAGER", "AXBOOT.css", 9L, 1, 1, null));
-        menuService.save(Menu.of(20L, "SYSTEM_MANAGER", "AXBOOT.jsp", 9L, 1, 2, null));
-
 
         commonCodeService.save(CommonCode.of("USER_STATUS", "계정상태", "ACCOUNT_LOCK", "잠김", 2));
         commonCodeService.save(CommonCode.of("USER_ROLE", "사용자 롤", "API", "API 접근 롤", 6));
@@ -273,7 +268,6 @@ public class DatabaseInitService {
         authGroupMenuService.save(AuthGroupMenu.of("S0001", 15L, "Y", "Y", "N", "N", "N", "N", "N", "N", "N"));
         authGroupMenuService.save(AuthGroupMenu.of("S0001", 16L, "Y", "Y", "N", "N", "N", "N", "N", "N", "N"));
         authGroupMenuService.save(AuthGroupMenu.of("S0001", 17L, "N", "N", "N", "N", "N", "N", "N", "N", "N"));
-        authGroupMenuService.save(AuthGroupMenu.of("S0001", 18L, "N", "N", "N", "N", "N", "N", "N", "N", "N"));
 
 
     }
