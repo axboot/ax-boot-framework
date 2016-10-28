@@ -33,7 +33,7 @@ $ax-search-tbl-label-color: #363636;
             table-layout: fixed;
             width: 300px;
             vertical-align: top;
-
+            min-height: 40px;
             [data-ax-td-label] {
                 display: table-cell;
                 width: 100px;
@@ -55,13 +55,28 @@ $ax-search-tbl-label-color: #363636;
                 a {
                     color: $ax-tbl-color;
                 }
+                line-height: 1em;
+
+                &:after {
+                    content: ' ';
+                }
             }
 
             .form-control, .btn {
                 vertical-align: middle;
             }
-            .form-group{
+            .form-group {
                 margin-bottom: 0;
+                label {
+                    font-weight: normal;
+                    line-height: 1em;
+                    vertical-align: middle;
+                    margin: 7px;
+                }
+            }
+            .navbar-form {
+                margin: 0;
+                padding: 0;
             }
         }
     }
@@ -74,11 +89,11 @@ $ax-search-tbl-label-color: #363636;
         font-size: 1em;
         @include W();
     }
-    .checkbox-inline{
+    .checkbox-inline {
         line-height: 26px;
         padding: 0;
         display: inline-block;
-        input[type="checkbox"]{
+        input[type="checkbox"] {
             display: inline-block;
             position: static;
             margin: 0 3px;
@@ -112,7 +127,7 @@ $ax-search-tbl-label-color: #363636;
             }
         }
     }
-    &.ax-search-box{
+    &.ax-search-box {
         @include ax-background(top, $ax-search-tbl-label-bg-colors);
         border: $ax-search-tbl-border;
         padding: 5px;

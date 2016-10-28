@@ -18,7 +18,7 @@
             <ax:form name="searchView0">
                 <ax:tbl clazz="ax-search-tbl" minWidth="500px">
                     <ax:tr>
-                        <ax:td label='조회일자' width="400px">
+                        <ax:td label='기간선택' width="400px">
 
                             <div class="input-group" data-ax5picker="search-saleDt">
                                 <input type="text" class="form-control" placeholder="yyyy/mm/dd">
@@ -28,32 +28,27 @@
                             </div>
 
                         </ax:td>
-                        <ax:td label='업체/매장 선택' width="350px">
+                        <ax:td label='모달선택' width="450px">
 
-                            <div class="input-group">
-                                <input type="text" id="compStorLabel" class="form-control" value="" readonly="readonly"/>
-                                <span class="input-group-btn">
+                            <div class="form-inline">
+                                <div class="form-group">
+                                    <input type="text" class="form-control W60" value="" readonly="readonly"/>
+                                    <input type="text" id="compStorLabel" class="form-control W100" value=""/>
                                     <button type="button" class="btn btn-primary" id="find_stor_modal" disabled="disabled">
                                         <i class="cqc-magnifier"></i>
                                         찾기
                                     </button>
-                                </span>
+                                </div>
                             </div>
 
                         </ax:td>
                     </ax:tr>
                     <ax:tr>
-                        <ax:td label='구분' width="400px">
+                        <ax:td label='날자' width="400px">
 
-                            <div class="form-inline">
-                                <div class="form-group">
-                                    <label>판매</label>
-                                    <ax:common-code groupCd="SALE_FLAG" id="saleFlag" emptyText="" emptyValue=""/>
-                                </div>
-                                <div class="form-group">
-                                    <label>전송</label>
-                                    <ax:common-code groupCd="SEND_FLAG" id="sendFlag" emptyText="" emptyValue=""/>
-                                </div>
+                            <div class="input-group" data-ax5picker="search-saleDt">
+                                <input type="text" class="form-control" placeholder="yyyy/mm/dd">
+                                <span class="input-group-addon"><i class="cqc-calendar"></i></span>
                             </div>
 
                         </ax:td>
