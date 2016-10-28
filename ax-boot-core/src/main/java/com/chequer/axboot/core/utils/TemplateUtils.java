@@ -1,6 +1,7 @@
 package com.chequer.axboot.core.utils;
 
 import org.apache.commons.io.FileUtils;
+import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.io.IOUtils;
 import org.springframework.core.io.ClassPathResource;
 
@@ -22,7 +23,7 @@ public class TemplateUtils {
 
             String fileBasePath = servletBasePath;
 
-            if(!fileBasePath.contains("webapp")) {
+            if (!fileBasePath.contains("webapp")) {
                 fileBasePath = servletBasePath + "/src/main/webapp/";
             }
 
@@ -56,12 +57,12 @@ public class TemplateUtils {
     }
 
     public static String getJsPath(String programPath) {
-        int end = programPath.indexOf(".jsp");
-        return "/assets/js/view/" + programPath.substring(5, end) + ".js";
+        String fileName = FilenameUtils.getBaseName(programPath.substring(5)) + ".js";
+        return "/assets/js/view/" + fileName;
     }
 
     public static String getDefaultJsPath(String programPath) {
-        int end = programPath.indexOf(".jsp");
-        return "/assets/js/axboot/" + programPath.substring(5, end) + ".js";
+        String fileName = FilenameUtils.getBaseName(programPath.substring(5)) + ".js";
+        return "/assets/js/axboot/" + fileName;
     }
 }
