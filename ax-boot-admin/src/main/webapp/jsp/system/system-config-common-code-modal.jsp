@@ -34,7 +34,7 @@
             <button type="button" class="btn btn-fn1" data-page-btn="save">완료</button>
         </ax:page-buttons>
 
-        <ax:split-layout name="ax1" oriental="vertical">
+        <ax:split-layout name="ax1" orientation="vertical">
             <ax:split-panel width="*" style="">
 
                 <div data-ax5grid="grid-view-01" data-fit-height-content="grid-view-01" style="height: 300px;"></div>

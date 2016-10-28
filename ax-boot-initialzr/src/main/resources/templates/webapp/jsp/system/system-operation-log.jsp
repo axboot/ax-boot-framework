@@ -22,7 +22,7 @@
 
         <ax:page-buttons></ax:page-buttons>
 
-        <ax:split-layout name="ax1" oriental="horizontal">
+        <ax:split-layout name="ax1" orientation="horizontal">
             <ax:split-panel height="*" style="padding-bottom: 5px;">
                 <div class="ax-button-group" data-fit-height-aside="grid-view-01">
 

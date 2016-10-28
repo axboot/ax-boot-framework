@@ -8,8 +8,8 @@
 <%@ attribute name="scroll" %>
 <%
     TagUtils tagUtils = new TagUtils(getParent());
-    String _oriental = tagUtils.getParentAttribute("oriental");
-    if (_oriental.equals("vertical")) {
+    String _orientation = tagUtils.getParentAttribute("orientation");
+    if (_orientation.equals("vertical")) {
 %>
 <div data-split-panel='{width: "${width}"}' id="${id}">
     <div style="${style}" class="${clazz}" data-split-panel-wrap="${scroll}">

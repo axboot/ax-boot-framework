@@ -143,7 +143,7 @@
 
 
         <pre>
-&lt;ax:split-layout name="ax1" oriental="vertical">
+&lt;ax:split-layout name="ax1" orientation="vertical">
     &lt;ax:split-panel width="300" style="padding-right: 10px;">
         너비가 300인 왼쪽 패널
     &lt;/ax:split-panel>
@@ -156,7 +156,7 @@
 </pre>
 
         <pre>
-&lt;ax:split-layout name="ax1" oriental="horizontal">
+&lt;ax:split-layout name="ax1" orientation="horizontal">
     &lt;ax:split-panel height="300" style="padding-bottom: 10px;">
         높이가 300인 상단 패널
     &lt;/ax:split-panel>

@@ -52,7 +52,7 @@
         </div>
 
 
-        <ax:split-layout name="ax1" oriental="vertical">
+        <ax:split-layout name="ax1" orientation="vertical">
             <ax:split-panel width="350" style="padding-right: 10px;">
 
                 <div class="ax-button-group" data-fit-height-aside="tree-view-01">

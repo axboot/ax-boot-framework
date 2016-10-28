@@ -41,7 +41,7 @@
             <div class="H10"></div>
         </div>
 
-        <ax:split-layout name="ax1" oriental="horizontal">
+        <ax:split-layout name="ax1" orientation="horizontal">
             <ax:split-panel height="250" style="padding-bottom: 10px;">
 
                 <div class="ax-button-group" data-fit-height-aside="left-view-01">

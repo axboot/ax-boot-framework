@@ -38,7 +38,7 @@
             <div class="H10"></div>
         </div>
 
-        <ax:split-layout name="ax1" oriental="vertical">
+        <ax:split-layout name="ax1" orientation="vertical">
             <ax:split-panel width="*" style="padding-right: 0px;">
 
                 <div class="ax-button-group" data-fit-height-aside="grid-view-01">
