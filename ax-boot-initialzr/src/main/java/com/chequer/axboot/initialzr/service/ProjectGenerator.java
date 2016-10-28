@@ -63,7 +63,7 @@ public class ProjectGenerator {
 
             if (file.isFile()) {
                 byte[] bytes = getBytes(file, values);
-                String path = getPath(projectName, packageName, file);
+                String path = getPath(artifactId, packageName, file);
 
                 ZipEntry entry = new ZipEntry(path);
                 entry.setSize(bytes.length);
