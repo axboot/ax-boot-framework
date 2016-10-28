@@ -94,6 +94,8 @@ fnObj.searchView = axboot.viewExtend(axboot.searchView, {
     },
     getData: function () {
         return {
+            pageNumber: this.pageNumber,
+            pageSize: this.pageSize,
             filter: this.filter.val()
         }
     }

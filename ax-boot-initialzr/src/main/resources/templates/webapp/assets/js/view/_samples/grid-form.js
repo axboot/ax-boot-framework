@@ -4,16 +4,21 @@ var ACTIONS = axboot.actionExtend(fnObj, {
         axboot.ajax({
             type: "GET",
             url: ["samples", "parent"],
-            data: caller.searchView.getData(),
+            data: $.extend({}, this.searchView.getData(), this.gridView01.getPageData()),
             callback: function (res) {
                 caller.gridView01.setData(res);
+            },
+            options: {
+                onError: function (err) {
+                    console.log(err);
+                }
             }
         });
+
         return false;
     },
     PAGE_SAVE: function (caller, act, data) {
         if (caller.formView01.validate()) {
-
             var parentData = caller.formView01.getData();
             var childList = [].concat(caller.gridView02.getData("modified"));
             childList = childList.concat(caller.gridView02.getData("deleted"));
@@ -40,6 +45,7 @@ var ACTIONS = axboot.actionExtend(fnObj, {
                     ACTIONS.dispatch(ACTIONS.PAGE_SEARCH);
                 });
         }
+
     },
     FORM_CLEAR: function (caller, act, data) {
         axDialog.confirm({
@@ -47,46 +53,22 @@ var ACTIONS = axboot.actionExtend(fnObj, {
         }, function () {
             if (this.key == "ok") {
                 caller.formView01.clear();
+                caller.gridView02.clear();
             }
         });
     },
     ITEM_CLICK: function (caller, act, data) {
         caller.formView01.setData(data);
-    },
-    ETC1FIND: function (caller, act, data) {
-        axboot.modal.open({
-            modalType: "ZIPCODE",
-            param: "",
-            sendData: function(){
-                return {};
-            },
-            callback: function (data) {
-                //{zipcodeData: data, zipcode: data.zonecode || data.postcode, roadAddress: fullRoadAddr, jibunAddress: data.jibunAddress}
-                caller.formView01.setEtc1Value({
-                    zipcode: data.zipcode, roadAddress: data.roadAddress, jibunAddress: data.jibunAddress
-                });
-                this.close();
+        axboot.ajax({
+            type: "GET",
+            url: "/api/v1/samples/child",
+            data: "parentKey=" + data.key,
+            callback: function (res) {
+                caller.gridView02.setData(res);
             }
         });
     },
-    ETC3FIND: function (caller, act, data) {
-        axboot.modal.open({
-            modalType: "SAMPLE-MODAL",
-            param: "",
-            sendData: function(){
-                return {
-                    "sendData": "AX5UI"
-                };
-            },
-            callback: function (data) {
-                caller.formView01.setEtc3Value({
-                    key: data.key,
-                    value: data.value
-                });
-                this.close();
-            }
-        });
-    },
+
     dispatch: function (caller, act, data) {
         var result = ACTIONS.exec(caller, act, data);
         if (result != "error") {
@@ -106,7 +88,7 @@ fnObj.pageStart = function () {
 
     axboot
         .call({
-            type: "GET", url: "/api/v1/commonCodes", data: {groupCd: "USER_ROLE", useYn: "Y"},
+            type: "GET", url: ["commonCodes"], data: {groupCd: "USER_ROLE", useYn: "Y"},
             callback: function (res) {
                 var userRole = [];
                 res.list.forEach(function (n) {
@@ -126,6 +108,7 @@ fnObj.pageStart = function () {
             _this.pageButtonView.initView();
             _this.searchView.initView();
             _this.gridView01.initView();
+            _this.gridView02.initView();
             _this.formView01.initView();
 
             ACTIONS.dispatch(ACTIONS.PAGE_SEARCH);
@@ -165,8 +148,6 @@ fnObj.searchView = axboot.viewExtend(axboot.searchView, {
     },
     getData: function () {
         return {
-            pageNumber: this.pageNumber,
-            pageSize: this.pageSize,
             filter: this.filter.val()
         }
     }
@@ -177,6 +158,10 @@ fnObj.searchView = axboot.viewExtend(axboot.searchView, {
  * gridView
  */
 fnObj.gridView01 = axboot.viewExtend(axboot.gridView, {
+    page: {
+        pageNumber: 0,
+        pageSize: 10
+    },
     initView: function () {
         var _this = this;
 
@@ -197,6 +182,19 @@ fnObj.gridView01 = axboot.viewExtend(axboot.gridView, {
                     this.self.select(this.dindex);
                     ACTIONS.dispatch(ACTIONS.ITEM_CLICK, this.item);
                 }
+            },
+            onPageChange: function (pageNumber) {
+                _this.setPageData({pageNumber: pageNumber});
+                ACTIONS.dispatch(ACTIONS.PAGE_SEARCH);
+            }
+        });
+
+        axboot.buttonClick(this, "data-grid-view-01-btn", {
+            "add": function () {
+                ACTIONS.dispatch(ACTIONS.ITEM_ADD);
+            },
+            "delete": function () {
+                ACTIONS.dispatch(ACTIONS.ITEM_DEL);
             }
         });
     },
@@ -236,12 +234,6 @@ fnObj.formView01 = axboot.viewExtend(axboot.formView, {
         axboot.buttonClick(this, "data-form-view-01-btn", {
             "form-clear": function () {
                 ACTIONS.dispatch(ACTIONS.FORM_CLEAR);
-            },
-            "etc1find": function () {
-                ACTIONS.dispatch(ACTIONS.ETC1FIND);
-            },
-            "etc3find": function () {
-                ACTIONS.dispatch(ACTIONS.ETC3FIND);
             }
         });
     },
@@ -262,16 +254,6 @@ fnObj.formView01 = axboot.viewExtend(axboot.formView, {
         this.model.setModel(data);
         this.modelFormatter.formatting(); // 입력된 값을 포메팅 된 값으로 변경
     },
-    setEtc1Value: function (data) {
-        this.model.set("etc1", data.zipcode);
-        this.model.set("etc2", data.roadAddress);
-
-    },
-    setEtc3Value: function (data) {
-        this.model.set("etc3", data.key);
-        this.model.set("etc4", data.value);
-
-    },
     validate: function () {
         var rs = this.model.validate();
         if (rs.error) {
@@ -284,5 +266,65 @@ fnObj.formView01 = axboot.viewExtend(axboot.formView, {
     clear: function () {
         this.model.setModel(this.getDefaultData());
         this.target.find('[data-ax-path="key"]').removeAttr("readonly");
+    }
+});
+
+
+/**
+ * gridView
+ */
+fnObj.gridView02 = axboot.viewExtend(axboot.gridView, {
+    initView: function () {
+
+        var _this = this;
+
+        this.target = axboot.gridBuilder({
+            showLineNumber: false,
+            showRowSelector: true,
+            multipleSelect: true,
+            target: $('[data-ax5grid="grid-view-02"]'),
+            columns: [
+                {key: "key", label: "KEY", width: 80, align: "left", editor: "text"},
+                {key: "value", label: "VALUE", width: 120, align: "left", editor: "text"},
+                {key: "etc1", label: "ETC1", width: 70, align: "center", editor: "text"},
+                {key: "ect2", label: "ETC2", width: 70, align: "center", editor: "text"},
+                {key: "ect3", label: "ETC3", width: 70, align: "center", editor: "text"},
+                {key: "ect4", label: "ETC4", width: 70, align: "center", editor: "text"}
+            ],
+            body: {
+                onClick: function () {
+                    //this.self.select(this.dindex);
+                    //ACTIONS.dispatch(ACTIONS.ITEM_CLICK, this.list[this.dindex]);
+                }
+            }
+        });
+
+        axboot.buttonClick(this, "data-grid-view-02-btn", {
+            "item-add": function () {
+                this.addRow();
+            },
+            "item-remove": function () {
+                this.delRow();
+            }
+        });
+    },
+    setData: function (_data) {
+        this.target.setData(_data);
+    },
+    getData: function (_type) {
+        var list = [];
+        var _list = this.target.getList(_type);
+
+        if (_type == "modified" || _type == "deleted") {
+            list = ax5.util.filter(_list, function () {
+                return this.key;
+            });
+        } else {
+            list = _list;
+        }
+        return list;
+    },
+    align: function () {
+        this.target.align();
     }
 });

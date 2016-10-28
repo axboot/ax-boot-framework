@@ -1,29 +1,19 @@
 var fnObj = {};
 var ACTIONS = axboot.actionExtend(fnObj, {
     PAGE_SEARCH: function (caller, act, data) {
-
-        if (data && data.page) {
-            caller.searchView.setPageNumber(data.page.pageNumber);
-        }
-
         axboot.ajax({
             type: "GET",
             url: ["samples", "parent"],
             data: caller.searchView.getData(),
             callback: function (res) {
                 caller.gridView01.setData(res);
-            },
-            options: {
-                onError: function (err) {
-                    console.log(err);
-                }
             }
         });
-
         return false;
     },
     PAGE_SAVE: function (caller, act, data) {
         if (caller.formView01.validate()) {
+
             var parentData = caller.formView01.getData();
             var childList = [].concat(caller.gridView02.getData("modified"));
             childList = childList.concat(caller.gridView02.getData("deleted"));
@@ -50,7 +40,6 @@ var ACTIONS = axboot.actionExtend(fnObj, {
                     ACTIONS.dispatch(ACTIONS.PAGE_SEARCH);
                 });
         }
-
     },
     FORM_CLEAR: function (caller, act, data) {
         axDialog.confirm({
@@ -66,7 +55,7 @@ var ACTIONS = axboot.actionExtend(fnObj, {
         caller.formView01.setData(data);
         axboot.ajax({
             type: "GET",
-            url: "/api/v1/samples/child",
+            url: ["samples", "child"],
             data: "parentKey=" + data.key,
             callback: function (res) {
                 caller.gridView02.setData(res);
@@ -74,6 +63,8 @@ var ACTIONS = axboot.actionExtend(fnObj, {
         });
     },
 
+    ROLE_GRID_DATA_INIT: function (caller, act, data) {},
+    ROLE_GRID_DATA_GET: function (caller, act, data) {},
     dispatch: function (caller, act, data) {
         var result = ACTIONS.exec(caller, act, data);
         if (result != "error") {
@@ -93,7 +84,7 @@ fnObj.pageStart = function () {
 
     axboot
         .call({
-            type: "GET", url: ["commonCodes"], data: {groupCd: "USER_ROLE", useYn: "Y"},
+            type: "GET", url: "/api/v1/commonCodes", data: {groupCd: "USER_ROLE", useYn: "Y"},
             callback: function (res) {
                 var userRole = [];
                 res.list.forEach(function (n) {
@@ -153,8 +144,6 @@ fnObj.searchView = axboot.viewExtend(axboot.searchView, {
     },
     getData: function () {
         return {
-            pageNumber: this.pageNumber,
-            pageSize: 10, //this.pageSize,
             filter: this.filter.val()
         }
     }
@@ -185,9 +174,6 @@ fnObj.gridView01 = axboot.viewExtend(axboot.gridView, {
                     this.self.select(this.dindex);
                     ACTIONS.dispatch(ACTIONS.ITEM_CLICK, this.item);
                 }
-            },
-            onPageChange: function (pageNumber) {
-                ACTIONS.dispatch(ACTIONS.PAGE_SEARCH, {page: {pageNumber: pageNumber}});
             }
         });
 
@@ -232,6 +218,7 @@ fnObj.formView01 = axboot.viewExtend(axboot.formView, {
         this.model.setModel(this.getDefaultData(), this.target);
         this.modelFormatter = new axboot.modelFormatter(this.model); // 모델 포메터 시작
         this.initEvent();
+
 
         axboot.buttonClick(this, "data-form-view-01-btn", {
             "form-clear": function () {
@@ -283,7 +270,6 @@ fnObj.gridView02 = axboot.viewExtend(axboot.gridView, {
         this.target = axboot.gridBuilder({
             showLineNumber: false,
             showRowSelector: true,
-            multipleSelect: true,
             target: $('[data-ax5grid="grid-view-02"]'),
             columns: [
                 {key: "key", label: "KEY", width: 80, align: "left", editor: "text"},

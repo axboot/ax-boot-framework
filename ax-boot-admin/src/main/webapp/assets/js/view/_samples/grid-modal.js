@@ -7,39 +7,85 @@ var ACTIONS = axboot.actionExtend(fnObj, {
             data: caller.searchView.getData(),
             callback: function (res) {
                 caller.gridView01.setData(res);
-            },
-            options: {
-                // axboot.ajax 함수에 2번째 인자는 필수가 아닙니다. ajax의 옵션을 전달하고자 할때 사용합니다.
-                onError: function (err) {
-                    console.log(err);
-                }
             }
         });
-
         return false;
     },
     PAGE_SAVE: function (caller, act, data) {
-        var saveList = [].concat(caller.gridView01.getData("modified"));
-        saveList = saveList.concat(caller.gridView01.getData("deleted"));
+        if (caller.formView01.validate()) {
 
-        axboot.ajax({
-            type: "PUT",
-            url: ["samples", "parent"],
-            data: JSON.stringify(saveList),
-            callback: function (res) {
-                ACTIONS.dispatch(ACTIONS.PAGE_SEARCH);
-                axToast.push("저장 되었습니다");
+            var parentData = caller.formView01.getData();
+            var childList = [].concat(caller.gridView02.getData("modified"));
+            childList = childList.concat(caller.gridView02.getData("deleted"));
+
+            // childList에 parentKey 삽입
+            childList.forEach(function (n) {
+                n.parentKey = parentData.key;
+            });
+
+            axboot
+                .call({
+                    type: "PUT", url: ["samples", "parent"], data: JSON.stringify([parentData]),
+                    callback: function (res) {
+
+                    }
+                })
+                .call({
+                    type: "PUT", url: ["samples", "child"], data: JSON.stringify(childList),
+                    callback: function (res) {
+
+                    }
+                })
+                .done(function () {
+                    ACTIONS.dispatch(ACTIONS.PAGE_SEARCH);
+                });
+        }
+    },
+    FORM_CLEAR: function (caller, act, data) {
+        axDialog.confirm({
+            msg: "정말 양식을 초기화 하시겠습니까?"
+        }, function () {
+            if (this.key == "ok") {
+                caller.formView01.clear();
             }
         });
     },
     ITEM_CLICK: function (caller, act, data) {
-
+        caller.formView01.setData(data);
     },
-    ITEM_ADD: function (caller, act, data) {
-        caller.gridView01.addRow();
+    ETC1FIND: function (caller, act, data) {
+        axboot.modal.open({
+            modalType: "ZIPCODE",
+            param: "",
+            sendData: function(){
+                return {};
+            },
+            callback: function (data) {
+                //{zipcodeData: data, zipcode: data.zonecode || data.postcode, roadAddress: fullRoadAddr, jibunAddress: data.jibunAddress}
+                caller.formView01.setEtc1Value({
+                    zipcode: data.zipcode, roadAddress: data.roadAddress, jibunAddress: data.jibunAddress
+                });
+                this.close();
+            }
+        });
     },
-    ITEM_DEL: function (caller, act, data) {
-        caller.gridView01.delRow("selected");
+    ETC3FIND: function (caller, act, data) {
+        axboot.modal.open({
+            modalType: "SAMPLE-MODAL",
+            param: "",
+            sendData: function(){
+                return {
+                    "sendData": "AX5UI"
+                };
+            },
+            callback: function (data) {
+                caller.formView01.setEtc3Value({
+                    key: data.key,
+                    value: data.value
+                });
+                this.close();
+            }
+        });
     },
     dispatch: function (caller, act, data) {
         var result = ACTIONS.exec(caller, act, data);
@@ -52,13 +98,38 @@ var ACTIONS = axboot.actionExtend(fnObj, {
     }
 });
 
+var CODE = {};
+
 // fnObj 기본 함수 스타트와 리사이즈
 fnObj.pageStart = function () {
-    this.pageButtonView.initView();
-    this.searchView.initView();
-    this.gridView01.initView();
+    var _this = this;
 
-    ACTIONS.dispatch(ACTIONS.PAGE_SEARCH);
+    axboot
+        .call({
+            type: "GET", url: "/api/v1/commonCodes", data: {groupCd: "USER_ROLE", useYn: "Y"},
+            callback: function (res) {
+                var userRole = [];
+                res.list.forEach(function (n) {
+                    userRole.push({
+                        value: n.code, text: n.name + "(" + n.code + ")",
+                        roleCd: n.code, roleNm: n.name,
+                        data: n
+                    });
+                });
+                this.userRole = userRole;
+            }
+        })
+        .done(function () {
+
+            CODE = this; // this는 call을 통해 수집된 데이터들.
+
+            _this.pageButtonView.initView();
+            _this.searchView.initView();
+            _this.gridView01.initView();
+            _this.formView01.initView();
+
+            ACTIONS.dispatch(ACTIONS.PAGE_SEARCH);
+        });
 };
 
 fnObj.pageResize = function () {
@@ -94,8 +165,6 @@ fnObj.searchView = axboot.viewExtend(axboot.searchView, {
     },
     getData: function () {
         return {
-            pageNumber: this.pageNumber,
-            pageSize: this.pageSize,
             filter: this.filter.val()
         }
     }
@@ -112,29 +181,20 @@ fnObj.gridView01 = axboot.viewExtend(axboot.gridView, {
         this.target = axboot.gridBuilder({
             showRowSelector: true,
             frozenColumnIndex: 0,
-            multipleSelect: true,
             target: $('[data-ax5grid="grid-view-01"]'),
             columns: [
-                {key: "key", label: "KEY", width: 160, align: "left", editor: "text"},
-                {key: "value", label: "VALUE", width: 350, align: "left", editor: "text"},
-                {key: "etc1", label: "ETC1", width: 100, align: "center", editor: "text"},
-                {key: "ect2", label: "ETC2", width: 100, align: "center", editor: "text"},
-                {key: "ect3", label: "ETC3", width: 100, align: "center", editor: "text"},
-                {key: "ect4", label: "ETC4", width: 100, align: "center", editor: "text"}
+                {key: "key", label: "KEY", width: 80, align: "left"},
+                {key: "value", label: "VALUE", width: 120, align: "left"},
+                {key: "etc1", label: "ETC1", width: 70, align: "center"},
+                {key: "ect2", label: "ETC2", width: 70, align: "center"},
+                {key: "ect3", label: "ETC3", width: 70, align: "center"},
+                {key: "ect4", label: "ETC4", width: 70, align: "center"}
             ],
             body: {
                 onClick: function () {
-                    this.self.select(this.dindex, {selectedClear: true});
+                    this.self.select(this.dindex);
+                    ACTIONS.dispatch(ACTIONS.ITEM_CLICK, this.item);
                 }
-            }
-        });
-
-        axboot.buttonClick(this, "data-grid-view-01-btn", {
-            "add": function () {
-                ACTIONS.dispatch(ACTIONS.ITEM_ADD);
-            },
-            "delete": function () {
-                ACTIONS.dispatch(ACTIONS.ITEM_DEL);
             }
         });
     },
@@ -144,7 +204,6 @@ fnObj.gridView01 = axboot.viewExtend(axboot.gridView, {
 
         if (_type == "modified" || _type == "deleted") {
             list = ax5.util.filter(_list, function () {
-                delete this.deleted;
                 return this.key;
             });
         } else {
@@ -154,5 +213,74 @@ fnObj.gridView01 = axboot.viewExtend(axboot.gridView, {
     },
     addRow: function () {
         this.target.addRow({__created__: true}, "last");
+    }
+});
+
+
+/**
+ * formView01
+ */
+fnObj.formView01 = axboot.viewExtend(axboot.formView, {
+    getDefaultData: function () {
+        return $.extend({}, axboot.formView.defaultData, {});
+    },
+    initView: function () {
+        this.target = $("#formView01");
+        this.model = new ax5.ui.binder();
+        this.model.setModel(this.getDefaultData(), this.target);
+        this.modelFormatter = new axboot.modelFormatter(this.model); // 모델 포메터 시작
+        this.initEvent();
+
+        axboot.buttonClick(this, "data-form-view-01-btn", {
+            "form-clear": function () {
+                ACTIONS.dispatch(ACTIONS.FORM_CLEAR);
+            },
+            "etc1find": function () {
+                ACTIONS.dispatch(ACTIONS.ETC1FIND);
+            },
+            "etc3find": function () {
+                ACTIONS.dispatch(ACTIONS.ETC3FIND);
+            }
+        });
+    },
+    initEvent: function () {
+        var _this = this;
+    },
+    getData: function () {
+        var data = this.modelFormatter.getClearData(this.model.get()); // 모델의 값을 포멧팅 전 값으로 치환.
+        return $.extend({}, data);
+    },
+    setData: function (data) {
+
+        if (typeof data === "undefined") data = this.getDefaultData();
+        data = $.extend({}, data);
+
+        this.target.find('[data-ax-path="key"]').attr("readonly", "readonly");
+
+        this.model.setModel(data);
+        this.modelFormatter.formatting(); // 입력된 값을 포메팅 된 값으로 변경
+    },
+    setEtc1Value: function (data) {
+        this.model.set("etc1", data.zipcode);
+        this.model.set("etc2", data.roadAddress);
+
+    },
+    setEtc3Value: function (data) {
+        this.model.set("etc3", data.key);
+        this.model.set("etc4", data.value);
+
+    },
+    validate: function () {
+        var rs = this.model.validate();
+        if (rs.error) {
+            alert(rs.error[0].jquery.attr("title") + '을(를) 입력해주세요.');
+            rs.error[0].jquery.focus();
+            return false;
+        }
+        return true;
+    },
+    clear: function () {
+        this.model.setModel(this.getDefaultData());
+        this.target.find('[data-ax-path="key"]').removeAttr("readonly");
     }
 });

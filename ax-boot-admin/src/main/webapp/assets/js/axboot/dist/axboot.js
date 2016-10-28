@@ -2295,18 +2295,6 @@ axboot.searchView = {
                 this[k].val(_obj[k]);
             }
         }
-    },
-    pageNumber: 0,
-    pageSize: 99999,
-    setPageNumber: function setPageNumber(pageNumber) {
-        if (typeof pageNumber !== "undefined") {
-            this.pageNumber = pageNumber;
-        }
-    },
-    setPageSize: function setPageSize(pageSize) {
-        if (typeof pageSize !== "undefined") {
-            this.pageSize = pageSize;
-        }
     }
     /* 라디오와 checkbox 타입 값 가져오기.
      radioBox: this.radioBox.filter(":checked").val(),
@@ -2331,6 +2319,10 @@ axboot.treeView = {};
  * @Object {Object} axboot.gridView
  */
 axboot.gridView = {
+    page: {
+        pageNumber: 0,
+        pageSize: 99999
+    },
     setData: function setData(_data) {
         this.target.setData(_data);
     },
@@ -2365,6 +2357,12 @@ axboot.gridView = {
                 totalPages: 0
             }
         });
+    },
+    setPageData: function setPageData(_page) {
+        this.page = $.extend(this.page, _page);
+    },
+    getPageData: function getPageData() {
+        return this.page;
     }
 };
 

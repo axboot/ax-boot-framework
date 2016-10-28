@@ -1,5 +1,10 @@
 var fnObj = {};
 var ACTIONS = axboot.actionExtend(fnObj, {
+    PAGE_CLOSE: function (caller, act, data) {
+        if (parent) {
+            parent.axboot.modal.close();
+        }
+    },
     PAGE_SEARCH: function (caller, act, data) {
         axboot.ajax({
             type: "GET",
@@ -7,39 +12,42 @@ var ACTIONS = axboot.actionExtend(fnObj, {
             data: caller.searchView.getData(),
             callback: function (res) {
                 caller.gridView01.setData(res);
-            },
-            options: {
-                // axboot.ajax 함수에 2번째 인자는 필수가 아닙니다. ajax의 옵션을 전달하고자 할때 사용합니다.
-                onError: function (err) {
-                    console.log(err);
-                }
             }
         });
-
         return false;
     },
-    PAGE_SAVE: function (caller, act, data) {
-        var saveList = [].concat(caller.gridView01.getData("modified"));
-        saveList = saveList.concat(caller.gridView01.getData("deleted"));
+    PAGE_CHOICE: function (caller, act, data) {
+        var list = caller.gridView01.getData("selected");
+        if (list.length > 0) {
+            if (parent && parent.axboot && parent.axboot.modal) {
+                parent.axboot.modal.callback(list[0]);
+            }
+        } else {
+            alert("선택된 목록이 없습니다.");
+        }
+    },
+    PAGE_DEL: function (caller, act, data) {
+        if (!confirm("정말 삭제 하시겠습니까?")) return;
+
+        var list = caller.gridView01.getData("selected");
+        list.forEach(function (n) {
+            n.__deleted__ = true;
+        });
 
         axboot.ajax({
             type: "PUT",
-            url: ["samples", "parent"],
-            data: JSON.stringify(saveList),
+            url: "/api/v1/files",
+            data: JSON.stringify(list),
             callback: function (res) {
                 ACTIONS.dispatch(ACTIONS.PAGE_SEARCH);
-                axToast.push("저장 되었습니다");
             }
         });
     },
     ITEM_CLICK: function (caller, act, data) {
-
+        ACTIONS.dispatch(ACTIONS.PAGE_CHOICE);
     },
-    ITEM_ADD: function (caller, act, data) {
-        caller.gridView01.addRow();
-    },
-    ITEM_DEL: function (caller, act, data) {
-        caller.gridView01.delRow("selected");
+    GRID_0_PAGING: function (caller, act, data) {
+        caller.searchView.setPageNumber(data);
     },
     dispatch: function (caller, act, data) {
         var result = ACTIONS.exec(caller, act, data);
@@ -52,11 +60,17 @@ var ACTIONS = axboot.actionExtend(fnObj, {
     }
 });
 
+var CODE = {};
+
 // fnObj 기본 함수 스타트와 리사이즈
 fnObj.pageStart = function () {
-    this.pageButtonView.initView();
-    this.searchView.initView();
-    this.gridView01.initView();
+    var _this = this;
+    
+    console.log(parent.axboot.modal.getData());
+
+    _this.pageButtonView.initView();
+    _this.searchView.initView();
+    _this.gridView01.initView();
 
     ACTIONS.dispatch(ACTIONS.PAGE_SEARCH);
 };
@@ -65,18 +79,20 @@ fnObj.pageResize = function () {
 
 };
 
-
 fnObj.pageButtonView = axboot.viewExtend({
     initView: function () {
         axboot.buttonClick(this, "data-page-btn", {
             "search": function () {
                 ACTIONS.dispatch(ACTIONS.PAGE_SEARCH);
             },
-            "save": function () {
-                ACTIONS.dispatch(ACTIONS.PAGE_SAVE);
+            "choice": function () {
+                ACTIONS.dispatch(ACTIONS.PAGE_CHOICE);
             },
-            "excel": function () {
-
+            "fn1": function () {
+                ACTIONS.dispatch(ACTIONS.PAGE_DEL);
+            },
+            "close": function () {
+                ACTIONS.dispatch(ACTIONS.PAGE_CLOSE);
             }
         });
     }
@@ -92,13 +108,16 @@ fnObj.searchView = axboot.viewExtend(axboot.searchView, {
         this.target.attr("onsubmit", "return ACTIONS.dispatch(ACTIONS.PAGE_SEARCH);");
         this.filter = $("#filter");
     },
+    setPageNumber: function (pageNumber) {
+        this.pageNumber = pageNumber;
+        ACTIONS.dispatch(ACTIONS.PAGE_SEARCH);
+    },
     getData: function () {
         return {
             filter: this.filter.val()
         }
     }
 });
-
 
 /**
  * gridView
@@ -108,21 +127,22 @@ fnObj.gridView01 = axboot.viewExtend(axboot.gridView, {
         var _this = this;
 
         this.target = axboot.gridBuilder({
+            showLineNumber: false,
             showRowSelector: true,
             frozenColumnIndex: 0,
-            multipleSelect: true,
             target: $('[data-ax5grid="grid-view-01"]'),
             columns: [
-                {key: "key", label: "KEY", width: 160, align: "left", editor: "text"},
-                {key: "value", label: "VALUE", width: 350, align: "left", editor: "text"},
-                {key: "etc1", label: "ETC1", width: 100, align: "center", editor: "text"},
-                {key: "ect2", label: "ETC2", width: 100, align: "center", editor: "text"},
-                {key: "ect3", label: "ETC3", width: 100, align: "center", editor: "text"},
-                {key: "ect4", label: "ETC4", width: 100, align: "center", editor: "text"}
+                {key: "key", label: "KEY", width: 100, align: "left"},
+                {key: "value", label: "VALUE", width: 200, align: "left"},
+                {key: "etc1", label: "ETC1", width: 70, align: "center"},
+                {key: "ect2", label: "ETC2", width: 70, align: "center"},
+                {key: "ect3", label: "ETC3", width: 70, align: "center"},
+                {key: "ect4", label: "ETC4", width: 70, align: "center"}
             ],
             body: {
                 onClick: function () {
-                    this.self.select(this.dindex, {selectedClear: true});
+                    this.self.select(this.dindex);
+                    ACTIONS.dispatch(ACTIONS.ITEM_CLICK, this.item);
                 }
             }
         });
@@ -135,22 +155,5 @@ fnObj.gridView01 = axboot.viewExtend(axboot.gridView, {
                 ACTIONS.dispatch(ACTIONS.ITEM_DEL);
             }
         });
-    },
-    getData: function (_type) {
-        var list = [];
-        var _list = this.target.getList(_type);
-
-        if (_type == "modified" || _type == "deleted") {
-            list = ax5.util.filter(_list, function () {
-                delete this.deleted;
-                return this.key;
-            });
-        } else {
-            list = _list;
-        }
-        return list;
-    },
-    addRow: function () {
-        this.target.addRow({__created__: true}, "last");
     }
 });
