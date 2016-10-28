@@ -23,7 +23,7 @@
         </style>
     </jsp:attribute>
     <jsp:attribute name="script">
-        <script type="text/javascript" src="<c:url value='js/page-structure.js' />"></script>
+        <script type="text/javascript" src="<c:url value='/assets/js/view/_samples/page-structure.js' />"></script>
     </jsp:attribute>
     <jsp:body>
 

@@ -10,7 +10,7 @@
 
 <ax:layout name="modal">
     <jsp:attribute name="script">
-        <script type="text/javascript" src="<c:url value='js/modal.js' />"></script>
+        <script type="text/javascript" src="<c:url value='/assets/js/view/_samples/modal.js' />"></script>
     </jsp:attribute>
     <jsp:attribute name="header">
         <h1 class="title">

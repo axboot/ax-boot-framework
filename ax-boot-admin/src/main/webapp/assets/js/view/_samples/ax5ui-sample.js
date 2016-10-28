@@ -1,15 +1,10 @@
 var fnObj = {};
 var ACTIONS = axboot.actionExtend(fnObj, {
     PAGE_SEARCH: function (caller, act, data) {
-
-        if (data && data.page) {
-            caller.searchView.setPageNumber(data.page.pageNumber);
-        }
-
         axboot.ajax({
             type: "GET",
             url: ["samples", "parent"],
-            data: caller.searchView.getData(),
+            data: $.extend({}, this.searchView.getData(), this.gridView01.getPageData()),
             callback: function (res) {
                 caller.gridView01.setData(res);
             },
@@ -64,14 +59,6 @@ var ACTIONS = axboot.actionExtend(fnObj, {
     },
     ITEM_CLICK: function (caller, act, data) {
         caller.formView01.setData(data);
-        axboot.ajax({
-            type: "GET",
-            url: "/api/v1/samples/child",
-            data: "parentKey=" + data.key,
-            callback: function (res) {
-                caller.gridView02.setData(res);
-            }
-        });
     },
 
     dispatch: function (caller, act, data) {
@@ -113,7 +100,6 @@ fnObj.pageStart = function () {
             _this.pageButtonView.initView();
             _this.searchView.initView();
             _this.gridView01.initView();
-            _this.gridView02.initView();
             _this.formView01.initView();
 
             ACTIONS.dispatch(ACTIONS.PAGE_SEARCH);
@@ -153,8 +139,6 @@ fnObj.searchView = axboot.viewExtend(axboot.searchView, {
     },
     getData: function () {
         return {
-            pageNumber: this.pageNumber,
-            pageSize: 10, //this.pageSize,
             filter: this.filter.val()
         }
     }
@@ -165,6 +149,10 @@ fnObj.searchView = axboot.viewExtend(axboot.searchView, {
  * gridView
  */
 fnObj.gridView01 = axboot.viewExtend(axboot.gridView, {
+    page: {
+        pageNumber: 0,
+        pageSize: 10
+    },
     initView: function () {
         var _this = this;
 
@@ -187,7 +175,8 @@ fnObj.gridView01 = axboot.viewExtend(axboot.gridView, {
                 }
             },
             onPageChange: function (pageNumber) {
-                ACTIONS.dispatch(ACTIONS.PAGE_SEARCH, {page: {pageNumber: pageNumber}});
+                _this.setPageData({pageNumber: pageNumber});
+                ACTIONS.dispatch(ACTIONS.PAGE_SEARCH);
             }
         });
 
@@ -268,65 +257,5 @@ fnObj.formView01 = axboot.viewExtend(axboot.formView, {
     clear: function () {
         this.model.setModel(this.getDefaultData());
         this.target.find('[data-ax-path="key"]').removeAttr("readonly");
-    }
-});
-
-
-/**
- * gridView
- */
-fnObj.gridView02 = axboot.viewExtend(axboot.gridView, {
-    initView: function () {
-
-        var _this = this;
-
-        this.target = axboot.gridBuilder({
-            showLineNumber: false,
-            showRowSelector: true,
-            multipleSelect: true,
-            target: $('[data-ax5grid="grid-view-02"]'),
-            columns: [
-                {key: "key", label: "KEY", width: 80, align: "left", editor: "text"},
-                {key: "value", label: "VALUE", width: 120, align: "left", editor: "text"},
-                {key: "etc1", label: "ETC1", width: 70, align: "center", editor: "text"},
-                {key: "ect2", label: "ETC2", width: 70, align: "center", editor: "text"},
-                {key: "ect3", label: "ETC3", width: 70, align: "center", editor: "text"},
-                {key: "ect4", label: "ETC4", width: 70, align: "center", editor: "text"}
-            ],
-            body: {
-                onClick: function () {
-                    //this.self.select(this.dindex);
-                    //ACTIONS.dispatch(ACTIONS.ITEM_CLICK, this.list[this.dindex]);
-                }
-            }
-        });
-
-        axboot.buttonClick(this, "data-grid-view-02-btn", {
-            "item-add": function () {
-                this.addRow();
-            },
-            "item-remove": function () {
-                this.delRow();
-            }
-        });
-    },
-    setData: function (_data) {
-        this.target.setData(_data);
-    },
-    getData: function (_type) {
-        var list = [];
-        var _list = this.target.getList(_type);
-
-        if (_type == "modified" || _type == "deleted") {
-            list = ax5.util.filter(_list, function () {
-                return this.key;
-            });
-        } else {
-            list = _list;
-        }
-        return list;
-    },
-    align: function () {
-        this.target.align();
     }
 });

@@ -5,11 +5,13 @@
 <%@ tag language="java" pageEncoding="UTF-8" body-content="empty" %>
 <%@ attribute name="groupCd" required="true" %>
 <%@ attribute name="name" required="false" %>
+<%@ attribute name="clazz" required="false" %>
 <%@ attribute name="id" required="false" %>
 <%@ attribute name="dataPath" required="false" %>
 <%@ attribute name="type" required="false" %>
 <%@ attribute name="defaultValue" required="false" %>
-<%@ attribute name="clazz" %>
+<%@ attribute name="emptyValue" required="false" %>
+<%@ attribute name="emptyText" required="false" %>
 
 <%
     if (StringUtils.isEmpty(type)) {
@@ -22,7 +24,30 @@
 
     switch (type) {
         case "select":
-            builder.append(String.format("<select id=\"%s\" name=\"%s\" data-ax-path=\"%s\" class=\"form-control %s\">", id, name, dataPath, clazz));
+            builder.append("<select class=\"form-control "+ clazz +" \"");
+
+            if (StringUtils.isEmpty(emptyValue)) {
+                emptyValue = "";
+            }
+
+            if (StringUtils.isNotEmpty(id)) {
+                builder.append("id=\"" + id + "\"");
+            }
+
+            if (StringUtils.isNotEmpty(name)) {
+                builder.append("name=\"" + name + "\"");
+            }
+
+            if (StringUtils.isNotEmpty(dataPath)) {
+                builder.append("data-ax-path=\"" + dataPath + "\"");
+            }
+
+            builder.append(">");
+
+
+            if (StringUtils.isEmpty(defaultValue) && StringUtils.isNotEmpty(emptyText)) {
+                builder.append(String.format("<option value=\"%s\">%s</option>", emptyValue, emptyText));
+            }
 
             for (CommonCode commonCode : commonCodes) {
                 if (StringUtils.isNotEmpty(defaultValue) && defaultValue.equals(commonCode.getCode())) {

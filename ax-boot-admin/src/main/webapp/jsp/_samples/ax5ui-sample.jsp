@@ -4,23 +4,73 @@
 
 <ax:set key="title" value="${pageName}"/>
 <ax:set key="page_desc" value="${pageRemark}"/>
-<ax:set key="page_auto_height" value="true"/>
+<ax:set key="page_auto_height" value="false"/>
 
 <ax:layout name="base">
     <jsp:attribute name="script">
-        <script type="text/javascript" src="<c:url value='/assets/js/view/_samples/grid-form.js' />"></script>
+        <script type="text/javascript" src="<c:url value='/assets/js/view/_samples/ax5ui-sample.js' />"></script>
     </jsp:attribute>
     <jsp:body>
 
         <ax:page-buttons></ax:page-buttons>
 
-
         <div role="page-header">
             <ax:form name="searchView0">
                 <ax:tbl clazz="ax-search-tbl" minWidth="500px">
                     <ax:tr>
-                        <ax:td label='검색조건' width="300px">
-                            <input type="text" class="form-control" />
+                        <ax:td label='조회일자' width="400px">
+
+                            <div class="input-group" data-ax5picker="search-saleDt">
+                                <input type="text" class="form-control" placeholder="yyyy/mm/dd">
+                                <span class="input-group-addon">~</span>
+                                <input type="text" class="form-control" placeholder="yyyy/mm/dd">
+                                <span class="input-group-addon"><i class="cqc-calendar"></i></span>
+                            </div>
+
+                        </ax:td>
+                        <ax:td label='업체/매장 선택' width="350px">
+
+                            <div class="input-group">
+                                <input type="text" id="compStorLabel" class="form-control" value="" readonly="readonly"/>
+                                <span class="input-group-btn">
+                                    <button type="button" class="btn btn-primary" id="find_stor_modal" disabled="disabled">
+                                        <i class="cqc-magnifier"></i>
+                                        찾기
+                                    </button>
+                                </span>
+                            </div>
+
+                        </ax:td>
+                    </ax:tr>
+                    <ax:tr>
+                        <ax:td label='구분' width="400px">
+
+                            <div class="form-inline">
+                                <div class="form-group">
+                                    <label>판매</label>
+                                    <ax:common-code groupCd="SALE_FLAG" id="saleFlag" emptyText="" emptyValue=""/>
+                                </div>
+                                <div class="form-group">
+                                    <label>전송</label>
+                                    <ax:common-code groupCd="SEND_FLAG" id="sendFlag" emptyText="" emptyValue=""/>
+                                </div>
+                            </div>
+
+                        </ax:td>
+                        <ax:td label='검색어' width="450px">
+
+                            <div class="form-inline">
+                                <div class="form-group">
+                                    <label>영수번호</label>
+
+                                    <input type="text" class="form-control W80" value="" />
+                                </div>
+                                <div class="form-group">
+                                    <label>계약번호</label>
+                                    <input type="text" class="form-control W80" value="" />
+                                </div>
+                            </div>
+
                         </ax:td>
                     </ax:tr>
                 </ax:tbl>
@@ -76,7 +126,7 @@
                         </ax:tr>
                         <ax:tr>
                             <ax:td label="ETC1" width="300px">
-                                <input type="text" data-ax-path="etc1" class="form-control" />
+                                <input type="text" data-ax-path="etc1" class="form-control" data-ax5formatter="money" />
                             </ax:td>
                             <ax:td label="ETC2" width="300px">
                                 <select data-ax-path="etc2" class="form-control W100">
@@ -102,27 +152,6 @@
                             </ax:td>
                         </ax:tr>
                     </ax:tbl>
-
-                    <div class="H5"></div>
-                    <div class="ax-button-group">
-                        <div class="left">
-                            <h3>
-                                <i class="cqc-list"></i>
-                                Child List</h3>
-                        </div>
-                        <div class="right">
-                            <button type="button" class="btn btn-default" data-grid-view-02-btn="item-add">
-                                <i class="cqc-plus"></i>
-                                추가
-                            </button>
-                            <button type="button" class="btn btn-default" data-grid-view-02-btn="item-remove">
-                                <i class="cqc-minus"></i>
-                                삭제
-                            </button>
-                        </div>
-                    </div>
-
-                    <div data-ax5grid="grid-view-02" style="height: 300px;"></div>
 
                 </ax:form>
 
