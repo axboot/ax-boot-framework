@@ -14709,7 +14709,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
          * ax5 version
          * @member {String} ax5.info.version
          */
-        var version = "1.3.4";
+        var version = "1.3.6";
 
         /**
          * ax5 library path
@@ -17751,7 +17751,7 @@ ax5.ui = function () {
 
     UI.addClass({
         className: "dialog",
-        version: "1.3.4"
+        version: "1.3.6"
     }, function () {
         /**
          * @class ax5dialog
@@ -18290,7 +18290,7 @@ ax5.ui = function () {
 
     UI.addClass({
         className: "mask",
-        version: "1.3.4"
+        version: "1.3.6"
     }, function () {
         /**
          * @class ax5mask
@@ -18621,7 +18621,7 @@ ax5.ui = function () {
 
     UI.addClass({
         className: "toast",
-        version: "1.3.4"
+        version: "1.3.6"
     }, function () {
         /**
          * @class ax5toast
@@ -18985,7 +18985,7 @@ ax5.ui = function () {
 
     UI.addClass({
         className: "modal",
-        version: "1.3.4"
+        version: "1.3.6"
     }, function () {
         /**
          * @class ax5modal
@@ -19611,7 +19611,7 @@ ax5.ui = function () {
 
     UI.addClass({
         className: "calendar",
-        version: "${VERSION}"
+        version: "1.3.6"
     }, function () {
 
         /**
@@ -20675,7 +20675,7 @@ ax5.ui = function () {
 
     UI.addClass({
         className: "picker",
-        version: "1.3.4"
+        version: "1.3.6"
     }, function () {
         /**
          * @class ax5picker
@@ -21633,7 +21633,7 @@ jQuery.fn.ax5picker = function () {
 
     UI.addClass({
         className: "formatter",
-        version: "1.3.4"
+        version: "1.3.6"
     }, function () {
         var TODAY = new Date();
         var setSelectionRange = function setSelectionRange(input, pos) {
@@ -22271,7 +22271,7 @@ jQuery.fn.ax5formatter = function () {
 
     UI.addClass({
         className: "menu",
-        version: "1.3.4"
+        version: "1.3.6"
     }, function () {
         /**
          * @class ax5.ui.menu
@@ -23066,7 +23066,7 @@ jQuery.fn.ax5formatter = function () {
 
     UI.addClass({
         className: "select",
-        version: "1.3.4"
+        version: "1.3.6"
     }, function () {
         /**
          * @class ax5select
@@ -24208,7 +24208,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
 
     UI.addClass({
         className: "grid",
-        version: "1.3.4"
+        version: "1.3.6"
     }, function () {
         /**
          * @class ax5grid
@@ -25091,15 +25091,16 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
                         }
                     },
                     "TAB": function TAB(_e) {
+
                         var activeEditLength = 0;
                         for (var columnKey in this.inlineEditing) {
                             activeEditLength++;
 
-                            GRID.body.inlineEdit.keydown.call(this, "RETURN", columnKey);
+                            GRID.body.inlineEdit.keydown.call(this, "RETURN", columnKey, { moveFocus: true });
                             // next focus
                             if (activeEditLength == 1) {
                                 if (GRID.body.moveFocus.call(this, _e.shiftKey ? "LEFT" : "RIGHT")) {
-                                    GRID.body.inlineEdit.keydown.call(this, "RETURN");
+                                    GRID.body.inlineEdit.keydown.call(this, "RETURN", undefined, { moveFocus: true });
                                 }
                             }
                         }
@@ -25502,6 +25503,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
 // todo : filter
 // todo : body menu
 // todo : column reorder
+// todo : editor 필수값 속성 지정
 
 
 // ax5.ui.grid.body
@@ -27327,7 +27329,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
                 action["__clear"].call(this);
             }
         },
-        keydown: function keydown(key, columnKey) {
+        keydown: function keydown(key, columnKey, _options) {
             var processor = {
                 "ESC": function ESC() {
                     for (var columnKey in this.inlineEditing) {
@@ -27341,6 +27343,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
                             inlineEdit.deActive.call(this, "RETURN", columnKey);
                         }
                     } else {
+
                         for (var k in this.focusedColumn) {
                             var _column = this.focusedColumn[k];
                             var column = this.bodyRowMap[_column.rowIndex + "_" + _column.colIndex];
@@ -27353,7 +27356,32 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
                             }
 
                             var col = this.colGroup[_column.colIndex];
-                            if (GRID.inlineEditor[col.editor.type].editMode !== "inline") {
+
+                            if (GRID.inlineEditor[col.editor.type].editMode === "inline") {
+                                if (_options && _options.moveFocus) {} else {
+                                    if (column.editor && column.editor.type == "checkbox") {
+
+                                        value = GRID.data.getValue.call(this, dindex, column.key);
+
+                                        var checked, newValue;
+                                        if (column.editor.config && column.editor.config.trueValue) {
+                                            if (checked = !(value == column.editor.config.trueValue)) {
+                                                newValue = column.editor.config.trueValue;
+                                            } else {
+                                                newValue = column.editor.config.falseValue;
+                                            }
+                                        } else {
+                                            newValue = checked = value == false || value == "false" || value < "1" ? "true" : "false";
+                                        }
+
+                                        GRID.data.setValue.call(this, _column.dindex, column.key, newValue);
+                                        updateRowState.call(this, ["cellChecked"], dindex, {
+                                            key: column.key, rowIndex: _column.rowIndex, colIndex: _column.colIndex,
+                                            editorConfig: column.editor.config, checked: checked
+                                        });
+                                    }
+                                }
+                            } else {
                                 GRID.body.inlineEdit.active.call(this, this.focusedColumn, null, value);
                             }
                         }
@@ -27362,7 +27390,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
             };
 
             if (key in processor) {
-                processor[key].call(this, key);
+                processor[key].call(this, key, columnKey, _options);
             }
         }
     };
@@ -29364,7 +29392,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
 
     UI.addClass({
         className: "combobox",
-        version: "${VERSION}"
+        version: "1.3.6"
     }, function () {
         /**
          * @class ax5combobox
@@ -31016,7 +31044,7 @@ jQuery.fn.ax5combobox = function () {
 
     UI.addClass({
         className: "layout",
-        version: "1.3.4"
+        version: "${VERSION}"
     }, function () {
         /**
          * @class ax5layout
@@ -31334,10 +31362,10 @@ jQuery.fn.ax5combobox = function () {
                         var withoutAsteriskSize;
                         item.splitPanel.asteriskLength = 0;
                         item.splitPanel.forEach(function (panel, panelIndex) {
-                            beforeSetCSS["split"][item.oriental].call(this, item, panel, panelIndex);
+                            beforeSetCSS["split"][item.orientation].call(this, item, panel, panelIndex);
                         });
 
-                        if (item.oriental == "horizontal") {
+                        if (item.orientation == "horizontal") {
                             withoutAsteriskSize = U.sum(item.splitPanel, function (n) {
                                 if (n.height != "*") return U.number(n.__height);
                             });
@@ -31348,7 +31376,7 @@ jQuery.fn.ax5combobox = function () {
                         }
 
                         item.splitPanel.forEach(function (panel, panelIndex) {
-                            setCSS["split"][item.oriental].call(this, item, panel, panelIndex, withoutAsteriskSize, windowResize);
+                            setCSS["split"][item.orientation].call(this, item, panel, panelIndex, withoutAsteriskSize, windowResize);
                         });
                     }
                 };
@@ -31450,7 +31478,7 @@ jQuery.fn.ax5combobox = function () {
                         "split": function split(e) {
                             var mouseObj = 'changedTouches' in e.originalEvent ? e.originalEvent.changedTouches[0] : e;
 
-                            if (item.oriental == "horizontal") {
+                            if (item.orientation == "horizontal") {
                                 panel.__da = mouseObj.clientY - panel.mousePosition.clientY;
 
                                 var prevPanel = item.splitPanel[panel.panelIndex - 1];
@@ -31526,7 +31554,7 @@ jQuery.fn.ax5combobox = function () {
                         },
                         "split-panel": {
                             "split": function split() {
-                                if (item.oriental == "horizontal") {
+                                if (item.orientation == "horizontal") {
                                     // 앞과 뒤의 높이 조절
                                     item.splitPanel[panel.panelIndex - 1].__height += panel.__da;
                                     item.splitPanel[panel.panelIndex + 1].__height -= panel.__da;
@@ -31636,7 +31664,7 @@ jQuery.fn.ax5combobox = function () {
                             })(U.parseJson(this.getAttribute("data-split-panel") || this.getAttribute("data-splitter"), true));
 
                             panelInfo.$target = jQuery(this);
-                            panelInfo.$target.addClass("split-panel-" + item.oriental);
+                            panelInfo.$target.addClass("split-panel-" + item.orientation);
                             panelInfo.panelIndex = ELIndex;
 
                             if (this.getAttribute("data-splitter")) {
@@ -31654,10 +31682,10 @@ jQuery.fn.ax5combobox = function () {
                                 panelInfo.resizerType = "split";
                             } else {
 
-                                if (item.oriental == "horizontal") {
+                                if (item.orientation == "horizontal") {
                                     panelInfo.__height = getPixel(panelInfo.height, item.targetDimension.height);
                                 } else {
-                                    item.oriental = "vertical";
+                                    item.orientation = "vertical";
                                     panelInfo.__width = getPixel(panelInfo.width, item.targetDimension.width);
                                 }
                             }
@@ -31926,9 +31954,9 @@ jQuery.fn.ax5combobox = function () {
                     },
                     "split-panel": function splitPanel(item) {
                         item.splitPanel.forEach(function (panel) {
-                            if (item.oriental == "vertical") {
+                            if (item.orientation == "vertical") {
                                 panel.__width = getPixel(panel.width, item.targetDimension.width);
-                            } else if (item.oriental == "horizontal") {
+                            } else if (item.orientation == "horizontal") {
                                 panel.__height = getPixel(panel.height, item.targetDimension.height);
                             }
                         });
@@ -32047,7 +32075,7 @@ jQuery.fn.ax5layout = function () {
 
     UI.addClass({
         className: "binder",
-        version: "1.3.4"
+        version: "1.3.6"
     }, function () {
 
         /**
@@ -33004,7 +33032,7 @@ jQuery.fn.ax5layout = function () {
 
     UI.addClass({
         className: "autocomplete",
-        version: "1.3.4"
+        version: "1.3.6"
     }, function () {
         /**
          * @class ax5autocomplete

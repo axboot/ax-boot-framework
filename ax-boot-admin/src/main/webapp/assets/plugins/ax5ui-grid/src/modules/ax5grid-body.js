@@ -2039,7 +2039,7 @@
                 action["__clear"].call(this);
             }
         },
-        keydown: function (key, columnKey) {
+        keydown: function (key, columnKey, _options) {
             var processor = {
                 "ESC": function () {
                     for (var columnKey in this.inlineEditing) {
@@ -2052,6 +2052,7 @@
                             inlineEdit.deActive.call(this, "RETURN", columnKey);
                         }
                     } else {
+
                         for (var k in this.focusedColumn) {
                             var _column = this.focusedColumn[k];
                             var column = this.bodyRowMap[_column.rowIndex + "_" + _column.colIndex];
@@ -2064,7 +2065,36 @@
                             }
 
                             var col = this.colGroup[_column.colIndex];
-                            if(GRID.inlineEditor[col.editor.type].editMode !== "inline") {
+
+                            if(GRID.inlineEditor[col.editor.type].editMode === "inline") {
+                                if(_options && _options.moveFocus){
+
+                                }
+                                else{
+                                    if (column.editor && column.editor.type == "checkbox") {
+
+                                        value = GRID.data.getValue.call(this, dindex, column.key);
+
+                                        var checked, newValue;
+                                        if (column.editor.config && column.editor.config.trueValue) {
+                                            if (checked = !(value == column.editor.config.trueValue)) {
+                                                newValue = column.editor.config.trueValue;
+                                            } else {
+                                                newValue = column.editor.config.falseValue;
+                                            }
+                                        } else {
+                                            newValue = checked = (value == false || value == "false" || value < "1") ? "true" : "false";
+                                        }
+
+                                        GRID.data.setValue.call(this, _column.dindex, column.key, newValue);
+                                        updateRowState.call(this, ["cellChecked"], dindex, {
+                                            key: column.key, rowIndex: _column.rowIndex, colIndex: _column.colIndex,
+                                            editorConfig: column.editor.config, checked: checked
+                                        });
+
+                                    }
+                                }
+                            } else {
                                 GRID.body.inlineEdit.active.call(this, this.focusedColumn, null, value);
                             }
                         }
@@ -2073,7 +2103,7 @@
             };
 
             if (key in processor) {
-                processor[key].call(this, key);
+                processor[key].call(this, key, columnKey, _options);
             }
         }
     };

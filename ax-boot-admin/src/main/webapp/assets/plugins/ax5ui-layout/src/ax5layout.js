@@ -336,10 +336,10 @@
                             var withoutAsteriskSize;
                             item.splitPanel.asteriskLength = 0;
                             item.splitPanel.forEach(function (panel, panelIndex) {
-                                beforeSetCSS["split"][item.oriental].call(this, item, panel, panelIndex);
+                                beforeSetCSS["split"][item.orientation].call(this, item, panel, panelIndex);
                             });
 
-                            if (item.oriental == "horizontal") {
+                            if (item.orientation == "horizontal") {
                                 withoutAsteriskSize = U.sum(item.splitPanel, function (n) {
                                     if (n.height != "*") return U.number(n.__height);
                                 });
@@ -351,7 +351,7 @@
                             }
 
                             item.splitPanel.forEach(function (panel, panelIndex) {
-                                setCSS["split"][item.oriental].call(this, item, panel, panelIndex, withoutAsteriskSize, windowResize);
+                                setCSS["split"][item.orientation].call(this, item, panel, panelIndex, withoutAsteriskSize, windowResize);
                             });
                         }
                     };
@@ -458,7 +458,7 @@
                             "split": function (e) {
                                 var mouseObj = ('changedTouches' in e.originalEvent) ? e.originalEvent.changedTouches[0] : e;
 
-                                if (item.oriental == "horizontal") {
+                                if (item.orientation == "horizontal") {
                                     panel.__da = mouseObj.clientY - panel.mousePosition.clientY;
 
                                     var prevPanel = item.splitPanel[panel.panelIndex - 1];
@@ -544,7 +544,7 @@
                             },
                             "split-panel": {
                                 "split": function () {
-                                    if (item.oriental == "horizontal") {
+                                    if (item.orientation == "horizontal") {
                                         // 앞과 뒤의 높이 조절
                                         item.splitPanel[panel.panelIndex - 1].__height += panel.__da;
                                         item.splitPanel[panel.panelIndex + 1].__height -= panel.__da;
@@ -681,7 +681,7 @@
 
                                 panelInfo.$target = jQuery(this);
                                 panelInfo.$target
-                                    .addClass("split-panel-" + item.oriental);
+                                    .addClass("split-panel-" + item.orientation);
                                 panelInfo.panelIndex = ELIndex;
 
                                 if (this.getAttribute("data-splitter")) {
@@ -702,11 +702,11 @@
 
                                 } else {
 
-                                    if (item.oriental == "horizontal") {
+                                    if (item.orientation == "horizontal") {
                                         panelInfo.__height = getPixel(panelInfo.height, item.targetDimension.height);
                                     }
                                     else {
-                                        item.oriental = "vertical";
+                                        item.orientation = "vertical";
                                         panelInfo.__width = getPixel(panelInfo.width, item.targetDimension.width);
                                     }
 
@@ -989,9 +989,9 @@
                     },
                     "split-panel": function (item) {
                         item.splitPanel.forEach(function (panel) {
-                            if (item.oriental == "vertical") {
+                            if (item.orientation == "vertical") {
                                 panel.__width = getPixel(panel.width, item.targetDimension.width);
-                            } else if (item.oriental == "horizontal") {
+                            } else if (item.orientation == "horizontal") {
                                 panel.__height = getPixel(panel.height, item.targetDimension.height);
                             }
                         });

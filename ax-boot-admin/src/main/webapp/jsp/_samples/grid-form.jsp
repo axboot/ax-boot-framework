@@ -76,7 +76,7 @@
                         </ax:tr>
                         <ax:tr>
                             <ax:td label="ETC1" width="300px">
-                                <input type="text" data-ax-path="etc1" class="form-control" />
+                                <input type="text" data-ax-path="etc1" class="form-control" data-ax5formatter="money" />
                             </ax:td>
                             <ax:td label="ETC2" width="300px">
                                 <select data-ax-path="etc2" class="form-control W100">

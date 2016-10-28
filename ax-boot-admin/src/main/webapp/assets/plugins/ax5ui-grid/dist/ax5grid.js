@@ -17,7 +17,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
 
     UI.addClass({
         className: "grid",
-        version: "1.3.4"
+        version: "1.3.6"
     }, function () {
         /**
          * @class ax5grid
@@ -900,15 +900,16 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
                         }
                     },
                     "TAB": function TAB(_e) {
+
                         var activeEditLength = 0;
                         for (var columnKey in this.inlineEditing) {
                             activeEditLength++;
 
-                            GRID.body.inlineEdit.keydown.call(this, "RETURN", columnKey);
+                            GRID.body.inlineEdit.keydown.call(this, "RETURN", columnKey, { moveFocus: true });
                             // next focus
                             if (activeEditLength == 1) {
                                 if (GRID.body.moveFocus.call(this, _e.shiftKey ? "LEFT" : "RIGHT")) {
-                                    GRID.body.inlineEdit.keydown.call(this, "RETURN");
+                                    GRID.body.inlineEdit.keydown.call(this, "RETURN", undefined, { moveFocus: true });
                                 }
                             }
                         }
@@ -1311,6 +1312,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
 // todo : filter
 // todo : body menu
 // todo : column reorder
+// todo : editor 필수값 속성 지정
 
 
 // ax5.ui.grid.body
@@ -3136,7 +3138,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
                 action["__clear"].call(this);
             }
         },
-        keydown: function keydown(key, columnKey) {
+        keydown: function keydown(key, columnKey, _options) {
             var processor = {
                 "ESC": function ESC() {
                     for (var columnKey in this.inlineEditing) {
@@ -3150,6 +3152,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
                             inlineEdit.deActive.call(this, "RETURN", columnKey);
                         }
                     } else {
+
                         for (var k in this.focusedColumn) {
                             var _column = this.focusedColumn[k];
                             var column = this.bodyRowMap[_column.rowIndex + "_" + _column.colIndex];
@@ -3162,7 +3165,32 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
                             }
 
                             var col = this.colGroup[_column.colIndex];
-                            if (GRID.inlineEditor[col.editor.type].editMode !== "inline") {
+
+                            if (GRID.inlineEditor[col.editor.type].editMode === "inline") {
+                                if (_options && _options.moveFocus) {} else {
+                                    if (column.editor && column.editor.type == "checkbox") {
+
+                                        value = GRID.data.getValue.call(this, dindex, column.key);
+
+                                        var checked, newValue;
+                                        if (column.editor.config && column.editor.config.trueValue) {
+                                            if (checked = !(value == column.editor.config.trueValue)) {
+                                                newValue = column.editor.config.trueValue;
+                                            } else {
+                                                newValue = column.editor.config.falseValue;
+                                            }
+                                        } else {
+                                            newValue = checked = value == false || value == "false" || value < "1" ? "true" : "false";
+                                        }
+
+                                        GRID.data.setValue.call(this, _column.dindex, column.key, newValue);
+                                        updateRowState.call(this, ["cellChecked"], dindex, {
+                                            key: column.key, rowIndex: _column.rowIndex, colIndex: _column.colIndex,
+                                            editorConfig: column.editor.config, checked: checked
+                                        });
+                                    }
+                                }
+                            } else {
                                 GRID.body.inlineEdit.active.call(this, this.focusedColumn, null, value);
                             }
                         }
@@ -3171,7 +3199,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
             };
 
             if (key in processor) {
-                processor[key].call(this, key);
+                processor[key].call(this, key, columnKey, _options);
             }
         }
     };
