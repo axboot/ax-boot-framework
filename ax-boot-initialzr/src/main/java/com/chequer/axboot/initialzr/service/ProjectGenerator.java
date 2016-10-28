@@ -91,8 +91,8 @@ public class ProjectGenerator {
             return baseName + "/java/" + packageName.replace(".", "/") + path;
         }
 
-        if ("pom.xml".equals(name)) {
-            return projectName + "/pom.xml";
+        if (path.startsWith("/root")) {
+            return projectName + "/" + name;
         }
 
         return baseName + "/" + path;
