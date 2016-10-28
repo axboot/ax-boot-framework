@@ -17,7 +17,6 @@ var CONFIG = JSON.parse(fs.readFileSync('config.json', 'utf8'));
 var ROOT = CONFIG.root;
 var ASSETS_SRC = ROOT + "/assets";
 var ASSETS = ROOT + "/assets";
-var AX5UI_PATH = CONFIG.ax5uiPath;
 var AX5UI_PLUGINS = {
     "ax5core": "ax5core",
     "ax5ui-dialog": "ax5dialog",
@@ -110,26 +109,7 @@ gulp.task('dashboard-scss', function () {
         .pipe(gulp.dest(ASSETS + '/plugins/css/light-bootstrap-dashboard'));
 });
 
-gulp.task('import-ax5ui-file', function () {
-    /*
-     ax5ui 소스를 로컬에서 직접 복붙하는 타스크
-     */
-    for (var k in AX5UI_PLUGINS) {
-        gulp.src([
-            '!' + AX5UI_PATH + k + '/**/test/**/*',
-            '!' + AX5UI_PATH + k + '/**/node_modules/**/*',
-            AX5UI_PATH + k + '/**/src/**/*',
-            AX5UI_PATH + k + '/**/dist/**/*',
-            AX5UI_PATH + k + '/**/*.json'
-        ], {base: AX5UI_PATH})
-            .pipe(gulp.dest(ASSETS + '/plugins'));
-    }
-
-});
-
-
 gulp.task('language', function () {
-
     var kor = JSON.parse(fs.readFileSync(ASSETS_SRC + '/lang/kor.json', 'utf8'));
     kor["@each"] = (function () {
         var arr = [];
