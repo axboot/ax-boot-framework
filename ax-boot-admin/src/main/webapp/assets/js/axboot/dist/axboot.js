@@ -37,29 +37,9 @@ axboot.init = function () {
                 size: 6
             },
             autoResize: false,
+            onStateChanged: function onStateChanged() {},
             onResize: function onResize() {
-                $('[data-fit-height-content]').each(function () {
-                    var $this = $(this);
-                    var _pHeight = $this.offsetParent().height();
-                    var name = this.getAttribute("data-fit-height-content");
-                    var _asideHeight = 0;
-                    $('[data-fit-height-aside="' + name + '"]').each(function () {
-                        _asideHeight += $(this).outerHeight();
-                    });
-                    $this.css({ height: _pHeight - _asideHeight });
-                });
-                if (ax5.ui.grid_instance) {
-                    var gi = ax5.ui.grid_instance.length;
-                    while (gi--) {
-                        ax5.ui.grid_instance[gi].setHeight(ax5.ui.grid_instance[gi].$target.height());
-                    }
-                }
-                if (ax5.ui.mask_instance) {
-                    var mi = ax5.ui.mask_instance.length;
-                    while (mi--) {
-                        ax5.ui.mask_instance[mi].align();
-                    }
-                }
+                axboot.layoutResize();
             },
             onOpenTab: function onOpenTab() {
                 var activeTabPanel = this.activePanel.$target.get(0);
@@ -135,18 +115,54 @@ axboot.pageStart = function () {
  * @method axboot.pageResize
  */
 axboot.pageResize = function () {
-
     if (window[axboot.def.pageFunctionName] && window[axboot.def.pageFunctionName].pageResize) {
         window[axboot.def.pageFunctionName].pageResize();
     }
 };
+
 /**
- * 페이지내부에 선언된 ax5layout이 리사이즈 되었을 때. axboot.def.pageFunctionName의 layoutResize를 실행해 줍니다.
+ * 페이지내부에 선언된 ax5layout안에 UI들에 강제 resize이벤트 발생시켜 줌.
  * @method axboot.layoutResize
  */
-axboot.layoutResize = function () {
-    if (window[axboot.def.pageFunctionName] && window[axboot.def.pageFunctionName].layoutResize) {
-        window[axboot.def.pageFunctionName].layoutResize();
+axboot.layoutResize = function (_delay) {
+
+    $('[data-fit-height-content]').each(function () {
+        var $this = $(this);
+        var _pHeight = $this.offsetParent().height();
+        var name = this.getAttribute("data-fit-height-content");
+        var _asideHeight = 0;
+        $('[data-fit-height-aside="' + name + '"]').each(function () {
+            _asideHeight += $(this).outerHeight();
+        });
+        $this.css({ height: _pHeight - _asideHeight });
+    });
+
+    function fn() {
+        if (ax5.ui.grid_instance) {
+            var gi = ax5.ui.grid_instance.length;
+            while (gi--) {
+                ax5.ui.grid_instance[gi].setHeight(ax5.ui.grid_instance[gi].$target.height());
+            }
+        }
+        if (ax5.ui.mask_instance) {
+            var mi = ax5.ui.mask_instance.length;
+            while (mi--) {
+                ax5.ui.mask_instance[mi].align();
+            }
+        }
+        if (ax5.ui.autocomplete_instance) {
+            ax5.ui.autocomplete_instance.align();
+        }
+        if (ax5.ui.combobox_instance) {
+            ax5.ui.combobox_instance.align();
+        }
+    }
+    if (_delay) {
+        setTimeout(function () {
+            fn();
+        }, _delay);
+    } else {
+        fn();
     }
 };
 
@@ -1929,6 +1945,42 @@ ax5.ui.formatter.formatter["chequer"] = {
         });
     }
 };
+
+/**
+ * @Object {Object} axboot.formFormatter
+ */
+axboot.formFormatter = function () {
+    /**
+     * @class ax5FormFormatter
+     * @param _model
+     * @example
+     * ```js
+     * this.formFormatter = new axboot.formFormatter(this.$target); // 폼 포메터 시작
+     * ```
+     */
+    var ax5FormFormatter = function ax5FormFormatter(_$target) {
+        this.target = _$target;
+
+        if (!(this.target instanceof jQuery)) {
+            console.log("target이 jQuery 오브젝트가 아니라서 formFormatter 초기화에 실패 하였습니다");
+            return;
+        }
+
+        /**
+         * @method ax5FormFormatter.formatting
+         * @example
+         * ```js
+         * this.modelFormatter.formatting(); // 입력된 값을 포메팅 된 값으로 변경
+         * ```
+         */
+        this.formatting = function () {
+            this.target.find('[data-ax5formatter]').ax5formatter();
+        };
+
+        this.formatting();
+    };
+    return ax5FormFormatter;
+}();
 /**
  * @object {Object} axboot.preparePlugin
  */

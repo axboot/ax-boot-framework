@@ -1323,7 +1323,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
 
     var escapeString = function escapeString(_value) {
         var tagsToReplace = {
-            '&': '&amp;',
+            //'&': '&amp;',
             '<': '&lt;',
             '>': '&gt;'
         };

@@ -173,24 +173,13 @@
 
 	0% {
 		opacity: 0.0;
-		@include transform(scale(1));
+		@include transform(scale(0));
 	}
 
 	100% {
 		opacity: 1.0;
 		@include transform(scale(1));
 	}
-
-	/*
-	0% {
-		opacity: 0.0;
-		@include transform(translateY(0%) rotateX(90deg));
-	}
-	100% {
-		opacity: 1.0;
-		@include transform(translateY(0%) rotateX(0deg));
-	}
-	*/
 }
 
 @include keyframes(ax-picker-destroy) {
@@ -213,7 +202,7 @@
 	@include perspective(1000px);
 	@include transform-style(preserve-3d);
 
-	@include animation(ax-picker $ax5picker-easing-time-open $ease-out-back);
+	@include animation(ax-picker $ax5picker-easing-time-open);
 	@include transform(translateZ(0));
 	@include transform-origin(center top);
 	/* flip type

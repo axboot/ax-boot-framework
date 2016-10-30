@@ -16,7 +16,7 @@ $ax5mask-bg-opacity: 0.4;
 @import "../../plugins/ax5ui-calendar/src/scss/ax5calendar_variables";
 @import "../../plugins/ax5ui-calendar/src/scss/ax5calendar";
 
-$ax5picker-easing-time-open: 0.1s;
+$ax5picker-easing-time-open: 0.2s;
 $ax5picker-easing-time-close: 0.1s;
 @import "../../plugins/ax5ui-picker/src/scss/ax5picker_variables";
 @import "../../plugins/ax5ui-picker/src/scss/ax5picker";
@@ -83,6 +83,9 @@ $ax5picker-easing-time-close: 0.1s;
     }
 }
 
+$ax5select-default-base-color: #444;
+$ax5select-default-theme-color: #D8D8D8;
+$ax5select-default-hover-type: darken, 0%;
 @import "../../plugins/ax5ui-select/src/scss/ax5select_variables";
 @import "../../plugins/ax5ui-select/src/scss/ax5select";
 
@@ -93,9 +96,16 @@ $ax5grid-border: 1px solid #D8D8D8;
 @import "../../plugins/ax5ui-grid/src/scss/ax5grid";
 
 $ax5combobox-label-padding: 0px 3px;
+$ax5combobox-default-base-color: #444;
+$ax5combobox-default-theme-color: #D8D8D8;
+$ax5combobox-default-hover-type: darken, 0%;
 @import "../../plugins/ax5ui-combobox/src/scss/ax5combobox_variables";
 @import "../../plugins/ax5ui-combobox/src/scss/ax5combobox";
 
+$ax5autocomplete-label-padding: 0px 3px;
+$ax5autocomplete-default-base-color: #444;
+$ax5autocomplete-default-theme-color: #D8D8D8;
+$ax5autocomplete-default-hover-type: darken, 1%;
 @import "../../plugins/ax5ui-autocomplete/src/scss/ax5autocomplete_variables";
 @import "../../plugins/ax5ui-autocomplete/src/scss/ax5autocomplete";
 

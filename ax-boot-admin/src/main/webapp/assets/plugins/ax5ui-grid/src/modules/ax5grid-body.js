@@ -6,7 +6,7 @@
 
     var escapeString = function(_value){
         var tagsToReplace = {
-            '&': '&amp;',
+            //'&': '&amp;',
             '<': '&lt;',
             '>': '&gt;'
         };
