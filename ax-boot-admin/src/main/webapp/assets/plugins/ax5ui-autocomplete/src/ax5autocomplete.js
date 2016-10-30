@@ -314,8 +314,8 @@
                     });
 
                     item.$select.html(AUTOCOMPLETE.tmpl.get.call(this, "formSelectOptions", {
-                            selected: item.selected
-                        }, item.columnKeys));
+                        selected: item.selected
+                    }, item.columnKeys));
 
                     item.$displayLabel
                         .html(getLabel.call(this, queIdx));
@@ -503,18 +503,18 @@
 
                                 if (typeof direction !== "undefined") {
                                     /*
-                                    // 방향이 있으면 커서 업/다운 아니면 사용자 키보드 입력
-                                    // 방향이 있으면 라벨 값을 수정
-                                    var childNodes = item.$displayLabel.get(0).childNodes;
-                                    var lastNode = childNodes[childNodes.length - 1];
-                                    if (lastNode && lastNode.nodeType == '3') {
-                                        //lastNode.nodeValue = item.options[_focusIndex].text;
-                                        U.selectRange(item.$displayLabel, "end");
-                                    } else if (lastNode && lastNode.nodeType == '1') {
-                                        //jQuery(lastNode).after(item.options[_focusIndex].text);
-                                        U.selectRange(item.$displayLabel, "end");
-                                    }
-                                    */
+                                     // 방향이 있으면 커서 업/다운 아니면 사용자 키보드 입력
+                                     // 방향이 있으면 라벨 값을 수정
+                                     var childNodes = item.$displayLabel.get(0).childNodes;
+                                     var lastNode = childNodes[childNodes.length - 1];
+                                     if (lastNode && lastNode.nodeType == '3') {
+                                     //lastNode.nodeValue = item.options[_focusIndex].text;
+                                     U.selectRange(item.$displayLabel, "end");
+                                     } else if (lastNode && lastNode.nodeType == '1') {
+                                     //jQuery(lastNode).after(item.options[_focusIndex].text);
+                                     U.selectRange(item.$displayLabel, "end");
+                                     }
+                                     */
                                     U.selectRange(item.$displayLabel, "end");
                                 }
                             }
@@ -949,7 +949,7 @@
                             }
                             if (ctrlKeys[e.which]) {
                                 U.stopEvent(e);
-                            }else{
+                            } else {
                                 debouncedFocusWord.call(this, queIdx);
                             }
 
@@ -1367,6 +1367,14 @@
                     state: "disable"
                 });
 
+                return this;
+            };
+
+            /**
+             * @method ax5autocomplete.align
+             */
+            this.align = function () {
+                alignAutocompleteDisplay.call(this);
                 return this;
             };
 

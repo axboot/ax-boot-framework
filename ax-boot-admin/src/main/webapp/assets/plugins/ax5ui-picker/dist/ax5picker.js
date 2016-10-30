@@ -9,7 +9,7 @@
 
     UI.addClass({
         className: "picker",
-        version: "1.3.9"
+        version: "${VERSION}"
     }, function () {
         /**
          * @class ax5picker
@@ -292,6 +292,8 @@
                 };
 
                 var item = this.queue[this.activePickerQueueIndex];
+
+                this.activePicker.css({ top: -999 });
 
                 if (append) jQuery(document.body).append(this.activePicker);
                 setTimeout(function () {

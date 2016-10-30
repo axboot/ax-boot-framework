@@ -1527,6 +1527,14 @@
                 return this;
             };
 
+            /**
+             * @method ax5combobox.align
+             */
+            this.align = function () {
+                alignComboboxDisplay.call(this);
+                return this;
+            };
+
             // 클래스 생성자
             this.main = (function () {
                 if (arguments && U.isObject(arguments[0])) {

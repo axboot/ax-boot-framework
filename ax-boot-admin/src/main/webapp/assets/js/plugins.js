@@ -14709,7 +14709,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
          * ax5 version
          * @member {String} ax5.info.version
          */
-        var version = "1.3.9";
+        var version = "1.3.10";
 
         /**
          * ax5 library path
@@ -17751,7 +17751,7 @@ ax5.ui = function () {
 
     UI.addClass({
         className: "dialog",
-        version: "1.3.9"
+        version: "1.3.10"
     }, function () {
         /**
          * @class ax5dialog
@@ -18290,7 +18290,7 @@ ax5.ui = function () {
 
     UI.addClass({
         className: "mask",
-        version: "1.3.9"
+        version: "1.3.10"
     }, function () {
         /**
          * @class ax5mask
@@ -18621,7 +18621,7 @@ ax5.ui = function () {
 
     UI.addClass({
         className: "toast",
-        version: "1.3.9"
+        version: "1.3.10"
     }, function () {
         /**
          * @class ax5toast
@@ -18985,7 +18985,7 @@ ax5.ui = function () {
 
     UI.addClass({
         className: "modal",
-        version: "1.3.9"
+        version: "1.3.10"
     }, function () {
         /**
          * @class ax5modal
@@ -19611,7 +19611,7 @@ ax5.ui = function () {
 
     UI.addClass({
         className: "calendar",
-        version: "1.3.9"
+        version: "1.3.10"
     }, function () {
 
         /**
@@ -20675,7 +20675,7 @@ ax5.ui = function () {
 
     UI.addClass({
         className: "picker",
-        version: "1.3.9"
+        version: "${VERSION}"
     }, function () {
         /**
          * @class ax5picker
@@ -20958,6 +20958,8 @@ ax5.ui = function () {
                 };
 
                 var item = this.queue[this.activePickerQueueIndex];
+
+                this.activePicker.css({ top: -999 });
 
                 if (append) jQuery(document.body).append(this.activePicker);
                 setTimeout(function () {
@@ -21633,7 +21635,7 @@ jQuery.fn.ax5picker = function () {
 
     UI.addClass({
         className: "formatter",
-        version: "1.3.9"
+        version: "1.3.10"
     }, function () {
         var TODAY = new Date();
         var setSelectionRange = function setSelectionRange(input, pos) {
@@ -22271,7 +22273,7 @@ jQuery.fn.ax5formatter = function () {
 
     UI.addClass({
         className: "menu",
-        version: "1.3.9"
+        version: "1.3.10"
     }, function () {
         /**
          * @class ax5.ui.menu
@@ -23066,7 +23068,7 @@ jQuery.fn.ax5formatter = function () {
 
     UI.addClass({
         className: "select",
-        version: "1.3.9"
+        version: "1.3.10"
     }, function () {
         /**
          * @class ax5select
@@ -25514,7 +25516,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
 
     var escapeString = function escapeString(_value) {
         var tagsToReplace = {
-            '&': '&amp;',
+            //'&': '&amp;',
             '<': '&lt;',
             '>': '&gt;'
         };
@@ -29404,7 +29406,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
 
     UI.addClass({
         className: "combobox",
-        version: "1.3.9"
+        version: "${VERSION}"
     }, function () {
         /**
          * @class ax5combobox
@@ -30827,6 +30829,14 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
                 return this;
             };
 
+            /**
+             * @method ax5combobox.align
+             */
+            this.align = function () {
+                alignComboboxDisplay.call(this);
+                return this;
+            };
+
             // 클래스 생성자
             this.main = function () {
                 if (arguments && U.isObject(arguments[0])) {
@@ -31056,7 +31066,7 @@ jQuery.fn.ax5combobox = function () {
 
     UI.addClass({
         className: "layout",
-        version: "1.3.9"
+        version: "1.3.10"
     }, function () {
         /**
          * @class ax5layout
@@ -32087,7 +32097,7 @@ jQuery.fn.ax5layout = function () {
 
     UI.addClass({
         className: "binder",
-        version: "1.3.9"
+        version: "1.3.10"
     }, function () {
 
         /**
@@ -33044,7 +33054,7 @@ jQuery.fn.ax5layout = function () {
 
     UI.addClass({
         className: "autocomplete",
-        version: "1.3.9"
+        version: "${VERSION}"
     }, function () {
         /**
          * @class ax5autocomplete
@@ -33508,18 +33518,18 @@ jQuery.fn.ax5layout = function () {
 
                             if (typeof direction !== "undefined") {
                                 /*
-                                // 방향이 있으면 커서 업/다운 아니면 사용자 키보드 입력
-                                // 방향이 있으면 라벨 값을 수정
-                                var childNodes = item.$displayLabel.get(0).childNodes;
-                                var lastNode = childNodes[childNodes.length - 1];
-                                if (lastNode && lastNode.nodeType == '3') {
-                                    //lastNode.nodeValue = item.options[_focusIndex].text;
-                                    U.selectRange(item.$displayLabel, "end");
-                                } else if (lastNode && lastNode.nodeType == '1') {
-                                    //jQuery(lastNode).after(item.options[_focusIndex].text);
-                                    U.selectRange(item.$displayLabel, "end");
-                                }
-                                */
+                                 // 방향이 있으면 커서 업/다운 아니면 사용자 키보드 입력
+                                 // 방향이 있으면 라벨 값을 수정
+                                 var childNodes = item.$displayLabel.get(0).childNodes;
+                                 var lastNode = childNodes[childNodes.length - 1];
+                                 if (lastNode && lastNode.nodeType == '3') {
+                                 //lastNode.nodeValue = item.options[_focusIndex].text;
+                                 U.selectRange(item.$displayLabel, "end");
+                                 } else if (lastNode && lastNode.nodeType == '1') {
+                                 //jQuery(lastNode).after(item.options[_focusIndex].text);
+                                 U.selectRange(item.$displayLabel, "end");
+                                 }
+                                 */
                                 U.selectRange(item.$displayLabel, "end");
                             }
                         }
@@ -34315,6 +34325,14 @@ jQuery.fn.ax5layout = function () {
                     state: "disable"
                 });
 
+                return this;
+            };
+
+            /**
+             * @method ax5autocomplete.align
+             */
+            this.align = function () {
+                alignAutocompleteDisplay.call(this);
                 return this;
             };
 

@@ -303,11 +303,12 @@
 
                     var item = this.queue[this.activePickerQueueIndex];
 
+                    this.activePicker.css({top: -999});
+
                     if (append) jQuery(document.body).append(this.activePicker);
                     setTimeout((function () {
                         _alignPicker.call(this, item);
                     }).bind(this));
-
                 },
                 onBodyClick = function (e, target) {
                     if (!this.activePicker) return this;
@@ -948,7 +949,6 @@
                     this.activePicker.find("[data-picker-btn]").on(cfg.clickEventName, (function (e) {
                         onBtnClick.call(this, e || window.event, queIdx);
                     }).bind(this));
-
 
                     alignPicker.call(this, "append");
 

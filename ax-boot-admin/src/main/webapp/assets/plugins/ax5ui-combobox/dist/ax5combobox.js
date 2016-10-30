@@ -9,7 +9,7 @@
 
     UI.addClass({
         className: "combobox",
-        version: "1.3.9"
+        version: "${VERSION}"
     }, function () {
         /**
          * @class ax5combobox
@@ -1429,6 +1429,14 @@
                     state: "disable"
                 });
 
+                return this;
+            };
+
+            /**
+             * @method ax5combobox.align
+             */
+            this.align = function () {
+                alignComboboxDisplay.call(this);
                 return this;
             };
 
