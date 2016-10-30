@@ -3,6 +3,7 @@ package com.chequer.axboot.core.utils;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.io.IOUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.core.io.ClassPathResource;
 
 import java.io.File;
@@ -15,37 +16,41 @@ public class TemplateUtils {
                 loader = TemplateUtils.class.getClassLoader();
             }
 
-            String servletBasePath = HttpUtils.getCurrentRequest().getServletContext().getRealPath("/");
+            String jspName = FilenameUtils.getBaseName(jspPath);
 
-            if (servletBasePath.contains("/target")) {
-                servletBasePath = servletBasePath.substring(0, servletBasePath.indexOf("/target"));
-            }
+            if (StringUtils.isNotEmpty(jspName)) {
+                String servletBasePath = HttpUtils.getCurrentRequest().getServletContext().getRealPath("/");
 
-            String fileBasePath = servletBasePath;
+                if (servletBasePath.contains("/target")) {
+                    servletBasePath = servletBasePath.substring(0, servletBasePath.indexOf("/target"));
+                }
 
-            if (!fileBasePath.contains("webapp")) {
-                fileBasePath = servletBasePath + "/src/main/webapp/";
-            }
+                String fileBasePath = servletBasePath;
 
-            String jsPath = getJsPath(jspPath);
-            String defaultJsPath = getDefaultJsPath(jspPath);
+                if (!fileBasePath.contains("webapp")) {
+                    fileBasePath = servletBasePath + "/src/main/webapp/";
+                }
 
-            File jspFile = new File(fileBasePath + jspPath);
-            File defaultJsFile = new File(fileBasePath + defaultJsPath);
-            File jsFile = new File(fileBasePath + jsPath);
+                String jsPath = getJsPath(jspPath);
+                String defaultJsPath = getDefaultJsPath(jspPath);
 
-            if (!jspFile.exists()) {
-                FileUtils.forceMkdir(jspFile.getParentFile());
-                String jspTemplate = IOUtils.toString(new ClassPathResource("/template/JSPBasicTemplate.tpl", loader).getInputStream(), "UTF-8");
-                jspTemplate = jspTemplate.replace("@{programJSPath}", jsPath);
+                File jspFile = new File(fileBasePath + jspPath);
+                File defaultJsFile = new File(fileBasePath + defaultJsPath);
+                File jsFile = new File(fileBasePath + jsPath);
 
-                FileUtils.write(jspFile, jspTemplate, "UTF-8");
-            }
+                if (!jspFile.exists()) {
+                    FileUtils.forceMkdir(jspFile.getParentFile());
+                    String jspTemplate = IOUtils.toString(new ClassPathResource("/template/JSPBasicTemplate.tpl", loader).getInputStream(), "UTF-8");
+                    jspTemplate = jspTemplate.replace("@{programJSPath}", jsPath);
 
-            if (!jsFile.exists() && !defaultJsFile.exists()) {
-                FileUtils.forceMkdir(jsFile.getParentFile());
-                String jsTemplate = IOUtils.toString(new ClassPathResource("/template/JSBasicTemplate.tpl", loader).getInputStream(), "UTF-8");
-                FileUtils.write(jsFile, jsTemplate, "UTF-8");
+                    FileUtils.write(jspFile, jspTemplate, "UTF-8");
+                }
+
+                if (!jsFile.exists() && !defaultJsFile.exists()) {
+                    FileUtils.forceMkdir(jsFile.getParentFile());
+                    String jsTemplate = IOUtils.toString(new ClassPathResource("/template/JSBasicTemplate.tpl", loader).getInputStream(), "UTF-8");
+                    FileUtils.write(jsFile, jsTemplate, "UTF-8");
+                }
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -57,12 +62,12 @@ public class TemplateUtils {
     }
 
     public static String getJsPath(String programPath) {
-        String fileName = FilenameUtils.getBaseName(programPath.substring(5)) + ".js";
-        return "/assets/js/view/" + fileName;
+        String path = programPath.substring(5, programPath.lastIndexOf("/")) + "/" + FilenameUtils.getBaseName(programPath) + ".js";
+        return "/assets/js/view/" + path;
     }
 
     public static String getDefaultJsPath(String programPath) {
-        String fileName = FilenameUtils.getBaseName(programPath.substring(5)) + ".js";
-        return "/assets/js/axboot/" + fileName;
+        String path = programPath.substring(5, programPath.lastIndexOf("/")) + "/" + FilenameUtils.getBaseName(programPath) + ".js";
+        return "/assets/js/axboot/" + path;
     }
 }
