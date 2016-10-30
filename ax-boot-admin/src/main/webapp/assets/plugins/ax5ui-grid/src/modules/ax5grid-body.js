@@ -4,6 +4,16 @@
     var GRID = ax5.ui.grid;
     var U = ax5.util;
 
+    var escapeString = function(_value){
+        var tagsToReplace = {
+            '&': '&amp;',
+            '<': '&lt;',
+            '>': '&gt;'
+        };
+        return _value.replace(/[&<>]/g, function(tag) {
+            return tagsToReplace[tag] || tag;
+        });
+    };
     var columnSelect = {
         focusClear: function () {
             var self = this;
@@ -557,7 +567,7 @@
                     _value = GRID.data.getValue.call(this, _index, _key);
                     if (typeof _value !== "undefined") returnValue = _value;
                 }
-                return returnValue;
+                return escapeString(returnValue);
             }
         }
     };
@@ -793,7 +803,6 @@
                                 '" style="height:' + _cellHeight + 'px;line-height: ' + lineHeight + 'px;">';
 
                         })(cellHeight), (isGroupingRow) ? getGroupingValue.call(this, _list[di], di, col) : getFieldValue.call(this, _list, _list[di], di, col), '</span>');
-
                         SS.push('</td>');
                     }
                     SS.push('<td ',
@@ -2002,7 +2011,7 @@
                     return U.number(__value);
                 }
                 else {
-                    return document.createElement( 'a' ).appendChild(document.createTextNode( __value ) ).parentNode.innerHTML;
+                    return __value;
                 }
             }).call(this, editorValue, column.editor);
 

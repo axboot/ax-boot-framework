@@ -1321,6 +1321,16 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
     var GRID = ax5.ui.grid;
     var U = ax5.util;
 
+    var escapeString = function escapeString(_value) {
+        var tagsToReplace = {
+            '&': '&amp;',
+            '<': '&lt;',
+            '>': '&gt;'
+        };
+        return _value.replace(/[&<>]/g, function (tag) {
+            return tagsToReplace[tag] || tag;
+        });
+    };
     var columnSelect = {
         focusClear: function focusClear() {
             var self = this;
@@ -1832,7 +1842,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
                     _value = GRID.data.getValue.call(this, _index, _key);
                     if (typeof _value !== "undefined") returnValue = _value;
                 }
-                return returnValue;
+                return escapeString(returnValue);
             }
         }
     };
@@ -2048,7 +2058,6 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
 
                             return '<span data-ax5grid-cellHolder="' + (col.multiLine ? 'multiLine' : '') + '" ' + (colAlign ? 'data-ax5grid-text-align="' + colAlign + '"' : '') + '" style="height:' + _cellHeight + 'px;line-height: ' + lineHeight + 'px;">';
                         }(cellHeight), isGroupingRow ? getGroupingValue.call(this, _list[di], di, col) : getFieldValue.call(this, _list, _list[di], di, col), '</span>');
-
                         SS.push('</td>');
                     }
                     SS.push('<td ', 'data-ax5grid-column-row="null" ', 'data-ax5grid-column-col="null" ', 'data-ax5grid-data-index="' + di + '" ', 'data-ax5grid-column-attr="' + "default" + '" ', 'style="height: ' + cfg.body.columnHeight + 'px;min-height: 1px;" ', '></td>');
@@ -3101,7 +3110,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
                 if (__editor.type == "money") {
                     return U.number(__value);
                 } else {
-                    return document.createElement('a').appendChild(document.createTextNode(__value)).parentNode.innerHTML;
+                    return __value;
                 }
             }.call(this, editorValue, column.editor);
 
@@ -3564,8 +3573,6 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
             this.list[_dindex][this.config.columnKeys.modified] = true;
             this.list[_dindex][_key] = _value;
         }
-
-        console.log(this.list[_dindex][_key], _value);
 
         if (this.onDataChanged) {
             this.onDataChanged.call({
