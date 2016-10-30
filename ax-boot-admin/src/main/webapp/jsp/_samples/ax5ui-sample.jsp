@@ -146,6 +146,11 @@
                                 <textarea data-ax-path="etc4" class="form-control"></textarea>
                             </ax:td>
                         </ax:tr>
+                        <ax:tr>
+                            <ax:td label="날짜선택" width="100%">
+                                <div id="calendar-target"></div>
+                            </ax:td>
+                        </ax:tr>
                     </ax:tbl>
 
                 </ax:form>

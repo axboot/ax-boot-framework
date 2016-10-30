@@ -811,7 +811,8 @@
             if (isScrolled) {
                 _elTarget.css({paddingTop: (_scrollConfig.paintStartRowIndex - this.xvar.frozenRowIndex) * _scrollConfig.bodyTrHeight});
             }
-            _elTarget.html(SS.join(''));
+            _elTarget.empty().get(0).innerHTML = SS.join('');
+
             this.$.livePanelKeys.push(_elTargetKey); // 사용중인 패널키를 모아둠. (뷰의 상태 변경시 사용하려고)
             return true;
         };
@@ -907,7 +908,7 @@
 
             SS.push('</table>');
 
-            _elTarget.html(SS.join(''));
+            _elTarget.empty().get(0).innerHTML = SS.join('');
             this.$.livePanelKeys.push(_elTargetKey); // 사용중인 패널키를 모아둠. (뷰의 상태 변경시 사용하려고)
             return true;
         };
@@ -1107,7 +1108,7 @@
 
             SS.push('</table>');
 
-            _elTarget.html(SS.join(''));
+            _elTarget.empty().get(0).innerHTML = SS.join('');
             return true;
         };
         var replaceGroupTr = function (_elTargetKey, _colGroup, _groupRow, _list, _scrollConfig) {
@@ -1197,7 +1198,7 @@
                             'style="height: ' + (cfg.body.columnHeight) + 'px;min-height: 1px;" ',
                             '></td>');
                     }
-                    _elTarget.find('tr[data-ax5grid-tr-data-index="' + di + '"]').html(SS.join(''));
+                    _elTarget.find('tr[data-ax5grid-tr-data-index="' + di + '"]').empty().get(0).innerHTML = SS.join('');
                 }
             }
         };
@@ -1346,7 +1347,7 @@
 
             SS.push('</table>');
 
-            _elTarget.html(SS.join(''));
+            _elTarget.empty().get(0).innerHTML = SS.join('');
             return true;
         };
         var replaceGroupTr = function (_elTargetKey, _colGroup, _groupRow, _list, _scrollConfig) {
@@ -1436,7 +1437,7 @@
                             'style="height: ' + (cfg.body.columnHeight) + 'px;min-height: 1px;" ',
                             '></td>');
                     }
-                    _elTarget.find('tr[data-ax5grid-tr-data-index="' + di + '"]').html(SS.join(''));
+                    _elTarget.find('tr[data-ax5grid-tr-data-index="' + di + '"]').empty().get(0).innerHTML = SS.join('');
                 }
             }
         };
@@ -1517,7 +1518,8 @@
                     '></td>');
             }
 
-            _elTarget.find('tr[data-ax5grid-tr-data-index="' + di + '"]').html(SS.join(''));
+            //_elTarget.find('tr[data-ax5grid-tr-data-index="' + di + '"]').html(SS.join(''));
+            _elTarget.find('tr[data-ax5grid-tr-data-index="' + di + '"]').empty().get(0).innerHTML = SS.join('');
         };
 
 
@@ -2000,7 +2002,7 @@
                     return U.number(__value);
                 }
                 else {
-                    return __value;
+                    return document.createElement( 'a' ).appendChild(document.createTextNode( __value ) ).parentNode.innerHTML;
                 }
             }).call(this, editorValue, column.editor);
 

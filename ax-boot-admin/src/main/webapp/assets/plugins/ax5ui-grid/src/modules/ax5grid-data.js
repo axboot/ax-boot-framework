@@ -327,6 +327,7 @@
     };
 
     var setValue = function (_dindex, _key, _value) {
+        
         this.needToPaintSum = true;
         if (/[\.\[\]]/.test(_key)) {
             try {
@@ -339,6 +340,8 @@
             this.list[_dindex][this.config.columnKeys.modified] = true;
             this.list[_dindex][_key] = _value;
         }
+        
+        console.log(this.list[_dindex][_key], _value);
 
         if (this.onDataChanged) {
             this.onDataChanged.call({
