@@ -91,10 +91,12 @@
             <div class="ax-frame-aside-menu-holder">
                 <div style="height: 10px;"></div>
                 {{#items}}
-                <a class="aside-menu-item aside-menu-item-label {{#open}}opend{{/open}}" data-label-index="{{@i}}">{{{name}}}</a>
+                <a class="aside-menu-item aside-menu-item-label{{#hasChildren}} {{#open}}opend{{/open}}{{/hasChildren}}" data-label-index="{{@i}}">{{{name}}}</a>
+                {{#hasChildren}}
                 <div class="aside-menu-item aside-menu-item-tree-body {{#open}}opend{{/open}}" data-tree-body-index="{{@i}}">
                     <div class="tree-holder ztree" id="aside-menu-{{@i}}" data-tree-holder-index="{{@i}}"></div>
                 </div>
+                {{/hasChildren}}
                 {{/items}}
             </div>
         </script>
