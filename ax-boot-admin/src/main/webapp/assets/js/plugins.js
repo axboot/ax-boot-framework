@@ -14709,7 +14709,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
          * ax5 version
          * @member {String} ax5.info.version
          */
-        var version = "1.3.6";
+        var version = "1.3.9";
 
         /**
          * ax5 library path
@@ -17751,7 +17751,7 @@ ax5.ui = function () {
 
     UI.addClass({
         className: "dialog",
-        version: "1.3.6"
+        version: "1.3.9"
     }, function () {
         /**
          * @class ax5dialog
@@ -18290,7 +18290,7 @@ ax5.ui = function () {
 
     UI.addClass({
         className: "mask",
-        version: "1.3.6"
+        version: "1.3.9"
     }, function () {
         /**
          * @class ax5mask
@@ -18621,7 +18621,7 @@ ax5.ui = function () {
 
     UI.addClass({
         className: "toast",
-        version: "1.3.6"
+        version: "1.3.9"
     }, function () {
         /**
          * @class ax5toast
@@ -18985,7 +18985,7 @@ ax5.ui = function () {
 
     UI.addClass({
         className: "modal",
-        version: "1.3.6"
+        version: "1.3.9"
     }, function () {
         /**
          * @class ax5modal
@@ -19611,7 +19611,7 @@ ax5.ui = function () {
 
     UI.addClass({
         className: "calendar",
-        version: "1.3.6"
+        version: "1.3.9"
     }, function () {
 
         /**
@@ -20675,7 +20675,7 @@ ax5.ui = function () {
 
     UI.addClass({
         className: "picker",
-        version: "1.3.6"
+        version: "1.3.9"
     }, function () {
         /**
          * @class ax5picker
@@ -21633,7 +21633,7 @@ jQuery.fn.ax5picker = function () {
 
     UI.addClass({
         className: "formatter",
-        version: "1.3.6"
+        version: "1.3.9"
     }, function () {
         var TODAY = new Date();
         var setSelectionRange = function setSelectionRange(input, pos) {
@@ -22271,7 +22271,7 @@ jQuery.fn.ax5formatter = function () {
 
     UI.addClass({
         className: "menu",
-        version: "1.3.6"
+        version: "1.3.9"
     }, function () {
         /**
          * @class ax5.ui.menu
@@ -23066,7 +23066,7 @@ jQuery.fn.ax5formatter = function () {
 
     UI.addClass({
         className: "select",
-        version: "1.3.6"
+        version: "1.3.9"
     }, function () {
         /**
          * @class ax5select
@@ -24208,7 +24208,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
 
     UI.addClass({
         className: "grid",
-        version: "1.3.6"
+        version: "${VERSION}"
     }, function () {
         /**
          * @class ax5grid
@@ -25512,6 +25512,16 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
     var GRID = ax5.ui.grid;
     var U = ax5.util;
 
+    var escapeString = function escapeString(_value) {
+        var tagsToReplace = {
+            '&': '&amp;',
+            '<': '&lt;',
+            '>': '&gt;'
+        };
+        return _value.replace(/[&<>]/g, function (tag) {
+            return tagsToReplace[tag] || tag;
+        });
+    };
     var columnSelect = {
         focusClear: function focusClear() {
             var self = this;
@@ -26023,7 +26033,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
                     _value = GRID.data.getValue.call(this, _index, _key);
                     if (typeof _value !== "undefined") returnValue = _value;
                 }
-                return returnValue;
+                return escapeString(returnValue);
             }
         }
     };
@@ -26239,7 +26249,6 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
 
                             return '<span data-ax5grid-cellHolder="' + (col.multiLine ? 'multiLine' : '') + '" ' + (colAlign ? 'data-ax5grid-text-align="' + colAlign + '"' : '') + '" style="height:' + _cellHeight + 'px;line-height: ' + lineHeight + 'px;">';
                         }(cellHeight), isGroupingRow ? getGroupingValue.call(this, _list[di], di, col) : getFieldValue.call(this, _list, _list[di], di, col), '</span>');
-
                         SS.push('</td>');
                     }
                     SS.push('<td ', 'data-ax5grid-column-row="null" ', 'data-ax5grid-column-col="null" ', 'data-ax5grid-data-index="' + di + '" ', 'data-ax5grid-column-attr="' + "default" + '" ', 'style="height: ' + cfg.body.columnHeight + 'px;min-height: 1px;" ', '></td>');
@@ -26251,7 +26260,8 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
             if (isScrolled) {
                 _elTarget.css({ paddingTop: (_scrollConfig.paintStartRowIndex - this.xvar.frozenRowIndex) * _scrollConfig.bodyTrHeight });
             }
-            _elTarget.html(SS.join(''));
+            _elTarget.empty().get(0).innerHTML = SS.join('');
+
             this.$.livePanelKeys.push(_elTargetKey); // 사용중인 패널키를 모아둠. (뷰의 상태 변경시 사용하려고)
             return true;
         };
@@ -26328,7 +26338,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
 
             SS.push('</table>');
 
-            _elTarget.html(SS.join(''));
+            _elTarget.empty().get(0).innerHTML = SS.join('');
             this.$.livePanelKeys.push(_elTargetKey); // 사용중인 패널키를 모아둠. (뷰의 상태 변경시 사용하려고)
             return true;
         };
@@ -26503,7 +26513,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
 
             SS.push('</table>');
 
-            _elTarget.html(SS.join(''));
+            _elTarget.empty().get(0).innerHTML = SS.join('');
             return true;
         };
         var replaceGroupTr = function replaceGroupTr(_elTargetKey, _colGroup, _groupRow, _list, _scrollConfig) {
@@ -26572,7 +26582,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
                         }
                         SS.push('<td ', 'data-ax5grid-column-row="null" ', 'data-ax5grid-column-col="null" ', 'data-ax5grid-data-index="' + di + '" ', 'data-ax5grid-column-attr="' + "default" + '" ', 'style="height: ' + cfg.body.columnHeight + 'px;min-height: 1px;" ', '></td>');
                     }
-                    _elTarget.find('tr[data-ax5grid-tr-data-index="' + di + '"]').html(SS.join(''));
+                    _elTarget.find('tr[data-ax5grid-tr-data-index="' + di + '"]').empty().get(0).innerHTML = SS.join('');
                 }
             }
         };
@@ -26701,7 +26711,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
 
             SS.push('</table>');
 
-            _elTarget.html(SS.join(''));
+            _elTarget.empty().get(0).innerHTML = SS.join('');
             return true;
         };
         var replaceGroupTr = function replaceGroupTr(_elTargetKey, _colGroup, _groupRow, _list, _scrollConfig) {
@@ -26770,7 +26780,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
                         }
                         SS.push('<td ', 'data-ax5grid-column-row="null" ', 'data-ax5grid-column-col="null" ', 'data-ax5grid-data-index="' + di + '" ', 'data-ax5grid-column-attr="' + "default" + '" ', 'style="height: ' + cfg.body.columnHeight + 'px;min-height: 1px;" ', '></td>');
                     }
-                    _elTarget.find('tr[data-ax5grid-tr-data-index="' + di + '"]').html(SS.join(''));
+                    _elTarget.find('tr[data-ax5grid-tr-data-index="' + di + '"]').empty().get(0).innerHTML = SS.join('');
                 }
             }
         };
@@ -26830,7 +26840,8 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
                 SS.push('<td ', 'data-ax5grid-column-row="null" ', 'data-ax5grid-column-col="null" ', 'data-ax5grid-data-index="' + di + '" ', 'data-ax5grid-column-attr="' + "default" + '" ', 'style="height: ' + cfg.body.columnHeight + 'px;min-height: 1px;" ', '></td>');
             }
 
-            _elTarget.find('tr[data-ax5grid-tr-data-index="' + di + '"]').html(SS.join(''));
+            //_elTarget.find('tr[data-ax5grid-tr-data-index="' + di + '"]').html(SS.join(''));
+            _elTarget.find('tr[data-ax5grid-tr-data-index="' + di + '"]').empty().get(0).innerHTML = SS.join('');
         };
 
         // left
@@ -27742,6 +27753,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
     };
 
     var setValue = function setValue(_dindex, _key, _value) {
+
         this.needToPaintSum = true;
         if (/[\.\[\]]/.test(_key)) {
             try {
@@ -29320,9 +29332,9 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
             }
             addC += colspan;
         }
-        addC -= 1;
-        if (addC < this.columns.length + 1) {
-            for (var c = addC; c < this.columns.length + 1; c++) {
+
+        if (addC < this.colGroup.length) {
+            for (var c = addC; c < this.colGroup.length; c++) {
                 table.rows[r].cols.push({
                     rowIndex: 0,
                     colIndex: c + 1,
@@ -29392,7 +29404,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
 
     UI.addClass({
         className: "combobox",
-        version: "1.3.6"
+        version: "1.3.9"
     }, function () {
         /**
          * @class ax5combobox
@@ -31044,7 +31056,7 @@ jQuery.fn.ax5combobox = function () {
 
     UI.addClass({
         className: "layout",
-        version: "${VERSION}"
+        version: "1.3.9"
     }, function () {
         /**
          * @class ax5layout
@@ -32075,7 +32087,7 @@ jQuery.fn.ax5layout = function () {
 
     UI.addClass({
         className: "binder",
-        version: "1.3.6"
+        version: "1.3.9"
     }, function () {
 
         /**
@@ -33032,7 +33044,7 @@ jQuery.fn.ax5layout = function () {
 
     UI.addClass({
         className: "autocomplete",
-        version: "1.3.6"
+        version: "1.3.9"
     }, function () {
         /**
          * @class ax5autocomplete

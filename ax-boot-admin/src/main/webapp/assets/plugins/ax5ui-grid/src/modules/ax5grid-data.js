@@ -327,6 +327,7 @@
     };
 
     var setValue = function (_dindex, _key, _value) {
+        
         this.needToPaintSum = true;
         if (/[\.\[\]]/.test(_key)) {
             try {

@@ -345,9 +345,9 @@
             }
             addC += colspan;
         }
-        addC -= 1;
-        if (addC < this.columns.length + 1) {
-            for (var c = addC; c < this.columns.length + 1; c++) {
+
+        if (addC < this.colGroup.length) {
+            for (var c = addC; c < this.colGroup.length; c++) {
                 table.rows[r].cols.push({
                     rowIndex: 0,
                     colIndex: (c + 1),
