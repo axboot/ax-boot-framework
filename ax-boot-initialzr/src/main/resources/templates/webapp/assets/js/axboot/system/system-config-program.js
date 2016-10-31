@@ -13,7 +13,7 @@ var ACTIONS = axboot.actionExtend(fnObj, {
         return false;
     },
     PAGE_SAVE: function (caller, act, data) {
-        var saveList = [].concat(caller.gridView01.getData("modified"));
+        var saveList = [].concat(caller.gridView01.getData());
         saveList = saveList.concat(caller.gridView01.getData("deleted"));
 
         axboot.ajax({

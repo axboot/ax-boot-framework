@@ -404,7 +404,7 @@
                 if (typeof opts.btns === "undefined") {
                     opts.btns = {
                         ok: {label: cfg.lang["ok"], theme: opts.theme},
-                        cancel: {label: cfg.lang["cancel"]}
+                        cancel: {label: cfg.lang["cancel"], theme: 'default'}
                     };
                 }
                 open.call(this, opts, callback);
@@ -461,7 +461,7 @@
                 if (typeof opts.btns === "undefined") {
                     opts.btns = {
                         ok: {label: cfg.lang["ok"], theme: opts.theme},
-                        cancel: {label: cfg.lang["cancel"]}
+                        cancel: {label: cfg.lang["cancel"], theme: 'default'}
                     };
                 }
                 open.call(this, opts, callback);

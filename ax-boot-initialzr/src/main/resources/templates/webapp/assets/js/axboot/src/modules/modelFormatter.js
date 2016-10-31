@@ -117,3 +117,39 @@ ax5.ui.formatter.formatter["chequer"] = {
         });
     }
 };
+
+/**
+ * @Object {Object} axboot.formFormatter
+ */
+axboot.formFormatter = (function(){
+    /**
+     * @class ax5FormFormatter
+     * @param _model
+     * @example
+     * ```js
+     * this.formFormatter = new axboot.formFormatter(this.$target); // 폼 포메터 시작
+     * ```
+     */
+    var ax5FormFormatter = function (_$target) {
+        this.target = _$target;
+
+        if (!(this.target instanceof jQuery)) {
+            console.log("target이 jQuery 오브젝트가 아니라서 formFormatter 초기화에 실패 하였습니다");
+            return;
+        }
+
+        /**
+         * @method ax5FormFormatter.formatting
+         * @example
+         * ```js
+         * this.modelFormatter.formatting(); // 입력된 값을 포메팅 된 값으로 변경
+         * ```
+         */
+        this.formatting = function () {
+            this.target.find('[data-ax5formatter]').ax5formatter();
+        };
+
+        this.formatting();
+    };
+    return ax5FormFormatter;
+})();

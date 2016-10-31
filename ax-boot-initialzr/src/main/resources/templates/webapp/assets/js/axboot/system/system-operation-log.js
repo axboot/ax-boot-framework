@@ -1,15 +1,10 @@
 var fnObj = {};
 var ACTIONS = axboot.actionExtend(fnObj, {
     PAGE_SEARCH: function (caller, act, data) {
-
-        if (data && data.page) {
-            caller.searchView.setPageNumber(data.page.pageNumber);
-        }
-
         axboot.ajax({
             type: "GET",
             url: ["errorLogs"],
-            data: caller.searchView.getData(),
+            data: $.extend({}, this.searchView.getData(), this.gridView01.getPageData()),
             callback: function (res) {
                 caller.gridView01.setData(res);
             }
@@ -129,8 +124,6 @@ fnObj.searchView = axboot.viewExtend(axboot.searchView, {
     },
     getData: function () {
         return {
-            pageNumber: this.pageNumber,
-            pageSize: 10, //this.pageSize,
             filter: this.filter.val(),
             sort: "id,desc"
         }
@@ -142,6 +135,10 @@ fnObj.searchView = axboot.viewExtend(axboot.searchView, {
  * gridView
  */
 fnObj.gridView01 = axboot.viewExtend(axboot.gridView, {
+    page: {
+        pageNumber: 0,
+        pageSize: 20
+    },
     initView: function () {
         var _this = this;
         this.target = axboot.gridBuilder({
@@ -170,7 +167,8 @@ fnObj.gridView01 = axboot.viewExtend(axboot.gridView, {
                 }
             },
             onPageChange: function (pageNumber) {
-                ACTIONS.dispatch(ACTIONS.PAGE_SEARCH, {page: {pageNumber: pageNumber}});
+                _this.setPageData({pageNumber: pageNumber});
+                ACTIONS.dispatch(ACTIONS.PAGE_SEARCH);
             }
         });
 

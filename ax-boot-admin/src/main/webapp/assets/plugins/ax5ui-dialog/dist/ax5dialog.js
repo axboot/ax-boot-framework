@@ -9,7 +9,7 @@
 
     UI.addClass({
         className: "dialog",
-        version: "1.3.10"
+        version: "${VERSION}"
     }, function () {
         /**
          * @class ax5dialog
@@ -394,7 +394,7 @@
                 if (typeof opts.btns === "undefined") {
                     opts.btns = {
                         ok: { label: cfg.lang["ok"], theme: opts.theme },
-                        cancel: { label: cfg.lang["cancel"] }
+                        cancel: { label: cfg.lang["cancel"], theme: 'default' }
                     };
                 }
                 open.call(this, opts, callback);
@@ -451,7 +451,7 @@
                 if (typeof opts.btns === "undefined") {
                     opts.btns = {
                         ok: { label: cfg.lang["ok"], theme: opts.theme },
-                        cancel: { label: cfg.lang["cancel"] }
+                        cancel: { label: cfg.lang["cancel"], theme: 'default' }
                     };
                 }
                 open.call(this, opts, callback);

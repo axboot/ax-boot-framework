@@ -2,6 +2,16 @@
 @import "../../plugins/ax5ui-dialog/src/scss/ax5dialog_variables";
 @import "../../plugins/ax5ui-dialog/src/scss/ax5dialog";
 
+.ax5-ui-dialog {
+    .ax-dialog-body {
+        .ax-dialog-buttons {
+            .btn{
+                padding: 5px 10px;
+            }
+        }
+    }
+}
+
 $ax5mask-bg-opacity: 0.4;
 @import "../../plugins/ax5ui-mask/src/scss/ax5mask_variables";
 @import "../../plugins/ax5ui-mask/src/scss/ax5mask";
@@ -16,7 +26,7 @@ $ax5mask-bg-opacity: 0.4;
 @import "../../plugins/ax5ui-calendar/src/scss/ax5calendar_variables";
 @import "../../plugins/ax5ui-calendar/src/scss/ax5calendar";
 
-$ax5picker-easing-time-open: 0.2s;
+$ax5picker-easing-time-open: 0.1s;
 $ax5picker-easing-time-close: 0.1s;
 @import "../../plugins/ax5ui-picker/src/scss/ax5picker_variables";
 @import "../../plugins/ax5ui-picker/src/scss/ax5picker";

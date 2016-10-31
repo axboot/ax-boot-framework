@@ -1321,16 +1321,6 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
     var GRID = ax5.ui.grid;
     var U = ax5.util;
 
-    var escapeString = function escapeString(_value) {
-        var tagsToReplace = {
-            //'&': '&amp;',
-            '<': '&lt;',
-            '>': '&gt;'
-        };
-        return _value.replace(/[&<>]/g, function (tag) {
-            return tagsToReplace[tag] || tag;
-        });
-    };
     var columnSelect = {
         focusClear: function focusClear() {
             var self = this;
@@ -1792,6 +1782,11 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
 
     var getFieldValue = function getFieldValue(_list, _item, _index, _col, _value) {
         var _key = _col.key;
+        var tagsToReplace = {
+            '<': '&lt;',
+            '>': '&gt;'
+        };
+
         if (_key === "__d-index__") {
             return _index + 1;
         } else if (_key === "__d-checkbox__") {
@@ -1835,14 +1830,18 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
                     return GRID.formatter[_col.formatter].call(that);
                 }
             } else {
-                var returnValue = "&nbsp;";
+                var returnValue = "";
+
                 if (typeof _value !== "undefined") {
                     returnValue = _value;
                 } else {
                     _value = GRID.data.getValue.call(this, _index, _key);
-                    if (typeof _value !== "undefined") returnValue = _value;
+                    if (_value !== null && typeof _value !== "undefined") returnValue = _value;
                 }
-                return escapeString(returnValue);
+
+                return returnValue.replace(/[<>]/g, function (tag) {
+                    return tagsToReplace[tag] || tag;
+                });
             }
         }
     };

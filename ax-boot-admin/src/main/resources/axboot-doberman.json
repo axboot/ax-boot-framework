@@ -1,0 +1,19 @@
+{
+  "title": "AXBoot :: Advanced Web Application Development Framework",
+  "copyrights": "AXBOOT 2.0.0 - Web Application Framework © 2010-2016",
+  "logo": {
+    "header": "http://axboot-theme:2022/doberman/images/header-logo.png",
+    "login": "/assets/images/login-logo.png",
+    "logo": "logo.png"
+  },
+  "background": {
+    "login": "/assets/images/login-bg.jpg"
+  },
+  "layout": {
+    "leftSideMenu": "visible"
+  },
+  "sessionCookie": "a_x_b_a_a_t_k",
+  "extendedCss": [
+    "http://axboot-theme:2022/doberman/axboot.css"
+  ]
+}

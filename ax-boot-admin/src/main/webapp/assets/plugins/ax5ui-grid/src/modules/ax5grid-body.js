@@ -4,16 +4,6 @@
     var GRID = ax5.ui.grid;
     var U = ax5.util;
 
-    var escapeString = function(_value){
-        var tagsToReplace = {
-            //'&': '&amp;',
-            '<': '&lt;',
-            '>': '&gt;'
-        };
-        return _value.replace(/[&<>]/g, function(tag) {
-            return tagsToReplace[tag] || tag;
-        });
-    };
     var columnSelect = {
         focusClear: function () {
             var self = this;
@@ -313,7 +303,7 @@
                     }
 
                     GRID.data.select.call(self, _column.dindex, undefined, {
-                        internalCall : true
+                        internalCall: true
                     });
                     updateRowState.call(self, ["selected"], _column.dindex);
                 },
@@ -515,6 +505,11 @@
 
     var getFieldValue = function (_list, _item, _index, _col, _value) {
         var _key = _col.key;
+        var tagsToReplace = {
+            '<': '&lt;',
+            '>': '&gt;'
+        };
+
         if (_key === "__d-index__") {
             return _index + 1;
         }
@@ -560,14 +555,18 @@
                     return GRID.formatter[_col.formatter].call(that);
                 }
             } else {
-                var returnValue = "&nbsp;";
+                var returnValue = "";
+
                 if (typeof _value !== "undefined") {
                     returnValue = _value;
                 } else {
                     _value = GRID.data.getValue.call(this, _index, _key);
-                    if (typeof _value !== "undefined") returnValue = _value;
+                    if (_value !== null && typeof _value !== "undefined") returnValue = _value;
                 }
-                return escapeString(returnValue);
+
+                return returnValue.replace(/[<>]/g, function (tag) {
+                    return tagsToReplace[tag] || tag;
+                });
             }
         }
     };
@@ -1629,8 +1628,8 @@
                     break;
                 }
 
-                if(!focusedColumn) return false;
-                
+                if (!focusedColumn) return false;
+
                 originalColumn = this.bodyRowMap[focusedColumn.rowIndex + "_" + focusedColumn.colIndex];
                 columnSelect.focusClear.call(this);
                 columnSelect.clear.call(this);
@@ -1714,7 +1713,7 @@
                     focusedColumn = jQuery.extend({}, this.focusedColumn[c], true);
                     break;
                 }
-                if(!focusedColumn) return false;
+                if (!focusedColumn) return false;
 
                 originalColumn = this.bodyRowMap[focusedColumn.rowIndex + "_" + focusedColumn.colIndex];
 
@@ -2077,11 +2076,11 @@
 
                             var col = this.colGroup[_column.colIndex];
 
-                            if(GRID.inlineEditor[col.editor.type].editMode === "inline") {
-                                if(_options && _options.moveFocus){
+                            if (GRID.inlineEditor[col.editor.type].editMode === "inline") {
+                                if (_options && _options.moveFocus) {
 
                                 }
-                                else{
+                                else {
                                     if (column.editor && column.editor.type == "checkbox") {
 
                                         value = GRID.data.getValue.call(this, dindex, column.key);
