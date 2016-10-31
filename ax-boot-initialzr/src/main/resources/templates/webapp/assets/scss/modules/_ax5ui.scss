@@ -30,6 +30,15 @@ $ax5picker-easing-time-open: 0.1s;
 $ax5picker-easing-time-close: 0.1s;
 @import "../../plugins/ax5ui-picker/src/scss/ax5picker_variables";
 @import "../../plugins/ax5ui-picker/src/scss/ax5picker";
+.ax5-ui-picker {
+    .ax-picker-body {
+        .ax-picker-buttons {
+            .btn{
+                padding: 5px 10px;
+            }
+        }
+    }
+}
 
 @import "../../plugins/ax5ui-formatter/src/scss/ax5formatter_variables";
 @import "../../plugins/ax5ui-formatter/src/scss/ax5formatter";
