@@ -1839,7 +1839,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
                     if (_value !== null && typeof _value !== "undefined") returnValue = _value;
                 }
 
-                return returnValue.replace(/[<>]/g, function (tag) {
+                return typeof returnValue === "number" ? returnValue : returnValue.replace(/[<>]/g, function (tag) {
                     return tagsToReplace[tag] || tag;
                 });
             }
@@ -3042,7 +3042,6 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
                         }
 
                         GRID.data.setValue.call(self, dindex, col.key, newValue);
-
                         updateRowState.call(self, ["cellChecked"], dindex, {
                             key: col.key, rowIndex: rowIndex, colIndex: colIndex,
                             editorConfig: col.editor.config, checked: checked
@@ -3067,11 +3066,16 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
             }
             if (this.isInlineEditing) {
 
+                var originalValue = GRID.data.getValue.call(self, dindex, col.key);
                 var initValue = function (__value, __editor) {
+                    if (U.isNothing(__value)) {
+                        __value = originalValue;
+                    }
+
                     if (__editor.type == "money") {
                         return U.number(__value, { "money": true });
                     } else {
-                        return __value || "";
+                        return __value;
                     }
                 }.call(this, _initValue, editor);
 
@@ -3561,28 +3565,32 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
     };
 
     var setValue = function setValue(_dindex, _key, _value) {
-
+        var originalValue = getValue.call(this, _dindex, _key);
         this.needToPaintSum = true;
-        if (/[\.\[\]]/.test(_key)) {
-            try {
+
+        if (originalValue !== _value) {
+            if (/[\.\[\]]/.test(_key)) {
+                try {
+                    this.list[_dindex][this.config.columnKeys.modified] = true;
+                    Function("val", "this" + GRID.util.getRealPathForDataItem(_key) + " = val;").call(this.list[_dindex], _value);
+                } catch (e) {}
+            } else {
                 this.list[_dindex][this.config.columnKeys.modified] = true;
-                Function("val", "this" + GRID.util.getRealPathForDataItem(_key) + " = val;").call(this.list[_dindex], _value);
-            } catch (e) {}
-        } else {
-            this.list[_dindex][this.config.columnKeys.modified] = true;
-            this.list[_dindex][_key] = _value;
+                this.list[_dindex][_key] = _value;
+            }
+
+            if (this.onDataChanged) {
+                this.onDataChanged.call({
+                    self: this,
+                    list: this.list,
+                    dindex: _dindex,
+                    item: this.list[_dindex],
+                    key: _key,
+                    value: _value
+                });
+            }
         }
 
-        if (this.onDataChanged) {
-            this.onDataChanged.call({
-                self: this,
-                list: this.list,
-                dindex: _dindex,
-                item: this.list[_dindex],
-                key: _key,
-                value: _value
-            });
-        }
         return true;
     };
 

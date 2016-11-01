@@ -11,13 +11,13 @@
         opacity: 1.0;
     }
     to {
-        opacity: 0.0;
+        opacity: 0.5;
     }
 }
 
 @include keyframes(ax5-ui-calendar-fadein) {
     from {
-        opacity: 0.0;
+        opacity: 0.5;
     }
     to {
         opacity: 1.0;
@@ -77,11 +77,11 @@
     }
     .calendar-body {
         &.fadein {
-            @include animation($ax5calendar-body-animation-in 0.3s ease-in-out);
+            @include animation($ax5calendar-body-animation-in 0.1s ease-in-out);
             opacity: 1.0;
         }
         &.fadeout {
-            @include animation($ax5calendar-body-animation-out 0.3s ease-in-out);
+            @include animation($ax5calendar-body-animation-out 0.1s ease-in-out);
             opacity: 0.0;
         }
 

@@ -816,7 +816,8 @@
                                 self.keyDown("RETURN", {});
                             }
 
-                        } else {
+                        }
+                        else {
 
                             if (e.metaKey || e.ctrlKey) {
                                 if (e.which == 67) { // c

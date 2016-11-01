@@ -327,30 +327,34 @@
     };
 
     var setValue = function (_dindex, _key, _value) {
-        
+        var originalValue = getValue.call(this, _dindex, _key);
         this.needToPaintSum = true;
-        if (/[\.\[\]]/.test(_key)) {
-            try {
+
+        if (originalValue !== _value) {
+            if (/[\.\[\]]/.test(_key)) {
+                try {
+                    this.list[_dindex][this.config.columnKeys.modified] = true;
+                    (Function("val", "this" + GRID.util.getRealPathForDataItem(_key) + " = val;")).call(this.list[_dindex], _value);
+                } catch (e) {
+
+                }
+            } else {
                 this.list[_dindex][this.config.columnKeys.modified] = true;
-                (Function("val", "this" + GRID.util.getRealPathForDataItem(_key) + " = val;")).call(this.list[_dindex], _value);
-            } catch (e) {
-
+                this.list[_dindex][_key] = _value;
             }
-        } else {
-            this.list[_dindex][this.config.columnKeys.modified] = true;
-            this.list[_dindex][_key] = _value;
+
+            if (this.onDataChanged) {
+                this.onDataChanged.call({
+                    self: this,
+                    list: this.list,
+                    dindex: _dindex,
+                    item: this.list[_dindex],
+                    key: _key,
+                    value: _value
+                });
+            }
         }
 
-        if (this.onDataChanged) {
-            this.onDataChanged.call({
-                self: this,
-                list: this.list,
-                dindex: _dindex,
-                item: this.list[_dindex],
-                key: _key,
-                value: _value
-            });
-        }
         return true;
     };
 

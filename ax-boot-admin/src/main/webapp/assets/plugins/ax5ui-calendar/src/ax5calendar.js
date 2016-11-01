@@ -88,7 +88,7 @@
                 mode: 'day', // day|month|year,
                 dateFormat: 'yyyy-MM-dd',
                 displayDate: (new Date()),
-                animateTime: 250,
+                animateTime: 100,
                 dimensions: {
                     controlHeight: '40',
                     controlButtonWidth: '40',
@@ -262,9 +262,9 @@
                                     thisDataLabel: cfg.lang.dayTmpl.replace('%s', loopDate.getDate()),
                                     itemStyles: U.css(itemStyles),
                                     addClass: (function () {
-                                        
+
                                         var classNames = "";
-                                                                                
+
                                         if (cfg.selectable) {
                                             if (self.selectableMap[thisDate]) {
                                                 classNames += ( loopDate.getMonth() == thisMonth ) ? " live" : "";
@@ -289,7 +289,7 @@
                                                 }
                                             }
                                         }
-                                        
+
                                         return classNames;
                                     })()
                                     + ' '

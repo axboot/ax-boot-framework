@@ -277,7 +277,7 @@
                     data.selected = item.selected;
                     data.hasSelected = (data.selected && data.selected.length > 0);
                     data.removeIcon = item.removeIcon;
-                        
+
                     try {
                         //return ax5.mustache.render(COMBOBOX.tmpl["label"].call(this, item.columnKeys), data) + "&nbsp;";
                         return COMBOBOX.tmpl.get.call(this, "label", data, item.columnKeys) + "&nbsp;";
@@ -314,9 +314,9 @@
                 onSearch = function (queIdx, searchWord) {
                     this.queue[queIdx].waitOptions = true;
                     /*
-                    this.activecomboboxOptionGroup.find('[data-els="content"]').html(
-                        jQuery(ax5.mustache.render(COMBOBOX.tmpl.options.call(this, this.queue[queIdx].columnKeys), this.queue[queIdx]))
-                    );
+                     this.activecomboboxOptionGroup.find('[data-els="content"]').html(
+                     jQuery(ax5.mustache.render(COMBOBOX.tmpl.options.call(this, this.queue[queIdx].columnKeys), this.queue[queIdx]))
+                     );
                      */
                     this.activecomboboxOptionGroup.find('[data-els="content"]').html(jQuery(
                         COMBOBOX.tmpl.get.call(this, "option", this.queue[queIdx], this.queue[queIdx].columnKeys)
@@ -347,7 +347,7 @@
                                 });
                             }
                         })(item, O);
-                        
+
                         item.options = syncComboboxOptions.call(this, this.activecomboboxQueueIndex, O.options);
 
                         alignComboboxDisplay.call(this);
@@ -360,10 +360,10 @@
                         data.lang = item.lang;
                         data.options = item.options;
                         /*
-                        this.activecomboboxOptionGroup.find('[data-els="content"]').html(jQuery(
-                            ax5.mustache.render(COMBOBOX.tmpl.options.call(this, item.columnKeys), data))
-                        );
-                        */
+                         this.activecomboboxOptionGroup.find('[data-els="content"]').html(jQuery(
+                         ax5.mustache.render(COMBOBOX.tmpl.options.call(this, item.columnKeys), data))
+                         );
+                         */
                         this.activecomboboxOptionGroup.find('[data-els="content"]').html(jQuery(
                             COMBOBOX.tmpl.get.call(this, "options", data, item.columnKeys)
                         ));
@@ -372,7 +372,7 @@
                 },
                 focusWord = function (queIdx, searchWord) {
                     //console.log(searchWord);
-                    
+
                     if (this.activecomboboxQueueIndex == -1) return this; // 옵션박스가 닫힌상태이면 진행안함.
                     var options = [], i = -1, l = this.queue[queIdx].indexedOptions.length - 1, n;
 
@@ -412,7 +412,7 @@
                             return a.optionsSort - b.optionsSort;
                         });
                     }
-                    
+
                     if (options && options.length > 0) {
                         focusMove.call(this, queIdx, undefined, options[0]['@findex']);
                     } else {
@@ -811,7 +811,7 @@
                             console.log(ax5.info.getError("ax5combobox", "402", "val"));
                             return;
                         }
-                        
+
                         if (typeof value == "undefined") {
                             throw "error not found value";
                         }
@@ -849,7 +849,7 @@
                         }
 
                         if (typeof value !== "undefined") {
-                            if(_option && (!_option.noStateChange)) {
+                            if (_option && (!_option.noStateChange)) {
                                 onStateChanged.call(this, this.queue[queIdx], {
                                     self: this,
                                     item: this.queue[queIdx],
@@ -949,7 +949,7 @@
 
                         for (var i = 0, l = childNodes.length; i < l; i++) {
                             var node = childNodes[i];
-                            if(node.nodeType == 1) {
+                            if (node.nodeType == 1) {
                                 if (node.nodeType in COMBOBOX.util.nodeTypeProcessor) {
 
                                     var value = COMBOBOX.util.nodeTypeProcessor[node.nodeType].call(this, queIdx, node, false);
@@ -989,7 +989,12 @@
                                 if (clickEl === "optionItemRemove") {
                                     var selectedIndex = target.getAttribute("data-ax5combobox-remove-index");
                                     var option = this.queue[queIdx].selected[selectedIndex];
-                                    setOptionSelect.call(this, queIdx, {index: {gindex: option['@gindex'], index: option['@index']}}, false, true);
+                                    setOptionSelect.call(this, queIdx, {
+                                        index: {
+                                            gindex: option['@gindex'],
+                                            index: option['@index']
+                                        }
+                                    }, false, true);
                                     focusLabel.call(this, queIdx);
                                     U.stopEvent(e);
                                     return this;
@@ -1029,7 +1034,7 @@
                                 "40": "KEY_DOWN",
                                 "38": "KEY_UP"
                             };
-                            if(!disableCtrlKeys[e.which]) {
+                            if (!disableCtrlKeys[e.which]) {
                                 debouncedFocusWord.call(this, queIdx);
                             }
                         },
@@ -1084,7 +1089,7 @@
                             })();
 
                             //item.$display = jQuery(ax5.mustache.render(COMBOBOX.tmpl["comboboxDisplay"].call(this, queIdx), data));
-                            item.$display = jQuery( COMBOBOX.tmpl.get.call(this, "comboboxDisplay", data, item.columnKeys) );
+                            item.$display = jQuery(COMBOBOX.tmpl.get.call(this, "comboboxDisplay", data, item.columnKeys));
                             item.$displayTable = item.$display.find('[data-els="display-table"]');
                             item.$displayLabel = item.$display.find('[data-ax5combobox-display="label"]');
 
@@ -1102,7 +1107,7 @@
                             }
                             else {
                                 //item.$select = jQuery(ax5.mustache.render(COMBOBOX.tmpl["formSelect"].call(this, queIdx), data));
-                                item.$select = jQuery( COMBOBOX.tmpl.get.call(this, "formSelect", data, item.columnKeys) );
+                                item.$select = jQuery(COMBOBOX.tmpl.get.call(this, "formSelect", data, item.columnKeys));
                                 item.$target.append(item.$select);
                             }
 
@@ -1245,10 +1250,10 @@
                             data.lang = item.lang;
                             data.options = item.options;
                             /*
-                            this.activecomboboxOptionGroup.find('[data-els="content"]').html(jQuery(
-                                ax5.mustache.render(COMBOBOX.tmpl["options"].call(this, item.columnKeys), data)
-                            ));
-                            */
+                             this.activecomboboxOptionGroup.find('[data-els="content"]').html(jQuery(
+                             ax5.mustache.render(COMBOBOX.tmpl["options"].call(this, item.columnKeys), data)
+                             ));
+                             */
                             this.activecomboboxOptionGroup.find('[data-els="content"]').html(jQuery(
                                 COMBOBOX.tmpl.get.call(this, "options", data, item.columnKeys)
                             ));
@@ -1305,7 +1310,7 @@
                     });
 
                     //this.activecomboboxOptionGroup = jQuery(ax5.mustache.render(COMBOBOX.tmpl["optionGroup"].call(this, item.columnKeys), data));
-                    this.activecomboboxOptionGroup = jQuery( COMBOBOX.tmpl.get.call(this, "optionGroup", data, item.columnKeys) );
+                    this.activecomboboxOptionGroup = jQuery(COMBOBOX.tmpl.get.call(this, "optionGroup", data, item.columnKeys));
                     //this.activecomboboxOptionGroup.find('[data-els="content"]').html(jQuery(ax5.mustache.render(COMBOBOX.tmpl["options"].call(this, item.columnKeys), data)));
                     this.activecomboboxOptionGroup.find('[data-els="content"]').html(jQuery(
                         COMBOBOX.tmpl.get.call(this, "options", data, item.columnKeys)
@@ -1392,10 +1397,10 @@
                     var _values = U.map(_value, function () {
                         return {value: this};
                     });
-                    setOptionSelect.call(this, queIdx, _values, _selected||true, {noStateChange:true});
+                    setOptionSelect.call(this, queIdx, _values, _selected || true, {noStateChange: true});
                 }
                 else if (U.isString(_value) || U.isNumber(_value)) {
-                    setOptionSelect.call(this, queIdx, {value: _value}, _selected||true, {noStateChange:true});
+                    setOptionSelect.call(this, queIdx, {value: _value}, _selected || true, {noStateChange: true});
                 }
                 //blurLabel.call(this, queIdx);
 
@@ -1421,7 +1426,7 @@
                     return;
                 }
                 clearSelected.call(this, queIdx);
-                setOptionSelect.call(this, queIdx, _text, true, {noStateChange:true});
+                setOptionSelect.call(this, queIdx, _text, true, {noStateChange: true});
                 //blurLabel.call(this, queIdx);
 
                 return this;
@@ -1498,13 +1503,21 @@
              */
             this.enable = function (_boundID) {
                 var queIdx = getQueIdx.call(this, _boundID);
-                this.queue[queIdx].$display.removeAttr("disabled");
-                this.queue[queIdx].$input.removeAttr("disabled");
 
-                onStateChanged.call(this, this.queue[queIdx], {
-                    self: this,
-                    state: "enable"
-                });
+                if (typeof queIdx !== "undefined") {
+                    if (this.queue[queIdx].$display[0]) {
+                        this.queue[queIdx].$displayLabel.attr("contentEditable", "true");
+                        this.queue[queIdx].$display.removeAttr("disabled");
+                    }
+                    if (this.queue[queIdx].$select[0]) {
+                        this.queue[queIdx].$select.removeAttr("disabled");
+                    }
+
+                    onStateChanged.call(this, this.queue[queIdx], {
+                        self: this,
+                        state: "enable"
+                    });
+                }
 
                 return this;
             };
@@ -1516,14 +1529,21 @@
              */
             this.disable = function (_boundID) {
                 var queIdx = getQueIdx.call(this, _boundID);
-                this.queue[queIdx].$display.attr("disabled", "disabled");
-                this.queue[queIdx].$input.attr("disabled", "disabled");
 
-                onStateChanged.call(this, this.queue[queIdx], {
-                    self: this,
-                    state: "disable"
-                });
+                if (typeof queIdx !== "undefined") {
+                    if (this.queue[queIdx].$display[0]) {
+                        this.queue[queIdx].$displayLabel.attr("contentEditable", "false");
+                        this.queue[queIdx].$display.attr("disabled", "disabled");
+                    }
+                    if (this.queue[queIdx].$select[0]) {
+                        this.queue[queIdx].$select.attr("disabled", "disabled");
+                    }
 
+                    onStateChanged.call(this, this.queue[queIdx], {
+                        self: this,
+                        state: "disable"
+                    });
+                }
                 return this;
             };
 

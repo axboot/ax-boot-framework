@@ -15,7 +15,7 @@
     };
 
     var autocompleteDisplay = function (columnKeys) {
-        return `
+        return ` 
 <div class="form-control {{formSize}} ax5autocomplete-display {{theme}}" 
 data-ax5autocomplete-display="{{id}}" data-ax5autocomplete-instance="{{instanceId}}">
     <div class="ax5autocomplete-display-table" data-els="display-table">

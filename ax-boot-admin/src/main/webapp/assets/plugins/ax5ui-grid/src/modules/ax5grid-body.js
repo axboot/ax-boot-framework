@@ -564,7 +564,7 @@
                     if (_value !== null && typeof _value !== "undefined") returnValue = _value;
                 }
 
-                return returnValue.replace(/[<>]/g, function (tag) {
+                return (typeof returnValue === "number") ? returnValue: returnValue.replace(/[<>]/g, function (tag) {
                     return tagsToReplace[tag] || tag;
                 });
             }
@@ -1937,7 +1937,6 @@
                         }
 
                         GRID.data.setValue.call(self, dindex, col.key, newValue);
-
                         updateRowState.call(self, ["cellChecked"], dindex, {
                             key: col.key, rowIndex: rowIndex, colIndex: colIndex,
                             editorConfig: col.editor.config, checked: checked
@@ -1963,12 +1962,17 @@
             }
             if (this.isInlineEditing) {
 
+                var originalValue = GRID.data.getValue.call(self, dindex, col.key);
                 var initValue = (function (__value, __editor) {
+                    if(U.isNothing(__value)){
+                        __value = originalValue;
+                    }
+
                     if (__editor.type == "money") {
                         return U.number(__value, {"money": true});
                     }
                     else {
-                        return __value || "";
+                        return __value;
                     }
                 }).call(this, _initValue, editor);
 

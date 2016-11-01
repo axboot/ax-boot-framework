@@ -54,6 +54,7 @@
                 },
                 animateTime: 100,
                 calendar: {
+                    multipleSelect: false,
                     control: {
                         left: ax5.def.picker.date_leftArrow || '&#x02190',
                         yearTmpl: ax5.def.picker.date_yearTmpl || '%s',
@@ -497,37 +498,112 @@
              * @param {String} val
              * @returns {ax5picker} this
              */
-            this.setContentValue = function (boundID, inputIndex, val) {
-                var queIdx = (U.isNumber(boundID)) ? boundID : getQueIdx.call(this, boundID);
-                var item = this.queue[queIdx];
-                var _input;
+            this.setContentValue = (function () {
 
-                if (item) {
+                var multipleInputProcessor = {
+                    "date": function (_item, _inputIndex, _val) {
+                        var values = [],
+                            diffDay, prevInputValue, nextInputValue;
 
-                    _input = (item.$target.get(0).tagName.toUpperCase() == "INPUT") ? item.$target : jQuery(item.$target.find('input[type]').get(inputIndex));
-                    _input.val(val);
-                    if (!item.disableChangeTrigger) {
-                        _input.trigger("change");
+                        if (_item.$target.get(0).tagName.toUpperCase() !== "INPUT") {
+                            _item.$target.find('input[type]').each(function () {
+                                values.push(this.value);
+                            });
+                        }
+
+                        if (_inputIndex == 0) {
+                            if (values.length > 1 && values[1] !== "") {
+                                // 값 검증
+                                diffDay = ax5.util.dday(values[1], {today: values[0]});
+                                if (diffDay < 0) {
+                                    // 다음날짜 달력을 변경합니다.
+                                    nextInputValue = _val;
+                                }else{
+
+                                }
+                            }else{
+                                nextInputValue = _val;
+                            }
+
+                            if(nextInputValue) {
+                                _item.pickerCalendar[1].ax5uiInstance.setSelection([nextInputValue], false).changeMode("d", nextInputValue);
+                                this.setContentValue(_item.id, 1, nextInputValue);
+                            }
+
+                            return _val;
+
+                        } else if (_inputIndex == 1) {
+                            if (values.length > 1) {
+                                // 값 검증
+                                diffDay = ax5.util.dday(values[1], {today: values[0]});
+                                if (diffDay < 0) {
+                                    // 다음날짜 달력을 변경합니다.
+                                    prevInputValue = values[1];
+                                }
+                            }
+
+                            if(prevInputValue) {
+                                _item.pickerCalendar[0].ax5uiInstance.setSelection([prevInputValue], false).changeMode("d", prevInputValue);
+                                this.setContentValue(_item.id, 0, prevInputValue);
+                            }
+
+                            return _val;
+                        }
+                    }
+                };
+
+                return function (boundID, inputIndex, val) {
+                    var queIdx = (U.isNumber(boundID)) ? boundID : getQueIdx.call(this, boundID);
+                    var item = this.queue[queIdx];
+                    var _input;
+
+                    if (item) {
+
+                        _input = (item.$target.get(0).tagName.toUpperCase() == "INPUT") ? item.$target : jQuery(item.$target.find('input[type]').get(inputIndex));
+                        _input.val(val);
+
+                        if (!item.disableChangeTrigger) {
+                            _input.trigger("change");
+                        }
+
+                        // picker의 입력이 2개이상인 경우
+                        //console.log(item.inputLength);
+                        if (item.inputLength > 1) {
+                            // 경우에 따라 첫번 선택에 따라 해야할 일들 처리
+                            if (multipleInputProcessor[item.content.type]) {
+                                val = multipleInputProcessor[item.content.type].call(this, item, inputIndex, val);
+                            }
+                        }
+
+                        var that = {
+                            self: self,
+                            state: "changeValue",
+                            item: item,
+                            inputIndex: inputIndex,
+                            value: val,
+                            values: [val]
+                        };
+                        if (item.$target.get(0).tagName.toUpperCase() !== "INPUT") {
+                            that.values = [];
+                            item.$target.find('input[type]').each(function () {
+                                that.values.push(this.value);
+                            });
+                        }
+
+                        onStateChanged.call(this, item, that);
+
+                        if (item.inputLength == 1) {
+                            this.close();
+                        }
                     }
 
-                    onStateChanged.call(this, item, {
-                        self: self,
-                        state: "changeValue",
-                        item: item,
-                        value: val
-                    });
-
-                    if (item.inputLength == 1) {
-                        this.close();
-                    }
-                }
-
-                item = null;
-                boundID = null;
-                inputIndex = null;
-                val = null;
-                return this;
-            };
+                    item = null;
+                    boundID = null;
+                    inputIndex = null;
+                    val = null;
+                    return this;
+                };
+            })();
 
             /**
              * @method ax5picker.open
@@ -561,14 +637,14 @@
                         var input = (item.$target.get(0).tagName.toUpperCase() == "INPUT") ? item.$target : item.$target.find('input[type]');
 
                         // calendar bind
+                        item.pickerCalendar = [];
                         item.pickerContent.find('[data-calendar-target]').each(function () {
 
                             // calendarConfig extend ~
                             var
                                 idx = this.getAttribute("data-calendar-target"),
                                 dValue = input.get(idx).value,
-                                d = ax5.util.date(dValue)
-                                ;
+                                d = ax5.util.date(dValue);
 
                             calendarConfig.displayDate = d;
                             if (dValue) calendarConfig.selection = [d];
@@ -578,7 +654,11 @@
                                 self.setContentValue(item.id, idx, this.date);
                             };
 
-                            new ax5.ui.calendar(calendarConfig);
+                            item.pickerCalendar.push({
+                                itemId: item.id,
+                                inputIndex: idx,
+                                ax5uiInstance: new ax5.ui.calendar(calendarConfig)
+                            });
                         });
 
                     },

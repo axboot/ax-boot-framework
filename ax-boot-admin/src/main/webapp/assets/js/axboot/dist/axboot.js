@@ -1783,8 +1783,10 @@ axboot.modal = function () {
      * @method axboot.modal.close
      */
     var close = function close(data) {
-        $(document.body).removeClass("modalOpened");
         window.axModal.close();
+        setTimeout(function () {
+            $(document.body).removeClass("modalOpened");
+        }, 500);
     };
     /**
      * ax5 modal을 최소화 합니다.

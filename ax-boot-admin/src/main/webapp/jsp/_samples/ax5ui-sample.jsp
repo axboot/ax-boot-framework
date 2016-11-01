@@ -18,7 +18,7 @@
             <ax:form name="searchView0">
                 <ax:tbl clazz="ax-search-tbl" minWidth="500px">
                     <ax:tr>
-                        <ax:td label='기간선택' width="350px">
+                        <ax:td label='기간선택' width="300px" labelWidth="80px">
 
                             <div class="input-group" data-ax5picker="date">
                                 <input type="text" class="form-control" placeholder="yyyy/mm/dd">
@@ -28,12 +28,12 @@
                             </div>
 
                         </ax:td>
-                        <ax:td label='모달선택' width="450px">
+                        <ax:td label='모달선택' width="300px" labelWidth="80px">
 
                             <div class="form-inline">
                                 <div class="form-group">
-                                    <input type="text" class="form-control W60" value="" readonly="readonly"/>
-                                    <input type="text" id="compStorLabel" class="form-control W100" value=""/>
+                                    <input type="text" class="form-control W50" value="" readonly="readonly"/>
+                                    <input type="text" id="compStorLabel" class="form-control W80" value=""/>
                                     <button type="button" class="btn btn-primary" data-searchview-btn="modal">
                                         <i class="cqc-magnifier"></i>
                                         찾기
@@ -42,31 +42,31 @@
                             </div>
 
                         </ax:td>
-                    </ax:tr>
-                    <ax:tr>
-                        <ax:td label='날자' width="350px">
+                        <ax:td label='날자' width="250px">
 
-                            <div class="input-group" data-ax5picker="search-saleDt">
-                                <input type="text" class="form-control" placeholder="yyyy/mm/dd" data-ax5picker="date"/>
+                            <div class="input-group" data-ax5picker="date">
+                                <input type="text" class="form-control" placeholder="yyyy/mm/dd"/>
                                 <span class="input-group-addon"><i class="cqc-calendar"></i></span>
                             </div>
 
                         </ax:td>
-                        <ax:td label='검색어' width="450px">
+                        <!--
+                        <ax:td label='검색어' width="400px">
 
                             <div class="form-inline">
                                 <div class="form-group">
-                                    <label>영수번호</label>
+                                    <label>영수</label>
 
                                     <input type="text" class="form-control W80" value=""/>
                                 </div>
                                 <div class="form-group">
-                                    <label>계약번호</label>
+                                    <label>계약</label>
                                     <input type="text" class="form-control W80" value=""/>
                                 </div>
                             </div>
 
                         </ax:td>
+                        -->
                     </ax:tr>
                 </ax:tbl>
             </ax:form>
@@ -90,7 +90,7 @@
 
             </ax:split-panel>
             <ax:splitter></ax:splitter>
-            <ax:split-panel width="*" style="padding-left: 10px;" scroll="scroll">
+            <ax:split-panel width="*" style="padding-left: 10px;padding-right: 5px;" scroll="scroll">
 
                 <!-- 폼 -->
                 <div class="ax-button-group" role="panel-header">

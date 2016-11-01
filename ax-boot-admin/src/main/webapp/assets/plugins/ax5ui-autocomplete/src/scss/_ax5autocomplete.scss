@@ -389,10 +389,8 @@ $hover-types: (
                     border-radius: 0px;
                     margin: 1px 0px 1px -0.5em;
 
-                    @include ax-background(top, $ax5autocomplete-label-bg-colors);
-                    border: $ax5autocomplete-label-border;
-                    color: $ax5autocomplete-label-color;
-
+                    background: #eee;
+                    border: 1px solid #ccc;
                     border-radius: 3px;
                     margin-left: 0px;
                     margin-right: 3px;

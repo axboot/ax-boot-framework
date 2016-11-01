@@ -14709,7 +14709,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
          * ax5 version
          * @member {String} ax5.info.version
          */
-        var version = "1.3.12";
+        var version = "1.3.16";
 
         /**
          * ax5 library path
@@ -17817,7 +17817,7 @@ ax5.ui = function () {
 
     UI.addClass({
         className: "dialog",
-        version: "${VERSION}"
+        version: "1.3.16"
     }, function () {
         /**
          * @class ax5dialog
@@ -18202,7 +18202,7 @@ ax5.ui = function () {
                 if (typeof opts.btns === "undefined") {
                     opts.btns = {
                         ok: { label: cfg.lang["ok"], theme: opts.theme },
-                        cancel: { label: cfg.lang["cancel"], theme: 'default' }
+                        cancel: { label: cfg.lang["cancel"] }
                     };
                 }
                 open.call(this, opts, callback);
@@ -18259,7 +18259,7 @@ ax5.ui = function () {
                 if (typeof opts.btns === "undefined") {
                     opts.btns = {
                         ok: { label: cfg.lang["ok"], theme: opts.theme },
-                        cancel: { label: cfg.lang["cancel"], theme: 'default' }
+                        cancel: { label: cfg.lang["cancel"] }
                     };
                 }
                 open.call(this, opts, callback);
@@ -18356,7 +18356,7 @@ ax5.ui = function () {
 
     UI.addClass({
         className: "mask",
-        version: "1.3.12"
+        version: "1.3.16"
     }, function () {
         /**
          * @class ax5mask
@@ -18687,7 +18687,7 @@ ax5.ui = function () {
 
     UI.addClass({
         className: "toast",
-        version: "1.3.12"
+        version: "1.3.16"
     }, function () {
         /**
          * @class ax5toast
@@ -19051,7 +19051,7 @@ ax5.ui = function () {
 
     UI.addClass({
         className: "modal",
-        version: "1.3.12"
+        version: "1.3.16"
     }, function () {
         /**
          * @class ax5modal
@@ -19677,7 +19677,7 @@ ax5.ui = function () {
 
     UI.addClass({
         className: "calendar",
-        version: "1.3.12"
+        version: "1.3.16"
     }, function () {
 
         /**
@@ -19756,7 +19756,7 @@ ax5.ui = function () {
                 mode: 'day', // day|month|year,
                 dateFormat: 'yyyy-MM-dd',
                 displayDate: new Date(),
-                animateTime: 250,
+                animateTime: 100,
                 dimensions: {
                     controlHeight: '40',
                     controlButtonWidth: '40',
@@ -20741,7 +20741,7 @@ ax5.ui = function () {
 
     UI.addClass({
         className: "picker",
-        version: "1.3.12"
+        version: "1.3.16"
     }, function () {
         /**
          * @class ax5picker
@@ -20787,6 +20787,7 @@ ax5.ui = function () {
                 },
                 animateTime: 100,
                 calendar: {
+                    multipleSelect: false,
                     control: {
                         left: ax5.def.picker.date_leftArrow || '&#x02190',
                         yearTmpl: ax5.def.picker.date_yearTmpl || '%s',
@@ -21211,37 +21212,111 @@ ax5.ui = function () {
              * @param {String} val
              * @returns {ax5picker} this
              */
-            this.setContentValue = function (boundID, inputIndex, val) {
-                var queIdx = U.isNumber(boundID) ? boundID : getQueIdx.call(this, boundID);
-                var item = this.queue[queIdx];
-                var _input;
+            this.setContentValue = function () {
 
-                if (item) {
+                var multipleInputProcessor = {
+                    "date": function date(_item, _inputIndex, _val) {
+                        var values = [],
+                            diffDay,
+                            prevInputValue,
+                            nextInputValue;
 
-                    _input = item.$target.get(0).tagName.toUpperCase() == "INPUT" ? item.$target : jQuery(item.$target.find('input[type]').get(inputIndex));
-                    _input.val(val);
-                    if (!item.disableChangeTrigger) {
-                        _input.trigger("change");
+                        if (_item.$target.get(0).tagName.toUpperCase() !== "INPUT") {
+                            _item.$target.find('input[type]').each(function () {
+                                values.push(this.value);
+                            });
+                        }
+
+                        if (_inputIndex == 0) {
+                            if (values.length > 1 && values[1] !== "") {
+                                // 값 검증
+                                diffDay = ax5.util.dday(values[1], { today: values[0] });
+                                if (diffDay < 0) {
+                                    // 다음날짜 달력을 변경합니다.
+                                    nextInputValue = _val;
+                                } else {}
+                            } else {
+                                nextInputValue = _val;
+                            }
+
+                            if (nextInputValue) {
+                                _item.pickerCalendar[1].ax5uiInstance.setSelection([nextInputValue], false).changeMode("d", nextInputValue);
+                                this.setContentValue(_item.id, 1, nextInputValue);
+                            }
+
+                            return _val;
+                        } else if (_inputIndex == 1) {
+                            if (values.length > 1) {
+                                // 값 검증
+                                diffDay = ax5.util.dday(values[1], { today: values[0] });
+                                if (diffDay < 0) {
+                                    // 다음날짜 달력을 변경합니다.
+                                    prevInputValue = values[1];
+                                }
+                            }
+
+                            if (prevInputValue) {
+                                _item.pickerCalendar[0].ax5uiInstance.setSelection([prevInputValue], false).changeMode("d", prevInputValue);
+                                this.setContentValue(_item.id, 0, prevInputValue);
+                            }
+
+                            return _val;
+                        }
+                    }
+                };
+
+                return function (boundID, inputIndex, val) {
+                    var queIdx = U.isNumber(boundID) ? boundID : getQueIdx.call(this, boundID);
+                    var item = this.queue[queIdx];
+                    var _input;
+
+                    if (item) {
+
+                        _input = item.$target.get(0).tagName.toUpperCase() == "INPUT" ? item.$target : jQuery(item.$target.find('input[type]').get(inputIndex));
+                        _input.val(val);
+
+                        if (!item.disableChangeTrigger) {
+                            _input.trigger("change");
+                        }
+
+                        // picker의 입력이 2개이상인 경우
+                        //console.log(item.inputLength);
+                        if (item.inputLength > 1) {
+                            // 경우에 따라 첫번 선택에 따라 해야할 일들 처리
+                            if (multipleInputProcessor[item.content.type]) {
+                                val = multipleInputProcessor[item.content.type].call(this, item, inputIndex, val);
+                            }
+                        }
+
+                        var that = {
+                            self: self,
+                            state: "changeValue",
+                            item: item,
+                            inputIndex: inputIndex,
+                            value: val,
+                            values: [val]
+                        };
+                        if (item.$target.get(0).tagName.toUpperCase() !== "INPUT") {
+                            that.values = [];
+                            item.$target.find('input[type]').each(function () {
+                                that.values.push(this.value);
+                            });
+                        }
+
+                        onStateChanged.call(this, item, that);
+
+                        if (item.inputLength == 1) {
+                            this.close();
+                        }
                     }
 
-                    onStateChanged.call(this, item, {
-                        self: self,
-                        state: "changeValue",
-                        item: item,
-                        value: val
-                    });
-
-                    if (item.inputLength == 1) {
-                        this.close();
-                    }
-                }
-
-                item = null;
-                boundID = null;
-                inputIndex = null;
-                val = null;
-                return this;
-            };
+                    item = null;
+                    boundID = null;
+                    inputIndex = null;
+                    val = null;
+                    return this;
+                };
+            }();
 
             /**
              * @method ax5picker.open
@@ -21272,6 +21347,7 @@ ax5.ui = function () {
                         var input = item.$target.get(0).tagName.toUpperCase() == "INPUT" ? item.$target : item.$target.find('input[type]');
 
                         // calendar bind
+                        item.pickerCalendar = [];
                         item.pickerContent.find('[data-calendar-target]').each(function () {
 
                             // calendarConfig extend ~
@@ -21287,7 +21363,11 @@ ax5.ui = function () {
                                 self.setContentValue(item.id, idx, this.date);
                             };
 
-                            new ax5.ui.calendar(calendarConfig);
+                            item.pickerCalendar.push({
+                                itemId: item.id,
+                                inputIndex: idx,
+                                ax5uiInstance: new ax5.ui.calendar(calendarConfig)
+                            });
                         });
                     },
                     'secure-num': function secureNum(queIdx) {
@@ -21701,7 +21781,7 @@ jQuery.fn.ax5picker = function () {
 
     UI.addClass({
         className: "formatter",
-        version: "1.3.12"
+        version: "1.3.16"
     }, function () {
         var TODAY = new Date();
         var setSelectionRange = function setSelectionRange(input, pos) {
@@ -22339,7 +22419,7 @@ jQuery.fn.ax5formatter = function () {
 
     UI.addClass({
         className: "menu",
-        version: "1.3.12"
+        version: "1.3.16"
     }, function () {
         /**
          * @class ax5.ui.menu
@@ -23136,7 +23216,7 @@ jQuery.fn.ax5formatter = function () {
 
     UI.addClass({
         className: "select",
-        version: "1.3.12"
+        version: "1.3.16"
     }, function () {
         /**
          * @class ax5select
@@ -26100,7 +26180,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
                     if (_value !== null && typeof _value !== "undefined") returnValue = _value;
                 }
 
-                return returnValue.replace(/[<>]/g, function (tag) {
+                return typeof returnValue === "number" ? returnValue : returnValue.replace(/[<>]/g, function (tag) {
                     return tagsToReplace[tag] || tag;
                 });
             }
@@ -27303,7 +27383,6 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
                         }
 
                         GRID.data.setValue.call(self, dindex, col.key, newValue);
-
                         updateRowState.call(self, ["cellChecked"], dindex, {
                             key: col.key, rowIndex: rowIndex, colIndex: colIndex,
                             editorConfig: col.editor.config, checked: checked
@@ -27328,11 +27407,16 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
             }
             if (this.isInlineEditing) {
 
+                var originalValue = GRID.data.getValue.call(self, dindex, col.key);
                 var initValue = function (__value, __editor) {
+                    if (U.isNothing(__value)) {
+                        __value = originalValue;
+                    }
+
                     if (__editor.type == "money") {
                         return U.number(__value, { "money": true });
                     } else {
-                        return __value || "";
+                        return __value;
                     }
                 }.call(this, _initValue, editor);
 
@@ -27822,28 +27906,32 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
     };
 
     var setValue = function setValue(_dindex, _key, _value) {
-
+        var originalValue = getValue.call(this, _dindex, _key);
         this.needToPaintSum = true;
-        if (/[\.\[\]]/.test(_key)) {
-            try {
+
+        if (originalValue !== _value) {
+            if (/[\.\[\]]/.test(_key)) {
+                try {
+                    this.list[_dindex][this.config.columnKeys.modified] = true;
+                    Function("val", "this" + GRID.util.getRealPathForDataItem(_key) + " = val;").call(this.list[_dindex], _value);
+                } catch (e) {}
+            } else {
                 this.list[_dindex][this.config.columnKeys.modified] = true;
-                Function("val", "this" + GRID.util.getRealPathForDataItem(_key) + " = val;").call(this.list[_dindex], _value);
-            } catch (e) {}
-        } else {
-            this.list[_dindex][this.config.columnKeys.modified] = true;
-            this.list[_dindex][_key] = _value;
+                this.list[_dindex][_key] = _value;
+            }
+
+            if (this.onDataChanged) {
+                this.onDataChanged.call({
+                    self: this,
+                    list: this.list,
+                    dindex: _dindex,
+                    item: this.list[_dindex],
+                    key: _key,
+                    value: _value
+                });
+            }
         }
 
-        if (this.onDataChanged) {
-            this.onDataChanged.call({
-                self: this,
-                list: this.list,
-                dindex: _dindex,
-                item: this.list[_dindex],
-                key: _key,
-                value: _value
-            });
-        }
         return true;
     };
 
@@ -29473,7 +29561,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
 
     UI.addClass({
         className: "combobox",
-        version: "1.3.12"
+        version: "1.3.16"
     }, function () {
         /**
          * @class ax5combobox
@@ -29766,9 +29854,9 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
                 onSearch = function onSearch(queIdx, searchWord) {
                 this.queue[queIdx].waitOptions = true;
                 /*
-                this.activecomboboxOptionGroup.find('[data-els="content"]').html(
-                    jQuery(ax5.mustache.render(COMBOBOX.tmpl.options.call(this, this.queue[queIdx].columnKeys), this.queue[queIdx]))
-                );
+                 this.activecomboboxOptionGroup.find('[data-els="content"]').html(
+                 jQuery(ax5.mustache.render(COMBOBOX.tmpl.options.call(this, this.queue[queIdx].columnKeys), this.queue[queIdx]))
+                 );
                  */
                 this.activecomboboxOptionGroup.find('[data-els="content"]').html(jQuery(COMBOBOX.tmpl.get.call(this, "option", this.queue[queIdx], this.queue[queIdx].columnKeys)));
 
@@ -29810,10 +29898,10 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
                     data.lang = item.lang;
                     data.options = item.options;
                     /*
-                    this.activecomboboxOptionGroup.find('[data-els="content"]').html(jQuery(
-                        ax5.mustache.render(COMBOBOX.tmpl.options.call(this, item.columnKeys), data))
-                    );
-                    */
+                     this.activecomboboxOptionGroup.find('[data-els="content"]').html(jQuery(
+                     ax5.mustache.render(COMBOBOX.tmpl.options.call(this, item.columnKeys), data))
+                     );
+                     */
                     this.activecomboboxOptionGroup.find('[data-els="content"]').html(jQuery(COMBOBOX.tmpl.get.call(this, "options", data, item.columnKeys)));
                 }.bind(this));
             },
@@ -30391,7 +30479,12 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
                                 if (clickEl === "optionItemRemove") {
                                     var selectedIndex = target.getAttribute("data-ax5combobox-remove-index");
                                     var option = this.queue[queIdx].selected[selectedIndex];
-                                    setOptionSelect.call(this, queIdx, { index: { gindex: option['@gindex'], index: option['@index'] } }, false, true);
+                                    setOptionSelect.call(this, queIdx, {
+                                        index: {
+                                            gindex: option['@gindex'],
+                                            index: option['@index']
+                                        }
+                                    }, false, true);
                                     focusLabel.call(this, queIdx);
                                     U.stopEvent(e);
                                     return this;
@@ -30623,10 +30716,10 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
                             data.lang = item.lang;
                             data.options = item.options;
                             /*
-                            this.activecomboboxOptionGroup.find('[data-els="content"]').html(jQuery(
-                                ax5.mustache.render(COMBOBOX.tmpl["options"].call(this, item.columnKeys), data)
-                            ));
-                            */
+                             this.activecomboboxOptionGroup.find('[data-els="content"]').html(jQuery(
+                             ax5.mustache.render(COMBOBOX.tmpl["options"].call(this, item.columnKeys), data)
+                             ));
+                             */
                             this.activecomboboxOptionGroup.find('[data-els="content"]').html(jQuery(COMBOBOX.tmpl.get.call(this, "options", data, item.columnKeys)));
                         }
                     }.bind(this));
@@ -30867,13 +30960,21 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
              */
             this.enable = function (_boundID) {
                 var queIdx = getQueIdx.call(this, _boundID);
-                this.queue[queIdx].$display.removeAttr("disabled");
-                this.queue[queIdx].$input.removeAttr("disabled");
 
-                onStateChanged.call(this, this.queue[queIdx], {
-                    self: this,
-                    state: "enable"
-                });
+                if (typeof queIdx !== "undefined") {
+                    if (this.queue[queIdx].$display[0]) {
+                        this.queue[queIdx].$displayLabel.attr("contentEditable", "true");
+                        this.queue[queIdx].$display.removeAttr("disabled");
+                    }
+                    if (this.queue[queIdx].$select[0]) {
+                        this.queue[queIdx].$select.removeAttr("disabled");
+                    }
+
+                    onStateChanged.call(this, this.queue[queIdx], {
+                        self: this,
+                        state: "enable"
+                    });
+                }
 
                 return this;
             };
@@ -30885,14 +30986,21 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
              */
             this.disable = function (_boundID) {
                 var queIdx = getQueIdx.call(this, _boundID);
-                this.queue[queIdx].$display.attr("disabled", "disabled");
-                this.queue[queIdx].$input.attr("disabled", "disabled");
 
-                onStateChanged.call(this, this.queue[queIdx], {
-                    self: this,
-                    state: "disable"
-                });
+                if (typeof queIdx !== "undefined") {
+                    if (this.queue[queIdx].$display[0]) {
+                        this.queue[queIdx].$displayLabel.attr("contentEditable", "false");
+                        this.queue[queIdx].$display.attr("disabled", "disabled");
+                    }
+                    if (this.queue[queIdx].$select[0]) {
+                        this.queue[queIdx].$select.attr("disabled", "disabled");
+                    }
 
+                    onStateChanged.call(this, this.queue[queIdx], {
+                        self: this,
+                        state: "disable"
+                    });
+                }
                 return this;
             };
 
@@ -31133,7 +31241,7 @@ jQuery.fn.ax5combobox = function () {
 
     UI.addClass({
         className: "layout",
-        version: "1.3.12"
+        version: "1.3.16"
     }, function () {
         /**
          * @class ax5layout
@@ -32164,7 +32272,7 @@ jQuery.fn.ax5layout = function () {
 
     UI.addClass({
         className: "binder",
-        version: "1.3.12"
+        version: "1.3.16"
     }, function () {
 
         /**
@@ -33121,7 +33229,7 @@ jQuery.fn.ax5layout = function () {
 
     UI.addClass({
         className: "autocomplete",
-        version: "1.3.12"
+        version: "1.3.16"
     }, function () {
         /**
          * @class ax5autocomplete
@@ -34366,13 +34474,21 @@ jQuery.fn.ax5layout = function () {
              */
             this.enable = function (_boundID) {
                 var queIdx = getQueIdx.call(this, _boundID);
-                this.queue[queIdx].$display.removeAttr("disabled");
-                this.queue[queIdx].$input.removeAttr("disabled");
 
-                onStateChanged.call(this, this.queue[queIdx], {
-                    self: this,
-                    state: "enable"
-                });
+                if (typeof queIdx !== "undefined") {
+                    if (this.queue[queIdx].$display[0]) {
+                        this.queue[queIdx].$displayLabel.attr("contentEditable", "true");
+                        this.queue[queIdx].$display.removeAttr("disabled");
+                    }
+                    if (this.queue[queIdx].$select[0]) {
+                        this.queue[queIdx].$select.removeAttr("disabled");
+                    }
+
+                    onStateChanged.call(this, this.queue[queIdx], {
+                        self: this,
+                        state: "enable"
+                    });
+                }
 
                 return this;
             };
@@ -34384,13 +34500,21 @@ jQuery.fn.ax5layout = function () {
              */
             this.disable = function (_boundID) {
                 var queIdx = getQueIdx.call(this, _boundID);
-                this.queue[queIdx].$display.attr("disabled", "disabled");
-                this.queue[queIdx].$input.attr("disabled", "disabled");
 
-                onStateChanged.call(this, this.queue[queIdx], {
-                    self: this,
-                    state: "disable"
-                });
+                if (typeof queIdx !== "undefined") {
+                    if (this.queue[queIdx].$display[0]) {
+                        this.queue[queIdx].$displayLabel.attr("contentEditable", "false");
+                        this.queue[queIdx].$display.attr("disabled", "disabled");
+                    }
+                    if (this.queue[queIdx].$select[0]) {
+                        this.queue[queIdx].$select.attr("disabled", "disabled");
+                    }
+
+                    onStateChanged.call(this, this.queue[queIdx], {
+                        self: this,
+                        state: "disable"
+                    });
+                }
 
                 return this;
             };
@@ -34501,7 +34625,7 @@ jQuery.fn.ax5autocomplete = function () {
     };
 
     var autocompleteDisplay = function autocompleteDisplay(columnKeys) {
-        return "\n<div class=\"form-control {{formSize}} ax5autocomplete-display {{theme}}\" \ndata-ax5autocomplete-display=\"{{id}}\" data-ax5autocomplete-instance=\"{{instanceId}}\">\n    <div class=\"ax5autocomplete-display-table\" data-els=\"display-table\">\n        <div data-ax5autocomplete-display=\"label-holder\"> \n        <a {{^tabIndex}}href=\"#ax5autocomplete-{{id}}\" {{/tabIndex}}{{#tabIndex}}tabindex=\"{{tabIndex}}\" {{/tabIndex}}\n        data-ax5autocomplete-display=\"label\"\n        contentEditable=\"true\"\n        spellcheck=\"false\">{{{label}}}</a>\n        </div>\n        <div data-ax5autocomplete-display=\"addon\"> \n            {{#multiple}}{{#reset}}\n            <span class=\"addon-icon-reset\" data-selected-clear=\"true\">{{{.}}}</span>\n            {{/reset}}{{/multiple}}\n        </div>\n    </div>\n</a>\n";
+        return " \n<div class=\"form-control {{formSize}} ax5autocomplete-display {{theme}}\" \ndata-ax5autocomplete-display=\"{{id}}\" data-ax5autocomplete-instance=\"{{instanceId}}\">\n    <div class=\"ax5autocomplete-display-table\" data-els=\"display-table\">\n        <div data-ax5autocomplete-display=\"label-holder\"> \n        <a {{^tabIndex}}href=\"#ax5autocomplete-{{id}}\" {{/tabIndex}}{{#tabIndex}}tabindex=\"{{tabIndex}}\" {{/tabIndex}}\n        data-ax5autocomplete-display=\"label\"\n        contentEditable=\"true\"\n        spellcheck=\"false\">{{{label}}}</a>\n        </div>\n        <div data-ax5autocomplete-display=\"addon\"> \n            {{#multiple}}{{#reset}}\n            <span class=\"addon-icon-reset\" data-selected-clear=\"true\">{{{.}}}</span>\n            {{/reset}}{{/multiple}}\n        </div>\n    </div>\n</a>\n";
     };
 
     var formSelect = function formSelect(columnKeys) {

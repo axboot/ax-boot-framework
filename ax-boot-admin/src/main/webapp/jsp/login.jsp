@@ -4,8 +4,7 @@
 <%@ page language="java" contentType="text/html; charset=utf-8" pageEncoding="utf-8" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="ax" tagdir="/WEB-INF/tags" %>
-<%
-    boolean initialized = AppContextManager.getBean(DatabaseInitService.class).initialized();
+<%boolean initialized = AppContextManager.getBean(DatabaseInitService.class).initialized();
 
     String lastNavigatedPage = null;
 
@@ -17,8 +16,7 @@
         request.setAttribute("redirect", lastNavigatedPage);
     } else {
         request.setAttribute("redirect", "/setup");
-    }
-%>
+    }%>
 
 <c:if test="${redirect!=null}">
     <c:redirect url="${redirect}"/>
@@ -104,8 +102,7 @@
                             <input type="password" name="userPs" id="userPs" value="1234" class="form-control ime-false" placeholder=""/>
                         </div>
 
-                        <input type="hidden"
-                               name="${_csrf.parameterName}" value="${_csrf.token}"/>
+                        <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
 
                         <div class="ax-padding-box" style="text-align: right;">
                             <button type="submit" class="btn">&nbsp;&nbsp;로그인&nbsp;&nbsp;</button>

@@ -1341,13 +1341,21 @@
              */
             this.enable = function (_boundID) {
                 var queIdx = getQueIdx.call(this, _boundID);
-                this.queue[queIdx].$display.removeAttr("disabled");
-                this.queue[queIdx].$input.removeAttr("disabled");
 
-                onStateChanged.call(this, this.queue[queIdx], {
-                    self: this,
-                    state: "enable"
-                });
+                if (typeof queIdx !== "undefined") {
+                    if (this.queue[queIdx].$display[0]) {
+                        this.queue[queIdx].$displayLabel.attr("contentEditable", "true");
+                        this.queue[queIdx].$display.removeAttr("disabled");
+                    }
+                    if (this.queue[queIdx].$select[0]) {
+                        this.queue[queIdx].$select.removeAttr("disabled");
+                    }
+
+                    onStateChanged.call(this, this.queue[queIdx], {
+                        self: this,
+                        state: "enable"
+                    });
+                }
 
                 return this;
             };
@@ -1359,13 +1367,21 @@
              */
             this.disable = function (_boundID) {
                 var queIdx = getQueIdx.call(this, _boundID);
-                this.queue[queIdx].$display.attr("disabled", "disabled");
-                this.queue[queIdx].$input.attr("disabled", "disabled");
 
-                onStateChanged.call(this, this.queue[queIdx], {
-                    self: this,
-                    state: "disable"
-                });
+                if (typeof queIdx !== "undefined") {
+                    if (this.queue[queIdx].$display[0]) {
+                        this.queue[queIdx].$displayLabel.attr("contentEditable", "false");
+                        this.queue[queIdx].$display.attr("disabled", "disabled");
+                    }
+                    if (this.queue[queIdx].$select[0]) {
+                        this.queue[queIdx].$select.attr("disabled", "disabled");
+                    }
+
+                    onStateChanged.call(this, this.queue[queIdx], {
+                        self: this,
+                        state: "disable"
+                    });
+                }
 
                 return this;
             };

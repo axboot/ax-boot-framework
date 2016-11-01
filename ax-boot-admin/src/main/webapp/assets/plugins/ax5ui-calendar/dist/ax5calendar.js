@@ -9,7 +9,7 @@
 
     UI.addClass({
         className: "calendar",
-        version: "1.3.12"
+        version: "1.3.16"
     }, function () {
 
         /**
@@ -88,7 +88,7 @@
                 mode: 'day', // day|month|year,
                 dateFormat: 'yyyy-MM-dd',
                 displayDate: new Date(),
-                animateTime: 250,
+                animateTime: 100,
                 dimensions: {
                     controlHeight: '40',
                     controlButtonWidth: '40',
