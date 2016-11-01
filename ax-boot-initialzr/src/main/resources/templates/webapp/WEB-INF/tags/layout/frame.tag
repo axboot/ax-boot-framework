@@ -1,4 +1,4 @@
-<%@ tag import="com.chequer.axboot.admin.utils.CommonCodeUtils" %>
+<%@ tag import="${basePackage}.utils.CommonCodeUtils" %>
 <%@ tag language="java" pageEncoding="UTF-8" body-content="scriptless" %>
 <%
     String commonCodeJson = CommonCodeUtils.getAllByJson();
