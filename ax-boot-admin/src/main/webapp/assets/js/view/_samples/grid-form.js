@@ -173,9 +173,9 @@ fnObj.gridView01 = axboot.viewExtend(axboot.gridView, {
                 {key: "key", label: "KEY", width: 80, align: "left"},
                 {key: "value", label: "VALUE", width: 120, align: "left"},
                 {key: "etc1", label: "ETC1", width: 70, align: "center"},
-                {key: "ect2", label: "ETC2", width: 70, align: "center"},
-                {key: "ect3", label: "ETC3", width: 70, align: "center"},
-                {key: "ect4", label: "ETC4", width: 70, align: "center"}
+                {key: "etc2", label: "ETC2", width: 70, align: "center"},
+                {key: "etc3", label: "ETC3", width: 70, align: "center"},
+                {key: "etc4", label: "ETC4", width: 70, align: "center"}
             ],
             body: {
                 onClick: function () {
@@ -287,9 +287,9 @@ fnObj.gridView02 = axboot.viewExtend(axboot.gridView, {
                 {key: "key", label: "KEY", width: 80, align: "left", editor: "text"},
                 {key: "value", label: "VALUE", width: 120, align: "left", editor: "text"},
                 {key: "etc1", label: "ETC1", width: 70, align: "center", editor: "text"},
-                {key: "ect2", label: "ETC2", width: 70, align: "center", editor: "text"},
-                {key: "ect3", label: "ETC3", width: 70, align: "center", editor: "text"},
-                {key: "ect4", label: "ETC4", width: 70, align: "center", editor: "text"}
+                {key: "etc2", label: "ETC2", width: 70, align: "center", editor: "text"},
+                {key: "etc3", label: "ETC3", width: 70, align: "center", editor: "text"},
+                {key: "etc4", label: "ETC4", width: 70, align: "center", editor: "text"}
             ],
             body: {
                 onClick: function () {

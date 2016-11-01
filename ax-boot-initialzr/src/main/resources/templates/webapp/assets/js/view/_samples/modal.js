@@ -135,9 +135,9 @@ fnObj.gridView01 = axboot.viewExtend(axboot.gridView, {
                 {key: "key", label: "KEY", width: 100, align: "left"},
                 {key: "value", label: "VALUE", width: 200, align: "left"},
                 {key: "etc1", label: "ETC1", width: 70, align: "center"},
-                {key: "ect2", label: "ETC2", width: 70, align: "center"},
-                {key: "ect3", label: "ETC3", width: 70, align: "center"},
-                {key: "ect4", label: "ETC4", width: 70, align: "center"}
+                {key: "etc2", label: "ETC2", width: 70, align: "center"},
+                {key: "etc3", label: "ETC3", width: 70, align: "center"},
+                {key: "etc4", label: "ETC4", width: 70, align: "center"}
             ],
             body: {
                 onClick: function () {
