@@ -147,6 +147,9 @@ fnObj.frameView = axboot.viewExtend({
         print: function () {
 
             var menuItems = ax5.util.deepCopy(TOP_MENU_DATA);
+            menuItems.forEach(function(m){
+               m.hasChildren = (m.children && m.children.length);
+            });
             menuItems[0].open = true;
             this.openedIndex = 0;
 
@@ -154,32 +157,39 @@ fnObj.frameView = axboot.viewExtend({
                 .html(ax5.mustache.render(this.tmpl, {items: menuItems}))
                 .on("click", '[data-label-index]', function () {
                     var index = this.getAttribute("data-label-index");
-                    fnObj.frameView.asideView.open(index);
+                    if(menuItems[index].children && menuItems[index].children.length){
+                        fnObj.frameView.asideView.open(index);
+                    }else{
+                        if (menuItems[index].program) {
+                            ACTIONS.dispatch(ACTIONS.MENU_OPEN, $.extend({}, menuItems[index].program, {menuId: menuItems[index].menuId, menuNm: menuItems[index].menuNm}));
+                        }
+                    }
                 });
 
             menuItems.forEach(function (n, nidx) {
-
                 var $treeTarget = fnObj.frameView.aside.find('[data-tree-holder-index="' + nidx + '"]');
-                var treeTargetId = $treeTarget.get(0).id;
-                $.fn.zTree.init(
-                    $treeTarget,
-                    {
-                        view: {
-                            dblClickExpand: false
-                        },
-                        callback: {
-                            onClick: function (event, treeId, treeNode, clickFlag) {
-                                var zTree = $.fn.zTree.getZTreeObj(treeTargetId);
-                                zTree.expandNode(treeNode);
+                if($treeTarget.get(0)) {
+                    var treeTargetId = $treeTarget.get(0).id;
+                    $.fn.zTree.init(
+                        $treeTarget,
+                        {
+                            view: {
+                                dblClickExpand: false
+                            },
+                            callback: {
+                                onClick: function (event, treeId, treeNode, clickFlag) {
+                                    var zTree = $.fn.zTree.getZTreeObj(treeTargetId);
+                                    zTree.expandNode(treeNode);
 
-                                if (treeNode.program) {
-                                    ACTIONS.dispatch(ACTIONS.MENU_OPEN, $.extend({}, treeNode.program, {menuId: treeNode.menuId, menuNm: treeNode.menuNm}));
+                                    if (treeNode.program) {
+                                        ACTIONS.dispatch(ACTIONS.MENU_OPEN, $.extend({}, treeNode.program, {menuId: treeNode.menuId, menuNm: treeNode.menuNm}));
+                                    }
                                 }
                             }
-                        }
-                    },
-                    n.children
-                );
+                        },
+                        n.children
+                    );
+                }
             });
         },
         open: function (_index) {
@@ -226,8 +236,15 @@ fnObj.topMenuView = axboot.viewExtend({
 
         this.menu.attach(this.target);
         this.menu.onClick = function () {
+            console.log(this);
             if (this.program) {
                 ACTIONS.dispatch(ACTIONS.MENU_OPEN, $.extend({}, this.program, {menuId: this.menuId, menuNm: this.menuNm}));
+            }
+        };
+        this.menu.onStateChanged = function () {
+            console.log(this);
+            if (this.state == 'close') {
+                //console.log(this.self.getCheckValue());
             }
         };
     }

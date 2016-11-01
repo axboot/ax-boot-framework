@@ -1965,7 +1965,7 @@
                 var originalValue = GRID.data.getValue.call(self, dindex, col.key);
                 var initValue = (function (__value, __editor) {
                     if(U.isNothing(__value)){
-                        __value = originalValue;
+                        __value = U.isNothing(originalValue) ? "" : originalValue;
                     }
 
                     if (__editor.type == "money") {

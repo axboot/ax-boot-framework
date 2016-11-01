@@ -14709,7 +14709,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
          * ax5 version
          * @member {String} ax5.info.version
          */
-        var version = "1.3.16";
+        var version = "1.3.17";
 
         /**
          * ax5 library path
@@ -17817,7 +17817,7 @@ ax5.ui = function () {
 
     UI.addClass({
         className: "dialog",
-        version: "1.3.16"
+        version: "1.3.17"
     }, function () {
         /**
          * @class ax5dialog
@@ -18356,7 +18356,7 @@ ax5.ui = function () {
 
     UI.addClass({
         className: "mask",
-        version: "1.3.16"
+        version: "1.3.17"
     }, function () {
         /**
          * @class ax5mask
@@ -18687,7 +18687,7 @@ ax5.ui = function () {
 
     UI.addClass({
         className: "toast",
-        version: "1.3.16"
+        version: "1.3.17"
     }, function () {
         /**
          * @class ax5toast
@@ -19051,7 +19051,7 @@ ax5.ui = function () {
 
     UI.addClass({
         className: "modal",
-        version: "1.3.16"
+        version: "1.3.17"
     }, function () {
         /**
          * @class ax5modal
@@ -19677,7 +19677,7 @@ ax5.ui = function () {
 
     UI.addClass({
         className: "calendar",
-        version: "1.3.16"
+        version: "1.3.17"
     }, function () {
 
         /**
@@ -20741,7 +20741,7 @@ ax5.ui = function () {
 
     UI.addClass({
         className: "picker",
-        version: "1.3.16"
+        version: "1.3.17"
     }, function () {
         /**
          * @class ax5picker
@@ -21781,7 +21781,7 @@ jQuery.fn.ax5picker = function () {
 
     UI.addClass({
         className: "formatter",
-        version: "1.3.16"
+        version: "1.3.17"
     }, function () {
         var TODAY = new Date();
         var setSelectionRange = function setSelectionRange(input, pos) {
@@ -22419,7 +22419,7 @@ jQuery.fn.ax5formatter = function () {
 
     UI.addClass({
         className: "menu",
-        version: "1.3.16"
+        version: "1.3.17"
     }, function () {
         /**
          * @class ax5.ui.menu
@@ -23216,7 +23216,7 @@ jQuery.fn.ax5formatter = function () {
 
     UI.addClass({
         className: "select",
-        version: "1.3.16"
+        version: "1.3.17"
     }, function () {
         /**
          * @class ax5select
@@ -27410,7 +27410,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
                 var originalValue = GRID.data.getValue.call(self, dindex, col.key);
                 var initValue = function (__value, __editor) {
                     if (U.isNothing(__value)) {
-                        __value = originalValue;
+                        __value = U.isNothing(originalValue) ? "" : originalValue;
                     }
 
                     if (__editor.type == "money") {
@@ -29561,7 +29561,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
 
     UI.addClass({
         className: "combobox",
-        version: "1.3.16"
+        version: "1.3.17"
     }, function () {
         /**
          * @class ax5combobox
@@ -31241,7 +31241,7 @@ jQuery.fn.ax5combobox = function () {
 
     UI.addClass({
         className: "layout",
-        version: "1.3.16"
+        version: "1.3.17"
     }, function () {
         /**
          * @class ax5layout
@@ -32272,7 +32272,7 @@ jQuery.fn.ax5layout = function () {
 
     UI.addClass({
         className: "binder",
-        version: "1.3.16"
+        version: "1.3.17"
     }, function () {
 
         /**
@@ -33229,7 +33229,7 @@ jQuery.fn.ax5layout = function () {
 
     UI.addClass({
         className: "autocomplete",
-        version: "1.3.16"
+        version: "1.3.17"
     }, function () {
         /**
          * @class ax5autocomplete
