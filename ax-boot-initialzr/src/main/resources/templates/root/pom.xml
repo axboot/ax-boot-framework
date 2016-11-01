@@ -10,6 +10,14 @@
     <name>${name}</name>
     <description>${description}</description>
 
+    <repositories>
+        <repository>
+            <id>axboot-release</id>
+            <name>AXBoot-Release</name>
+            <url>http://nexus.axboot.com/content/repositories/releases</url>
+        </repository>
+    </repositories>
+
     <properties>
         <java.version>1.8</java.version>
         <lombok.version>1.16.8</lombok.version>
