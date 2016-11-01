@@ -90,7 +90,7 @@ public class AXBootLogbackAppender extends UnsynchronizedAppenderBase<ILoggingEv
         SlackField date = new SlackField();
         date.setTitle("발생시간");
 
-        LocalDateTime localDateTime = LocalDateTime.ofInstant(errorLog.getErrorDatetime(), ZoneId.of("Seoul/Korea"));
+        LocalDateTime localDateTime = LocalDateTime.ofInstant(errorLog.getErrorDatetime(), ZoneId.of("Asia/Seoul"));
         date.setValue(localDateTime.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")));
         date.setShorten(true);
         fields.add(date);

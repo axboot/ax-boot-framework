@@ -17,10 +17,6 @@ public class SessionUser implements UserDetails {
 
     private String userNm;
 
-    private String compCd;
-
-    private String storCd;
-
     private Locale locale;
 
     private String timeZone;
