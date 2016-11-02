@@ -1,7 +1,9 @@
 package com.chequer.axboot.core.vo;
 
+import com.chequer.axboot.core.json.Views;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonView;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -13,14 +15,17 @@ import java.time.LocalDateTime;
 public class BaseVO {
 	@Transient
 	@JsonProperty("__deleted__")
+	@JsonView(value = Views.Root.class)
 	protected boolean __deleted__;
 
 	@Transient
 	@JsonProperty("__created__")
+	@JsonView(value = Views.Root.class)
 	protected boolean __created__;
 
 	@Transient
 	@JsonProperty("__modified__")
+	@JsonView(value = Views.Root.class)
 	protected boolean __modified__;
 
 	@Transient
