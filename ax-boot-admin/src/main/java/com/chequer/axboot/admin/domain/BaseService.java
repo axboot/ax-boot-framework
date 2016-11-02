@@ -24,7 +24,6 @@ public class BaseService<T, ID extends Serializable> extends AXBootBaseService<T
     protected QProgram qProgram = QProgram.program;
     protected QUserAuth qUserAuth = QUserAuth.userAuth;
     protected QMenu qMenu = QMenu.menu;
-    protected QManual qManual = QManual.manual;
     protected QCommonFile qCommonFile = QCommonFile.commonFile;
 
     protected AXBootJPAQueryDSLRepository<T, ID> repository;
