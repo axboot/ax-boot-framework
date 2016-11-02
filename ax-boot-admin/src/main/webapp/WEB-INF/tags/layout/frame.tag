@@ -76,7 +76,10 @@
                     <img src="${pageContext.request.contextPath}${config.logo.header}" width="100%"/>
                 </a>
             </div>
-            <div id="ax-top-menu" class="ax-split-panel ax-split-flex">
+            <div id="ax-top-menu" class="ax-split-panel ax-split-flex"></div>
+            <div class="ax-split-panel cell-aside-handle" id="ax-fullscreen-handel">
+                <i class="cqc-expand icon-closed"></i>
+                <i class="cqc-collapse icon-opened"></i>
             </div>
         </div>
     </div>

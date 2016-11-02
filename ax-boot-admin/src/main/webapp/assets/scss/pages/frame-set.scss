@@ -16,10 +16,12 @@ $ax-frame-header-tab-on-color: #fff !default;
 
 $ax-frame-aside-width: 220px !default;
 $ax-frame-aside-bg: #2B3A48 !default;
+$ax-frame-aside-border : 0 none !default;
 
 $ax-frame-foot-height: 30px !default;
 $ax-frame-foot-bg: #E2E2E2 !default;
 $ax-frame-foot-color: #7C7C7C !default;
+
 
 &.frame-set {
     overflow: hidden;
@@ -72,6 +74,7 @@ $ax-frame-foot-color: #7C7C7C !default;
             width: 100%;
             height: $ax-frame-header-height;
             background-color: $ax-frame-header-bg;
+            border-bottom: $ax-frame-header-tab-border;
 
             .cell-aside-handle {
                 cursor: pointer;
@@ -95,6 +98,14 @@ $ax-frame-foot-color: #7C7C7C !default;
             #ax-top-menu {
                 padding-left: 10px;
             }
+            #ax-fullscreen-handel{
+                .icon-closed{display: block;}
+                .icon-opened{display: none;}
+                i {
+                    background: #F1F1F1;
+                    color: #2B3A48;
+                }
+            }
         }
         .ax-frame-header-tab {
             //@include transition(all 0.3s ease-in-out);
@@ -106,17 +117,16 @@ $ax-frame-foot-color: #7C7C7C !default;
             width: 100%;
             height: $ax-frame-header-tab-height;
             @include ax-background(top, $ax-frame-header-tab-container-bg-colors);
+            border-bottom: $ax-frame-header-tab-border;
 
             #ax-frame-header-tab-container {
-                border-top: $ax-frame-header-tab-border;
-                border-bottom: $ax-frame-header-tab-border;
                 height: 100%;
                 &:before {
                     display: block;
                     content: ' ';
                     position: absolute;
                     left: 0;
-                    bottom: 1px;
+                    bottom: 0px;
                     height: 4px;
                     width: 100%;
                     background: nth($ax-frame-header-tab-on-bg-colors, 1);
@@ -133,7 +143,7 @@ $ax-frame-foot-color: #7C7C7C !default;
                     box-sizing: border-box;
                     display: table-cell;
                     box-sizing: border-box;
-                    height: $ax-frame-header-tab-height - 5;
+                    height: $ax-frame-header-tab-height - 4;
                     line-height: $ax-frame-header-tab-height - 7;
                     min-width: 120px;
 
@@ -201,6 +211,7 @@ $ax-frame-foot-color: #7C7C7C !default;
             height: 100%;
             background-color: $ax-frame-aside-bg;
             padding-top: $ax-frame-header-tool-height + $ax-frame-header-height;
+            border-right: $ax-frame-aside-border;
 
             .ax-frame-aside-menu-holder {
                 height: 100%;
@@ -254,8 +265,8 @@ $ax-frame-foot-color: #7C7C7C !default;
             width: 100%;
             height: 100%;
             padding-top: $ax-frame-header-tool-height + $ax-frame-header-height + $ax-frame-header-tab-height;
-            padding-bottom: $ax-frame-foot-height;
 
+            padding-bottom: $ax-frame-foot-height;
             .frame-item {
                 width: 100%;
                 height: 100%;
@@ -287,7 +298,7 @@ $ax-frame-foot-color: #7C7C7C !default;
                 padding-left: $ax-frame-aside-width;
             }
             .ax-frame-header {
-                .cell-aside-handle {
+                #cell-aside-handle {
                     i {
                         background: #F1F1F1;
                         color: #2B3A48;
@@ -305,6 +316,33 @@ $ax-frame-foot-color: #7C7C7C !default;
             }
             .ax-frame-foot {
                 padding-left: $ax-frame-aside-width;
+            }
+        }
+
+        &.full-screen {
+            .ax-frame-header-tool {
+                display: none;
+            }
+            .ax-frame-header {
+                top: 0;
+                #ax-fullscreen-handel {
+                    .icon-closed{display: none;}
+                    .icon-opened{display: block;}
+                    i {
+                        background: #788694;
+                        color: #fff;
+                    }
+                }
+            }
+            .ax-frame-header-tab {
+                display: none;
+            }
+            .ax-frame-contents {
+                padding-top: $ax-frame-header-height;
+                padding-bottom: 0;
+            }
+            .ax-frame-foot {
+                display: none;
             }
         }
     }

@@ -48,7 +48,7 @@ $ax5picker-easing-time-close: 0.1s;
 
 .ax5-ui-menubar {
     &.axboot {
-        @include menubar-variant(#2C2C2C, #979797, #fff, #fff, #2c2c2c, $body-bg, #3DACFC);
+        @include menubar-variant(#2C2C2C, #979797, #fff, #fff, #2c2c2c, transparent, #3DACFC);
 
         .ax-menu-body {
             .ax-menu-item {
