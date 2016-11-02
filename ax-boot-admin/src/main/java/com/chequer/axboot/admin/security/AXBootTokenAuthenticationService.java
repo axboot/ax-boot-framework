@@ -44,9 +44,7 @@ public class AXBootTokenAuthenticationService {
     }
 
     public int tokenExpiry() {
-        if (PhaseUtils.isAlpha()) {
-            return 60 * 3;
-        } else if (PhaseUtils.isProduction()) {
+        if (PhaseUtils.isProduction()) {
             return 60 * 50;
         } else {
             return 60 * 10 * 10 * 10 * 10;
