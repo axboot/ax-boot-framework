@@ -15,7 +15,7 @@
         <script>
             var isHeadless = true;
         </script>
-        <script type="text/javascript" src="<c:url value='/assets/js/axboot/common/brokebot.min.js' />"></script>
+        <script type="text/javascript" src="<c:url value='/assets/js/common/brokebot.min.js' />"></script>
     </jsp:attribute>
     <jsp:body>
 
