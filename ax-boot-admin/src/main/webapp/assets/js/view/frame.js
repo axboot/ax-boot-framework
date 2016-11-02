@@ -1,24 +1,26 @@
 var fnObj = {};
 var ACTIONS = axboot.actionExtend(fnObj, {
-    PAGE_SEARCH: "PAGE_SEARCH",
-    TOGGLE_ASIDE: "TOGGLE_ASIDE",
-    MENU_OPEN: "MENU_OPEN",
+    PAGE_SEARCH: function (caller, act, data) {
+
+        return false;
+    },
+    TOGGLE_ASIDE: function (caller, act, data) {
+        caller.frameView.toggleAside();
+    },
+    MENU_OPEN: function (caller, act, data) {
+        caller.tabView.open(data);
+    },
+    TOGGLE_FULLSCREEN: function (caller, act, data) {
+        caller.frameView.toggleFullScreen();
+    },
+
     dispatch: function (caller, act, data) {
-        switch (act) {
-            case ACTIONS.PAGE_SEARCH:
-
-                //console.log("PAGE_SEARCH");
-                //console.log(arguments);
-
-                break;
-            case ACTIONS.TOGGLE_ASIDE:
-                this.frameView.toggleAside();
-                break;
-            case ACTIONS.MENU_OPEN:
-                this.tabView.open(data);
-                break;
-            default:
-                return false;
+        var result = ACTIONS.exec(caller, act, data);
+        if (result != "error") {
+            return result;
+        } else {
+            // 직접코딩
+            return false;
         }
     }
 });
@@ -132,6 +134,11 @@ fnObj.frameView = axboot.viewExtend({
             ACTIONS.dispatch(ACTIONS.TOGGLE_ASIDE);
         });
 
+        this.fullScreenHandle = $("#ax-fullscreen-handel");
+        this.fullScreenHandle.on("click", function () {
+            ACTIONS.dispatch(ACTIONS.TOGGLE_FULLSCREEN);
+        });
+
         if (this.aside.get(0)) {
             this.asideView.initView();
             this.asideView.print();
@@ -140,6 +147,15 @@ fnObj.frameView = axboot.viewExtend({
     toggleAside: function () {
         this.target.toggleClass("show-aside");
     },
+    toggleFullScreen: function () {
+        if(this.target.hasClass("full-screen")){
+            this.target.removeClass("full-screen");
+        }else{
+            this.target.addClass("full-screen");
+            this.target.removeClass("show-aside");
+        }
+
+    },
     asideView: axboot.viewExtend({
         initView: function () {
             this.tmpl = $('[data-tmpl="ax-frame-aside"]').html();
@@ -147,8 +163,8 @@ fnObj.frameView = axboot.viewExtend({
         print: function () {
 
             var menuItems = ax5.util.deepCopy(TOP_MENU_DATA);
-            menuItems.forEach(function(m){
-               m.hasChildren = (m.children && m.children.length);
+            menuItems.forEach(function (m) {
+                m.hasChildren = (m.children && m.children.length);
             });
             menuItems[0].open = true;
             this.openedIndex = 0;
@@ -157,9 +173,9 @@ fnObj.frameView = axboot.viewExtend({
                 .html(ax5.mustache.render(this.tmpl, {items: menuItems}))
                 .on("click", '[data-label-index]', function () {
                     var index = this.getAttribute("data-label-index");
-                    if(menuItems[index].children && menuItems[index].children.length){
+                    if (menuItems[index].children && menuItems[index].children.length) {
                         fnObj.frameView.asideView.open(index);
-                    }else{
+                    } else {
                         if (menuItems[index].program) {
                             ACTIONS.dispatch(ACTIONS.MENU_OPEN, $.extend({}, menuItems[index].program, {menuId: menuItems[index].menuId, menuNm: menuItems[index].menuNm}));
                         }
@@ -168,7 +184,7 @@ fnObj.frameView = axboot.viewExtend({
 
             menuItems.forEach(function (n, nidx) {
                 var $treeTarget = fnObj.frameView.aside.find('[data-tree-holder-index="' + nidx + '"]');
-                if($treeTarget.get(0)) {
+                if ($treeTarget.get(0)) {
                     var treeTargetId = $treeTarget.get(0).id;
                     $.fn.zTree.init(
                         $treeTarget,
@@ -222,7 +238,7 @@ fnObj.topMenuView = axboot.viewExtend({
         this.menu = new ax5.ui.menu({
             theme: 'axboot',
             direction: "top",
-            offset: {left: 0, top: 0},
+            offset: {left: 0, top: -1},
             position: "absolute",
             icons: {
                 'arrow': '<i class="cqc-chevron-right"></i>'
