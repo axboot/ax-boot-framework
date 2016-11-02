@@ -42,7 +42,6 @@ public class AXBootSecurityConfig extends WebSecurityConfigurerAdapter {
             "/resources/**",
             "/axboot.config.js",
             "/assets/**",
-            "/layouts/**",
             "/jsp/common/**",
             "/jsp/setup/**",
             "/swagger/**",
