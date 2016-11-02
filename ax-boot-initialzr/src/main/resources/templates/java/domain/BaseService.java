@@ -2,7 +2,6 @@ package ${basePackage}.domain;
 
 import ${basePackage}.domain.code.QCommonCode;
 import ${basePackage}.domain.file.QCommonFile;
-import ${basePackage}.domain.manual.QManual;
 import ${basePackage}.domain.program.QProgram;
 import ${basePackage}.domain.program.menu.QMenu;
 import ${basePackage}.domain.user.QUser;

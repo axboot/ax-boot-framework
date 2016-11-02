@@ -2,7 +2,6 @@ package com.chequer.axboot.admin.domain;
 
 import com.chequer.axboot.admin.domain.code.QCommonCode;
 import com.chequer.axboot.admin.domain.file.QCommonFile;
-import com.chequer.axboot.admin.domain.manual.QManual;
 import com.chequer.axboot.admin.domain.program.QProgram;
 import com.chequer.axboot.admin.domain.program.menu.QMenu;
 import com.chequer.axboot.admin.domain.user.QUser;
