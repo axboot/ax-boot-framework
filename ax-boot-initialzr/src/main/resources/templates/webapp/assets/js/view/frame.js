@@ -252,13 +252,11 @@ fnObj.topMenuView = axboot.viewExtend({
 
         this.menu.attach(this.target);
         this.menu.onClick = function () {
-            console.log(this);
             if (this.program) {
                 ACTIONS.dispatch(ACTIONS.MENU_OPEN, $.extend({}, this.program, {menuId: this.menuId, menuNm: this.menuNm}));
             }
         };
         this.menu.onStateChanged = function () {
-            console.log(this);
             if (this.state == 'close') {
                 //console.log(this.self.getCheckValue());
             }
