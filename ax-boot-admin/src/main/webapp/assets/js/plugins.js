@@ -14709,7 +14709,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
          * ax5 version
          * @member {String} ax5.info.version
          */
-        var version = "1.3.17";
+        var version = "1.3.19";
 
         /**
          * ax5 library path
@@ -17817,7 +17817,7 @@ ax5.ui = function () {
 
     UI.addClass({
         className: "dialog",
-        version: "1.3.17"
+        version: "1.3.19"
     }, function () {
         /**
          * @class ax5dialog
@@ -18356,7 +18356,7 @@ ax5.ui = function () {
 
     UI.addClass({
         className: "mask",
-        version: "1.3.17"
+        version: "1.3.19"
     }, function () {
         /**
          * @class ax5mask
@@ -18687,7 +18687,7 @@ ax5.ui = function () {
 
     UI.addClass({
         className: "toast",
-        version: "1.3.17"
+        version: "1.3.19"
     }, function () {
         /**
          * @class ax5toast
@@ -19051,7 +19051,7 @@ ax5.ui = function () {
 
     UI.addClass({
         className: "modal",
-        version: "1.3.17"
+        version: "1.3.19"
     }, function () {
         /**
          * @class ax5modal
@@ -19677,7 +19677,7 @@ ax5.ui = function () {
 
     UI.addClass({
         className: "calendar",
-        version: "1.3.17"
+        version: "1.3.19"
     }, function () {
 
         /**
@@ -20741,7 +20741,7 @@ ax5.ui = function () {
 
     UI.addClass({
         className: "picker",
-        version: "1.3.17"
+        version: "1.3.19"
     }, function () {
         /**
          * @class ax5picker
@@ -21781,7 +21781,7 @@ jQuery.fn.ax5picker = function () {
 
     UI.addClass({
         className: "formatter",
-        version: "1.3.17"
+        version: "1.3.19"
     }, function () {
         var TODAY = new Date();
         var setSelectionRange = function setSelectionRange(input, pos) {
@@ -22419,7 +22419,7 @@ jQuery.fn.ax5formatter = function () {
 
     UI.addClass({
         className: "menu",
-        version: "1.3.17"
+        version: "1.3.19"
     }, function () {
         /**
          * @class ax5.ui.menu
@@ -23006,26 +23006,27 @@ jQuery.fn.ax5formatter = function () {
                         index = Number(target.getAttribute("data-menu-item-index")),
                         scrollTop = cfg.position == "fixed" ? jQuery(document).scrollTop() : 0;
 
-                    if (self.menuBar.openedIndex == index) {
-                        if (eType == "click") self.close();
-                        return false;
-                    }
-
-                    self.menuBar.target.find('[data-menu-item-index]').removeClass("hover");
-                    self.menuBar.opened = true;
-                    self.menuBar.openedIndex = index;
-
-                    $target.attr("data-menu-item-opened", "true");
-                    $target.addClass("hover");
-
-                    if (cfg.offset) {
-                        if (cfg.offset.left) offset.left += cfg.offset.left;
-                        if (cfg.offset.top) offset.top += cfg.offset.top;
-                    }
-
-                    opt = getOption["object"].call(this, { left: offset.left, top: offset.top + height - scrollTop }, opt);
-
                     if (cfg.items && cfg.items[index][cfg.columnKeys.items] && cfg.items[index][cfg.columnKeys.items].length) {
+
+                        if (self.menuBar.openedIndex == index) {
+                            if (eType == "click") self.close();
+                            return false;
+                        }
+
+                        self.menuBar.target.find('[data-menu-item-index]').removeClass("hover");
+                        self.menuBar.opened = true;
+                        self.menuBar.openedIndex = index;
+
+                        $target.attr("data-menu-item-opened", "true");
+                        $target.addClass("hover");
+
+                        if (cfg.offset) {
+                            if (cfg.offset.left) offset.left += cfg.offset.left;
+                            if (cfg.offset.top) offset.top += cfg.offset.top;
+                        }
+
+                        opt = getOption["object"].call(this, { left: offset.left, top: offset.top + height - scrollTop }, opt);
+
                         popup.call(self, opt, cfg.items[index][cfg.columnKeys.items], 0, 'root.' + target.getAttribute("data-menu-item-index")); // 0 is seq of queue
                         appEventAttach.call(self, true); // 이벤트 연결
                     }
@@ -23037,6 +23038,18 @@ jQuery.fn.ax5formatter = function () {
                     height = null;
                     index = null;
                     scrollTop = null;
+                };
+                var clickParentMenu = function clickParentMenu(target, opt, eType) {
+                    var $target = jQuery(target),
+                        offset = $target.offset(),
+                        height = $target.outerHeight(),
+                        index = Number(target.getAttribute("data-menu-item-index")),
+                        scrollTop = cfg.position == "fixed" ? jQuery(document).scrollTop() : 0;
+                    if (cfg.items && (!cfg.items[index][cfg.columnKeys.items] || cfg.items[index][cfg.columnKeys.items].length == 0)) {
+                        if (self.onClick) {
+                            self.onClick.call(cfg.items[index], cfg.items[index]);
+                        }
+                    }
                 };
 
                 return function (el, opt) {
@@ -23085,7 +23098,10 @@ jQuery.fn.ax5formatter = function () {
                                 return true;
                             }
                         });
-                        if (target) popUpChildMenu(target, opt, "click");
+                        if (target) {
+                            clickParentMenu(target, opt, "click");
+                            popUpChildMenu(target, opt, "click");
+                        }
 
                         target = null;
                     });
@@ -23216,7 +23232,7 @@ jQuery.fn.ax5formatter = function () {
 
     UI.addClass({
         className: "select",
-        version: "1.3.17"
+        version: "1.3.19"
     }, function () {
         /**
          * @class ax5select
@@ -24358,7 +24374,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
 
     UI.addClass({
         className: "grid",
-        version: "${VERSION}"
+        version: "1.3.19"
     }, function () {
         /**
          * @class ax5grid
@@ -29561,7 +29577,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
 
     UI.addClass({
         className: "combobox",
-        version: "1.3.17"
+        version: "1.3.19"
     }, function () {
         /**
          * @class ax5combobox
@@ -31241,7 +31257,7 @@ jQuery.fn.ax5combobox = function () {
 
     UI.addClass({
         className: "layout",
-        version: "1.3.17"
+        version: "1.3.19"
     }, function () {
         /**
          * @class ax5layout
@@ -32272,7 +32288,7 @@ jQuery.fn.ax5layout = function () {
 
     UI.addClass({
         className: "binder",
-        version: "1.3.17"
+        version: "1.3.19"
     }, function () {
 
         /**
@@ -33229,7 +33245,7 @@ jQuery.fn.ax5layout = function () {
 
     UI.addClass({
         className: "autocomplete",
-        version: "1.3.17"
+        version: "1.3.19"
     }, function () {
         /**
          * @class ax5autocomplete
