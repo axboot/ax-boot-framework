@@ -6,7 +6,7 @@
 
 ![preview axboot](https://github.com/axboot/ax-boot-themes/raw/master/assets/doberman-3.png)
 
-## What is AX-Boot Framework?
+## What is AXBoot Framework?
 >Full Stack Java Development Framework.
 
 ## Features
