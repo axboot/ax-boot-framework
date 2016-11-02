@@ -198,6 +198,7 @@ public class DatabaseInitService {
         userAuthService.save(userAuth);
 
         programService.save(Program.of("api", "API", "/swagger/", "_self", "N", "Y", "Y", "N", "N", "N", "N", "N", "N", "N"));
+        programService.save(Program.of("axboot-js", "[API]axboot.js", "/jsp/_apis/axboot-js.jsp", "_self", "N", "N", "N", "N", "N", "N", "N", "N", "N", "N"));
         programService.save(Program.of("basic", "[샘플]기본템플릿", "/jsp/_samples/basic.jsp", "_self", "Y", "Y", "Y", "N", "N", "N", "N", "N", "N", "N"));
         programService.save(Program.of("grid-form", "[샘플]그리드&폼 템플릿", "/jsp/_samples/grid-form.jsp", "_self", "Y", "Y", "Y", "N", "N", "N", "N", "N", "N", "N"));
         programService.save(Program.of("grid-modal", "[샘플]모달 템플릿", "/jsp/_samples/grid-modal.jsp", "_self", "Y", "Y", "Y", "N", "N", "N", "N", "N", "N", "N"));
@@ -210,7 +211,6 @@ public class DatabaseInitService {
         programService.save(Program.of("system-config-common-code", "공통코드관리", "/jsp/system/system-config-common-code.jsp", "_self", "Y", "Y", "Y", "Y", "N", "N", "N", "N", "N", "N"));
         programService.save(Program.of("system-config-menu", "메뉴관리", "/jsp/system/system-config-menu.jsp", "_self", "Y", "Y", "Y", "N", "N", "N", "N", "N", "N", "N"));
         programService.save(Program.of("system-config-program", "프로그램관리", "/jsp/system/system-config-program.jsp", "_self", "Y", "Y", "Y", "N", "N", "N", "N", "N", "N", "N"));
-        programService.save(Program.of("system-help-manual", "매뉴얼 관리", "/jsp/system/system-help-manual.jsp", "_self", "Y", "Y", "Y", "N", "N", "Y", "N", "N", "N", "N"));
         programService.save(Program.of("system-operation-log", "에러로그 조회", "/jsp/system/system-operation-log.jsp", "_self", "Y", "Y", "N", "N", "N", "Y", "N", "N", "N", "N"));
         programService.save(Program.of("tab-layout", "[샘플]탭레이아웃", "/jsp/_samples/tab-layout.jsp", "_self", "N", "N", "N", "N", "N", "N", "N", "N", "N", "N"));
         programService.save(Program.of("vertical-layout", "[샘플]좌우레이아웃", "/jsp/_samples/vertical-layout.jsp", "_self", "N", "N", "N", "N", "N", "N", "N", "N", "N", "N"));
@@ -221,7 +221,6 @@ public class DatabaseInitService {
         menuService.save(Menu.of(4L, "SYSTEM_MANAGER", "메뉴관리", 1L, 1, 2, "system-config-menu"));
         menuService.save(Menu.of(5L, "SYSTEM_MANAGER", "사용자 관리", 1L, 1, 3, "system-auth-user"));
         menuService.save(Menu.of(6L, "SYSTEM_MANAGER", "에러로그 조회", 1L, 1, 4, "system-operation-log"));
-        menuService.save(Menu.of(7L, "SYSTEM_MANAGER", "매뉴얼 관리", 1L, 1, 5, "system-help-manual"));
         menuService.save(Menu.of(8L, "SYSTEM_MANAGER", "레이아웃 샘플", null, 0, 1, null));
         menuService.save(Menu.of(9L, "SYSTEM_MANAGER", "API", null, 0, 2, null));
         menuService.save(Menu.of(10L, "SYSTEM_MANAGER", "페이지구조설명", 8L, 1, 0, "page-structure"));
@@ -232,6 +231,10 @@ public class DatabaseInitService {
         menuService.save(Menu.of(15L, "SYSTEM_MANAGER", "그리드&탭폼 템플릿", 8L, 1, 6, "grid-tabform"));
         menuService.save(Menu.of(16L, "SYSTEM_MANAGER", "그리드&모달 템플릿", 8L, 1, 7, "grid-modal"));
         menuService.save(Menu.of(17L, "SYSTEM_MANAGER", "탭레이아웃", 8L, 1, 3, "tab-layout"));
+        menuService.save(Menu.of(18L, "SYSTEM_MANAGER", "AXBOOT.js", 9L, 1, 0, "axboot-js"));
+        menuService.save(Menu.of(19L, "SYSTEM_MANAGER", "AXBOOT.css", 9L, 1, 1, null));
+        menuService.save(Menu.of(20L, "SYSTEM_MANAGER", "AXBOOT.jsp", 9L, 1, 2, null));
+
 
         commonCodeService.save(CommonCode.of("USER_STATUS", "계정상태", "ACCOUNT_LOCK", "잠김", 2));
         commonCodeService.save(CommonCode.of("USER_ROLE", "사용자 롤", "API", "API 접근 롤", 6));
@@ -258,7 +261,6 @@ public class DatabaseInitService {
         authGroupMenuService.save(AuthGroupMenu.of("S0001", 4L, "Y", "Y", "N", "N", "N", "N", "N", "N", "N"));
         authGroupMenuService.save(AuthGroupMenu.of("S0001", 5L, "Y", "Y", "N", "N", "N", "N", "N", "N", "N"));
         authGroupMenuService.save(AuthGroupMenu.of("S0001", 6L, "Y", "N", "N", "N", "N", "N", "N", "N", "N"));
-        authGroupMenuService.save(AuthGroupMenu.of("S0001", 7L, "Y", "Y", "N", "N", "N", "N", "N", "N", "N"));
         authGroupMenuService.save(AuthGroupMenu.of("S0001", 8L, "Y", "Y", "N", "N", "N", "N", "N", "N", "N"));
         authGroupMenuService.save(AuthGroupMenu.of("S0001", 10L, "N", "N", "N", "N", "N", "N", "N", "N", "N"));
         authGroupMenuService.save(AuthGroupMenu.of("S0001", 11L, "N", "N", "N", "N", "N", "N", "N", "N", "N"));
@@ -268,6 +270,7 @@ public class DatabaseInitService {
         authGroupMenuService.save(AuthGroupMenu.of("S0001", 15L, "Y", "Y", "N", "N", "N", "N", "N", "N", "N"));
         authGroupMenuService.save(AuthGroupMenu.of("S0001", 16L, "Y", "Y", "N", "N", "N", "N", "N", "N", "N"));
         authGroupMenuService.save(AuthGroupMenu.of("S0001", 17L, "N", "N", "N", "N", "N", "N", "N", "N", "N"));
+        authGroupMenuService.save(AuthGroupMenu.of("S0001", 18L, "N", "N", "N", "N", "N", "N", "N", "N", "N"));
 
 
     }

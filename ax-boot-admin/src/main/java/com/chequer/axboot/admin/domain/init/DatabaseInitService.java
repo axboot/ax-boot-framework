@@ -211,7 +211,6 @@ public class DatabaseInitService {
         programService.save(Program.of("system-config-common-code", "공통코드관리", "/jsp/system/system-config-common-code.jsp", "_self", "Y", "Y", "Y", "Y", "N", "N", "N", "N", "N", "N"));
         programService.save(Program.of("system-config-menu", "메뉴관리", "/jsp/system/system-config-menu.jsp", "_self", "Y", "Y", "Y", "N", "N", "N", "N", "N", "N", "N"));
         programService.save(Program.of("system-config-program", "프로그램관리", "/jsp/system/system-config-program.jsp", "_self", "Y", "Y", "Y", "N", "N", "N", "N", "N", "N", "N"));
-        programService.save(Program.of("system-help-manual", "매뉴얼 관리", "/jsp/system/system-help-manual.jsp", "_self", "Y", "Y", "Y", "N", "N", "Y", "N", "N", "N", "N"));
         programService.save(Program.of("system-operation-log", "에러로그 조회", "/jsp/system/system-operation-log.jsp", "_self", "Y", "Y", "N", "N", "N", "Y", "N", "N", "N", "N"));
         programService.save(Program.of("tab-layout", "[샘플]탭레이아웃", "/jsp/_samples/tab-layout.jsp", "_self", "N", "N", "N", "N", "N", "N", "N", "N", "N", "N"));
         programService.save(Program.of("vertical-layout", "[샘플]좌우레이아웃", "/jsp/_samples/vertical-layout.jsp", "_self", "N", "N", "N", "N", "N", "N", "N", "N", "N", "N"));
@@ -222,7 +221,6 @@ public class DatabaseInitService {
         menuService.save(Menu.of(4L, "SYSTEM_MANAGER", "메뉴관리", 1L, 1, 2, "system-config-menu"));
         menuService.save(Menu.of(5L, "SYSTEM_MANAGER", "사용자 관리", 1L, 1, 3, "system-auth-user"));
         menuService.save(Menu.of(6L, "SYSTEM_MANAGER", "에러로그 조회", 1L, 1, 4, "system-operation-log"));
-        menuService.save(Menu.of(7L, "SYSTEM_MANAGER", "매뉴얼 관리", 1L, 1, 5, "system-help-manual"));
         menuService.save(Menu.of(8L, "SYSTEM_MANAGER", "레이아웃 샘플", null, 0, 1, null));
         menuService.save(Menu.of(9L, "SYSTEM_MANAGER", "API", null, 0, 2, null));
         menuService.save(Menu.of(10L, "SYSTEM_MANAGER", "페이지구조설명", 8L, 1, 0, "page-structure"));
@@ -263,7 +261,6 @@ public class DatabaseInitService {
         authGroupMenuService.save(AuthGroupMenu.of("S0001", 4L, "Y", "Y", "N", "N", "N", "N", "N", "N", "N"));
         authGroupMenuService.save(AuthGroupMenu.of("S0001", 5L, "Y", "Y", "N", "N", "N", "N", "N", "N", "N"));
         authGroupMenuService.save(AuthGroupMenu.of("S0001", 6L, "Y", "N", "N", "N", "N", "N", "N", "N", "N"));
-        authGroupMenuService.save(AuthGroupMenu.of("S0001", 7L, "Y", "Y", "N", "N", "N", "N", "N", "N", "N"));
         authGroupMenuService.save(AuthGroupMenu.of("S0001", 8L, "Y", "Y", "N", "N", "N", "N", "N", "N", "N"));
         authGroupMenuService.save(AuthGroupMenu.of("S0001", 10L, "N", "N", "N", "N", "N", "N", "N", "N", "N"));
         authGroupMenuService.save(AuthGroupMenu.of("S0001", 11L, "N", "N", "N", "N", "N", "N", "N", "N", "N"));
