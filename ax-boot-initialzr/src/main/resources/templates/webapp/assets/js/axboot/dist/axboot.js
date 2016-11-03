@@ -310,6 +310,12 @@ axboot.ajax = function () {
             }
         }).always(function (data, textStatus, jqXHR) {
             queue.pop();
+
+            // 프레임 셋에 타이머 초기화.
+            if (top.fnObj && top.fnObj.activityTimerView) {
+                top.fnObj.activityTimerView.update();
+            }
+
             if (!options.nomask) if (queue.length == 0) axAJAXMask.close(300);
         });
     };
@@ -1783,8 +1789,10 @@ axboot.modal = function () {
      * @method axboot.modal.close
      */
     var close = function close(data) {
-        $(document.body).removeClass("modalOpened");
         window.axModal.close();
+        setTimeout(function () {
+            $(document.body).removeClass("modalOpened");
+        }, 500);
     };
     /**
      * ax5 modal을 최소화 합니다.

@@ -111,8 +111,7 @@
                 ${config.copyrights}
             </div>
             <div class="ax-split-panel text-align-right">
-                Last account activity 52 mins ago
-
+                Last account activity <b id="account-activity-timer">0초</b> 경과.
             </div>
         </div>
     </div>

@@ -30,6 +30,7 @@ fnObj.pageStart = function () {
     this.topMenuView.initView();
     this.frameView.initView();
     this.tabView.initView();
+    this.activityTimerView.initView();
 };
 
 fnObj.pageResize = function () {
@@ -148,9 +149,9 @@ fnObj.frameView = axboot.viewExtend({
         this.target.toggleClass("show-aside");
     },
     toggleFullScreen: function () {
-        if(this.target.hasClass("full-screen")){
+        if (this.target.hasClass("full-screen")) {
             this.target.removeClass("full-screen");
-        }else{
+        } else {
             this.target.addClass("full-screen");
             this.target.removeClass("show-aside");
         }
@@ -516,3 +517,53 @@ fnObj.tabView = axboot.viewExtend({
     }
 });
 
+
+/**
+ * activityTimerView
+ */
+fnObj.activityTimerView = axboot.viewExtend({
+    initView: function () {
+        this.$target = $("#account-activity-timer");
+        /*
+        $(document.body).on("click", function () {
+            fnObj.activityTimerView.update();
+        });
+        */
+        this.update();
+        setInterval(function () {
+            fnObj.activityTimerView.print();
+        }, 1000);
+    },
+    update: function () {
+        this.initTime = (new Date()).getTime();
+    },
+    print: function () {
+        var now = (new Date()).getTime(),
+            D_Milli = (1000 * 60) * 60,
+            M_Milli = (1000 * 60),
+            S_Milli = 1000;
+
+        var diffNum = (now - this.initTime);
+        var displayTime = [];
+        var hh, mi, ss;
+
+        if (diffNum > D_Milli) {
+            hh = Math.floor(diffNum / D_Milli);
+            displayTime.push(hh + "시");
+            diffNum -= hh * D_Milli;
+        }
+        if (diffNum > M_Milli) {
+            mi = Math.floor(diffNum / M_Milli);
+            displayTime.push(mi + "분");
+            diffNum -= mi * M_Milli;
+        }
+        if (diffNum > S_Milli) {
+            ss = Math.floor(diffNum / S_Milli);
+            displayTime.push(ss + "초");
+        } else {
+            displayTime.push("0초");
+        }
+
+        this.$target.html(displayTime.join(""));
+    }
+});
