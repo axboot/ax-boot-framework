@@ -24374,7 +24374,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
 
     UI.addClass({
         className: "grid",
-        version: "1.3.19"
+        version: "${VERSION}"
     }, function () {
         /**
          * @class ax5grid
@@ -24605,7 +24605,12 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
             },
                 resetColGroupWidth = function resetColGroupWidth() {
                 /// !! 그리드 target의 크기가 변경되면 이 함수를 호출하려 this.colGroup의 _width 값을 재 계산 하여야 함. [tom]
-                var CT_WIDTH = this.$["container"]["root"].width();
+                var CT_WIDTH = this.$["container"]["root"].width() - function () {
+                    var width = 0;
+                    if (cfg.showLineNumber) width += cfg.lineNumberColumnWidth;
+                    if (cfg.showRowSelector) width += cfg.rowSelectorColumnWidth;
+                    return width;
+                }();
                 var totalWidth = 0;
                 var computedWidth;
                 var autoWidthColgroupIndexs = [];
@@ -28915,6 +28920,10 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
                 _panel_width = self.$["panel"]["body"].width(),
                 _content_height = self.xvar.scrollContentHeight,
                 _content_width = self.xvar.scrollContentWidth;
+
+            if (isNaN(_content_height) || isNaN(_content_width)) {
+                return false;
+            }
 
             var newLeft, newTop;
             var _top_is_end = false;

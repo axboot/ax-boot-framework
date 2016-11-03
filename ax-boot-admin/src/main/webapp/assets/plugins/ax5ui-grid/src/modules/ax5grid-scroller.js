@@ -248,6 +248,10 @@
                 _content_height = self.xvar.scrollContentHeight,
                 _content_width = self.xvar.scrollContentWidth;
 
+            if(isNaN(_content_height) || isNaN(_content_width)){
+                return false;
+            }
+
             var newLeft, newTop;
             var _top_is_end = false;
             var _left_is_end = false;
@@ -266,6 +270,8 @@
             } else {
                 if (delta.y == 0) _top_is_end = true;
             }
+            
+
 
             // newLeft이 범위를 넘었는지 체크
             if (newLeft >= 0) {
