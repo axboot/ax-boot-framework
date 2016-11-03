@@ -9,7 +9,7 @@ var ACTIONS = axboot.actionExtend(fnObj, {
             callback: function (res) {
                 caller.uploadView01.setData(searchData);
                 caller.uploadView02.setData(searchData);
-                caller.treeView01.setData(searchData, res.list);
+                caller.treeView01.setData(searchData, res.list, data);
             }
         });
         return false;
@@ -41,7 +41,7 @@ var ACTIONS = axboot.actionExtend(fnObj, {
                         data: JSON.stringify(data),
                         callback: function (res) {
                             axToast.push("매뉴얼 내용이 저장 되었습니다");
-                            ACTIONS.dispatch(ACTIONS.PAGE_SEARCH);
+                            ACTIONS.dispatch(ACTIONS.PAGE_SEARCH, {manualId: data.manualId});
                         }
                     })
                     ;
@@ -303,9 +303,28 @@ fnObj.treeView01 = axboot.viewExtend(axboot.treeView, {
             }
         }, []);
     },
-    setData: function (_searchData, _tree) {
+    setData: function (_searchData, _tree, _data) {
         this.param = $.extend({}, _searchData);
         this.target.setData(_tree);
+
+        if (_data && typeof _data.manualId !== "undefined") {
+            // selectNode
+            (function (_tree, _keyName, _key) {
+                var nodes = _tree.getNodes();
+                var findNode = function (_arr) {
+                    var i = _arr.length;
+                    while (i--) {
+                        if (_arr[i][_keyName] == _key) {
+                            _tree.selectNode(_arr[i]);
+                        }
+                        if (_arr[i].children && _arr[i].children.length > 0) {
+                            findNode(_arr[i].children);
+                        }
+                    }
+                };
+                findNode(nodes);
+            })(this.target.zTree, "manualId", _data.manualId);
+        }
     },
     getData: function () {
         var _this = this;

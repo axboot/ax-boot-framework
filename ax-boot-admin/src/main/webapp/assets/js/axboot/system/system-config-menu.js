@@ -7,7 +7,7 @@ var ACTIONS = axboot.actionExtend(fnObj, {
             url: ["menu"],
             data: caller.searchView.getData(),
             callback: function (res) {
-                caller.treeView01.setData(searchData, res.list);
+                caller.treeView01.setData(searchData, res.list, data);
             }
         });
 
@@ -29,7 +29,7 @@ var ACTIONS = axboot.actionExtend(fnObj, {
                 if (data && data.callback) {
                     data.callback();
                 } else {
-                    ACTIONS.dispatch(ACTIONS.PAGE_SEARCH);
+                    ACTIONS.dispatch(ACTIONS.PAGE_SEARCH, {menuId: caller.formView01.getData().menuId});
                 }
             }
         });
@@ -367,9 +367,28 @@ fnObj.treeView01 = axboot.viewExtend(axboot.treeView, {
             }
         }, []);
     },
-    setData: function (_searchData, _tree) {
+    setData: function (_searchData, _tree, _data) {
         this.param = $.extend({}, _searchData);
         this.target.setData(_tree);
+
+        if (_data && typeof _data.menuId !== "undefined") {
+            // selectNode
+            (function (_tree, _keyName, _key) {
+                var nodes = _tree.getNodes();
+                var findNode = function (_arr) {
+                    var i = _arr.length;
+                    while (i--) {
+                        if (_arr[i][_keyName] == _key) {
+                            _tree.selectNode(_arr[i]);
+                        }
+                        if (_arr[i].children && _arr[i].children.length > 0) {
+                            findNode(_arr[i].children);
+                        }
+                    }
+                };
+                findNode(nodes);
+            })(this.target.zTree, "menuId", _data.menuId);
+        }
     },
     getData: function () {
         var _this = this;
