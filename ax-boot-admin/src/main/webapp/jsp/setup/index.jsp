@@ -89,7 +89,7 @@
                     </table>
                 </div>
                 <div class="alert alert-info" role="alert">
-                    WARNING! 스키마 및 초기 데이터 생성을 이미한 경우에는, 기존에 생성된 테이블과 데이터가 모두 삭제된 후 재생성 됩니다.
+                    WARNING! 데이터베이스가 초기화된 후 재생성됩니다.
                 </div>
 
                 <!-- TODO : AJAX Call로 처리 -->
