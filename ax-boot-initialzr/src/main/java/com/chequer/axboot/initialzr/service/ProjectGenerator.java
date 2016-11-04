@@ -52,7 +52,7 @@ public class ProjectGenerator {
         values.put("description", description);
         values.put("groupId", groupId);
         values.put("sessionCookie", uuid);
-        values.put("axbootCoreVersion", "2.1.11");
+        values.put("axbootCoreVersion", "2.1.13");
 
         PathMatchingResourcePatternResolver resolver = new PathMatchingResourcePatternResolver();
 
