@@ -62,12 +62,20 @@ public class TemplateUtils {
     }
 
     public static String getJsPath(String programPath) {
-        String path = programPath.substring(5, programPath.lastIndexOf("/")) + "/" + FilenameUtils.getBaseName(programPath) + ".js";
-        return "/assets/js/view/" + path;
+        return "/assets/js/view" + getJsName(programPath);
     }
 
     public static String getDefaultJsPath(String programPath) {
-        String path = programPath.substring(5, programPath.lastIndexOf("/")) + "/" + FilenameUtils.getBaseName(programPath) + ".js";
-        return "/assets/js/axboot/" + path;
+        return "/assets/js/axboot" + getJsName(programPath);
+    }
+
+    public static String getJsName(String programPath) {
+        if (programPath.startsWith("/jsp")) {
+            programPath = programPath.substring(4);
+        }
+
+        int lastIndex = programPath.lastIndexOf(".");
+
+        return programPath.substring(0, lastIndex) + ".js";
     }
 }
