@@ -14709,7 +14709,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
          * ax5 version
          * @member {String} ax5.info.version
          */
-        var version = "1.3.19";
+        var version = "1.3.20";
 
         /**
          * ax5 library path
@@ -17817,7 +17817,7 @@ ax5.ui = function () {
 
     UI.addClass({
         className: "dialog",
-        version: "1.3.19"
+        version: "1.3.20"
     }, function () {
         /**
          * @class ax5dialog
@@ -18356,7 +18356,7 @@ ax5.ui = function () {
 
     UI.addClass({
         className: "mask",
-        version: "1.3.19"
+        version: "1.3.20"
     }, function () {
         /**
          * @class ax5mask
@@ -18687,7 +18687,7 @@ ax5.ui = function () {
 
     UI.addClass({
         className: "toast",
-        version: "1.3.19"
+        version: "1.3.20"
     }, function () {
         /**
          * @class ax5toast
@@ -19051,7 +19051,7 @@ ax5.ui = function () {
 
     UI.addClass({
         className: "modal",
-        version: "1.3.19"
+        version: "1.3.20"
     }, function () {
         /**
          * @class ax5modal
@@ -19677,7 +19677,7 @@ ax5.ui = function () {
 
     UI.addClass({
         className: "calendar",
-        version: "1.3.19"
+        version: "${VERSION}"
     }, function () {
 
         /**
@@ -20278,22 +20278,21 @@ ax5.ui = function () {
                 });
                 if (target) {
                     value = target.getAttribute("data-calendar-move");
-
-                    if (cfg.mode == "day") {
+                    if (cfg.mode == "day" || cfg.mode == "d") {
                         if (value == "left") {
                             cfg.displayDate = U.date(cfg.displayDate, { add: { m: -1 } });
                         } else {
                             cfg.displayDate = U.date(cfg.displayDate, { add: { m: 1 } });
                         }
                         printDay.call(this, cfg.displayDate);
-                    } else if (cfg.mode == "month") {
+                    } else if (cfg.mode == "month" || cfg.mode == "m") {
                         if (value == "left") {
                             cfg.displayDate = U.date(cfg.displayDate, { add: { y: -1 } });
                         } else {
                             cfg.displayDate = U.date(cfg.displayDate, { add: { y: 1 } });
                         }
                         printMonth.call(this, cfg.displayDate);
-                    } else if (cfg.mode == "year") {
+                    } else if (cfg.mode == "year" || cfg.mode == "y") {
                         if (value == "left") {
                             cfg.displayDate = U.date(cfg.displayDate, { add: { y: -10 } });
                         } else {
@@ -20384,7 +20383,7 @@ ax5.ui = function () {
                 };
 
                 if (cfg.control) {
-                    this.$["control"].find('[data-calendar-move]').on(cfg.clickEventName, function (e) {
+                    this.$["root"].on(cfg.clickEventName, '[data-calendar-move]', function (e) {
                         move.call(this, e || window.event);
                     }.bind(this));
                 }
@@ -20741,7 +20740,7 @@ ax5.ui = function () {
 
     UI.addClass({
         className: "picker",
-        version: "1.3.19"
+        version: "1.3.20"
     }, function () {
         /**
          * @class ax5picker
@@ -21781,7 +21780,7 @@ jQuery.fn.ax5picker = function () {
 
     UI.addClass({
         className: "formatter",
-        version: "1.3.19"
+        version: "1.3.20"
     }, function () {
         var TODAY = new Date();
         var setSelectionRange = function setSelectionRange(input, pos) {
@@ -22419,7 +22418,7 @@ jQuery.fn.ax5formatter = function () {
 
     UI.addClass({
         className: "menu",
-        version: "1.3.19"
+        version: "1.3.20"
     }, function () {
         /**
          * @class ax5.ui.menu
@@ -23232,7 +23231,7 @@ jQuery.fn.ax5formatter = function () {
 
     UI.addClass({
         className: "select",
-        version: "1.3.19"
+        version: "1.3.20"
     }, function () {
         /**
          * @class ax5select
@@ -24374,7 +24373,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
 
     UI.addClass({
         className: "grid",
-        version: "${VERSION}"
+        version: "1.3.20"
     }, function () {
         /**
          * @class ax5grid
@@ -29586,7 +29585,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
 
     UI.addClass({
         className: "combobox",
-        version: "1.3.19"
+        version: "1.3.20"
     }, function () {
         /**
          * @class ax5combobox
@@ -31266,7 +31265,7 @@ jQuery.fn.ax5combobox = function () {
 
     UI.addClass({
         className: "layout",
-        version: "1.3.19"
+        version: "1.3.20"
     }, function () {
         /**
          * @class ax5layout
@@ -32297,7 +32296,7 @@ jQuery.fn.ax5layout = function () {
 
     UI.addClass({
         className: "binder",
-        version: "1.3.19"
+        version: "1.3.20"
     }, function () {
 
         /**
@@ -33254,7 +33253,7 @@ jQuery.fn.ax5layout = function () {
 
     UI.addClass({
         className: "autocomplete",
-        version: "1.3.19"
+        version: "1.3.20"
     }, function () {
         /**
          * @class ax5autocomplete
