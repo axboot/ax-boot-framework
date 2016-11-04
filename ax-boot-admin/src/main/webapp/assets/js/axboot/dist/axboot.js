@@ -107,6 +107,10 @@ axboot.init = function () {
  */
 axboot.pageStart = function () {
     if (window[axboot.def.pageFunctionName] && window[axboot.def.pageFunctionName].pageStart) {
+        // 프레임 셋에 타이머 초기화.
+        if (top.fnObj && top.fnObj.activityTimerView) {
+            top.fnObj.activityTimerView.update();
+        }
         window[axboot.def.pageFunctionName].pageStart();
     }
 };

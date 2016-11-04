@@ -517,7 +517,6 @@ fnObj.tabView = axboot.viewExtend({
     }
 });
 
-
 /**
  * activityTimerView
  */
@@ -549,19 +548,21 @@ fnObj.activityTimerView = axboot.viewExtend({
 
         if (diffNum > D_Milli) {
             hh = Math.floor(diffNum / D_Milli);
-            displayTime.push(hh + "시");
+            displayTime.push(ax5.util.setDigit(hh, 2) + ":");
             diffNum -= hh * D_Milli;
         }
         if (diffNum > M_Milli) {
             mi = Math.floor(diffNum / M_Milli);
-            displayTime.push(mi + "분");
+            displayTime.push(ax5.util.setDigit(mi, 2) + ":");
             diffNum -= mi * M_Milli;
+        } else {
+            displayTime.push("00:");
         }
         if (diffNum > S_Milli) {
             ss = Math.floor(diffNum / S_Milli);
-            displayTime.push(ss + "초");
+            displayTime.push(ax5.util.setDigit(ss, 2));
         } else {
-            displayTime.push("0초");
+            displayTime.push("00");
         }
 
         this.$target.html(displayTime.join(""));
