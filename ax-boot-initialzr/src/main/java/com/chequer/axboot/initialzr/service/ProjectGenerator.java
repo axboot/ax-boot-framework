@@ -47,7 +47,7 @@ public class ProjectGenerator {
         values.put("package", packageName);
         values.put("basePackage", packageName);
         values.put("domainPackage", packageName + ".domain");
-        values.put("name", projectName);
+        values.put("projectName", projectName);
         values.put("artifactId", artifactId);
         values.put("description", description);
         values.put("groupId", groupId);

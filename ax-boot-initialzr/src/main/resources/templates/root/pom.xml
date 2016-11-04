@@ -7,7 +7,7 @@
     <artifactId>${artifactId}</artifactId>
     <version>1.0.0</version>
     <packaging>war</packaging>
-    <name>${name}</name>
+    <name>${projectName}</name>
     <description>${description}</description>
 
     <repositories>
