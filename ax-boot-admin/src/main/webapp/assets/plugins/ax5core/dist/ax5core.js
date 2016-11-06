@@ -53,7 +53,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
          * ax5 version
          * @member {String} ax5.info.version
          */
-        var version = "1.3.20";
+        var version = "1.3.22";
 
         /**
          * ax5 library path
@@ -1391,7 +1391,8 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
             if (typeof cond === "undefined") {
                 return d;
             } else {
-                if (cond["add"]) {
+
+                if ("add" in cond) {
                     d = function (_d, opts) {
                         var yy,
                             mm,
@@ -1412,13 +1413,39 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
                             _d = new Date(yy, mm, dd, 12);
                         } else if (typeof opts["y"] !== "undefined") {
                             _d.setTime(_d.getTime() + opts["y"] * 365 * DyMilli);
-                        } else {
-                            _d.setTime(_d.getTime() + opts["y"] * DyMilli);
                         }
                         return _d;
                     }(new Date(d), cond["add"]);
                 }
-                if (cond["return"]) {
+
+                if ("set" in cond) {
+                    d = function (_d, opts) {
+                        var yy,
+                            mm,
+                            dd,
+                            processor = {
+                            "firstDayOfMonth": function firstDayOfMonth(date) {
+                                yy = date.getFullYear();
+                                mm = date.getMonth();
+                                dd = 1;
+                                return new Date(yy, mm, dd, 12);
+                            },
+                            "lastDayOfMonth": function lastDayOfMonth(date) {
+                                yy = date.getFullYear();
+                                mm = date.getMonth();
+                                dd = daysOfMonth(yy, mm);
+                                return new Date(yy, mm, dd, 12);
+                            }
+                        };
+                        if (opts in processor) {
+                            return processor[opts](_d);
+                        } else {
+                            return _d;
+                        }
+                    }(new Date(d), cond["set"]);
+                }
+
+                if ("return" in cond) {
                     return function () {
                         var fStr = cond["return"],
                             nY,

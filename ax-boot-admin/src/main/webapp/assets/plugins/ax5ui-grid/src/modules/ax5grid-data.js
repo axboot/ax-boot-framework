@@ -404,6 +404,36 @@
         return this.list[_dindex][cfg.columnKeys.selected];
     };
 
+    var selectAll = function (_selected, _options) {
+        var cfg = this.config;
+
+        var dindex = this.list.length;
+        if (typeof _selected === "undefined") {
+            while (dindex--) {
+                if (this.list[dindex].__isGrouping) continue;
+                if(this.list[dindex][cfg.columnKeys.selected] = !this.list[dindex][cfg.columnKeys.selected]){
+                    this.selectedDataIndexs.push(dindex);
+                }
+            }
+        }else{
+            while (dindex--) {
+                if (this.list[dindex].__isGrouping) continue;
+                if(this.list[dindex][cfg.columnKeys.selected] = _selected) {
+                    this.selectedDataIndexs.push(dindex);
+                }
+            }
+        }
+
+        if (this.onDataChanged && _options && _options.internalCall) {
+            this.onDataChanged.call({
+                self: this,
+                list: this.list
+            });
+        }
+
+        return this.list;
+    };
+
     var sort = function (_sortInfo, _list) {
         var self = this;
         var list = _list || this.list;
@@ -453,6 +483,7 @@
         getValue: getValue,
         clearSelect: clearSelect,
         select: select,
+        selectAll: selectAll,
         add: add,
         remove: remove,
         deleteRow: deleteRow,

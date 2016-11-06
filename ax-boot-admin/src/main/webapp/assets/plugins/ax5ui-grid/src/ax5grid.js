@@ -209,7 +209,6 @@
                 initColumns = function (_columns) {
                     this.columns = U.deepCopy(_columns);
                     this.headerTable = GRID.util.makeHeaderTable.call(this, this.columns);
-
                     this.xvar.frozenColumnIndex = (cfg.frozenColumnIndex > this.columns.length) ? this.columns.length : cfg.frozenColumnIndex;
 
                     this.bodyRowTable = GRID.util.makeBodyRowTable.call(this, this.columns);
@@ -1294,7 +1293,15 @@
              * @param {Number} _selectObject.rowIndex - rowIndex of columns
              * @param {Number} _selectObject.conIndex - colIndex of columns
              * @param {Object} _options
+             * @param {Boolean} _options.selectedClear
+             * @param {Boolean} _options.selected
              * @returns {ax5grid}
+             * @example
+             * ```js
+             * firstGrid.select(0);
+             * firstGrid.select(0, {selected: true});
+             * firstGrid.select(0, {selected: false});
+             * ```
              */
             this.select = function (_selectObject, _options) {
                 if (U.isNumber(_selectObject)) {
@@ -1310,10 +1317,27 @@
                         }
                     }
 
-                    GRID.data.select.call(this, dindex);
+                    GRID.data.select.call(this, dindex, _options && _options.selected);
                     GRID.body.updateRowState.call(this, ["selected"], dindex);
                 }
+                return this;
+            };
 
+            /**
+             * @method ax5grid.selectAll
+             * @param {Object} _options
+             * @param {Boolean} _options.selected
+             * @returns {ax5grid}
+             * @example
+             * ```js
+             * firstGrid.selectAll();
+             * firstGrid.selectAll({selected: true});
+             * firstGrid.selectAll({selected: false});
+             * ```
+             */
+            this.selectAll = function(_options){
+                GRID.data.selectAll.call(this, _options && _options.selected);
+                GRID.body.updateRowStateAll.call(this, ["selected"]);
                 return this;
             };
 
@@ -1332,7 +1356,6 @@
 
     GRID = ax5.ui.grid;
 })();
-
 
 // todo : merge cells
 // todo : filter

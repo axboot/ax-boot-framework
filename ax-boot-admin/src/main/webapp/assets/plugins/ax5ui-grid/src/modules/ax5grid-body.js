@@ -249,6 +249,21 @@
         });
     };
 
+    var updateRowStateAll = function (_states, _data) {
+        var self = this;
+        var cfg = this.config;
+
+        var processor = {
+            "selected": function (_dindex) {
+                GRID.body.repaint.call(this, true);
+            }
+        };
+        _states.forEach(function (_state) {
+            if (!processor[_state]) throw 'invaild state name';
+            processor[_state].call(self, _data);
+        });
+    };
+
     var init = function () {
         var self = this;
 
@@ -2128,6 +2143,7 @@
         repaintCell: repaintCell,
         repaintRow: repaintRow,
         updateRowState: updateRowState,
+        updateRowStateAll: updateRowStateAll,
         scrollTo: scrollTo,
         blur: blur,
         moveFocus: moveFocus,
