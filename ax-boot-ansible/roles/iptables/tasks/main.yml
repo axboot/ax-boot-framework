@@ -1,0 +1,10 @@
+---
+- name: stop firewall
+  shell: systemctl stop firewalld
+  sudo: yes
+  ignore_errors: yes
+
+- name: disable firewall
+  shell: systemctl disable firewalld
+  sudo: yes
+  ignore_errors: yes

@@ -1,0 +1,10 @@
+---
+- name: disable selinux
+  shell: setenforce 0
+  sudo: yes
+  ignore_errors: yes
+
+- name: disable selinux
+  shell: "echo 'SELINUX=disabled' > /etc/sysconfig/selinux"
+  sudo: yes
+  ignore_errors: yes

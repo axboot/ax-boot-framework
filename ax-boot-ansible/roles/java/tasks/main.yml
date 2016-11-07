@@ -1,0 +1,20 @@
+---
+- name: remove open-jdk
+  shell: yum -y remove "*java*"
+  sudo: yes
+
+- name: remove open-jdk
+  shell: yum -y remove "*jdk*"
+  sudo: yes
+
+- name: download jdk
+  get_url: url={{package_repo_url}}/jdk/{{jdk_version}} dest=/tmp/{{jdk_version}}
+  sudo: yes
+
+- name: install jdk
+  yum: name=/tmp/{{ jdk_version }} state=present
+  sudo: yes
+
+- name: remove jdk
+  file: path=/tmp/{{ jdk_version }} state=absent
+  sudo: yes

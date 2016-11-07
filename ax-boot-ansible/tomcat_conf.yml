@@ -1,0 +1,10 @@
+#ansible-playbook tomcat_conf.yml -i inventories/alpha --extra-vars "app=front"
+
+- name: apply conf
+  hosts: "{{ app }}"
+  remote_user: deploy
+  sudo: true
+  vars_files:
+    - group_vars/{{ app }}.yml
+  roles:
+    - tomcat_conf
