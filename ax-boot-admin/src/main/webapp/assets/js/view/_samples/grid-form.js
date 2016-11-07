@@ -1,4 +1,4 @@
-var fnObj = {};
+var fnObj = {}, CODE = {};
 var ACTIONS = axboot.actionExtend(fnObj, {
     PAGE_SEARCH: function (caller, act, data) {
         axboot.ajax({
@@ -80,9 +80,6 @@ var ACTIONS = axboot.actionExtend(fnObj, {
     }
 });
 
-var CODE = {};
-
-// fnObj 기본 함수 스타트와 리사이즈
 fnObj.pageStart = function () {
     var _this = this;
 
@@ -119,7 +116,6 @@ fnObj.pageResize = function () {
 
 };
 
-
 fnObj.pageButtonView = axboot.viewExtend({
     initView: function () {
         axboot.buttonClick(this, "data-page-btn", {
@@ -153,9 +149,8 @@ fnObj.searchView = axboot.viewExtend(axboot.searchView, {
     }
 });
 
-
 /**
- * gridView
+ * gridView01
  */
 fnObj.gridView01 = axboot.viewExtend(axboot.gridView, {
     page: {
@@ -216,7 +211,6 @@ fnObj.gridView01 = axboot.viewExtend(axboot.gridView, {
     }
 });
 
-
 /**
  * formView01
  */
@@ -269,9 +263,8 @@ fnObj.formView01 = axboot.viewExtend(axboot.formView, {
     }
 });
 
-
 /**
- * gridView
+ * gridView02
  */
 fnObj.gridView02 = axboot.viewExtend(axboot.gridView, {
     initView: function () {
