@@ -1,9 +1,0 @@
-#ansible-playbook tomcat_parallel_deploy.yml -i inventories/alpha --extra-vars "app=admin"
-
-- name: deploy war
-  hosts: "{{ app }}"
-  remote_user: deploy
-  vars_files:
-    - group_vars/{{ app }}.yml
-  roles:
-    - tomcat_parallel_deploy

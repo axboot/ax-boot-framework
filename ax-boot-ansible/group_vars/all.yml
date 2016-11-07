@@ -1,8 +1,0 @@
-nginx_version: "1.9.9"
-nginx_headers_more_module: "0.30"
-open_ssl_version: "1.0.2j"
-tomcat_version: "8.0.36"
-tomcat_native_lib_version: "1.2.8"
-package_repo_url: "http://files.chequer.io/ansible"
-jdk_version: "jdk-8u101-linux-x64.rpm"
-service_domain: "chequer.io"

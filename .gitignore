@@ -38,4 +38,5 @@ rebel.xml
 axboot-dev.properties
 .rebel.*
 yarn.*
-ax-boot-ansible/
+!.mvn
+!.mvn/wrapper/*.jar

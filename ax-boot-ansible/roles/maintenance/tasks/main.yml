@@ -1,3 +1,0 @@
-- name: set maintenance
-  command: mv /var/nginx/data/maintenance.html.bak /var/nginx/data/maintenance.html
-  sudo: yes
