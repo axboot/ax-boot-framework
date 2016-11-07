@@ -1,5 +1,6 @@
 package com.chequer.axboot.core.db.schema;
 
+import com.chequer.axboot.core.config.AXBootContextConfig;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.boot.Metadata;
@@ -11,6 +12,8 @@ import org.hibernate.boot.registry.StandardServiceRegistryBuilder;
 import org.hibernate.internal.SessionFactoryImpl;
 import org.hibernate.metadata.ClassMetadata;
 import org.reflections.Reflections;
+import org.reflections.util.ClasspathHelper;
+import org.reflections.util.ConfigurationBuilder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -42,6 +45,9 @@ public class SchemaGeneratorBase {
     @Autowired
     protected Environment environment;
 
+    @Autowired
+    private AXBootContextConfig axBootContextConfig;
+
     protected SessionFactoryImpl getSessionFactory() {
         Session session = (Session) entityManager.getDelegate();
         return (SessionFactoryImpl) session.getSessionFactory();
@@ -63,8 +69,9 @@ public class SchemaGeneratorBase {
 
         MetadataSources metadataSources = new MetadataSources(standardServiceRegistry);
 
-        new Reflections()
-                .getTypesAnnotatedWith(Entity.class)
+        Reflections reflections = new Reflections(axBootContextConfig.getBasePackageName());
+
+        reflections.getTypesAnnotatedWith(Entity.class)
                 .forEach(metadataSources::addAnnotatedClass);
 
         return metadataSources.buildMetadata();

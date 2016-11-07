@@ -158,19 +158,16 @@ public class DatabaseInitService {
     }
 
 
-    @Transactional
     public void init() throws Exception {
         createSchema();
     }
 
-    @Transactional
     public void createSchema() throws Exception {
         dropSchema();
         schemaGenerator.createSchema();
         createDefaultData();
     }
 
-    @Transactional
     public void createDefaultData() throws IOException {
         User user = new User();
         user.setUserCd("system");
@@ -273,11 +270,8 @@ public class DatabaseInitService {
         authGroupMenuService.save(AuthGroupMenu.of("S0001",18L,"N","N","N","N","N","N","N","N","N"));
         authGroupMenuService.save(AuthGroupMenu.of("S0001",21L,"N","N","N","N","N","N","N","N","N"));
 
-
-
     }
 
-    @Transactional
     public void dropSchema() {
         try {
             List<String> tableList = schemaGenerator.getTableList();

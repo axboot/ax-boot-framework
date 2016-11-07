@@ -50,6 +50,7 @@ public class SchemaGenerator extends SchemaGeneratorBase {
             try {
                 jdbcTemplate.execute(convertedDDL.toUpperCase());
             } catch (Exception e) {
+                e.printStackTrace();
             }
         }
     }
