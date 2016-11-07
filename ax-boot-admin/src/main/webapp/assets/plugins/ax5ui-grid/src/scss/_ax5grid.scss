@@ -79,6 +79,13 @@
                 @include transform(rotate(-50deg));
             }
         }
+        &[data-ax5grid-selected="true"]{
+            .checkBox {
+                &:after {
+                    opacity: 1;
+                }
+            }
+        }
     }
 
     &[data-ax5grid-column-attr="lineNumber"] {

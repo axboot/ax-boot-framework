@@ -1456,7 +1456,8 @@
                 return d;
             }
             else {
-                if (cond["add"]) {
+
+                if ("add" in cond) {
                     d = (function (_d, opts) {
                         var
                             yy, mm, dd, mxdd,
@@ -1478,13 +1479,37 @@
                         else if (typeof opts["y"] !== "undefined") {
                             _d.setTime(_d.getTime() + ((opts["y"] * 365) * DyMilli));
                         }
-                        else {
-                            _d.setTime(_d.getTime() + (opts["y"] * DyMilli));
-                        }
                         return _d;
                     })(new Date(d), cond["add"]);
                 }
-                if (cond["return"]) {
+
+                if ("set" in cond) {
+                    d = (function (_d, opts) {
+                        var
+                            yy, mm, dd,
+                            processor = {
+                                "firstDayOfMonth": function (date) {
+                                    yy = date.getFullYear();
+                                    mm = date.getMonth();
+                                    dd = 1;
+                                    return new Date(yy, mm, dd, 12);
+                                },
+                                "lastDayOfMonth": function (date) {
+                                    yy = date.getFullYear();
+                                    mm = date.getMonth();
+                                    dd = daysOfMonth(yy, mm);
+                                    return new Date(yy, mm, dd, 12);
+                                }
+                            };
+                        if (opts in processor) {
+                            return processor[opts](_d);
+                        } else {
+                            return _d;
+                        }
+                    })(new Date(d), cond["set"]);
+                }
+
+                if ("return" in cond) {
                     return (function () {
                         var fStr = cond["return"], nY, nM, nD, nH, nMM, nS, nDW;
 

@@ -53,7 +53,13 @@
         "off": function () {
             this.$["resizer"]["horizontal"].removeClass("live");
             this.xvar.columnResizerLived = false;
-            this.setColumnWidth(this.colGroup[this.xvar.columnResizerIndex]._width + this.xvar.__da, this.xvar.columnResizerIndex);
+
+            if (typeof this.xvar.__da === "undefined") {
+
+            }
+            else {
+                this.setColumnWidth(this.colGroup[this.xvar.columnResizerIndex]._width + this.xvar.__da, this.xvar.columnResizerIndex);
+            }
 
             jQuery(document.body)
                 .unbind(GRID.util.ENM["mousemove"] + ".ax5grid-" + this.instanceId)
@@ -76,11 +82,23 @@
             var colIndex = this.getAttribute("data-ax5grid-column-colindex");
             var rowIndex = this.getAttribute("data-ax5grid-column-rowindex");
             var col = self.colGroup[colIndex];
-            if (key && col) {
-                if ((col.sortable === true || self.config.sortable === true) && col.sortable !== false) {
-                    if(!col.sortFixed) toggleSort.call(self, col.key);
+
+            if(key === "__checkbox_header__"){
+                var selected = this.getAttribute("data-ax5grid-selected");
+                    selected = (U.isNothing(selected)) ? true : (selected === "true") ? false: true;
+
+                $(this).attr("data-ax5grid-selected", selected);
+                self.selectAll({selected: selected});
+            }
+            else{
+                if (key && col) {
+                    console.log(key, col);
+                    if ((col.sortable === true || self.config.sortable === true) && col.sortable !== false) {
+                        if (!col.sortFixed) toggleSort.call(self, col.key);
+                    }
                 }
             }
+
             GRID.body.blur.call(self);
         });
         this.$["container"]["header"]
@@ -98,7 +116,7 @@
         resetFrozenColumn.call(this);
     };
 
-    var resetFrozenColumn = function(){
+    var resetFrozenColumn = function () {
         var cfg = this.config;
         var dividedHeaderObj = GRID.util.divideTableByFrozenColumnIndex(this.headerTable, this.config.frozenColumnIndex);
         this.asideHeaderData = (function (dataTable) {
@@ -111,24 +129,25 @@
                         label: "",
                         colspan: 1,
                         rowspan: dataTable.rows.length,
-                        key: "__dindex__",
                         colIndex: null
                     }, _col = {};
 
                     if (cfg.showLineNumber) {
                         _col = jQuery.extend({}, col, {
-                            label: "&nbsp;",
                             width: cfg.lineNumberColumnWidth,
-                            _width: cfg.lineNumberColumnWidth
+                            _width: cfg.lineNumberColumnWidth,
+                            columnAttr: "lineNumber",
+                            key: "__index_header__", label: "&nbsp;"
                         });
                         colGroup.push(_col);
                         data.rows[i].cols.push(_col);
                     }
                     if (cfg.showRowSelector) {
                         _col = jQuery.extend({}, col, {
-                            label: "",
                             width: cfg.rowSelectorColumnWidth,
-                            _width: cfg.rowSelectorColumnWidth
+                            _width: cfg.rowSelectorColumnWidth,
+                            columnAttr: "rowSelector",
+                            key: "__checkbox_header__", label: ""
                         });
                         colGroup.push(_col);
                         data.rows[i].cols.push(_col);
@@ -141,6 +160,23 @@
         }).call(this, this.headerTable);
         this.leftHeaderData = dividedHeaderObj.leftData;
         this.headerData = dividedHeaderObj.rightData;
+    };
+
+    var getFieldValue = function (_col) {
+        var cfg = this.config;
+        var colGroup = this.colGroup;
+        var _key = _col.key;
+        var tagsToReplace = {
+            '<': '&lt;',
+            '>': '&gt;'
+        };
+
+        if (_key === "__checkbox_header__") {
+            return '<div class="checkBox"></div>';
+
+        } else {
+            return (_col.label || "&nbsp;");
+        }
     };
 
     var repaint = function (_reset) {
@@ -219,7 +255,7 @@
                             _SS += '<span data-ax5grid-column-sort="' + col.colIndex + '" data-ax5grid-column-sort-order="' + (colGroup[col.colIndex].sort || "") + '" />';
                         }
                         return _SS;
-                    })(), (col.label || "&nbsp;"), '</span>');
+                    })(), getFieldValue.call(this, col), '</span>');
 
                     if (!U.isNothing(col.colIndex)) {
                         if (cfg.enableFilter) {
@@ -260,13 +296,12 @@
         };
 
         if (cfg.asidePanelWidth > 0) {
-            repaintHeader(this.$.panel["aside-header"], this.asideColGroup, asideHeaderData);
+            repaintHeader.call(this, this.$.panel["aside-header"], this.asideColGroup, asideHeaderData);
         }
-
         if (cfg.frozenColumnIndex > 0) {
-            repaintHeader(this.$.panel["left-header"], this.leftHeaderColGroup, leftHeaderData);
+            repaintHeader.call(this, this.$.panel["left-header"], this.leftHeaderColGroup, leftHeaderData);
         }
-        this.xvar.scrollContentWidth = repaintHeader(this.$.panel["header-scroll"], this.headerColGroup, headerData);
+        this.xvar.scrollContentWidth = repaintHeader.call(this, this.$.panel["header-scroll"], this.headerColGroup, headerData);
 
         if (cfg.rightSum) {
 
@@ -283,13 +318,13 @@
         var sortInfo = {};
         var seq = 0;
 
-        for(var k in this.sortInfo){
-            if(this.sortInfo[k].fixed){
+        for (var k in this.sortInfo) {
+            if (this.sortInfo[k].fixed) {
                 sortInfo[k] = this.sortInfo[k];
                 seq++;
             }
         }
-        
+
         for (var i = 0, l = this.colGroup.length; i < l; i++) {
             if (this.colGroup[i].key == _key) {
                 if (sortOrder == "") {
@@ -331,6 +366,11 @@
             }
         }
         return this;
+    };
+
+    var select = function(_options){
+        GRID.data.select.call(this, dindex, _options && _options.selected);
+        GRID.body.updateRowState.call(this, ["selected"], dindex);
     };
 
     GRID.header = {
