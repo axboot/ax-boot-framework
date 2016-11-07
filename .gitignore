@@ -30,6 +30,7 @@ overridedb.*
 *.ipr
 *.iws
 .idea
+!maven-wrapper.jar
 *.jar
 .DS_Store
 .factorypath
@@ -39,4 +40,3 @@ axboot-dev.properties
 .rebel.*
 yarn.*
 !.mvn
-!.mvn/wrapper/*.jar
