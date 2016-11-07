@@ -61,6 +61,10 @@ public class ProjectGenerator {
         for (Resource resource : resources) {
             File file = resource.getFile();
 
+            if(file.getName().contains("maven")) {
+                System.out.println(file.getName());
+            }
+
             if (file.isFile()) {
                 byte[] bytes = getBytes(file, values);
                 String path = getPath(artifactId, packageName, file);
@@ -92,7 +96,7 @@ public class ProjectGenerator {
         }
 
         if (path.startsWith("/root")) {
-            return projectName + "/" + name;
+            return projectName + "/" + path.substring(6);
         }
 
         return baseName + "/" + path;
