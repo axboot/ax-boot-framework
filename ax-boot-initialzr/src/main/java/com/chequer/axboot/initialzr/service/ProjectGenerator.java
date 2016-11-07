@@ -27,11 +27,11 @@ import java.util.zip.ZipOutputStream;
 public class ProjectGenerator {
 
     public void generate(ProjectGenerateRequest projectGenerateRequest, HttpServletRequest request, HttpServletResponse response) throws IOException {
-        String packageName = projectGenerateRequest.getPackageName();
-        String projectName = projectGenerateRequest.getProjectName();
-        String artifactId = projectGenerateRequest.getArtifact();
-        String description = projectGenerateRequest.getDescription();
-        String groupId = projectGenerateRequest.getGroupId();
+        String packageName = projectGenerateRequest.getPackageName().trim();
+        String projectName = projectGenerateRequest.getProjectName().trim();
+        String artifactId = projectGenerateRequest.getArtifact().trim();
+        String description = projectGenerateRequest.getDescription().trim();
+        String groupId = projectGenerateRequest.getGroupId().trim();
 
         String encodedFileName = EncodeUtils.encodeDownloadFileName(artifactId + "_" + DateUtils.getDateYyyyMmddWithoutDash() + ".zip");
         response.setHeader("Content-Disposition", "attachment; filename=" + encodedFileName);
@@ -92,10 +92,10 @@ public class ProjectGenerator {
         }
 
         if (path.startsWith("/root")) {
-            return projectName + "/" + name;
+            return projectName + "/" + path.substring(6);
         }
 
-        return baseName + "/" + path;
+        return baseName + path;
     }
 
     public byte[] getBytes(File file, Map<String, String> values) throws IOException {

@@ -12,7 +12,6 @@
 .factorypath
 .recommenders
 bin
-!/chequer-api-go/bin
 build
 target
 .factorypath
@@ -31,8 +30,13 @@ overridedb.*
 *.ipr
 *.iws
 .idea
+!maven-wrapper.jar
 *.jar
 .DS_Store
 .factorypath
-node_modules
+node_modules/
 rebel.xml
+.rebel.*
+yarn.*
+!.mvn
+!maven-wrapper.jar
