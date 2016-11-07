@@ -1,0 +1,15 @@
+[Unit]
+Description=Apache Tomcat Web Application Container
+After=syslog.target network.target
+
+[Service]
+Type=forking
+ExecStart=/home/deploy/scripts/instance_control.sh start
+#ExecStop=/home/deploy/scripts/tomcat.sh chequer-admin_1 stop
+KillMode=process
+KillSignal=SIGQUIT
+TimeoutStopSec=5
+PrivateTmp=true
+
+[Install]
+WantedBy=multi-user.target

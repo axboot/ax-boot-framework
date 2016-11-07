@@ -1,0 +1,10 @@
+---
+- name: Install logrotate
+  yum: pkg=logrotate state=present
+
+- name: Setup logrotate.d scripts
+  copy: src={{ item.name }} dest=/etc/logrotate.d/{{ item.name }}
+  with_items:
+    - {name: nginx}
+    - {name: tomcat}
+  sudo: yes

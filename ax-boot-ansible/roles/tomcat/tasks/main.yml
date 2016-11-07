@@ -1,0 +1,66 @@
+- name: set tomcat version
+  set_fact:
+    tomcat_package: "apache-tomcat-{{ tomcat_version }}"
+    tomcat_native_lib_package: "tomcat-native-{{ tomcat_native_lib_version }}"
+
+- name: Install the 'Development tools' package group
+  yum: name="apr-devel" state=present
+  sudo: yes
+
+- name: download tomcat
+  get_url: url={{ package_repo_url }}/tomcat/{{ tomcat_package }}.tar.gz dest=/usr/local/src/{{ tomcat_package }}.tar.gz use_proxy=yes timeout=3600
+  sudo: yes
+
+- name: delete home dir for symlink of tomcat
+  shell: rm -fr /usr/local/tomcat
+  sudo: yes
+
+- name: extract tomcat archive
+  command: chdir=/usr/local/src /bin/tar xvf /usr/local/src/{{ tomcat_package }}.tar.gz -C /usr/local/ creates=/usr/local/{{ tomcat_package }}
+  sudo: yes
+
+- name: symlink install directory
+  file: src=/usr/local/{{ tomcat_package }} path=/usr/local/tomcat state=link
+  sudo: yes
+
+- name: Change ownership of Tomcat installation
+  file: path=/usr/local/tomcat/ owner=nobody group=nobody state=directory recurse=yes
+  sudo: yes
+
+- name: download tomcat native library
+  get_url: url={{ package_repo_url }}/tomcat/{{tomcat_native_lib_package}}-src.tar.gz dest=/usr/local/src/{{ tomcat_native_lib_package }}-src.tar.gz use_proxy=yes timeout=3600
+  sudo: yes
+
+- name: extract tomcat native library archive
+  command: chdir=/usr/local/src /bin/tar xvf /usr/local/src/{{ tomcat_native_lib_package }}-src.tar.gz -C /usr/local/ creates=/usr/local/{{ tomcat_native_lib_package }}-src
+  sudo: yes
+
+- name: install tomcat native library
+  shell: >
+    cd /usr/local/{{ tomcat_native_lib_package }}-src/native &&
+    ./configure
+    --with-apr=/usr/bin/apr-1-config
+    --with-java-home=/usr/java/default
+    --with-ssl=/usr/local/src/openssl-{{ open_ssl_version }}
+    --prefix=/usr/local/tomcat &&
+    make --quiet install
+  sudo: yes
+
+
+- name: copy tomcat scripts
+  copy:
+    src={{ item.src }} dest=/home/deploy/scripts/{{item.dest}} owner=deploy group=users mode=0755
+  with_items:
+    - {src: tomcat.sh, dest: tomcat.sh}
+    - {src: instance_control.sh, dest: instance_control.sh}
+
+- name: copy tomcat auto start script
+  copy:
+    src={{ item.name }} dest=/usr/lib/systemd/system/{{ item.name }} owner=root group=root mode=644
+  with_items:
+    - {name: tomcat.service}
+  sudo: yes
+
+- name: enable systemctl
+  shell: systemctl enable tomcat
+  sudo: yes

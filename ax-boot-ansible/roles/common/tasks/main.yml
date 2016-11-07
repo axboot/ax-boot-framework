@@ -1,0 +1,47 @@
+---
+- name: set epel version
+  set_fact: epel_version="epel-release-latest-7.noarch.rpm"
+
+- name: get epel
+  get_url: url={{package_repo_url}}/epel/{{epel_version}} dest=/tmp/{{epel_version}}
+  sudo: yes
+
+- name: install epel
+  yum: name=/tmp/{{ epel_version }} state=present
+  sudo: yes
+
+- name: remove epel
+  file: path=/tmp/{{ epel_version }} state=absent
+  sudo: yes
+
+- name: Install the 'Development tools' package group
+  yum: name="@Development tools" state=present
+  sudo: yes
+
+- name: install devel lib
+  yum: pkg={{ item }} state=present
+  with_items:
+    - openssl-devel
+    - glibc-devel
+    - glibc-devel.x86_64
+    - pcre-devel
+    - libselinux-python
+  sudo: yes
+
+- name: download openssl
+  get_url: url={{ item.src }} dest={{ item.dest }} use_proxy=yes timeout=7200 validate_certs=no
+  with_items:
+    - {src: "{{package_repo_url}}/openssl/openssl-{{ open_ssl_version }}.tar.gz", dest: "/usr/local/src/openssl-{{ open_ssl_version }}.tar.gz"}
+  sudo: yes
+
+- name: create source dir
+  file: dest={{ item.dest }} state=directory owner=root
+  with_items:
+    - {dest: "/usr/local/src/openssl-{{ open_ssl_version }}"}
+  sudo: yes
+
+- name: unarchive nginx source
+  unarchive: src={{ item.src }} dest={{ item.dest }} copy=no
+  with_items:
+    - {src: "/usr/local/src/openssl-{{ open_ssl_version }}.tar.gz", dest: "/usr/local/src"}
+  sudo: yes

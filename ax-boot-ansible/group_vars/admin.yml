@@ -1,0 +1,8 @@
+app_name: axboot-admin
+app_name_1: axboot-admin_1
+tomcat_shutdown_port: 8190
+tomcat_service_port: 10080
+jmx_port: 8890
+upstream_timeout: 2
+upstream_max_fails: 5
+read_timeout: 200

@@ -1,0 +1,94 @@
+- name: create conf directory
+  file: path=/var/tomcat/{{ app_name }}/conf/Catalina/localhost owner=nobody group=nobody state=directory recurse=yes
+
+- name: create logs directory
+  file: path=/var/tomcat/{{ app_name }}/logs/ owner=nobody group=nobody state=directory recurse=yes
+
+- name: create asset directory
+  file: path=/var/tomcat/{{ app_name }}/assets/ owner=nobody group=nobody state=directory recurse=yes mode=0775
+  sudo: yes
+
+- name: create catalina home
+  file:
+    path=/var/tomcat/{{ app_name }}/{{ item.path }}/ owner=nobody group=nobody state=directory recurse=yes
+  with_items:
+    - {path: "bin" }
+    - {path: "webapps" }
+    - {path: "work" }
+    - {path: "temp" }
+
+- name: copy tomcat conf
+  template:
+    src=tomcat/{{ item.src }} dest=/var/tomcat/{{ app_name }}/conf/{{ item.dest }} owner=nobody group=nobody
+  with_items:
+    - {src: server.xml.j2, dest: server.xml}
+    - {src: web.xml.j2, dest: web.xml}
+
+- name: copy setenv script
+  template:
+    src=tomcat/{{ item.src }} dest=/var/tomcat/{{ app_name }}/bin/{{ item.dest }} owner=nobody group=nobody mode=0755
+  with_items:
+    - {src: setenv.sh.j2, dest: setenv.sh}
+
+- name: create conf directory
+  file: path=/var/tomcat/{{ app_name_1 }}/conf/Catalina/localhost owner=nobody group=nobody state=directory recurse=yes
+
+- name: create logs directory
+  file: path=/var/tomcat/{{ app_name_1 }}/logs/ owner=nobody group=nobody state=directory recurse=yes
+
+- name: create asset directory
+  file: path=/var/tomcat/{{ app_name_1 }}/assets/ owner=nobody group=nobody state=directory recurse=yes mode=0775
+  sudo: yes
+
+- name: create catalina home
+  file:
+    path=/var/tomcat/{{ app_name_1 }}/{{ item.path }}/ owner=nobody group=nobody state=directory recurse=yes
+  with_items:
+    - {path: "bin" }
+    - {path: "webapps" }
+    - {path: "work" }
+    - {path: "temp" }
+
+- name: copy tomcat conf
+  template:
+    src=tomcat/{{ item.src }} dest=/var/tomcat/{{ app_name_1 }}/conf/{{ item.dest }} owner=nobody group=nobody
+  with_items:
+    - {src: server_1.xml.j2, dest: server.xml}
+    - {src: web.xml.j2, dest: web.xml}
+
+- name: copy setenv script
+  template:
+    src=tomcat/{{ item.src }} dest=/var/tomcat/{{ app_name_1 }}/bin/{{ item.dest }} owner=nobody group=nobody mode=0755
+  with_items:
+    - {src: setenv_1.sh.j2, dest: setenv.sh}
+
+# script copy
+- name: create scripts directory
+  file: path=/home/deploy/scripts/ owner=deploy group=users state=directory recurse=yes
+  sudo: yes
+
+- name: create deploy based directory
+  file: path=/home/deploy/{{ item.path }} owner=deploy group=users state=directory recurse=yes
+  with_items:
+    - {path: "conf/tomcat"}
+    - {path: "logs/tomcat"}
+    - {path: "service/tomcat"}
+  sudo: yes
+
+- name: create deploy based symbolic link (conf & logs)
+  file:
+    src=/var/tomcat/{{ item.app }}/{{ item.path }} path=/home/deploy/{{ item.path }}/tomcat/{{ item.app }} state=link
+  with_items:
+    - {app: "{{ app_name }}", path: "conf"}
+    - {app: "{{ app_name }}", path: "logs"}
+    - {app: "{{ app_name_1 }}", path: "conf"}
+    - {app: "{{ app_name_1 }}", path: "logs"}
+  sudo: yes
+
+- name: create deploy based symbolic link (service)
+  file:
+    src=/var/tomcat/{{ item.app }} path=/home/deploy/service/tomcat/{{ item.app }} state=link
+  with_items:
+    - {app: "{{ app_name }}"}
+    - {app: "{{ app_name_1 }}"}
+  sudo: yes

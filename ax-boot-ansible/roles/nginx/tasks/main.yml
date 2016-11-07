@@ -1,0 +1,57 @@
+---
+- name: download nginx source
+  get_url: url={{ item.src }} dest={{ item.dest }} use_proxy=yes timeout=7200 validate_certs=no
+  with_items:
+    - {src: '{{package_repo_url}}/nginx/nginx-{{ nginx_version }}.tar.gz', dest: '/usr/local/src/nginx-{{ nginx_version }}.tar.gz'}
+    - {src: '{{package_repo_url}}/nginx/headers-more-nginx-module-{{ nginx_headers_more_module }}.tar.gz', dest: '/usr/local/src/headers-more-nginx-module-{{ nginx_headers_more_module }}.tar.gz'}
+  sudo: yes
+
+- name: create source dir
+  file: dest={{ item.dest }} state=directory owner=root
+  with_items:
+    - {dest: "/usr/local/src/nginx-{{ nginx_version }}"}
+    - {dest: "/usr/local/src/headers-more-nginx-module-{{ nginx_headers_more_module }}"}
+  sudo: yes
+
+- name: unarchive nginx source
+  unarchive: src={{ item.src }} dest={{ item.dest }} copy=no
+  with_items:
+    - {src: "/usr/local/src/nginx-{{ nginx_version }}.tar.gz", dest: "/usr/local/src"}
+    - {src: "/usr/local/src/headers-more-nginx-module-{{ nginx_headers_more_module }}.tar.gz", dest: "/usr/local/src"}
+  sudo: yes
+
+- name: configure nginx
+  shell: >
+    cd /usr/local/src/nginx-{{ nginx_version }} &&
+    ./configure
+    --with-http_stub_status_module
+    --with-http_ssl_module
+    --with-http_secure_link_module
+    --with-openssl=/usr/local/src/openssl-{{ open_ssl_version }}
+    --with-openssl-opt=enable-tlsext
+    --with-http_realip_module
+    --add-module=/usr/local/src/headers-more-nginx-module-{{ nginx_headers_more_module }} &&
+    make --quiet install
+  sudo: yes
+
+- name: create scripts directory
+  file: path=/home/deploy/scripts/ owner=deploy group=users state=directory recurse=yes
+  sudo: yes
+
+- name: copy nginx scripts
+  copy:
+    src={{ item.name }} dest=/home/deploy/scripts/{{ item.name }} owner=deploy group=users mode=0755
+  with_items:
+    - {name: nginx.sh}
+  sudo: yes
+
+- name: copy nginx auto start script
+  copy:
+    src={{ item.name }} dest=/usr/lib/systemd/system/{{ item.name }} owner=root group=root mode=644
+  with_items:
+    - {name: nginx.service}
+  sudo: yes
+
+- name: enable systemctl
+  shell: systemctl enable nginx
+  sudo: yes
