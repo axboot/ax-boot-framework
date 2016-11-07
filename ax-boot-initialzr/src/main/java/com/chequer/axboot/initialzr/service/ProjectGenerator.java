@@ -95,7 +95,7 @@ public class ProjectGenerator {
             return projectName + "/" + path.substring(6);
         }
 
-        return baseName + "/" + path;
+        return baseName + path;
     }
 
     public byte[] getBytes(File file, Map<String, String> values) throws IOException {
