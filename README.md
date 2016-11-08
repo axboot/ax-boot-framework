@@ -44,9 +44,9 @@ Develop enterprise web applications fast as never before with AXBoot Framework
 
 |Database|Test|
 |---|---|
-| H2  | Tested(Default Embdded)  |
-| MySQL  | Tested  |
-| MariaDB  | Tested  |
+| H2 1.4+  | Tested(Default Embdded)  |
+| MySQL 5.5+  | Tested  |
+| MariaDB 5.5+ | Tested  |
 | MSSQL | will be soon |
 | Oracle | will be soon |
 | PostgreSQL | will be soon |
