@@ -14709,7 +14709,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
          * ax5 version
          * @member {String} ax5.info.version
          */
-        var version = "1.3.22";
+        var version = "${VERSION}";
 
         /**
          * ax5 library path
@@ -17084,6 +17084,138 @@ ax5.info.errorMsg["ax5combobox"] = {
         }
     })(window.console || {}); // Using `this` for web workers.
 
+
+    // Modernizr style test
+    if (!(window.webkitMatchMedia || window.mozMatchMedia || window.oMatchMedia || window.msMatchMedia || window.matchMedia)) {
+        var root = document.getElementsByTagName('html')[0];
+        root.className += ' no-matchmedia';
+    }
+
+    /*! matchMedia() polyfill - Test a CSS media type/query in JS. Authors & copyright (c) 2012: Scott Jehl, Paul Irish, Nicholas Zakas, David Knight. Dual MIT/BSD license */
+    window.matchMedia || (window.matchMedia = function () {
+        "use strict";
+
+        // For browsers that support matchMedium api such as IE 9 and webkit
+
+        var styleMedia = window.styleMedia || window.media;
+
+        // For those that don't support matchMedium
+        if (!styleMedia) {
+            var style = document.createElement('style'),
+                script = document.getElementsByTagName('script')[0],
+                info = null;
+
+            style.type = 'text/css';
+            style.id = 'matchmediajs-test';
+
+            script.parentNode.insertBefore(style, script);
+
+            // 'style.currentStyle' is used by IE <= 8 and 'window.getComputedStyle' for all other browsers
+            info = 'getComputedStyle' in window && window.getComputedStyle(style, null) || style.currentStyle;
+
+            styleMedia = {
+                matchMedium: function matchMedium(media) {
+                    var text = '@media ' + media + '{ #matchmediajs-test { width: 1px; } }';
+
+                    // 'style.styleSheet' is used by IE <= 8 and 'style.textContent' for all other browsers
+                    if (style.styleSheet) {
+                        style.styleSheet.cssText = text;
+                    } else {
+                        style.textContent = text;
+                    }
+
+                    // Test if media query is true or false
+                    return info.width === '1px';
+                }
+            };
+        }
+
+        return function (media) {
+            return {
+                matches: styleMedia.matchMedium(media || 'all'),
+                media: media || 'all'
+            };
+        };
+    }());
+
+    /*! matchMedia() polyfill addListener/removeListener extension. Author & copyright (c) 2012: Scott Jehl. Dual MIT/BSD license */
+    (function () {
+        // Bail out for browsers that have addListener support
+        if (window.matchMedia && window.matchMedia('all').addListener) {
+            return false;
+        }
+
+        var localMatchMedia = window.matchMedia,
+            hasMediaQueries = localMatchMedia('only all').matches,
+            isListening = false,
+            timeoutID = 0,
+            // setTimeout for debouncing 'handleChange'
+        queries = [],
+            // Contains each 'mql' and associated 'listeners' if 'addListener' is used
+        handleChange = function handleChange(evt) {
+            // Debounce
+            clearTimeout(timeoutID);
+
+            timeoutID = setTimeout(function () {
+                for (var i = 0, il = queries.length; i < il; i++) {
+                    var mql = queries[i].mql,
+                        listeners = queries[i].listeners || [],
+                        matches = localMatchMedia(mql.media).matches;
+
+                    // Update mql.matches value and call listeners
+                    // Fire listeners only if transitioning to or from matched state
+                    if (matches !== mql.matches) {
+                        mql.matches = matches;
+
+                        for (var j = 0, jl = listeners.length; j < jl; j++) {
+                            listeners[j].call(window, mql);
+                        }
+                    }
+                }
+            }, 30);
+        };
+
+        window.matchMedia = function (media) {
+            var mql = localMatchMedia(media),
+                listeners = [],
+                index = 0;
+
+            mql.addListener = function (listener) {
+                // Changes would not occur to css media type so return now (Affects IE <= 8)
+                if (!hasMediaQueries) {
+                    return;
+                }
+
+                // Set up 'resize' listener for browsers that support CSS3 media queries (Not for IE <= 8)
+                // There should only ever be 1 resize listener running for performance
+                if (!isListening) {
+                    isListening = true;
+                    window.addEventListener('resize', handleChange, true);
+                }
+
+                // Push object only if it has not been pushed already
+                if (index === 0) {
+                    index = queries.push({
+                        mql: mql,
+                        listeners: listeners
+                    });
+                }
+
+                listeners.push(listener);
+            };
+
+            mql.removeListener = function (listener) {
+                for (var i = 0, il = listeners.length; i < il; i++) {
+                    if (listeners[i] === listener) {
+                        listeners.splice(i, 1);
+                    }
+                }
+            };
+
+            return mql;
+        };
+    })();
+
     // extend innerWidth ..
     var html = document.getElementsByTagName('html')[0];
     var body = document.getElementsByTagName('body')[0];
@@ -17844,7 +17976,7 @@ ax5.ui = function () {
 
     UI.addClass({
         className: "dialog",
-        version: "1.3.22"
+        version: "1.3.24"
     }, function () {
         /**
          * @class ax5dialog
@@ -18383,7 +18515,7 @@ ax5.ui = function () {
 
     UI.addClass({
         className: "mask",
-        version: "1.3.22"
+        version: "1.3.24"
     }, function () {
         /**
          * @class ax5mask
@@ -18714,7 +18846,7 @@ ax5.ui = function () {
 
     UI.addClass({
         className: "toast",
-        version: "1.3.22"
+        version: "1.3.24"
     }, function () {
         /**
          * @class ax5toast
@@ -19078,7 +19210,7 @@ ax5.ui = function () {
 
     UI.addClass({
         className: "modal",
-        version: "1.3.22"
+        version: "1.3.24"
     }, function () {
         /**
          * @class ax5modal
@@ -19704,7 +19836,7 @@ ax5.ui = function () {
 
     UI.addClass({
         className: "calendar",
-        version: "1.3.22"
+        version: "1.3.24"
     }, function () {
 
         /**
@@ -20767,7 +20899,7 @@ ax5.ui = function () {
 
     UI.addClass({
         className: "picker",
-        version: "1.3.22"
+        version: "1.3.24"
     }, function () {
         /**
          * @class ax5picker
@@ -21807,7 +21939,7 @@ jQuery.fn.ax5picker = function () {
 
     UI.addClass({
         className: "formatter",
-        version: "1.3.22"
+        version: "1.3.24"
     }, function () {
         var TODAY = new Date();
         var setSelectionRange = function setSelectionRange(input, pos) {
@@ -22445,7 +22577,7 @@ jQuery.fn.ax5formatter = function () {
 
     UI.addClass({
         className: "menu",
-        version: "1.3.22"
+        version: "1.3.24"
     }, function () {
         /**
          * @class ax5.ui.menu
@@ -23258,7 +23390,7 @@ jQuery.fn.ax5formatter = function () {
 
     UI.addClass({
         className: "select",
-        version: "1.3.22"
+        version: "1.3.24"
     }, function () {
         /**
          * @class ax5select
@@ -24400,7 +24532,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
 
     UI.addClass({
         className: "grid",
-        version: "${VERSION}"
+        version: "1.3.24"
     }, function () {
         /**
          * @class ax5grid
@@ -29718,7 +29850,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
 
     UI.addClass({
         className: "combobox",
-        version: "1.3.22"
+        version: "1.3.24"
     }, function () {
         /**
          * @class ax5combobox
@@ -31398,7 +31530,7 @@ jQuery.fn.ax5combobox = function () {
 
     UI.addClass({
         className: "layout",
-        version: "1.3.22"
+        version: "1.3.24"
     }, function () {
         /**
          * @class ax5layout
@@ -32429,7 +32561,7 @@ jQuery.fn.ax5layout = function () {
 
     UI.addClass({
         className: "binder",
-        version: "1.3.22"
+        version: "1.3.24"
     }, function () {
 
         /**
@@ -33386,7 +33518,7 @@ jQuery.fn.ax5layout = function () {
 
     UI.addClass({
         className: "autocomplete",
-        version: "1.3.22"
+        version: "1.3.24"
     }, function () {
         /**
          * @class ax5autocomplete

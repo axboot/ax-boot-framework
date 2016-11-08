@@ -7,11 +7,6 @@ var ACTIONS = axboot.actionExtend(fnObj, {
             data: $.extend({}, this.searchView.getData(), this.gridView01.getPageData()),
             callback: function (res) {
                 caller.gridView01.setData(res);
-            },
-            options: {
-                onError: function (err) {
-                    console.log(err);
-                }
             }
         });
 
