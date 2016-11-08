@@ -1,7 +1,10 @@
 <%@ tag import="com.chequer.axboot.admin.utils.CommonCodeUtils" %>
+<%@ tag import="com.chequer.axboot.core.utils.PhaseUtils" %>
 <%@ tag language="java" pageEncoding="UTF-8" body-content="scriptless" %>
 <%
     String commonCodeJson = CommonCodeUtils.getAllByJson();
+    boolean isDevelopmentMode = PhaseUtils.isDevelopmentMode();
+    request.setAttribute("isDevelopmentMode", isDevelopmentMode);
 %>
 <!DOCTYPE html>
 <html>
@@ -49,6 +52,9 @@
                     </div>
                     <div class="panel-split"></div>
                     <div class="ax-split-panel">
+                        <c:if test="${isDevelopmentMode}">
+                            <!-- 개발자 툴 연결 아이콘 -->
+                        </c:if>
                         <a href="#ax" class="ax-frame-logout" onclick="location.href = '${pageContext.request.contextPath}/api/logout';">
                             <i class="cqc-log-out"></i>
                             로그아웃
