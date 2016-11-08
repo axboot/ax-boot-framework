@@ -1,7 +1,9 @@
 package com.chequer.axboot.admin.domain.user;
 
 import com.chequer.axboot.admin.domain.BaseService;
+import com.chequer.axboot.admin.domain.user.auth.UserAuth;
 import com.chequer.axboot.admin.domain.user.auth.UserAuthService;
+import com.chequer.axboot.admin.domain.user.role.UserRole;
 import com.chequer.axboot.admin.domain.user.role.UserRoleService;
 import com.chequer.axboot.core.parameter.RequestParams;
 import com.querydsl.core.BooleanBuilder;
@@ -58,6 +60,14 @@ public class UserService extends BaseService<User, String> {
                 }
 
                 save(user);
+
+                for (UserAuth userAuth : user.getAuthList()) {
+                    userAuth.setUserCd(user.getUserCd());
+                }
+
+                for (UserRole userRole : user.getRoleList()) {
+                    userRole.setUserCd(user.getUserCd());
+                }
 
                 userAuthService.save(user.getAuthList());
                 userRoleService.save(user.getRoleList());

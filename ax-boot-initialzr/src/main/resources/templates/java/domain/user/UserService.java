@@ -3,6 +3,8 @@ package ${basePackage}.domain.user;
 import ${basePackage}.domain.BaseService;
 import ${basePackage}.domain.user.auth.UserAuthService;
 import ${basePackage}.domain.user.role.UserRoleService;
+import ${basePackage}.domain.user.auth.UserAuth;
+import ${basePackage}.domain.user.auth.UserRole;
 import com.chequer.axboot.core.parameter.RequestParams;
 import com.querydsl.core.BooleanBuilder;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -58,6 +60,14 @@ public class UserService extends BaseService<User, String> {
                 }
 
                 save(user);
+
+                for (UserAuth userAuth : user.getAuthList()) {
+                    userAuth.setUserCd(user.getUserCd());
+                }
+
+                for (UserRole userRole : user.getRoleList()) {
+                    userRole.setUserCd(user.getUserCd());
+                }
 
                 userAuthService.save(user.getAuthList());
                 userRoleService.save(user.getRoleList());

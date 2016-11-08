@@ -41,6 +41,8 @@ public class AXBootContextConfig implements ApplicationContextAware {
 
     private String basePackageName;
 
+    private String controllerPackageName;
+
     private String domainPackageName;
 
     private static ApplicationContext applicationContext;
