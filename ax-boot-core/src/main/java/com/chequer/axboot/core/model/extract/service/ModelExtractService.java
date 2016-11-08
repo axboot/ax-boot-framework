@@ -9,6 +9,7 @@ import com.chequer.axboot.core.model.extract.metadata.Table;
 import com.chequer.axboot.core.model.extract.service.jdbc.JdbcMetadataService;
 import com.chequer.axboot.core.model.extract.template.TemplateParser;
 import com.chequer.axboot.core.model.extract.template.file.TemplateCode;
+import com.chequer.axboot.core.utils.TemplateUtils;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
 import org.springframework.stereotype.Service;
@@ -17,6 +18,7 @@ import javax.inject.Inject;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.util.List;
 
 @Service
 public class ModelExtractService {
@@ -96,5 +98,43 @@ public class ModelExtractService {
         }
 
         return null;
+    }
+
+    public void makeFiles(List<String> templateTypes, String tableName, String className, String apiPath, String packageName) {
+        for (String templateType : templateTypes) {
+            Table table = jdbcMetadataService.getTable(tableName);
+
+            String domainPackage = axBootContextConfig.getDomainPackageName() + "." + packageName;
+
+            switch (templateType) {
+                case AXBootTypes.ModelExtractorTemplate.CONTROLLER:
+                    TemplateUtils.makeControllerFile(TemplateParser.getControllerTemplate(className, apiPath, table), axBootContextConfig.getControllerPackageName());
+                    break;
+
+                case AXBootTypes.ModelExtractorTemplate.VO:
+                    TemplateUtils.makeDomainFile(TemplateParser.getVoTemplate(className, table), domainPackage);
+                    break;
+
+                case AXBootTypes.ModelExtractorTemplate.ENTITY:
+                    TemplateUtils.makeDomainFile(TemplateParser.getEntityTemplate(className, table), domainPackage);
+                    break;
+
+                case AXBootTypes.ModelExtractorTemplate.SERVICE:
+                    TemplateUtils.makeDomainFile(TemplateParser.getServiceTemplate(className, table), domainPackage);
+                    break;
+
+                case AXBootTypes.ModelExtractorTemplate.REPOSITORY:
+                    TemplateUtils.makeDomainFile(TemplateParser.getRepositoryTemplate(className, table), domainPackage);
+                    break;
+
+                case AXBootTypes.ModelExtractorTemplate.MYBATIS_INTERFACE:
+                    TemplateUtils.makeDomainFile(TemplateParser.getMyBatisInterfaceTemplate(className, table), domainPackage);
+                    break;
+
+                case AXBootTypes.ModelExtractorTemplate.MYBATIS_XML:
+                    TemplateUtils.makeDomainResourceFile(TemplateParser.getMyBatisXMLTemplate(className, table), domainPackage);
+                    break;
+            }
+        }
     }
 }

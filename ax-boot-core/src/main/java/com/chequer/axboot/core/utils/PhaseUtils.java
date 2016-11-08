@@ -46,4 +46,9 @@ public class PhaseUtils implements EnvironmentAware {
     public static Environment getEnvironment() {
         return environment;
     }
+
+    public static boolean isDevelopmentMode() {
+        return isLocal() || Boolean.parseBoolean(System.getProperty("axboot.profiles.development"));
+    }
 }
+

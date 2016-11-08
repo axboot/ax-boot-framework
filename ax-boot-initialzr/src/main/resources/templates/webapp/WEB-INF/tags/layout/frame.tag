@@ -1,7 +1,10 @@
 <%@ tag import="${basePackage}.utils.CommonCodeUtils" %>
+<%@ tag import="com.chequer.axboot.core.utils.PhaseUtils" %>
 <%@ tag language="java" pageEncoding="UTF-8" body-content="scriptless" %>
 <%
     String commonCodeJson = CommonCodeUtils.getAllByJson();
+    boolean isDevelopmentMode = PhaseUtils.isDevelopmentMode();
+    request.setAttribute("isDevelopmentMode", isDevelopmentMode);
 %>
 <!DOCTYPE html>
 <html>
