@@ -2359,17 +2359,20 @@ axboot.searchView = {
                 this[k].val(_obj[k]);
             }
         }
+    },
+    getCheckedValue: function getCheckedValue($inp) {
+        if ($inp[0].type == "radio") {
+            return $inp.filter(":checked").val();
+        } else if ($inp[0].type == "checkbox") {
+            return function (_$inp) {
+                var vals = [];
+                _$inp.filter(":checked").each(function () {
+                    vals.push(this.value);
+                });
+                return vals.join(',');
+            }.call(this, $inp);
+        }
     }
-    /* 라디오와 checkbox 타입 값 가져오기.
-     radioBox: this.radioBox.filter(":checked").val(),
-     checkBox: (function () {
-     var vals = [];
-     this.checkBox.filter(":checked").each(function () {
-     vals.push(this.value);
-     });
-     return vals.join(',');
-     }).call(this),
-     */
 };
 
 /**
