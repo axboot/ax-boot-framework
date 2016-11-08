@@ -36,18 +36,27 @@ Develop enterprise web applications fast as never before with AXBoot Framework
 
 |Web Application Server|
 |---|
-|Servlet 3.0 스펙을 준수하는 WAS(Tomcat 7.x+, JBoss EAP 7, Wildfly 8+, WebLogic 12c+, WebSphere 8+, JEUS 7+)  |
+|Servlet 3.0+ Spec WAS(Tomcat 7.x+, JBoss EAP 7, Wildfly 8+, WebLogic 12c+, WebSphere 8+, JEUS 7+)  |
 
-|Browser|Web Server|Java |
+|Web Browser|Web Server|Java |
 |---|---|---|
-| IE9+, Chrome 32+, Opera 2014+, Safari 7+, Firefox 32+  | 제한없음 | JDK 1.8.0 이상  |
+| IE9+, Chrome 32+, Opera 2014+, Safari 7+, Firefox 32+  | Whatever you want(Nginx, Apache, etc) | JDK 1.8.0+  |
 
-|Database|Uasge|
+|Database|Test|
 |---|---|
-| H2  | 내장됨(테스트완료)  |
-| mySql  | 테스트완료  |
-| MariaDB  | 테스트완료  |
+| H2  | Tested(Default Embdded)  |
+| MySQL  | Tested  |
+| MariaDB  | Tested  |
+| MSSQL | will be soon |
+| Oracle | will be soon |
+| PostgreSQL | will be soon |
 
+### Required Tools
+- Git (required)
+- Lombok (required)
+- Gulp (required)
+- NPM (required)
+- Local Maven (optional, provided maven wrapper in generated project)
 
 ## Features
 ### 1. FullStack Framework
