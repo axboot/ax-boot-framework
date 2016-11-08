@@ -52,8 +52,6 @@ Develop enterprise web applications fast as never before with AXBoot Framework
 
 #### AXBoot is the framework that provides A to Z Web Development solutions.
 
----
-
 ### 2. Various Layout, Theme
 
 #### Various Layout
@@ -61,8 +59,6 @@ Develop enterprise web applications fast as never before with AXBoot Framework
 
 #### Theme
 > Theme selection allows a user to change look and feel, as well as allowing the user to fine tune specifics of the UI.
-
----
 
 ### 3. Developer-friendly
 
@@ -74,8 +70,6 @@ Develop enterprise web applications fast as never before with AXBoot Framework
 
 #### No Restricted Development Environment
 > Environment, User-Friendly IDE can be used.
-
----
 
 ### 4. Productive
 
@@ -102,8 +96,6 @@ Develop enterprise web applications fast as never before with AXBoot Framework
 - DAELIM Corporation Global Logistics Management System
 - JTNET Van Administration System
 - Suseo High Speed Railway Concession System
-
----
 
 ### 6. Maintainable
 
