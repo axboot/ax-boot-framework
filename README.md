@@ -7,7 +7,6 @@
 
 ![preview axboot](https://github.com/axboot/ax-boot-themes/raw/master/assets/doberman-3.png)
 
---- 
 
 ## What is AXBoot Framework?
 
@@ -19,6 +18,7 @@ Furthermore, AXBoot provides the Layout system, Web UI Components, Prebuilt Comm
 Develop enterprise web applications fast as never before with AXBoot Framework
 
 ## Getting Started
+
 [AXBoot Demonstration](http://demo.axboot.com)
 > AXBoot Demonstration Site
 
@@ -31,15 +31,23 @@ Develop enterprise web applications fast as never before with AXBoot Framework
 [AXBoot UI Framework](http://ax5.io)
 > AXBoot UI Framework Documentation (now, English only)
 
----
 
 ## Environment
-- Java 8 +
-- Tomcat 7.x+
-- Lombok
-- Gulp
 
----
+|Web Application Server|
+|---|
+|Servlet 3.0 스펙을 준수하는 WAS(Tomcat 7.x+, JBoss EAP 7, Wildfly 8+, WebLogic 12c+, WebSphere 8+, JEUS 7+)  |
+
+|Browser|Web Server|Java |
+|---|---|---|
+| IE9+, Chrome 32+, Opera 2014+, Safari 7+, Firefox 32+  | 제한없음 | JDK 1.8.0 이상  |
+
+|Database|Uasge|
+|---|---|
+| H2  | 내장됨(테스트완료)  |
+| mySql  | 테스트완료  |
+| MariaDB  | 테스트완료  |
+
 
 ## Features
 ### 1. FullStack Framework
@@ -92,6 +100,7 @@ Develop enterprise web applications fast as never before with AXBoot Framework
 
 #### Reference
 > The system has been proven, and its impressive portfolio includes list of large enterprise system usage including: 
+
 - Incheon Airport POS Concession System (Over 1 million times used per day, 25TPS)
 - DAELIM Corporation Global Logistics Management System
 - JTNET Van Administration System
@@ -122,10 +131,10 @@ Develop enterprise web applications fast as never before with AXBoot Framework
 [![start.axboot.com 동영상 보기](https://raw.githubusercontent.com/axboot/ax-boot-document/master/assets/axboot-youtube-03.jpg)](https://www.youtube.com/watch?v=XXXn7Fw_DL8)
 
 ## Sites
-- [AXBoot Offical Site](http://www.axboot.com)
+[AXBoot Offical Site](http://www.axboot.com)
 
 ## Themes
- - https://github.com/axboot/ax-boot-themes
+https://github.com/axboot/ax-boot-themes
  
 ## Developers
 - Brant Hwang (brant@chequer.io)
