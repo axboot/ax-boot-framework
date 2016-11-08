@@ -56,7 +56,7 @@ public class ProgramService extends BaseService<Program, String> {
 
             // 저장 처리
             else {
-                TemplateUtils.makeFile(program.getProgPh());
+                TemplateUtils.makeJspAndJsFiles(program.getProgPh());
 
                 // 신규 저장일 경우
                 if (isEmpty(program.getProgCd())) {

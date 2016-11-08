@@ -1,11 +1,13 @@
 package com.chequer.axboot.core.model.extract.controller;
 
+import com.chequer.axboot.core.api.response.ApiResponse;
 import com.chequer.axboot.core.controllers.BaseController;
 import com.chequer.axboot.core.model.JPAMvcModelExtractedCode;
 import com.chequer.axboot.core.model.extract.metadata.Table;
 import com.chequer.axboot.core.model.extract.service.ModelExtractService;
 import com.chequer.axboot.core.model.extract.service.jdbc.JdbcMetadataService;
 import com.chequer.axboot.core.model.extract.template.file.TemplateCode;
+import com.chequer.axboot.core.utils.TemplateUtils;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -44,6 +46,7 @@ public class ModelExtractController extends BaseController {
             JPAMvcModelExtractedCode jpaMvcModelExtractedCode = modelExtractService.getJpaMvcModel(tableName, className, apiPath);
             modelAndView.addObject("jpaMvcModel", jpaMvcModelExtractedCode);
             modelAndView.addObject("downloadLink", String.format("/modelExtractor/download?tableName=%s&className=%s&apiPath=%s&templateType", tableName, className, apiPath));
+            modelAndView.addObject("copyLink", String.format("/modelExtractor/makeFiles?tableName=%s&className=%s&apiPath=%s&templateType", tableName, className, apiPath));
         } catch (Exception e) {
             e.printStackTrace();
             modelAndView.addObject("error", e.getMessage());
@@ -83,5 +86,18 @@ public class ModelExtractController extends BaseController {
         respHeaders.setContentDispositionFormData("attachment", templateCode.name());
 
         return new ResponseEntity<>(templateCode.code().getBytes(), respHeaders, HttpStatus.OK);
+    }
+
+    @RequestMapping(value = "/makeFiles", method = RequestMethod.GET)
+    public ApiResponse copy(
+            @RequestParam(defaultValue = "") String packageName,
+            @RequestParam(defaultValue = "") String tableName,
+            @RequestParam(defaultValue = "") String className,
+            @RequestParam(required = false, defaultValue = "") String apiPath,
+            @RequestParam(defaultValue = "") List<String> templateTypes) throws IOException {
+
+        modelExtractService.makeFiles(templateTypes, tableName, className, apiPath, packageName);
+
+        return ok();
     }
 }
