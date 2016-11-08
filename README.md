@@ -15,13 +15,13 @@ Develop enterprise web applications fast as never before with AXBoot Framework
 
 ## Getting Started
 - [AXBoot Demonstration](http://demo.axboot.com)
->AXBoot Demonstration Site
+    - AXBoot Demonstration Site
 - [AXBoot Initialzr](http://start.axboot.com)
->AXBoot Project Initializer (like Spring Initialzr)
+    - AXBoot Project Initializer (like Spring Initialzr)
 - [AXBoot Documentation](http://api.axboot.com)
->AXBoot Documentation (now, Korean only)
+    - AXBoot Documentation (now, Korean only)
 - [AXBoot UI Framework](http://ax5.io)
->AXBoot UI Framework Documentation (now, English only)
+    - AXBoot UI Framework Documentation (now, English only)
 
 ## Environment
 - Java 8 +
