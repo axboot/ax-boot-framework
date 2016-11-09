@@ -1,3 +1,5 @@
+package ${controllerPackageName};
+
 import com.chequer.axboot.core.api.response.Responses;
 import com.chequer.axboot.core.controllers.BaseController;
 import com.chequer.axboot.core.parameter.RequestParams;
@@ -6,6 +8,8 @@ import com.chequer.axboot.core.api.response.ApiResponse;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import ${domainPackageName}.${targetPackageName}.${entityClassName};
+import ${domainPackageName}.${targetPackageName}.${serviceClassName};
 
 import javax.inject.Inject;
 import java.util.List;

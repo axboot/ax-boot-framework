@@ -7,6 +7,10 @@ public class TemplateKeys {
 
 	public static final String ANNOTATIONS = "annotations";
 
+	public static final String TARGET_PACKAGE_NAME = "targetPackageName";
+
+	public static final String CONTROLLER_PACKAGE_NAME = "controllerPackageName";
+
 	public static final String BASE_PACKAGE_NAME = "packageName";
 
 	public static final String DOMAIN_PACKAGE_NAME = "domainPackageName";

@@ -1,3 +1,5 @@
+package ${domainPackageName}.${targetPackageName};
+
 import org.springframework.stereotype.Service;
 import ${domainPackageName}.BaseService;
 import javax.inject.Inject;

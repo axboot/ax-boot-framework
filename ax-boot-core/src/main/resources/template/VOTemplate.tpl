@@ -1,3 +1,5 @@
+package ${domainPackageName}.${targetPackageName};
+
 import com.chequer.axboot.core.utils.ModelMapperUtils;
 import com.chequer.axboot.core.vo.BaseVO;
 import lombok.Data;

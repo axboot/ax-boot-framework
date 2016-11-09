@@ -1,3 +1,5 @@
+package ${domainPackageName}.${targetPackageName};
+
 import com.chequer.axboot.core.mybatis.MyBatisMapper;
 import java.util.List;
 

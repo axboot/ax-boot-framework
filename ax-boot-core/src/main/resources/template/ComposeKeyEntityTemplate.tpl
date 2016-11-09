@@ -1,3 +1,6 @@
+package ${domainPackageName}.${targetPackageName};
+
+
 import com.chequer.axboot.core.annotations.ColumnPosition;
 import ${domainPackageName}.SimpleJpaModel;
 import lombok.*;

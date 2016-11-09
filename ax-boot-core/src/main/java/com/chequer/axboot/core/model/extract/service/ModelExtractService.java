@@ -108,31 +108,31 @@ public class ModelExtractService {
 
             switch (templateType) {
                 case AXBootTypes.ModelExtractorTemplate.CONTROLLER:
-                    TemplateUtils.makeControllerFile(TemplateParser.getControllerTemplate(className, apiPath, table), axBootContextConfig.getControllerPackageName());
+                    TemplateUtils.makeControllerFile(TemplateParser.getControllerTemplate(className, apiPath, table, packageName), axBootContextConfig.getControllerPackageName());
                     break;
 
                 case AXBootTypes.ModelExtractorTemplate.VO:
-                    TemplateUtils.makeDomainFile(TemplateParser.getVoTemplate(className, table), domainPackage);
+                    TemplateUtils.makeDomainFile(TemplateParser.getVoTemplate(className, table, packageName), domainPackage);
                     break;
 
                 case AXBootTypes.ModelExtractorTemplate.ENTITY:
-                    TemplateUtils.makeDomainFile(TemplateParser.getEntityTemplate(className, table), domainPackage);
+                    TemplateUtils.makeDomainFile(TemplateParser.getEntityTemplate(className, table, packageName), domainPackage);
                     break;
 
                 case AXBootTypes.ModelExtractorTemplate.SERVICE:
-                    TemplateUtils.makeDomainFile(TemplateParser.getServiceTemplate(className, table), domainPackage);
+                    TemplateUtils.makeDomainFile(TemplateParser.getServiceTemplate(className, table, packageName), domainPackage);
                     break;
 
                 case AXBootTypes.ModelExtractorTemplate.REPOSITORY:
-                    TemplateUtils.makeDomainFile(TemplateParser.getRepositoryTemplate(className, table), domainPackage);
+                    TemplateUtils.makeDomainFile(TemplateParser.getRepositoryTemplate(className, table, packageName), domainPackage);
                     break;
 
                 case AXBootTypes.ModelExtractorTemplate.MYBATIS_INTERFACE:
-                    TemplateUtils.makeDomainFile(TemplateParser.getMyBatisInterfaceTemplate(className, table), domainPackage);
+                    TemplateUtils.makeDomainFile(TemplateParser.getMyBatisInterfaceTemplate(className, table, packageName), domainPackage);
                     break;
 
                 case AXBootTypes.ModelExtractorTemplate.MYBATIS_XML:
-                    TemplateUtils.makeDomainResourceFile(TemplateParser.getMyBatisXMLTemplate(className, table), domainPackage);
+                    TemplateUtils.makeDomainResourceFile(TemplateParser.getMyBatisXMLTemplate(className, table, packageName), domainPackage);
                     break;
             }
         }
