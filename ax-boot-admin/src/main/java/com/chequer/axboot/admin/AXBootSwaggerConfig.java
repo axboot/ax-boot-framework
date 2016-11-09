@@ -21,7 +21,7 @@ public class AXBootSwaggerConfig {
     @Bean
     public SwaggerSpringMvcPlugin customImplementation() {
         return new SwaggerSpringMvcPlugin(this.springSwaggerConfig)
-                .apiInfo(new ApiInfo("API", "API", "", "", "", ""))
+                .apiInfo(new ApiInfo("AXBoot API Swagger", "API Demonstration", "", "", "", ""))
                 .includePatterns("/api/v1.*")
                 .ignoredParameterTypes(AuthenticationPrincipal.class, RequestParams.class);
     }
