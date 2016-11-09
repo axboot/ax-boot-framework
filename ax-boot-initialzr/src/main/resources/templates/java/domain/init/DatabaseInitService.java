@@ -221,7 +221,6 @@ public class DatabaseInitService {
         menuService.save(Menu.of(4L,"SYSTEM_MANAGER","메뉴관리",1L, 1, 2, "system-config-menu"));
         menuService.save(Menu.of(5L,"SYSTEM_MANAGER","사용자 관리",1L, 1, 3, "system-auth-user"));
         menuService.save(Menu.of(6L,"SYSTEM_MANAGER","에러로그 조회",1L, 1, 4, "system-operation-log"));
-        menuService.save(Menu.of(8L,"SYSTEM_MANAGER","레이아웃 샘플",null, 0, 1, null));
         menuService.save(Menu.of(10L,"SYSTEM_MANAGER","페이지구조설명",8L, 1, 0, "page-structure"));
         menuService.save(Menu.of(11L,"SYSTEM_MANAGER","좌우레이아웃",8L, 1, 1, "vertical-layout"));
         menuService.save(Menu.of(12L,"SYSTEM_MANAGER","상하레이아웃",8L, 1, 2, "grid-form"));
