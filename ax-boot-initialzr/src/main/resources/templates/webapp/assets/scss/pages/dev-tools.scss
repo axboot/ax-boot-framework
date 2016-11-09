@@ -1,0 +1,305 @@
+$ax-frame-header-tool-height: 30px !default;
+$ax-frame-header-tool-bg: #788694 !default;
+$ax-frame-header-tool-border: 0 none !default;
+$ax-frame-header-tool-user-info-color: #fff !default;
+$ax-frame-header-tool-user-info-btn-bg-colors: (#79CBE3, #39B5DC) !default;
+
+$ax-frame-header-height: 50px !default;
+$ax-frame-header-bg: #fff !default;
+$ax-frame-header-tab-height: 30px !default;
+$ax-frame-header-tab-container-bg-colors: (#B5B6B6, #B5B6B6) !default;
+$ax-frame-header-tab-bg-colors: (#DDDDDD, #DDDDDD) !default;
+$ax-frame-header-tab-color: #000 !default;
+$ax-frame-header-tab-border: 1px solid #636363 !default;
+$ax-frame-header-tab-on-bg-colors: (#3DACFC, #3DACFC) !default;
+$ax-frame-header-tab-on-color: #fff !default;
+
+$ax-frame-aside-width: 220px !default;
+$ax-frame-aside-bg: #2B3A48 !default;
+$ax-frame-aside-border : 0 none !default;
+
+$ax-frame-foot-height: 30px !default;
+$ax-frame-foot-bg: #E2E2E2 !default;
+$ax-frame-foot-color: #7C7C7C !default;
+
+
+&.dev-tools {
+    overflow: hidden;
+
+    #ax-frame-root {
+        min-width: 960px;
+        $ax-frame-header-tool-height: 0;
+        $ax-frame-foot-height: 0;
+        // 프레임셋 용
+        .ax-frame-header-tool {
+            display: none;
+        }
+        .ax-frame-header {
+            //@include animation(FADE-IN 0.5s ease-in-out forwards);
+            z-index: 3;
+            position: absolute;
+            top: $ax-frame-header-tool-height;
+            left: 0;
+            width: 100%;
+            height: $ax-frame-header-height;
+            background-color: $ax-frame-header-bg;
+            border-bottom: $ax-frame-header-tab-border;
+
+            .cell-aside-handle {
+                cursor: pointer;
+                width: $ax-frame-header-height;
+                text-align: center;
+                padding: 10px;
+                i {
+                    background: #788694;
+                    color: #fff;
+                    display: block;
+                    height: $ax-frame-header-height - 20;
+                    line-height: $ax-frame-header-height - 20;
+                    width: $ax-frame-header-height - 20;
+                    font-size: 20px;
+                }
+            }
+            .cell-logo {
+                height: $ax-frame-header-height;
+                width: $ax-frame-aside-width - $ax-frame-header-height;
+            }
+            #ax-top-menu {
+                padding-left: 10px;
+            }
+            #ax-fullscreen-handel{
+                .icon-closed{display: block;}
+                .icon-opened{display: none;}
+                i {
+                    background: #F1F1F1;
+                    color: #2B3A48;
+                }
+            }
+        }
+        .ax-frame-header-tab {
+            //@include transition(all 0.3s ease-in-out);
+            @include animation(SLIDE-DOWN 0.3s ease-in-out forwards);
+            z-index: 1;
+            position: absolute;
+            top: $ax-frame-header-tool-height + $ax-frame-header-height;
+            left: 0;
+            width: 100%;
+            height: $ax-frame-header-tab-height;
+            @include ax-background(top, $ax-frame-header-tab-container-bg-colors);
+            border-bottom: $ax-frame-header-tab-border;
+
+            #ax-frame-header-tab-container {
+                height: 100%;
+                &:before {
+                    display: block;
+                    content: ' ';
+                    position: absolute;
+                    left: 0;
+                    bottom: 0px;
+                    height: 4px;
+                    width: 100%;
+                    background: nth($ax-frame-header-tab-on-bg-colors, 1);
+                    border-top: $ax-frame-header-tab-border;
+                    box-sizing: border-box;
+                }
+                .tab-item-holder {
+                    display: table;
+                    table-layout: fixed;
+                }
+                .tab-item {
+                    cursor: pointer;
+                    position: relative;
+                    box-sizing: border-box;
+                    display: table-cell;
+                    box-sizing: border-box;
+                    height: $ax-frame-header-tab-height - 4;
+                    line-height: $ax-frame-header-tab-height - 7;
+                    min-width: 120px;
+
+                    padding: 0 10px;
+                    padding-right: 22px;
+                    //border-left: $ax-frame-header-tab-border;
+                    border-right: $ax-frame-header-tab-border;
+                    border-bottom: $ax-frame-header-tab-border;
+                    color: $ax-frame-header-tab-color;
+                    font-size: 0.9em;
+                    margin: 0 1px;
+                    @include ax-background(top, $ax-frame-header-tab-bg-colors);
+
+
+                    span[data-toggle="tooltip"]{
+                        display: block;
+                        white-space: nowrap;
+                        text-overflow: ellipsis;
+                        overflow: hidden;
+                    }
+
+                    i[data-tab-close] {
+                        position: absolute;
+                        right: 0px;
+                        top: 0px;
+                        height: $ax-frame-header-tab-height - 5;
+                        line-height: $ax-frame-header-tab-height - 5;
+
+                        width: 25px;
+                        text-align: center;
+                    }
+
+                    &.on {
+                        @include ax-background(top, $ax-frame-header-tab-on-bg-colors);
+                        border-bottom: 1px solid nth($ax-frame-header-tab-on-bg-colors, 1);
+                        color: $ax-frame-header-tab-on-color;
+                        i[data-tab-close] {
+                            //display: block;
+                        }
+                    }
+                }
+                .tab-item-menu {
+                    display: table-cell;
+                    width: 10px;
+                    min-width: 10px;
+                    padding: 0px;
+                    border-right: $ax-frame-header-tab-border;
+                }
+                .tab-item-addon {
+                    display: table-cell;
+                    width: 10px;
+                    padding: 0px;
+                }
+
+            }
+        }
+        .ax-frame-aside {
+            //@include animation(SLIDE-IN-LEFT 0.3s ease-in-out forwards);
+            @include transition(all 0.3s ease-in-out);
+            z-index: 2;
+            position: absolute;
+            top: 0;
+            left: -$ax-frame-aside-width;
+            width: $ax-frame-aside-width;
+            height: 100%;
+            background-color: $ax-frame-aside-bg;
+            padding-top: $ax-frame-header-tool-height + $ax-frame-header-height;
+            border-right: $ax-frame-aside-border;
+
+            .ax-frame-aside-menu-holder {
+                height: 100%;
+                overflow: auto;
+                .aside-menu-item {
+                    display: block;
+                    color: #fff;
+                    padding: 5px 10px;
+                    font-size: 1em;
+                    &.aside-menu-item-label {
+                        cursor: pointer;
+                        padding: 0px 15px;
+                        height: 40px;
+                        line-height: 40px;
+                        cursor: pointer;
+                        border-left: 3px solid #788694;
+                        text-decoration: none;
+                        &:hover{
+                            background: #788694;
+                        }
+                        &.opend, &:hover{
+                            border-color: #44ADF9;
+                        }
+                    }
+                    &.aside-menu-item-tree-body{
+                        display: none;
+                        padding: 10px;
+                        &.opend{
+                            display: block;
+
+                        }
+                        .tree-holder{
+                            height: 300px;
+                            /* box: */
+                            background: #fff;
+                            border: 1px solid #BBBBBB;
+                            border-radius: 4px;
+                            overflow: auto;
+                            font-size: 1em;
+                        }
+                    }
+                }
+            }
+        }
+        .ax-frame-contents {
+            //@include transition(all 0.3s ease-in-out);
+            //@include animation(FADE-IN 0.3s ease-in-out forwards);
+            position: absolute;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            padding-top: $ax-frame-header-tool-height + $ax-frame-header-height + $ax-frame-header-tab-height;
+
+            padding-bottom: $ax-frame-foot-height;
+            .frame-item {
+                width: 100%;
+                height: 100%;
+                display: none;
+                &.on {
+                    display: block;
+                }
+            }
+        }
+        .ax-frame-foot {
+            display: none;
+        }
+
+        &.show-aside {
+            .ax-frame-header-tool {
+                padding-left: $ax-frame-aside-width;
+            }
+            .ax-frame-header {
+                .cell-aside-handle {
+                    i {
+                        background: #F1F1F1;
+                        color: #2B3A48;
+                    }
+                }
+            }
+            .ax-frame-header-tab {
+                padding-left: $ax-frame-aside-width;
+            }
+            .ax-frame-aside {
+                left: 0;
+            }
+            .ax-frame-contents {
+                padding-left: $ax-frame-aside-width;
+            }
+            .ax-frame-foot {
+                padding-left: $ax-frame-aside-width;
+            }
+        }
+
+        &.full-screen {
+            .ax-frame-header-tool {
+                display: none;
+            }
+            .ax-frame-header {
+                top: 0;
+                #ax-fullscreen-handel {
+                    .icon-closed{display: none;}
+                    .icon-opened{display: block;}
+                    i {
+                        background: #788694;
+                        color: #fff;
+                    }
+                }
+            }
+            .ax-frame-header-tab {
+                display: none;
+            }
+            .ax-frame-contents {
+                padding-top: $ax-frame-header-height;
+                padding-bottom: 0;
+            }
+            .ax-frame-foot {
+                display: none;
+            }
+        }
+    }
+}

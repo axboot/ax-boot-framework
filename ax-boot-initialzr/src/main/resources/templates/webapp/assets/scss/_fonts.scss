@@ -6,6 +6,7 @@ i{
 $icomoon-font-path: "../plugins/cheqcon/fonts";
 @import "../plugins/cheqcon/variables";
 @import "../plugins/cheqcon/style.scss";
+@import url(http://fonts.googleapis.com/earlyaccess/notosanskr.css);
 
 /*
 $nanum-gothic-path: "../plugins/webfont-nanum/nanumgothic/v3";
@@ -68,6 +69,7 @@ $nanum-myeongjo-path: "../plugins/webfont-nanum/nanummyeongjo/v2";
 }
 */
 
+/*
 $noto-sans-path: "../plugins/NotoSansKR-Hestia/fonts";
 @font-face {
     font-family: 'Noto Sans Korean';
@@ -145,3 +147,4 @@ $noto-sans-path: "../plugins/NotoSansKR-Hestia/fonts";
     url($noto-sans-path + "/woff/NotoSansKR-Black-Hestia.woff") format('woff'),
     url($noto-sans-path + "/otf/NotoSansKR-Black-Hestia.otf") format('opentype');
 }
+*/

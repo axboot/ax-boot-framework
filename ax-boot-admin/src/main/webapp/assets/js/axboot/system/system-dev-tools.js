@@ -349,7 +349,7 @@ fnObj.tabView = axboot.viewExtend({
     _getItem: function (item) {
         var po = [];
         po.push('<div class="tab-item ' + item.status + '" data-tab-id="' + item.menuId + '">');
-        po.push('<span data-toggle="tooltip" data-placement="bottom" title=\'' + item.progNm + '\'>', item.progNm, '</span>');
+        po.push('<span data-toggle="tooltip" data-placement="bottom" title=\'' + item.progNm + '\'><i class="cqc-cw"></i> ', item.progNm, '</span>');
         if (!item.fixed) po.push('<i class="cqc-cancel3" data-tab-close="true" data-tab-id="' + item.menuId + '"></i>');
         po.push('</div>');
         return po.join('');
@@ -504,10 +504,12 @@ fnObj.tabView = axboot.viewExtend({
     bindEvent: function () {
         var _this = this;
         this.target.find('.tab-item').unbind("click").bind("click", function (e) {
-            if (e.target.tagName == "I") {
+            var isClose = e.target.getAttribute("data-tab-close");
+            if (isClose && e.target.tagName == "I") {
                 _this.close(this.getAttribute("data-tab-id"));
             }
             else {
+                window["frame-item-" + this.getAttribute("data-tab-id")].location.reload();
                 _this.click(this.getAttribute("data-tab-id"), e);
             }
         });

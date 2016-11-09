@@ -82,7 +82,7 @@
             <div>&nbsp;</div>
             <div class="ax-split-panel cell-logo">
                 <a href="#">
-                    <img src="https://cdn.rawgit.com/axboot/ax-boot-themes/master/cocker/images/header-logo.png" width="100%"/>
+                    <img src="/assets/images/devtools-logo.png" width="100%"/>
                 </a>
             </div>
             <div id="ax-top-menu" class="ax-split-panel ax-split-flex"></div>

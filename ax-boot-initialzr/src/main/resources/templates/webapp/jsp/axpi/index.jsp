@@ -6,7 +6,7 @@
     <title>Database Schema to JPA Objects</title>
 
     <link rel="stylesheet" type="text/css" href="/jsp/axpi/plugins/prettify/github.css">
-    <link rel="stylesheet" type="text/css" href="/jsp/axpi/plugins/ax5/css/jellyfish/ax5.min.css">
+    <link rel="stylesheet" type="text/css" href="https://cdn.rawgit.com/axisj/ax5/master/src/css/dplus/ax5.min.css">
     <link rel="stylesheet" type="text/css" href="/jsp/axpi/css/app.css">
     <link rel="stylesheet" type="text/css" href="http://cdno.axisj.com/axicon/axicon.css">
 
@@ -15,13 +15,51 @@
             padding: 10px;
             border: 1px solid #bbbbbb;
         }
-        a:hover{
+
+        a:hover {
             color: #0F6AB4;
+        }
+
+        .ax-btn {
+            border-radius: 6px;
+            text-decoration: none;
         }
     </style>
 
     <script type="text/javascript" src="/jsp/axpi/plugins/prettify/prettify.js"></script>
-    <script type="text/javascript" src="/jsp/axpi/plugins/ax5/ax5.min.js"></script>
+    <script type="text/javascript" src="https://rawgit.com/axisj/ax5/master/pub/ax5.min.js"></script>
+    <script type="text/javascript" src="https://rawgit.com/axisj/ax5/master/pub/ui/all.min.js"></script>
+    <script>
+        function makeAll() {
+            var my_dialog = new ax5.ui.dialog();
+            my_dialog.set_config({});
+
+            my_dialog.prompt({
+                theme: 'good',
+                width: 300,
+                title: 'AXBOOT Generated Code',
+                input: {
+                    data1: {label:"Package Name"},
+                    data2: {label:"Class Name"}
+                }
+            }, function () {
+                //console.log(this.value);
+
+                ax5.xhr({
+                    method: "GET",
+                    url: "${copyLink}&templateTypes=Controller,Entity,Repository,Service&packageName=" + this.data1 + "&className=" + this.data2,
+                    param: "",
+                    res: function (response, status) {
+                        alert("Success");
+                    },
+                    error: function () {
+
+                    }
+                });
+
+            });
+        }
+    </script>
 </head>
 <body>
 
@@ -36,40 +74,63 @@
             <div class="app-content app-wrap">
 
                 <article class="cover">
-                    <h1 data-menu-item="JPA" data-value="Codes">Extracted Java Codes</h1>
+                    <h1 data-menu-item="JPA" data-value="Codes" style="padding-top: 0px;">
+                        Generated Code
+                        <button onclick="makeAll()" class="ax-btn good">MakeAll</button>
+
+                        <button class="ax-btn" onclick="history.back();" style="border-radius: 6px;position: absolute;right: 15px; top :10px;">Back</button>
+                    </h1>
                 </article>
                 <article class="content">
-                    <h3 data-menu-item="Controller">Controller / <a href="${downloadLink}=Controller">Download</a></h3>
+                    <h3 data-menu-item="Controller">Controller /
+                        <a href="${downloadLink}=Controller" class="ax-btn">Download</a>
+                    </h3>
                     <pre class="prettyprint linenums">${jpaMvcModel.getController().code()}</pre>
                 </article>
 
                 <article class="content">
-                    <h3 data-menu-item="Modal">Entity / <a href="${downloadLink}=Entity">Download</a></h3>
+                    <h3 data-menu-item="Modal">Entity /
+                        <a href="${downloadLink}=Entity" class="ax-btn">Download</a>
+                    </h3>
                     <pre class="prettyprint linenums">${jpaMvcModel.getEntity().code()}</pre>
                 </article>
 
                 <article class="content">
-                    <h3>VO / <a href="${downloadLink}=VO">Download</a></h3>
+                    <h3>VO /
+                        <a href="${downloadLink}=VO" class="ax-btn">Download</a>
+                    </h3>
                     <pre class="prettyprint linenums">${jpaMvcModel.getVo().code()}</pre>
                 </article>
 
                 <article class="content">
-                    <h3 data-menu-item="Service">Service / <a href="${downloadLink}=Service">Download</a></h3>
+                    <h3 data-menu-item="Service">Service /
+                        <a href="${downloadLink}=Service" class="ax-btn">Download</a>
+
+                    </h3>
                     <pre class="prettyprint linenums">${jpaMvcModel.getService().code()}</pre>
                 </article>
 
                 <article class="content">
-                    <h3 data-menu-item="Repository">Repository / <a href="${downloadLink}=Repository">Download</a></h3>
+                    <h3 data-menu-item="Repository">Repository /
+                        <a href="${downloadLink}=Repository" class="ax-btn">Download</a>
+
+                    </h3>
                     <pre class="prettyprint linenums">${jpaMvcModel.getRepository().code()}</pre>
                 </article>
 
                 <article class="content">
-                    <h3 data-menu-item="MyBatis-Interface">MyBatis-Interface / <a href="${downloadLink}=MyBatisInterface">Download</a></h3>
+                    <h3 data-menu-item="MyBatis-Interface">MyBatis-Interface /
+                        <a href="${downloadLink}=MyBatisInterface" class="ax-btn">Download</a>
+
+                    </h3>
                     <pre class="prettyprint linenums">${jpaMvcModel.getMyBatisInterface().code()}</pre>
                 </article>
 
                 <article class="content">
-                    <h3 data-menu-item="MyBatis-XML">MyBatis-XML / <a href="${downloadLink}=MyBatisXML">Download</a></h3>
+                    <h3 data-menu-item="MyBatis-XML">MyBatis-XML /
+                        <a href="${downloadLink}=MyBatisXML" class="ax-btn">Download</a>
+
+                    </h3>
                     <xmp class="prettyprint linenums">${jpaMvcModel.getMyBatisXML().code()}</xmp>
                 </article>
 

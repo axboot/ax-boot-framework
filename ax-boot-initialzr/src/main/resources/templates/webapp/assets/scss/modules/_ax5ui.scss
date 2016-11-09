@@ -108,12 +108,12 @@ $ax5select-default-hover-type: darken, 0%;
 @import "../../plugins/ax5ui-select/src/scss/ax5select_variables";
 @import "../../plugins/ax5ui-select/src/scss/ax5select";
 
-//
+// ax5grid
 $ax5grid-border: 1px solid #D8D8D8;
-
 @import "../../plugins/ax5ui-grid/src/scss/ax5grid_variables";
 @import "../../plugins/ax5ui-grid/src/scss/ax5grid";
 
+// ax5combobox
 $ax5combobox-label-padding: 0px 3px;
 $ax5combobox-default-base-color: #444;
 $ax5combobox-default-theme-color: #D8D8D8;
