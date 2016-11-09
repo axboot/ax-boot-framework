@@ -26,6 +26,10 @@
         <%@ include file="layout/modal.tag" %>
     </c:when>
 
+    <c:when test="${name eq 'devTools'}">
+        <%@ include file="layout/devTools.tag" %>
+    </c:when>
+
     <c:otherwise>
         <%@ include file="layout/base.tag" %>
     </c:otherwise>
