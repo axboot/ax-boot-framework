@@ -19,7 +19,6 @@
         "gulp-concat": "*",
         "gulp-sass": "^2.1.1",
         "gulp-uglify": "^1.5.1",
-        "gulp-marko-ax5": "",
         "js-beautify": "^1.5.10",
         "gulp-plumber": "",
         "gulp-notify": "",
