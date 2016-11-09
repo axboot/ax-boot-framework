@@ -1,6 +1,4 @@
-package $
-
-import com.mangofactory.swagger.models.dto.ApiInfo;{basePackage};
+package ${basePackage};
 
 import com.chequer.axboot.core.parameter.RequestParams;
 import com.mangofactory.swagger.configuration.SpringSwaggerConfig;
