@@ -47,11 +47,19 @@
             <div class="ax-split-panel text-align-right">
 
                 <div class="ax-split-col ax-frame-user-info">
+                    <c:if test="${isDevelopmentMode}">
+                        <!-- 개발자 툴 연결 아이콘 -->
+                        <div class="ax-split-panel">
+                            <a href="#ax" onclick="window.open('/jsp/system/system-dev-tools.jsp');"><i class="cqc-tools"></i> 개발자도구</a>
+                        </div>
+                        <div class="panel-split"></div>
+                    </c:if>
                     <div class="ax-split-panel">
                         <a href="#ax" onclick="fcObj.open_user_info();">${loginUser.userNm}</a>님 로그인
                     </div>
                     <div class="panel-split"></div>
                     <div class="ax-split-panel">
+
                         <a href="#ax" class="ax-frame-logout" onclick="location.href = '${pageContext.request.contextPath}/api/logout';">
                             <i class="cqc-log-out"></i>
                             로그아웃
@@ -67,12 +75,12 @@
     <div class="ax-frame-header">
         <div class="ax-split-col" style="height: 100%;">
             <c:if test="${config.layout.leftSideMenu eq 'visible'}">
-            <div class="ax-split-panel cell-aside-handle" id="ax-aside-handel">
-                <i class="cqc-menu"></i>
-            </div>
+                <div class="ax-split-panel cell-aside-handle" id="ax-aside-handel">
+                    <i class="cqc-menu"></i>
+                </div>
             </c:if>
             <c:if test="${config.layout.leftSideMenu ne 'visible'}">
-            <div class="ax-split-panel">&nbsp;</div>
+                <div class="ax-split-panel">&nbsp;</div>
             </c:if>
             <div class="ax-split-panel cell-logo">
                 <a href="${pageContext.request.contextPath}/jsp/main.jsp">
