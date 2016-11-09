@@ -149,9 +149,9 @@ fnObj.frameView = axboot.viewExtend({
         this.target.toggleClass("show-aside");
     },
     toggleFullScreen: function () {
-        if(this.target.hasClass("full-screen")){
+        if (this.target.hasClass("full-screen")) {
             this.target.removeClass("full-screen");
-        }else{
+        } else {
             this.target.addClass("full-screen");
             this.target.removeClass("show-aside");
         }
@@ -416,9 +416,7 @@ fnObj.tabView = axboot.viewExtend({
         }
 
         if (this.list.length > this.limitCount) {
-            var remove_item = this.list.splice(1, 1);
-            this.target.find('[data-tab-id="' + remove_item[0].menuId + '"]').remove();
-            this.frameTarget.find('[data-tab-id="' + remove_item[0].menuId + '"]').remove();
+            this.close(this.list[1].menuId);
         }
 
         this.bindEvent();
@@ -457,7 +455,24 @@ fnObj.tabView = axboot.viewExtend({
         }
         this.list = newList;
         this.target.find('[data-tab-id="' + menuId + '"]').remove();
-        this.frameTarget.find('[data-tab-id="' + menuId + '"]').remove();
+
+        // 프레임 제거
+        (function () {
+            var $iframe = this.frameTarget.find('[data-tab-id="' + menuId + '"]'), // iframe jQuery Object
+                iframeObject = $iframe.get(0),
+                idoc = (iframeObject.contentDocument) ? iframeObject.contentDocument : iframeObject.contentWindow.document;
+
+            $(idoc.body).children().each(function () {
+                $(this).remove();
+            });
+            idoc.innerHTML = "";
+            $iframe
+                .attr('src', 'about:blank')
+                .remove();
+
+            // force garbarge collection for IE only
+            window.CollectGarbage && window.CollectGarbage();
+        }).call(this);
 
         if (removeItem.status == 'on') {
             var lastIndex = this.list.length - 1;
@@ -517,16 +532,17 @@ fnObj.tabView = axboot.viewExtend({
     }
 });
 
-
 /**
  * activityTimerView
  */
 fnObj.activityTimerView = axboot.viewExtend({
     initView: function () {
         this.$target = $("#account-activity-timer");
-        $(document.body).on("click", function () {
-            fnObj.activityTimerView.update();
-        });
+        /*
+         $(document.body).on("click", function () {
+         fnObj.activityTimerView.update();
+         });
+         */
         this.update();
         setInterval(function () {
             fnObj.activityTimerView.print();

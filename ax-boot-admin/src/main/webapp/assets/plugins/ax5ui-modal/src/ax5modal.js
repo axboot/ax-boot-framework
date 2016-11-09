@@ -202,8 +202,8 @@
 
                     this.$.header
                         .bind(ENM["mousedown"], function (e) {
-                            if(opts.isFullScreen) return false;
-                            
+                            if (opts.isFullScreen) return false;
+
                             /// 이벤트 필터링 추가 : 버튼엘리먼트로 부터 발생된 이벤트이면 moveModal 시작하지 않도록 필터링
                             var isButton = U.findParentNode(e.target, function (_target) {
                                 if (_target.getAttribute("data-modal-header-btn")) {
@@ -435,6 +435,27 @@
 
                     setTimeout((function () {
                         if (this.activeModal) {
+
+                            // 프레임 제거
+                            var $iframe = this.$["iframe"], // iframe jQuery Object
+                                iframeObject = $iframe.get(0),
+                                idoc = (iframeObject.contentDocument) ? iframeObject.contentDocument : iframeObject.contentWindow.document;
+
+                            try {
+                                $(idoc.body).children().each(function () {
+                                    $(this).remove();
+                                });
+                            } catch (e) {
+
+                            }
+                            idoc.innerHTML = "";
+                            $iframe
+                                .attr('src', 'about:blank')
+                                .remove();
+
+                            // force garbarge collection for IE only
+                            window.CollectGarbage && window.CollectGarbage();
+
                             this.activeModal.remove();
                             this.activeModal = null;
                         }
@@ -442,6 +463,7 @@
                             self: this,
                             state: "close"
                         });
+
                     }).bind(this), cfg.animateTime);
                 }
 

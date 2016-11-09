@@ -110,7 +110,8 @@
         this.$["page"]["status"].html(GRID.tmpl.get("page_status", {
             fromRowIndex: U.number(fromRowIndex + 1, {"money": true}),
             toRowIndex: U.number(toRowIndex, {"money": true}),
-            totalElements: U.number(totalElements, {"money": true})
+            totalElements: U.number(totalElements, {"money": true}),
+            dataRowCount: (totalElements !== this.xvar.dataRealRowCount) ? this.xvar.dataRealRowCount : false
         }));
     };
 

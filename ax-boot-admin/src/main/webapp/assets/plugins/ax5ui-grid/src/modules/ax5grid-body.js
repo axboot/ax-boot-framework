@@ -526,7 +526,7 @@
         };
 
         if (_key === "__d-index__") {
-            return _index + 1;
+            return _item["__index"] + 1;
         }
         else if (_key === "__d-checkbox__") {
             return '<div class="checkBox"></div>';
@@ -569,7 +569,8 @@
                 } else {
                     return GRID.formatter[_col.formatter].call(that);
                 }
-            } else {
+            }
+            else {
                 var returnValue = "";
 
                 if (typeof _value !== "undefined") {
@@ -604,10 +605,10 @@
             return value;
         }
         else if (_key === "__d-index__") {
-            return _index + 1;
+            return '';
         }
         else if (_key === "__d-checkbox__") {
-            return '&nbsp;';
+            return '';
         }
         else {
             if (_col.collector) {

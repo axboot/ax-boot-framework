@@ -40,7 +40,7 @@
 
             if (-top > _scroller_height) {
                 top = -_scroller_height;
-                
+
                 var scrollPositon = convertScrollPosition[type].call(this, {top: -top}, {
                     _content_width: _var._content_width,
                     _content_height: _var._content_height,
@@ -248,7 +248,7 @@
                 _content_height = self.xvar.scrollContentHeight,
                 _content_width = self.xvar.scrollContentWidth;
 
-            if(isNaN(_content_height) || isNaN(_content_width)){
+            if (isNaN(_content_height) || isNaN(_content_width)) {
                 return false;
             }
 
@@ -270,7 +270,6 @@
             } else {
                 if (delta.y == 0) _top_is_end = true;
             }
-            
 
 
             // newLeft이 범위를 넘었는지 체크
@@ -377,38 +376,40 @@
         this.$["scroller"]["horizontal-bar"].css({height: this.config.scroller.size - (margin + 1), top: margin / 2});
 
         this.$["scroller"]["vertical-bar"]
-            .bind(GRID.util.ENM["mousedown"], (function (e) {
+            .on(GRID.util.ENM["mousedown"], (function (e) {
                 this.xvar.mousePosition = GRID.util.getMousePosition(e);
                 scrollBarMover.on.call(this, this.$["scroller"]["vertical"], this.$["scroller"]["vertical-bar"], "vertical");
             }).bind(this))
-            .bind("dragstart", function (e) {
+            .on("dragstart", function (e) {
                 U.stopEvent(e);
                 return false;
             });
+
         this.$["scroller"]["vertical"]
-            .bind("click", (function (e) {
-                if (e.target && e.target.getAttribute("data-ax5grid-scroller") == "vertical") {
+            .on("click", (function (e) {
+                if(e.target.getAttribute("data-ax5grid-scroller") == "vertical") {
                     scrollBarMover.click.call(this, this.$["scroller"]["vertical"], this.$["scroller"]["vertical-bar"], "vertical", e);
                 }
             }).bind(this));
 
         this.$["scroller"]["horizontal-bar"]
-            .bind(GRID.util.ENM["mousedown"], (function (e) {
+            .on(GRID.util.ENM["mousedown"], (function (e) {
                 this.xvar.mousePosition = GRID.util.getMousePosition(e);
                 scrollBarMover.on.call(this, this.$["scroller"]["horizontal"], this.$["scroller"]["horizontal-bar"], "horizontal");
             }).bind(this))
-            .bind("dragstart", function (e) {
+            .on("dragstart", function (e) {
                 U.stopEvent(e);
                 return false;
             });
+
         this.$["scroller"]["horizontal"]
-            .bind("click", (function (e) {
-                if (e.target && e.target.getAttribute("data-ax5grid-scroller") == "horizontal") {
+            .on("click", (function (e) {
+                if(e.target.getAttribute("data-ax5grid-scroller") == "horizontal") {
                     scrollBarMover.click.call(this, this.$["scroller"]["horizontal"], this.$["scroller"]["horizontal-bar"], "horizontal", e);
                 }
             }).bind(this));
 
-        this.$["container"]["body"].bind('mousewheel DOMMouseScroll', (function (e) {
+        this.$["container"]["body"].on('mousewheel DOMMouseScroll', (function (e) {
             var E = e.originalEvent;
             var delta = {x: 0, y: 0};
             if (E.detail) {
@@ -464,9 +465,9 @@
             }),
             height: verticalScrollBarHeight
         });
-        
+
         //console.log(horizontalScrollBarWidth);
-        
+
         this.$["scroller"]["horizontal-bar"].css({
             left: convertScrollBarPosition.horizontal.call(this, this.$.panel["body-scroll"].position().left, {
                 _content_width: _content_width,
