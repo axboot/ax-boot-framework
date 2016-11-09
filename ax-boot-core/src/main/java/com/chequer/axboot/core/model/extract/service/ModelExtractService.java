@@ -9,6 +9,7 @@ import com.chequer.axboot.core.model.extract.metadata.Table;
 import com.chequer.axboot.core.model.extract.service.jdbc.JdbcMetadataService;
 import com.chequer.axboot.core.model.extract.template.TemplateParser;
 import com.chequer.axboot.core.model.extract.template.file.TemplateCode;
+import com.chequer.axboot.core.utils.NamingUtils;
 import com.chequer.axboot.core.utils.TemplateUtils;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
@@ -38,13 +39,15 @@ public class ModelExtractService {
 
         JPAMvcModelExtractedCode jpaMvcModelExtractedCode = new JPAMvcModelExtractedCode();
 
-        jpaMvcModelExtractedCode.setController(TemplateParser.getControllerTemplate(className, apiPath, table));
-        jpaMvcModelExtractedCode.setEntity(TemplateParser.getEntityTemplate(className, table));
-        jpaMvcModelExtractedCode.setService(TemplateParser.getServiceTemplate(className, table));
-        jpaMvcModelExtractedCode.setRepository(TemplateParser.getRepositoryTemplate(className, table));
-        jpaMvcModelExtractedCode.setVo(TemplateParser.getVoTemplate(className, table));
-        jpaMvcModelExtractedCode.setMyBatisInterface(TemplateParser.getMyBatisInterfaceTemplate(className, table));
-        jpaMvcModelExtractedCode.setMyBatisXML(TemplateParser.getMyBatisXMLTemplate(className, table));
+        String classFieldName = NamingUtils.classFieldName(className);
+
+        jpaMvcModelExtractedCode.setController(TemplateParser.getControllerTemplate(className, apiPath, table, classFieldName));
+        jpaMvcModelExtractedCode.setEntity(TemplateParser.getEntityTemplate(className, table, classFieldName));
+        jpaMvcModelExtractedCode.setService(TemplateParser.getServiceTemplate(className, table, classFieldName));
+        jpaMvcModelExtractedCode.setRepository(TemplateParser.getRepositoryTemplate(className, table, classFieldName));
+        jpaMvcModelExtractedCode.setVo(TemplateParser.getVoTemplate(className, table, classFieldName));
+        jpaMvcModelExtractedCode.setMyBatisInterface(TemplateParser.getMyBatisInterfaceTemplate(className, table, classFieldName));
+        jpaMvcModelExtractedCode.setMyBatisXML(TemplateParser.getMyBatisXMLTemplate(className, table, classFieldName));
 
         AXBootContextConfig.Modeler modelerConfig = axBootContextConfig.getModelerConfig();
 
