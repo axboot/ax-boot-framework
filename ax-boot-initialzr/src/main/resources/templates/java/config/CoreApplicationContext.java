@@ -85,6 +85,7 @@ public class CoreApplicationContext {
         SqlSessionFactoryBean sqlSessionFactoryBean = new SqlSessionFactoryBean();
         sqlSessionFactoryBean.setDataSource(dataSource);
         sqlSessionFactoryBean.setTypeAliasesPackage(GlobalConstants.DOMAIN_PACKAGE);
+        sqlSessionFactoryBean.setTypeHandlers(axBootContextConfig.getMyBatisTypeHandlers());
         sqlSessionFactoryBean.setTransactionFactory(springManagedTransactionFactory);
         return sqlSessionFactoryBean.getObject();
     }

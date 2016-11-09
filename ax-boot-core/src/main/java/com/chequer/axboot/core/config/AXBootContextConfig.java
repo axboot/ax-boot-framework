@@ -84,19 +84,11 @@ public class AXBootContextConfig implements ApplicationContextAware {
 
     public TypeHandler<?>[] getMyBatisTypeHandlers() {
         return new TypeHandler<?>[]{
-                new ArrayBooleanTypeHandler(),
-                new ArrayDoubleTypeHandler(),
-                new ArrayIntegerTypeHandler(),
-                new ArrayLongTypeHandler(),
-                new ArrayString2dTypeHandler(),
-                new ArrayStringTypeHandler(),
                 new InstantTypeHandler(),
                 new LocalDateTimeTypeHandler(),
                 new LocalDateTypeHandler(),
                 new LocalTimeTypeHandler(),
-                new MapTypeHandler(),
                 new OffsetDateTimeTypeHandler(),
-                new PropertiesTypeHandler(),
                 new ZonedDateTimeTypeHandler()
         };
     }
