@@ -4,7 +4,7 @@ import ${basePackage}.domain.BaseService;
 import ${basePackage}.domain.user.auth.UserAuthService;
 import ${basePackage}.domain.user.role.UserRoleService;
 import ${basePackage}.domain.user.auth.UserAuth;
-import ${basePackage}.domain.user.auth.UserRole;
+import ${basePackage}.domain.user.role.UserRole;
 import com.chequer.axboot.core.parameter.RequestParams;
 import com.querydsl.core.BooleanBuilder;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
