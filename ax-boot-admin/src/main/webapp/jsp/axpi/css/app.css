@@ -331,17 +331,21 @@ pre.prettyprint {
 }
 
 .app-page .app-nav-left {
-    position: absolute;
+    position: fixed;
     top: 0px;
     left: 0px;
     /* Rectangle 10: */
     width: 300px;
+    height: 100%;
     margin: 0px auto 0px auto;
-    padding: 0px 0px;
+    padding: 20px 0px;
     box-sizing: border-box;
     overflow: auto;
     text-align: left;
     box-sizing: border-box;
+    overflow: auto;
+    border-right: 1px solid #e4e5e7;
+    background: #f7f9fa;
 }
 
 .app-page .app-nav-left .nav-block {
@@ -375,7 +379,7 @@ pre.prettyprint {
 }
 
 .app-page .app-nav-left ul:hover, .app-page .app-nav-left ul.open {
-    border-right: 1px solid #f3f3f3;
+
     color: #777b7d;
 }
 
@@ -401,8 +405,7 @@ pre.prettyprint {
 }
 
 .app-page .app-nav-left ul li:hover, .app-page .app-nav-left ul li.open {
-    background: #358CAE;
-    color: #fff;
+    color: #45adf9;
 }
 
 .app-page .app-nav-left ul li.menu-label {

@@ -17,13 +17,13 @@ ax5.dom.ready(function () {
                     tbl.comments = '';
                 }
 
-                var link = "<a href='/modelExtractor?tableName=" + tbl.tableName + "&className=" + tbl.className + "' title='클릭하면 파일을 다운로드 합니다.' target=_blank>";
+                var link = "<a href='/modelExtractor?tableName=" + tbl.tableName + "&className=" + tbl.className + "' title='클릭하면 파일을 다운로드 합니다.'>";
                 po.push('<article class="content">');
-                po.push(link + '	<h3 style="text-decoration: underline;" data-menu-item="' + tbl.tableName + '">' + tbl.tableName + '(' + tbl.className + ') <i class="axi axi-file-download"></i> </h3></a>');
+                po.push(link + '	<h3 style="text-decoration: underline;" data-menu-item="' + tbl.tableName + '">' + tbl.tableName + ' <i class="axi axi-file-download"></i> </h3></a>');
                 po.push('   <p>' + tbl.comments + '</p>');
                 //tbl.json
 
-                po.push('<table>');
+                po.push('<table width="100%">');
                 po.push('<tr valign="top">');
                 po.push('<td>');
 
@@ -109,7 +109,7 @@ ax5.dom.ready(function () {
 
                         link_text = dom.attr(el, "data-value");
                         if (!link_text) link_text = el.innerText;
-                        po.push('<li id="menu-' + el_name + '"><a href="#' + el_name + '">' + link_text + '</a></li>');
+                        po.push('<li id="menu-' + el_name + '"><a href="#' + el_name + '">' + el_name + '</a></li>');
                         prev_tag = el.tagName;
                     }
                 }
@@ -141,7 +141,7 @@ ax5.dom.ready(function () {
                     set_menu_height: function () {
                         window_height = dom(window).height();
                         //dom.css(app_nav_left, {"height":ax5.dom.height(window) - 60});
-                        dom.css(app_nav_left, {"height": ax5.dom.height(window)});
+                        //dom.css(app_nav_left, {"height": ax5.dom.height(window)});
                     },
                     menu_taping: function (opt) {
                         if (typeof opt === "undefined" && nav_left_on) return false;

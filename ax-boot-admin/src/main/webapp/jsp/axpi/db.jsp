@@ -5,18 +5,19 @@
     <style type="text/css">
         pre {
             padding:10px;
-            border:1px solid #bbbbbb;
+            border:1px solid #e4e5e7;
         }
         .scheme-table{
+            width: 100%;
             font-size: 13px;
-            border:1px solid #bbbbbb;
+            border:1px solid #e4e5e7;
             border-collapse: collapse;
         }
         .scheme-table td, .scheme-table th {
-            border:1px solid #ddd;
+            border:1px solid #e4e5e7;
         }
         .scheme-table thead th{
-            //border:1px solid #bbbbbb;
+            //border:1px solid #e4e5e7;
             background: #eee;
         }
         a, u {
@@ -35,11 +36,7 @@
 
     <div class="app-page" style="padding-top:0px;">
         <div class="app-content app-wrap">
-
-            <article class="cover">
-                <h1 data-menu-item="Tables" data-value="List of Tables">Schema Explorer</h1>
-            </article>
-
+            <h1 data-menu-item="" data-value="List of Tables" style="display: none;">Schema Explorer</h1>
             <div id="print-body">
 
             </div>

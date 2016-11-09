@@ -59,7 +59,7 @@
     <jsp:invoke fragment="css"/>
     <jsp:invoke fragment="js"/>
 </head>
-<body class="ax-body ${axbody_class}" onselectstart="return false;">
+<body class="ax-body ${axbody_class}" onselectstart="return false;" style="background: #fff;">
 <div id="ax-frame-root" class="" data-root-container="true">
     <jsp:doBody/>
 

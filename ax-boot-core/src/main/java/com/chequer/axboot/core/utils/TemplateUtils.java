@@ -33,7 +33,7 @@ public class TemplateUtils {
         }
 
         if (servletBasePath.contains("/src")) {
-            servletBasePath.substring(0, servletBasePath.indexOf("/src"));
+            servletBasePath = servletBasePath.substring(0, servletBasePath.indexOf("/src"));
         }
 
         return servletBasePath;
