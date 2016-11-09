@@ -14709,7 +14709,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
          * ax5 version
          * @member {String} ax5.info.version
          */
-        var version = "${VERSION}";
+        var version = "1.3.26";
 
         /**
          * ax5 library path
@@ -17976,7 +17976,7 @@ ax5.ui = function () {
 
     UI.addClass({
         className: "dialog",
-        version: "1.3.24"
+        version: "1.3.26"
     }, function () {
         /**
          * @class ax5dialog
@@ -18515,7 +18515,7 @@ ax5.ui = function () {
 
     UI.addClass({
         className: "mask",
-        version: "1.3.24"
+        version: "1.3.26"
     }, function () {
         /**
          * @class ax5mask
@@ -18846,7 +18846,7 @@ ax5.ui = function () {
 
     UI.addClass({
         className: "toast",
-        version: "1.3.24"
+        version: "1.3.26"
     }, function () {
         /**
          * @class ax5toast
@@ -19210,7 +19210,7 @@ ax5.ui = function () {
 
     UI.addClass({
         className: "modal",
-        version: "1.3.24"
+        version: "${VERSION}"
     }, function () {
         /**
          * @class ax5modal
@@ -19615,6 +19615,24 @@ ax5.ui = function () {
 
                     setTimeout(function () {
                         if (this.activeModal) {
+
+                            // 프레임 제거
+                            var $iframe = this.$["iframe"],
+                                // iframe jQuery Object
+                            iframeObject = $iframe.get(0),
+                                idoc = iframeObject.contentDocument ? iframeObject.contentDocument : iframeObject.contentWindow.document;
+
+                            try {
+                                $(idoc.body).children().each(function () {
+                                    $(this).remove();
+                                });
+                            } catch (e) {}
+                            idoc.innerHTML = "";
+                            $iframe.attr('src', 'about:blank').remove();
+
+                            // force garbarge collection for IE only
+                            window.CollectGarbage && window.CollectGarbage();
+
                             this.activeModal.remove();
                             this.activeModal = null;
                         }
@@ -19836,7 +19854,7 @@ ax5.ui = function () {
 
     UI.addClass({
         className: "calendar",
-        version: "1.3.24"
+        version: "1.3.26"
     }, function () {
 
         /**
@@ -20899,7 +20917,7 @@ ax5.ui = function () {
 
     UI.addClass({
         className: "picker",
-        version: "1.3.24"
+        version: "1.3.26"
     }, function () {
         /**
          * @class ax5picker
@@ -21939,7 +21957,7 @@ jQuery.fn.ax5picker = function () {
 
     UI.addClass({
         className: "formatter",
-        version: "1.3.24"
+        version: "1.3.26"
     }, function () {
         var TODAY = new Date();
         var setSelectionRange = function setSelectionRange(input, pos) {
@@ -22577,7 +22595,7 @@ jQuery.fn.ax5formatter = function () {
 
     UI.addClass({
         className: "menu",
-        version: "1.3.24"
+        version: "1.3.26"
     }, function () {
         /**
          * @class ax5.ui.menu
@@ -23390,7 +23408,7 @@ jQuery.fn.ax5formatter = function () {
 
     UI.addClass({
         className: "select",
-        version: "1.3.24"
+        version: "1.3.26"
     }, function () {
         /**
          * @class ax5select
@@ -24532,7 +24550,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
 
     UI.addClass({
         className: "grid",
-        version: "1.3.24"
+        version: "${VERSION}"
     }, function () {
         /**
          * @class ax5grid
@@ -26347,7 +26365,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
         };
 
         if (_key === "__d-index__") {
-            return _index + 1;
+            return _item["__index"] + 1;
         } else if (_key === "__d-checkbox__") {
             return '<div class="checkBox"></div>';
         } else {
@@ -26425,9 +26443,9 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
             _item[_col.colIndex] = value;
             return value;
         } else if (_key === "__d-index__") {
-            return _index + 1;
+            return '';
         } else if (_key === "__d-checkbox__") {
-            return '&nbsp;';
+            return '';
         } else {
             if (_col.collector) {
                 that = {
@@ -27853,6 +27871,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
             l = _list.length;
         var returnList = [];
         var appendIndex = 0;
+        var dataRealRowCount;
 
         if (this.config.body.grouping) {
             var groupingKeys = U.map(this.bodyGrouping.by, function () {
@@ -27901,6 +27920,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
                         if (_list[i][this.config.columnKeys.selected]) {
                             this.selectedDataIndexs.push(i);
                         }
+                        dataRealRowCount = _list[i]["__index"] = i;
                         returnList.push(_list[i]);
                         appendIndex++;
                     }
@@ -27911,14 +27931,20 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
                 if (_list[i] && _list[i][this.config.columnKeys.deleted]) {
                     this.deletedList.push(_list[i]);
                 } else if (_list[i]) {
+
                     if (_list[i][this.config.columnKeys.selected]) {
                         this.selectedDataIndexs.push(i);
                     }
+                    // __index변수를 추가하여 lineNumber 에 출력합니다. (body getFieldValue 에서 출력함)
+                    dataRealRowCount = _list[i]["__index"] = i;
                     returnList.push(_list[i]);
                 }
             }
         }
 
+        // 원본 데이터의 갯수
+        // grouping은 제외하고 수집됨.
+        this.xvar.dataRealRowCount = dataRealRowCount + 1;
         return returnList;
     };
 
@@ -28947,7 +28973,8 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
         this.$["page"]["status"].html(GRID.tmpl.get("page_status", {
             fromRowIndex: U.number(fromRowIndex + 1, { "money": true }),
             toRowIndex: U.number(toRowIndex, { "money": true }),
-            totalElements: U.number(totalElements, { "money": true })
+            totalElements: U.number(totalElements, { "money": true }),
+            dataRowCount: totalElements !== this.xvar.dataRealRowCount ? this.xvar.dataRealRowCount : false
         }));
     };
 
@@ -29301,33 +29328,35 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
         this.$["scroller"]["vertical-bar"].css({ width: this.config.scroller.size - (margin + 1), left: margin / 2 });
         this.$["scroller"]["horizontal-bar"].css({ height: this.config.scroller.size - (margin + 1), top: margin / 2 });
 
-        this.$["scroller"]["vertical-bar"].bind(GRID.util.ENM["mousedown"], function (e) {
+        this.$["scroller"]["vertical-bar"].on(GRID.util.ENM["mousedown"], function (e) {
             this.xvar.mousePosition = GRID.util.getMousePosition(e);
             scrollBarMover.on.call(this, this.$["scroller"]["vertical"], this.$["scroller"]["vertical-bar"], "vertical");
-        }.bind(this)).bind("dragstart", function (e) {
+        }.bind(this)).on("dragstart", function (e) {
             U.stopEvent(e);
             return false;
         });
-        this.$["scroller"]["vertical"].bind("click", function (e) {
-            if (e.target && e.target.getAttribute("data-ax5grid-scroller") == "vertical") {
+
+        this.$["scroller"]["vertical"].on("click", function (e) {
+            if (e.target.getAttribute("data-ax5grid-scroller") == "vertical") {
                 scrollBarMover.click.call(this, this.$["scroller"]["vertical"], this.$["scroller"]["vertical-bar"], "vertical", e);
             }
         }.bind(this));
 
-        this.$["scroller"]["horizontal-bar"].bind(GRID.util.ENM["mousedown"], function (e) {
+        this.$["scroller"]["horizontal-bar"].on(GRID.util.ENM["mousedown"], function (e) {
             this.xvar.mousePosition = GRID.util.getMousePosition(e);
             scrollBarMover.on.call(this, this.$["scroller"]["horizontal"], this.$["scroller"]["horizontal-bar"], "horizontal");
-        }.bind(this)).bind("dragstart", function (e) {
+        }.bind(this)).on("dragstart", function (e) {
             U.stopEvent(e);
             return false;
         });
-        this.$["scroller"]["horizontal"].bind("click", function (e) {
-            if (e.target && e.target.getAttribute("data-ax5grid-scroller") == "horizontal") {
+
+        this.$["scroller"]["horizontal"].on("click", function (e) {
+            if (e.target.getAttribute("data-ax5grid-scroller") == "horizontal") {
                 scrollBarMover.click.call(this, this.$["scroller"]["horizontal"], this.$["scroller"]["horizontal-bar"], "horizontal", e);
             }
         }.bind(this));
 
-        this.$["container"]["body"].bind('mousewheel DOMMouseScroll', function (e) {
+        this.$["container"]["body"].on('mousewheel DOMMouseScroll', function (e) {
             var E = e.originalEvent;
             var delta = { x: 0, y: 0 };
             if (E.detail) {
@@ -29426,7 +29455,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
     };
 
     var page_status = function page_status() {
-        return "<span>{{fromRowIndex}} - {{toRowIndex}} of {{totalElements}}</span>";
+        return "<span>{{fromRowIndex}} - {{toRowIndex}} of {{totalElements}}{{#dataRowCount}} ({{dataRowCount}}){{/dataRowCount}}</span>";
     };
 
     GRID.tmpl = {
@@ -29850,7 +29879,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
 
     UI.addClass({
         className: "combobox",
-        version: "1.3.24"
+        version: "1.3.26"
     }, function () {
         /**
          * @class ax5combobox
@@ -31530,7 +31559,7 @@ jQuery.fn.ax5combobox = function () {
 
     UI.addClass({
         className: "layout",
-        version: "1.3.24"
+        version: "1.3.26"
     }, function () {
         /**
          * @class ax5layout
@@ -32561,7 +32590,7 @@ jQuery.fn.ax5layout = function () {
 
     UI.addClass({
         className: "binder",
-        version: "1.3.24"
+        version: "1.3.26"
     }, function () {
 
         /**
@@ -33518,7 +33547,7 @@ jQuery.fn.ax5layout = function () {
 
     UI.addClass({
         className: "autocomplete",
-        version: "1.3.24"
+        version: "1.3.26"
     }, function () {
         /**
          * @class ax5autocomplete
