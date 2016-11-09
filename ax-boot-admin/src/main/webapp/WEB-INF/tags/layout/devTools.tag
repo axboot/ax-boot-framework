@@ -17,7 +17,7 @@
     <link rel="shortcut icon" href="<c:url value='/assets/favicon.ico'/>" type="image/x-icon"/>
     <link rel="icon" href="<c:url value='/assets/favicon.ico'/>" type="image/x-icon"/>
 
-    <link rel="stylesheet" type="text/css" href="//axboot-theme:2022/cocker/axboot.css"/>
+    <link rel="stylesheet" type="text/css" href="https://rawgit.com/axboot/ax-boot-themes/master/cocker/axboot.css"/>
 
     <script type="text/javascript">
         var CONTEXT_PATH = "<%=ContextUtil.getContext()%>";
