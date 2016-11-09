@@ -46,7 +46,7 @@ public class ModelExtractController extends BaseController {
             JPAMvcModelExtractedCode jpaMvcModelExtractedCode = modelExtractService.getJpaMvcModel(tableName, className, apiPath);
             modelAndView.addObject("jpaMvcModel", jpaMvcModelExtractedCode);
             modelAndView.addObject("downloadLink", String.format("/modelExtractor/download?tableName=%s&className=%s&apiPath=%s&templateType", tableName, className, apiPath));
-            modelAndView.addObject("copyLink", String.format("/modelExtractor/makeFiles?tableName=%s&className=%s&apiPath=%s&templateType", tableName, className, apiPath));
+            modelAndView.addObject("copyLink", String.format("/modelExtractor/makeFiles?tableName=%s&className=%s&apiPath=%s&templateTypes", tableName, className, apiPath));
         } catch (Exception e) {
             e.printStackTrace();
             modelAndView.addObject("error", e.getMessage());
