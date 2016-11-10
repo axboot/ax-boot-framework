@@ -221,16 +221,16 @@ public class DatabaseInitService {
         menuService.save(Menu.of(4L,"SYSTEM_MANAGER","메뉴관리",1L, 1, 2, "system-config-menu"));
         menuService.save(Menu.of(5L,"SYSTEM_MANAGER","사용자 관리",1L, 1, 3, "system-auth-user"));
         menuService.save(Menu.of(6L,"SYSTEM_MANAGER","에러로그 조회",1L, 1, 4, "system-operation-log"));
-        menuService.save(Menu.of(8L,"SYSTEM_MANAGER","레이아웃 샘플",null, 0, 1, null));
-        menuService.save(Menu.of(10L,"SYSTEM_MANAGER","페이지구조설명",8L, 1, 0, "page-structure"));
-        menuService.save(Menu.of(11L,"SYSTEM_MANAGER","좌우레이아웃",8L, 1, 1, "vertical-layout"));
-        menuService.save(Menu.of(12L,"SYSTEM_MANAGER","상하레이아웃",8L, 1, 2, "grid-form"));
-        menuService.save(Menu.of(13L,"SYSTEM_MANAGER","기본템플릿",8L, 1, 4, "basic"));
-        menuService.save(Menu.of(14L,"SYSTEM_MANAGER","그리드&폼 템플릿",8L, 1, 5, "grid-form"));
-        menuService.save(Menu.of(15L,"SYSTEM_MANAGER","그리드&탭폼 템플릿",8L, 1, 6, "grid-tabform"));
-        menuService.save(Menu.of(16L,"SYSTEM_MANAGER","그리드&모달 템플릿",8L, 1, 7, "grid-modal"));
-        menuService.save(Menu.of(17L,"SYSTEM_MANAGER","탭레이아웃",8L, 1, 3, "tab-layout"));
-        menuService.save(Menu.of(21L,"SYSTEM_MANAGER","AX5UI샘플",8L, 1, 8, "ax5ui-sample"));
+        menuService.save(Menu.of(7L,"SYSTEM_MANAGER","레이아웃 샘플",null, 0, 0, null));
+        menuService.save(Menu.of(9L,"SYSTEM_MANAGER","페이지구조설명",7L, 1, 0, "page-structure"));
+        menuService.save(Menu.of(8L,"SYSTEM_MANAGER","기본템플릿",7L, 1, 1, "basic"));
+        menuService.save(Menu.of(10L,"SYSTEM_MANAGER","좌우레이아웃",7L, 1, 2, "vertical-layout"));
+        menuService.save(Menu.of(11L,"SYSTEM_MANAGER","상하레이아웃",7L, 1, 3, "horizontal-layout"));
+        menuService.save(Menu.of(12L,"SYSTEM_MANAGER","탭레이아웃",7L, 1, 4, "tab-layout"));
+        menuService.save(Menu.of(13L,"SYSTEM_MANAGER","그리드&폼 템플릿",7L, 1, 5, "grid-form"));
+        menuService.save(Menu.of(14L,"SYSTEM_MANAGER","그리드&탭폼 템플릿",7L, 1, 6, "grid-tabform"));
+        menuService.save(Menu.of(15L,"SYSTEM_MANAGER","그리드&모달 템플릿",7L, 1, 7, "grid-modal"));
+        menuService.save(Menu.of(16L,"SYSTEM_MANAGER","AX5UI샘플",7L, 1, 8, "ax5ui-sample"));
 
 
         commonCodeService.save(CommonCode.of("USER_STATUS","계정상태","ACCOUNT_LOCK","잠김",2));
@@ -257,18 +257,16 @@ public class DatabaseInitService {
         authGroupMenuService.save(AuthGroupMenu.of("S0001",4L,"Y","Y","N","N","N","N","N","N","N"));
         authGroupMenuService.save(AuthGroupMenu.of("S0001",5L,"Y","Y","N","N","N","N","N","N","N"));
         authGroupMenuService.save(AuthGroupMenu.of("S0001",6L,"Y","N","N","N","N","N","N","N","N"));
-        authGroupMenuService.save(AuthGroupMenu.of("S0001",7L,"Y","Y","N","N","N","N","N","N","N"));
-        authGroupMenuService.save(AuthGroupMenu.of("S0001",8L,"Y","Y","N","N","N","N","N","N","N"));
+        authGroupMenuService.save(AuthGroupMenu.of("S0001",7L,"Y","N","N","N","N","N","N","N","N"));
+        authGroupMenuService.save(AuthGroupMenu.of("S0001",8L,"N","N","N","N","N","N","N","N","N"));
+        authGroupMenuService.save(AuthGroupMenu.of("S0001",9L,"N","N","N","N","N","N","N","N","N"));
         authGroupMenuService.save(AuthGroupMenu.of("S0001",10L,"N","N","N","N","N","N","N","N","N"));
-        authGroupMenuService.save(AuthGroupMenu.of("S0001",11L,"N","N","N","N","N","N","N","N","N"));
-        authGroupMenuService.save(AuthGroupMenu.of("S0001",12L,"N","N","N","N","N","N","N","N","N"));
+        authGroupMenuService.save(AuthGroupMenu.of("S0001",11L,"Y","Y","N","N","N","N","N","N","N"));
+        authGroupMenuService.save(AuthGroupMenu.of("S0001",12L,"Y","Y","N","N","N","N","N","N","N"));
         authGroupMenuService.save(AuthGroupMenu.of("S0001",13L,"Y","Y","N","N","N","N","N","N","N"));
         authGroupMenuService.save(AuthGroupMenu.of("S0001",14L,"Y","Y","N","N","N","N","N","N","N"));
-        authGroupMenuService.save(AuthGroupMenu.of("S0001",15L,"Y","Y","N","N","N","N","N","N","N"));
-        authGroupMenuService.save(AuthGroupMenu.of("S0001",16L,"Y","Y","N","N","N","N","N","N","N"));
-        authGroupMenuService.save(AuthGroupMenu.of("S0001",17L,"N","N","N","N","N","N","N","N","N"));
-        authGroupMenuService.save(AuthGroupMenu.of("S0001",18L,"N","N","N","N","N","N","N","N","N"));
-        authGroupMenuService.save(AuthGroupMenu.of("S0001",21L,"N","N","N","N","N","N","N","N","N"));
+        authGroupMenuService.save(AuthGroupMenu.of("S0001",15L,"N","N","N","N","N","N","N","N","N"));
+        authGroupMenuService.save(AuthGroupMenu.of("S0001",16L,"N","N","N","N","N","N","N","N","N"));
 
     }
 
