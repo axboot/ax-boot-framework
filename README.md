@@ -131,7 +131,7 @@ Develop enterprise web applications fast as never before with AXBoot Framework
 ## Videos
 
 #### Project Creation & Build & Run
-[![start.axboot.com 동영상 보기](https://raw.githubusercontent.com/axboot/ax-boot-document/master/assets/axboot-youtube-01.jpg)](https://www.youtube.com/watch?v=n3F47DPyD5c)
+[![start.axboot.com 동영상 보기](https://raw.githubusercontent.com/axboot/ax-boot-document/master/assets/axboot-youtube-01.jpg)](https://www.youtube.com/watch?v=7CbEWftw0eo)
 
 #### UI Framework Introduction
 [![start.axboot.com 동영상 보기](https://raw.githubusercontent.com/axboot/ax-boot-document/master/assets/axboot-youtube-02.jpg)](https://www.youtube.com/watch?v=XXXn7Fw_DL8)
