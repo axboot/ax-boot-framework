@@ -233,7 +233,7 @@ fnObj.topMenuView = axboot.viewExtend({
 
         var menuItems = ax5.util.deepCopy(TOP_MENU_DATA);
         menuItems.forEach(function (n) {
-            if(n.children && n.children.length) {
+            if (n.children && n.children.length) {
                 n.name += ' <i class="cqc-chevron-down"></i>';
             }
         });
@@ -509,8 +509,11 @@ fnObj.tabView = axboot.viewExtend({
                 _this.close(this.getAttribute("data-tab-id"));
             }
             else {
-                window["frame-item-" + this.getAttribute("data-tab-id")].location.reload();
-                _this.click(this.getAttribute("data-tab-id"), e);
+                if (e.target.tagName == "I") {
+                    window["frame-item-" + this.getAttribute("data-tab-id")].location.reload();
+                } else {
+                    _this.click(this.getAttribute("data-tab-id"), e);
+                }
             }
         });
 
