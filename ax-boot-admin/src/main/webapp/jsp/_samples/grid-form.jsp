@@ -14,7 +14,6 @@
 
         <ax:page-buttons></ax:page-buttons>
 
-
         <div role="page-header">
             <ax:form name="searchView0">
                 <ax:tbl clazz="ax-search-tbl" minWidth="500px">
@@ -30,7 +29,6 @@
 
         <ax:split-layout name="ax1" orientation="vertical">
             <ax:split-panel width="400" style="padding-right: 10px;">
-
                 <!-- 목록 -->
                 <div class="ax-button-group" data-fit-height-aside="grid-view-01">
                     <div class="left">
@@ -42,11 +40,9 @@
                     </div>
                 </div>
                 <div data-ax5grid="grid-view-01" data-fit-height-content="grid-view-01" style="height: 300px;"></div>
-
             </ax:split-panel>
             <ax:splitter></ax:splitter>
             <ax:split-panel width="*" style="padding-left: 10px;" scroll="scroll">
-
                 <!-- 폼 -->
                 <div class="ax-button-group" role="panel-header">
                     <div class="left">
@@ -61,7 +57,6 @@
                         </button>
                     </div>
                 </div>
-
                 <ax:form name="formView01">
                     <ax:tbl clazz="ax-form-tbl" minWidth="500px">
                         <ax:tr>
@@ -125,7 +120,6 @@
                     <div data-ax5grid="grid-view-02" style="height: 300px;"></div>
 
                 </ax:form>
-
             </ax:split-panel>
         </ax:split-layout>
 

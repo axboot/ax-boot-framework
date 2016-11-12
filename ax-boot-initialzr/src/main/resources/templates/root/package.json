@@ -28,8 +28,6 @@
         "gulp-sourcemaps": "",
         "gulp-util": "*",
         "gulp-clean": "^0.3.2",
-        "css.escape": "",
-        "gulp-mustache": "",
         "bower":"^1.7.9"
     }
 }

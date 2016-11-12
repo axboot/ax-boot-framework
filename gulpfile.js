@@ -9,9 +9,7 @@ var plumber = require('gulp-plumber');
 var notify = require("gulp-notify");
 var babel = require('gulp-babel');
 var spawn = require('child_process').spawn;
-var mustache = require("gulp-mustache");
 var fs = require('fs');
-var CSSEscape = require('CSS.escape');
 
 var CONFIG = JSON.parse(fs.readFileSync('config.json', 'utf8'));
 var ROOT = CONFIG.root;
@@ -95,11 +93,26 @@ gulp.task('axboot-js', function () {
  * SASS
  */
 gulp.task('scss', function () {
+
     gulp.src(ASSETS_SRC + '/scss/axboot.scss')
         .pipe(plumber({errorHandler: errorAlert}))
         .pipe(sass({outputStyle: 'compressed'}))
         //.pipe(sass({outputStyle: 'nested'}))
         .pipe(gulp.dest(ASSETS + '/css'));
+
+});
+
+gulp.task('scss-ie9', function () {
+
+    gulp.src([
+        ASSETS_SRC + '/scss/axboot-01.scss',
+        ASSETS_SRC + '/scss/axboot-02.scss',
+        ASSETS_SRC + '/scss/axboot-03.scss'
+    ])
+        .pipe(plumber({errorHandler: errorAlert}))
+        .pipe(sass({outputStyle: 'compressed'}))
+        .pipe(gulp.dest(ASSETS + '/css'));
+
 });
 
 gulp.task('dashboard-scss', function () {
@@ -125,24 +138,6 @@ gulp.task('import-ax5ui-file', function () {
             .pipe(gulp.dest(ASSETS + '/plugins'));
     }
 
-});
-
-
-gulp.task('language', function () {
-
-    var kor = JSON.parse(fs.readFileSync(ASSETS_SRC + '/lang/kor.json', 'utf8'));
-    kor["@each"] = (function () {
-        var arr = [];
-        for (var k in this) {
-            if (typeof this[k] == "string") arr.push({"@key": CSSEscape(k), "@value": (this[k])});
-            else  arr.push({"@key": CSSEscape(k), "@value": k, "@font": this[k].font});
-        }
-        return arr;
-    }).call(kor);
-
-    gulp.src(ASSETS_SRC + "/lang/lang-kor.css")
-        .pipe(mustache(kor))
-        .pipe(gulp.dest(ASSETS + "/css"));
 });
 
 /**
