@@ -15,5 +15,10 @@
   "sessionCookie": "${sessionCookie}",
   "extendedCss": [
     "/assets/css/axboot.css"
+  ],
+  "extendedCssforIE9": [
+    "/assets/css/axboot-01.css",
+    "/assets/css/axboot-02.css",
+    "/assets/css/axboot-03.css"
   ]
 }
