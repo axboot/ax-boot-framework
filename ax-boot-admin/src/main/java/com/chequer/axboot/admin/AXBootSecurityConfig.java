@@ -12,6 +12,7 @@ import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
+import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -29,6 +30,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
 @EnableWebSecurity
+@EnableGlobalMethodSecurity(securedEnabled = true, proxyTargetClass = true)
 @Configuration
 public class AXBootSecurityConfig extends WebSecurityConfigurerAdapter {
 
@@ -90,7 +92,7 @@ public class AXBootSecurityConfig extends WebSecurityConfigurerAdapter {
                 .logout().logoutUrl(LOGOUT_API).deleteCookies(GlobalConstants.ADMIN_AUTH_TOKEN_KEY, GlobalConstants.LAST_NAVIGATED_PAGE).logoutSuccessHandler(new LogoutSuccessHandler(LOGIN_PAGE))
                 .and()
 
-                .exceptionHandling().authenticationEntryPoint(new AXBootAuthenticationEntryPoint()).accessDeniedHandler(new AdminAccessDeniedHandler())
+                .exceptionHandling().authenticationEntryPoint(new AXBootAuthenticationEntryPoint())
                 .and()
 
                 .addFilterBefore(new AXBootLoginFilter(LOGIN_API, tokenAuthenticationService, userService, authenticationManager(), new AXBootAuthenticationEntryPoint()), UsernamePasswordAuthenticationFilter.class)
@@ -136,13 +138,6 @@ public class AXBootSecurityConfig extends WebSecurityConfigurerAdapter {
             CookieUtils.deleteCookie(GlobalConstants.LAST_NAVIGATED_PAGE);
             request.getSession().invalidate();
             super.onLogoutSuccess(request, response, authentication);
-        }
-    }
-
-    class AdminAccessDeniedHandler implements AccessDeniedHandler {
-        @Override
-        public void handle(HttpServletRequest request, HttpServletResponse response, AccessDeniedException accessDeniedException) throws IOException, ServletException {
-            System.out.println(request.getAuthType());
         }
     }
 }

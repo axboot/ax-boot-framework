@@ -1,6 +1,7 @@
 <%@ tag import="com.chequer.axboot.core.utils.ContextUtil" %>
 <%@ tag import="com.chequer.axboot.admin.utils.CommonCodeUtils" %>
 <%@ tag import="com.chequer.axboot.core.utils.PhaseUtils" %>
+<%@ taglib prefix="ax" tagdir="/WEB-INF/tags" %>
 <%@ tag language="java" pageEncoding="UTF-8" body-content="scriptless" %>
 <%
     String commonCodeJson = CommonCodeUtils.getAllByJson();

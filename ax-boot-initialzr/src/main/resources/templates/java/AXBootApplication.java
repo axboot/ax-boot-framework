@@ -8,6 +8,6 @@ import org.springframework.context.annotation.PropertySource;
 @Configuration
 @ComponentScan
 @EnableAutoConfiguration
-@PropertySource(value = {"classpath:spring-boot.properties", "classpath:axboot-common.properties", "classpath:axboot-${spring.profiles.active:local}.properties"})
+@PropertySource(value = {"classpath:axboot-common.properties", "classpath:axboot-${spring.profiles.active:local}.properties"})
 public class AXBootApplication {
 }

@@ -129,7 +129,7 @@ public class AXBootContextConfig implements ApplicationContextAware {
 
     @Data
     public static class Modeler {
-        private boolean output = true;
+        private boolean output = false;
 
         @Getter(AccessLevel.NONE)
         private String outputDir;
@@ -208,7 +208,7 @@ public class AXBootContextConfig implements ApplicationContextAware {
             public HibernateJpaVendorAdapter getHibernateJpaVendorAdapter() {
                 HibernateJpaVendorAdapter vendorAdapter = new HibernateJpaVendorAdapter();
 
-                switch (databaseType) {
+                switch (databaseType.toLowerCase()) {
                     case AXBootTypes.DatabaseType.MSSQL:
                         vendorAdapter.setDatabase(Database.SQL_SERVER);
                         break;
@@ -231,7 +231,7 @@ public class AXBootContextConfig implements ApplicationContextAware {
                 }
 
                 if (StringUtils.isEmpty(dialect)) {
-                    switch (databaseType) {
+                    switch (databaseType.toLowerCase()) {
                         case AXBootTypes.DatabaseType.MSSQL:
                             vendorAdapter.setDatabase(Database.SQL_SERVER);
                             vendorAdapter.setDatabasePlatform(SQLServer2005Dialect.class.getName());

@@ -12,6 +12,7 @@ import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
+import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -30,6 +31,7 @@ import java.io.IOException;
 
 @EnableWebSecurity
 @Configuration
+@EnableGlobalMethodSecurity(securedEnabled = true, proxyTargetClass = true)
 public class AXBootSecurityConfig extends WebSecurityConfigurerAdapter {
 
     public static final String LOGIN_API = "/api/login";
