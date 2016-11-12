@@ -26,8 +26,6 @@
         "babel-preset-es2015": "",
         "gulp-sourcemaps": "",
         "gulp-util": "*",
-        "gulp-clean": "^0.3.2",
-        "css.escape": "",
-        "gulp-mustache": ""
+        "gulp-clean": "^0.3.2"
     }
 }

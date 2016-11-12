@@ -20,8 +20,10 @@
     <link rel="icon" href="<c:url value='/assets/favicon.ico'/>" type="image/x-icon"/>
 
     <c:forEach var="css" items="${config.extendedCss}">
-        <link rel="stylesheet" type="text/css" href="<c:url value='${css}'/>"/>
-    </c:forEach>
+        <link rel="stylesheet" type="text/css" href="<c:url value='${css}'/>"/></c:forEach>
+    <!--[if lt IE 10]><c:forEach var="css" items="${config.extendedCssforIE9}">
+    <link rel="stylesheet" type="text/css" href="<c:url value='${css}'/>"/></c:forEach>
+    <![endif]-->
 
     <script type="text/javascript">
         var CONTEXT_PATH = "<%=ContextUtil.getContext()%>";

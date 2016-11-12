@@ -1,0 +1,12 @@
+@import "axboot-inc";
+
+//== pages
+.ax-body {
+    @import "pages/login";
+    @import "pages/frame-set";
+    @import "pages/dev-tools";
+    @import "pages/base";
+    @import "pages/modal-base";
+    @import "pages/error-page";
+    @import "pages/dashboard";
+}

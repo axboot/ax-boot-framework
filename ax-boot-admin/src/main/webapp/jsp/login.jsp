@@ -32,6 +32,7 @@
                 background-size: cover;
                 color: #ccc;
             }
+
         </style>
     </jsp:attribute>
 
@@ -84,7 +85,7 @@
     <jsp:body>
         <ax:flex-layout valign="middle" align="center" style="width:100%;height:100%;">
             <div>
-                <img src="${pageContext.request.contextPath}${config.logo.login}" class="img-logo">
+                <img src="${pageContext.request.contextPath}${config.logo.login}" class="img-logo" />
             </div>
 
             <div class="panel">
