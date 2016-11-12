@@ -31,6 +31,9 @@ Develop enterprise web applications fast as never before with AXBoot Framework
 [AXBoot UI Framework](http://ax5.io)
 > AXBoot UI Framework Documentation (now, English only)
 
+[AXBoot User Group](https://www.facebook.com/groups/axboot/)
+> AXBoot Facebook User Group (Q&A or Communication)
+
 
 ## Environment
 
