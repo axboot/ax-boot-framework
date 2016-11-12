@@ -89,41 +89,40 @@
             </div>
 
             <div class="panel">
-                <div class="panel-heading">ID와 Password를 입력해주세요.</div>
+                <div class="panel-heading"><ax:message code="axboot.admin.login.guide.message"/></div>
                 <div class="panel-body">
                     <form name="login-form" class="" method="post" action="/api/login" onsubmit="return fnObj.login();" autocomplete="off">
 
                         <div class="form-group">
-                            <label for="userCd"><i class="cqc-new-message"></i> ID</label>
+                            <label for="userCd"><i class="cqc-new-message"></i> <ax:message code="axboot.admin.id"/></label>
                             <input type="text" name="userCd" id="userCd" value="system" class="form-control ime-false" placeholder=""/>
                         </div>
 
                         <div class="form-group">
-                            <label for="userPs"><i class="cqc-key"></i> Password</label>
+                            <label for="userPs"><i class="cqc-key"></i> <ax:message code="axboot.admin.password"/></label>
                             <input type="password" name="userPs" id="userPs" value="1234" class="form-control ime-false" placeholder=""/>
                         </div>
 
                         <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
 
                         <div class="ax-padding-box" style="text-align: right;">
-                            <button type="submit" class="btn">&nbsp;&nbsp;로그인&nbsp;&nbsp;</button>
+                            <button type="submit" class="btn">&nbsp;&nbsp;<ax:message code="axboot.admin.login"/>&nbsp;&nbsp;</button>
                         </div>
 
                     </form>
                 </div>
                 <ul class="list-group">
                     <li class="list-group-item">
-                        <a href="#">아이디 찾기</a>
+                        <a href="#"><ax:message code="axboot.admin.find.id"/></a>
                         &nbsp;
                         &nbsp;
-                        <a href="#">비밀번호 찾기</a>
+                        <a href="#"><ax:message code="axboot.admin.find.password"/></a>
                     </li>
-
                 </ul>
             </div>
 
             <div class="txt-copyrights">
-                AXBOOT 2.0 - Full Stack Web Application Framework © 2010-2016
+                ${config.copyrights}
             </div>
 
             <div class="txt-good-words" id="good_words">

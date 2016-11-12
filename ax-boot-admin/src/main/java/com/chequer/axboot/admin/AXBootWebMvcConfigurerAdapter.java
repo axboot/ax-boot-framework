@@ -18,7 +18,10 @@ import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateDeserializer;
 import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateTimeDeserializer;
 import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateSerializer;
 import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateTimeSerializer;
+import org.springframework.beans.BeansException;
 import org.springframework.boot.web.servlet.FilterRegistrationBean;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.ApplicationContextAware;
 import org.springframework.context.MessageSource;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -52,7 +55,9 @@ import java.util.List;
 import java.util.Locale;
 
 @Configuration
-public class AXBootWebMvcConfigurerAdapter extends WebMvcConfigurerAdapter {
+public class AXBootWebMvcConfigurerAdapter extends WebMvcConfigurerAdapter implements ApplicationContextAware {
+    private ApplicationContext applicationContext;
+
     @Override
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
         registry.addResourceHandler("/assets/**").addResourceLocations("/assets/");
@@ -73,7 +78,7 @@ public class AXBootWebMvcConfigurerAdapter extends WebMvcConfigurerAdapter {
 
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
-        registry.addInterceptor(new LocaleChangeInterceptor());
+        registry.addInterceptor(localeChangeInterceptor());
     }
 
     @Override
@@ -172,13 +177,23 @@ public class AXBootWebMvcConfigurerAdapter extends WebMvcConfigurerAdapter {
     }
 
     @Bean
+    public LocaleChangeInterceptor localeChangeInterceptor() {
+        LocaleChangeInterceptor localeChangeInterceptor = new LocaleChangeInterceptor();
+        localeChangeInterceptor.setParamName("language");
+        return localeChangeInterceptor;
+    }
+
+    @Bean
     public MessageSource messageSource() {
         ReloadableResourceBundleMessageSource resourceBundleMessageSource = new ReloadableResourceBundleMessageSource();
         resourceBundleMessageSource.setBasename("classpath:messages/messages");
         resourceBundleMessageSource.setDefaultEncoding("UTF-8");
         resourceBundleMessageSource.setFallbackToSystemLocale(true);
 
-        if (PhaseUtils.isDevelopmentMode()) {
+        String[] activeProfiles = applicationContext.getEnvironment().getActiveProfiles();
+
+        if (activeProfiles != null && activeProfiles.length > 0 && activeProfiles[0].equals("local") ||
+                Boolean.parseBoolean(System.getProperty("axboot.profiles.development"))) {
             resourceBundleMessageSource.setCacheSeconds(1);
         }
 
@@ -192,5 +207,10 @@ public class AXBootWebMvcConfigurerAdapter extends WebMvcConfigurerAdapter {
         cookieLocaleResolver.setCookiePath("/");
         cookieLocaleResolver.setDefaultLocale(new Locale("ko_KR"));
         return cookieLocaleResolver;
+    }
+
+    @Override
+    public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {
+        this.applicationContext = applicationContext;
     }
 }

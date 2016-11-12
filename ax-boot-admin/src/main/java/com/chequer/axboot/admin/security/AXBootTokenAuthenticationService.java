@@ -13,6 +13,8 @@ import com.chequer.axboot.core.session.JWTSessionHandler;
 import com.chequer.axboot.core.utils.*;
 import com.chequer.axboot.core.vo.ScriptSessionVO;
 import org.apache.commons.io.FilenameUtils;
+import org.apache.commons.lang3.StringUtils;
+import org.apache.tomcat.jni.Global;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -68,6 +70,11 @@ public class AXBootTokenAuthenticationService {
         final String progCd = FilenameUtils.getBaseName(request.getServletPath());
         final Long menuId = requestUtils.getLong("menuId");
         final String requestUri = request.getRequestURI();
+        final String language = requestUtils.getString(GlobalConstants.LANGUAGE_PARAMETER_KEY, "");
+
+        if (StringUtils.isNotEmpty(language)) {
+            CookieUtils.addCookie(response, GlobalConstants.LANGUAGE_COOKIE_KEY, language);
+        }
 
         if (token == null) {
             return deleteCookieAndReturnNullAuthentication(request, response);

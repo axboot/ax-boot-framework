@@ -51,22 +51,23 @@
             <div class="ax-split-panel text-align-right">
 
                 <div class="ax-split-col ax-frame-user-info">
+                    <a href="/?language=en">English</a> / <a href="/?language=ko">Korean</a>
                     <c:if test="${isDevelopmentMode}">
                         <!-- 개발자 툴 연결 아이콘 -->
                         <div class="ax-split-panel">
-                            <a href="#ax" onclick="window.open('/jsp/system/system-dev-tools.jsp');"><i class="cqc-tools"></i> 개발자도구</a>
+                            <a href="#ax" onclick="window.open('/jsp/system/system-dev-tools.jsp');"><i class="cqc-tools"></i> <ax:message code="axboot.devtools"/></a>
                         </div>
                         <div class="panel-split"></div>
                     </c:if>
                     <div class="ax-split-panel">
-                        <a href="#ax" onclick="fcObj.open_user_info();">${loginUser.userNm}</a>님 로그인
+                        <a href="#ax" onclick="fcObj.open_user_info();"><ax:message code="axboot.admin.login.status.message" arguments="${loginUser.userNm}"/></a>
                     </div>
                     <div class="panel-split"></div>
                     <div class="ax-split-panel">
 
                         <a href="#ax" class="ax-frame-logout" onclick="location.href = '${pageContext.request.contextPath}/api/logout';">
                             <i class="cqc-log-out"></i>
-                            로그아웃
+                            <ax:message code="axboot.admin.logout"/>
                         </a>
                     </div>
                 </div>
