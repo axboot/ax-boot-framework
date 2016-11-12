@@ -104,17 +104,11 @@ gulp.task('scss', function () {
 
 gulp.task('scss-ie9', function () {
 
-    gulp.src(ASSETS_SRC + '/scss/axboot-01.scss')
-        .pipe(plumber({errorHandler: errorAlert}))
-        .pipe(sass({outputStyle: 'compressed'}))
-        .pipe(gulp.dest(ASSETS + '/css'));
-
-    gulp.src(ASSETS_SRC + '/scss/axboot-02.scss')
-        .pipe(plumber({errorHandler: errorAlert}))
-        .pipe(sass({outputStyle: 'compressed'}))
-        .pipe(gulp.dest(ASSETS + '/css'));
-
-    gulp.src(ASSETS_SRC + '/scss/axboot-03.scss')
+    gulp.src([
+        ASSETS_SRC + '/scss/axboot-01.scss',
+        ASSETS_SRC + '/scss/axboot-02.scss',
+        ASSETS_SRC + '/scss/axboot-03.scss'
+    ])
         .pipe(plumber({errorHandler: errorAlert}))
         .pipe(sass({outputStyle: 'compressed'}))
         .pipe(gulp.dest(ASSETS + '/css'));

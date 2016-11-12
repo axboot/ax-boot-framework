@@ -1485,7 +1485,7 @@ axboot.gridBuilder = function () {
 
             for (var i = 0, l = columns.length; i < l; i++) {
                 if (axboot.gridBuilder.preDefineColumns[columns[i].key]) {
-                    columns[i] = $.extend({}, columns[i], axboot.gridBuilder.preDefineColumns[columns[i].key]);
+                    columns[i] = $.extend({}, axboot.gridBuilder.preDefineColumns[columns[i].key], columns[i]);
                 }
                 if (columns[i].columns) {
                     columns[i].columns = convertColumn(columns[i].columns);
