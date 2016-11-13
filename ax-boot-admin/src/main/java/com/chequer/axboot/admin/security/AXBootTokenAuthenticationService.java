@@ -14,7 +14,6 @@ import com.chequer.axboot.core.utils.*;
 import com.chequer.axboot.core.vo.ScriptSessionVO;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.lang3.StringUtils;
-import org.apache.tomcat.jni.Global;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
