@@ -17,10 +17,15 @@ import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateDeserializer;
 import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateTimeDeserializer;
 import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateSerializer;
 import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateTimeSerializer;
+import org.springframework.beans.BeansException;
 import org.springframework.boot.web.servlet.FilterRegistrationBean;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.ApplicationContextAware;
+import org.springframework.context.MessageSource;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Primary;
+import org.springframework.context.support.ReloadableResourceBundleMessageSource;
 import org.springframework.core.Ordered;
 import org.springframework.data.web.PageableHandlerMethodArgumentResolver;
 import org.springframework.http.converter.HttpMessageConverter;
@@ -28,11 +33,15 @@ import org.springframework.http.converter.StringHttpMessageConverter;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
 import org.springframework.web.accept.ContentNegotiationManager;
 import org.springframework.web.method.support.HandlerMethodArgumentResolver;
+import org.springframework.web.servlet.LocaleResolver;
 import org.springframework.web.servlet.View;
 import org.springframework.web.servlet.ViewResolver;
 import org.springframework.web.servlet.config.annotation.DefaultServletHandlerConfigurer;
+import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
+import org.springframework.web.servlet.i18n.CookieLocaleResolver;
+import org.springframework.web.servlet.i18n.LocaleChangeInterceptor;
 import org.springframework.web.servlet.view.ContentNegotiatingViewResolver;
 import org.springframework.web.servlet.view.InternalResourceViewResolver;
 
@@ -42,15 +51,44 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 @Configuration
-public class AXBootWebMvcConfigurerAdapter extends WebMvcConfigurerAdapter {
+public class AXBootWebMvcConfigurerAdapter extends WebMvcConfigurerAdapter implements ApplicationContextAware {
+    private ApplicationContext applicationContext;
+
     @Override
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
         registry.addResourceHandler("/assets/**").addResourceLocations("/assets/");
         registry.addResourceHandler("/axboot.config.js").addResourceLocations("/axboot.config.js");
         registry.addResourceHandler("/layout/**").addResourceLocations("/layout/");
         registry.addResourceHandler("/favicon.ico").addResourceLocations("/static/favicon.ico");
+    }
+
+    @Override
+    public void addArgumentResolvers(List<HandlerMethodArgumentResolver> argumentResolvers) {
+        PageableHandlerMethodArgumentResolver pageableHandlerMethodArgumentResolver = new PageableHandlerMethodArgumentResolver();
+        pageableHandlerMethodArgumentResolver.setPageParameterName("pageNumber");
+        pageableHandlerMethodArgumentResolver.setSizeParameterName("pageSize");
+
+        argumentResolvers.add(new RequestParamsArgumentResolver());
+        argumentResolvers.add(pageableHandlerMethodArgumentResolver);
+    }
+
+    @Override
+    public void addInterceptors(InterceptorRegistry registry) {
+        registry.addInterceptor(localeChangeInterceptor());
+    }
+
+    @Override
+    public void configureDefaultServletHandling(DefaultServletHandlerConfigurer configurer) {
+        configurer.enable();
+    }
+
+    @Override
+    public void configureMessageConverters(List<HttpMessageConverter<?>> converters) {
+        converters.add(stringHttpMessageConverter());
+        converters.add(mappingJackson2HttpMessageConverter());
     }
 
     @Bean
@@ -108,22 +146,6 @@ public class AXBootWebMvcConfigurerAdapter extends WebMvcConfigurerAdapter {
         return contentNegotiatingViewResolver;
     }
 
-    @Override
-    public void addArgumentResolvers(List<HandlerMethodArgumentResolver> argumentResolvers) {
-        PageableHandlerMethodArgumentResolver pageableHandlerMethodArgumentResolver = new PageableHandlerMethodArgumentResolver();
-        pageableHandlerMethodArgumentResolver.setPageParameterName("pageNumber");
-        pageableHandlerMethodArgumentResolver.setSizeParameterName("pageSize");
-
-        argumentResolvers.add(new RequestParamsArgumentResolver());
-        argumentResolvers.add(pageableHandlerMethodArgumentResolver);
-    }
-
-    @Override
-    public void configureDefaultServletHandling(DefaultServletHandlerConfigurer configurer) {
-        configurer.enable();
-        super.configureDefaultServletHandling(configurer);
-    }
-
     @Bean
     public FilterRegistrationBean multiReadableHttpServletRequestFilterRegistrationBean() {
         FilterRegistrationBean registrationBean = new FilterRegistrationBean();
@@ -153,9 +175,41 @@ public class AXBootWebMvcConfigurerAdapter extends WebMvcConfigurerAdapter {
         return new StringHttpMessageConverter(Charset.forName("UTF-8"));
     }
 
+    @Bean
+    public LocaleChangeInterceptor localeChangeInterceptor() {
+        LocaleChangeInterceptor localeChangeInterceptor = new LocaleChangeInterceptor();
+        localeChangeInterceptor.setParamName("language");
+        return localeChangeInterceptor;
+    }
+
+    @Bean
+    public MessageSource messageSource() {
+        ReloadableResourceBundleMessageSource resourceBundleMessageSource = new ReloadableResourceBundleMessageSource();
+        resourceBundleMessageSource.setBasename("classpath:messages/messages");
+        resourceBundleMessageSource.setDefaultEncoding("UTF-8");
+        resourceBundleMessageSource.setFallbackToSystemLocale(true);
+
+        String[] activeProfiles = applicationContext.getEnvironment().getActiveProfiles();
+
+        if (activeProfiles != null && activeProfiles.length > 0 && activeProfiles[0].equals("local") ||
+                Boolean.parseBoolean(System.getProperty("axboot.profiles.development"))) {
+            resourceBundleMessageSource.setCacheSeconds(1);
+        }
+
+        return resourceBundleMessageSource;
+    }
+
+    @Bean
+    public LocaleResolver localeResolver() {
+        CookieLocaleResolver cookieLocaleResolver = new CookieLocaleResolver();
+        cookieLocaleResolver.setCookieName("language");
+        cookieLocaleResolver.setCookiePath("/");
+        cookieLocaleResolver.setDefaultLocale(new Locale("ko_KR"));
+        return cookieLocaleResolver;
+    }
+
     @Override
-    public void configureMessageConverters(List<HttpMessageConverter<?>> converters) {
-        converters.add(stringHttpMessageConverter());
-        converters.add(mappingJackson2HttpMessageConverter());
+    public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {
+        this.applicationContext = applicationContext;
     }
 }

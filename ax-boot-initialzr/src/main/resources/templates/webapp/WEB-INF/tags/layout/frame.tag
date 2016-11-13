@@ -1,6 +1,7 @@
 <%@ tag import="${basePackage}.utils.CommonCodeUtils" %>
 <%@ tag import="com.chequer.axboot.core.utils.ContextUtil" %>
 <%@ tag import="com.chequer.axboot.core.utils.PhaseUtils" %>
+<%@ taglib prefix="ax" tagdir="/WEB-INF/tags" %>
 <%@ tag language="java" pageEncoding="UTF-8" body-content="scriptless" %>
 <%
     String commonCodeJson = CommonCodeUtils.getAllByJson();
@@ -53,19 +54,19 @@
                     <c:if test="${isDevelopmentMode}">
                         <!-- 개발자 툴 연결 아이콘 -->
                         <div class="ax-split-panel">
-                            <a href="#ax" onclick="window.open('/jsp/system/system-dev-tools.jsp');"><i class="cqc-tools"></i> 개발자도구</a>
+                            <a href="#ax" onclick="window.open('/jsp/system/system-dev-tools.jsp');"><i class="cqc-tools"></i> <ax:message code="axboot.devtools"/></a>
                         </div>
                         <div class="panel-split"></div>
                     </c:if>
                     <div class="ax-split-panel">
-                        <a href="#ax" onclick="fcObj.open_user_info();">${loginUser.userNm}</a>님 로그인
+                        <a href="#ax" onclick="fcObj.open_user_info();"><ax:message code="axboot.admin.login.status.message" arguments="${loginUser.userNm}"/></a>
                     </div>
                     <div class="panel-split"></div>
                     <div class="ax-split-panel">
 
                         <a href="#ax" class="ax-frame-logout" onclick="location.href = '${pageContext.request.contextPath}/api/logout';">
                             <i class="cqc-log-out"></i>
-                            로그아웃
+                            <ax:message code="axboot.admin.logout"/>
                         </a>
                     </div>
                 </div>
