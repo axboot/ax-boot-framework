@@ -38,7 +38,14 @@ public class MenuService extends BaseService<Menu, Long> {
             builder.and(qMenu.progCd.eq(progCd));
         }
 
-        List<Menu> menuList = select().from(qMenu).where(builder).orderBy(qMenu.level.asc(), qMenu.sort.asc()).fetch();
+        List<Menu> menuList = select()
+                .from(qMenu)
+                .leftJoin(qMenu.program, qProgram)
+                .fetchJoin()
+                .where(builder)
+                .orderBy(qMenu.level.asc(), qMenu.sort.asc())
+                .fetch();
+
 
         if (returnType.equals("hierarchy")) {
             List<Menu> hierarchyList = new ArrayList<>();

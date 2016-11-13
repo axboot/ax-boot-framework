@@ -153,6 +153,21 @@ public class StatementMethodInterceptor implements MethodInterceptor {
             }
         } catch (Exception exception) {
             if (sqlExecutionInfo != null) {
+
+                StatementExecutionInfo statementExecutionInfo = statementInfoMap.get(invocation.getThis());
+
+                if (logger.isDebugEnabled()) {
+                    String sqlLogging = getLoggingSql(statementExecutionInfo, sqlExecutionInfo, invocation);
+                    if (statementExecutionInfo.getBatchCount() > 0) {
+                        logger.debug("[batching/{}]\n{}\n", statementExecutionInfo.getBatchCount(), sqlLogging);
+                    } else {
+                        logger.debug("[query]\n{}\n", sqlLogging);
+                    }
+                } else if (logger.isInfoEnabled() && sqlOutput) {
+                    String sqlLogging = getLoggingSql(statementExecutionInfo, sqlExecutionInfo, invocation);
+                    logger.info("\n[query] - {} - {}\n", LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")), sqlLogging);
+                }
+
                 boolean timeoutException = false;
                 switch (databaseType) {
                     case AXBootTypes.DatabaseType.MYSQL:
