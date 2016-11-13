@@ -1,4 +1,4 @@
-package com.chequer.axboot.core.logback;
+package com.chequer.axboot.core.logging;
 
 import ch.qos.logback.classic.spi.ILoggingEvent;
 import ch.qos.logback.classic.spi.StackTraceElementProxy;
@@ -58,7 +58,7 @@ public class AXBootLogbackAppender extends UnsynchronizedAppenderBase<ILoggingEv
             AXBootErrorLog errorLog = getErrorLog(loggingEvent);
 
             if (axBootLoggingConfig.getDatabase().isEnabled()) {
-                if (axBootLoggingConfig.getSlack().isEnabled()) {
+                if (axBootLoggingConfig.getSlack().isEnabled() || axBootLoggingConfig.getJandi().isEnable()) {
                     errorLog.setAlertYn("Y");
                 }
                 toDatabase(errorLog);
@@ -67,7 +67,15 @@ public class AXBootLogbackAppender extends UnsynchronizedAppenderBase<ILoggingEv
             if (axBootLoggingConfig.getSlack().isEnabled()) {
                 toSlack(errorLog);
             }
+
+            if (axBootLoggingConfig.getJandi().isEnable()) {
+                toJandi(errorLog);
+            }
         }
+    }
+
+    private void toJandi(AXBootErrorLog errorLog) {
+
     }
 
     private void toSlack(AXBootErrorLog errorLog) {

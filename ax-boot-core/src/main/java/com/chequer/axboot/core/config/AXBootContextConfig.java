@@ -109,6 +109,8 @@ public class AXBootContextConfig implements ApplicationContextAware {
 
         private Slack slack;
 
+        private Jandi jandi;
+
         private Database database;
 
         private String adminUrl;
@@ -118,6 +120,12 @@ public class AXBootContextConfig implements ApplicationContextAware {
             private boolean enabled = false;
             private String webHookUrl = "";
             private String channel = "";
+        }
+
+        @Data
+        public static class Jandi {
+            private boolean enable = false;
+            private String webHookUrl = "";
         }
 
         @Data

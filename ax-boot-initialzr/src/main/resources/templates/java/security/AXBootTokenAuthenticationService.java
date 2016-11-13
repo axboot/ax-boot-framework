@@ -80,22 +80,24 @@ public class AXBootTokenAuthenticationService {
         }
 
         if (!requestUri.startsWith(ContextUtil.getBaseApiPath())) {
-            Menu menu = menuService.findOne(menuId);
+            if(menuId > 0) {
+                Menu menu = menuService.findOne(menuId);
 
-            if (menu != null) {
-                Program program = menu.getProgram();
+                if (menu != null) {
+                    Program program = menu.getProgram();
 
-                if (program != null) {
-                    requestUtils.setAttribute("program", program);
-                    requestUtils.setAttribute("pageName", menu.getMenuNm());
-                    requestUtils.setAttribute("pageRemark", program.getRemark());
+                    if (program != null) {
+                        requestUtils.setAttribute("program", program);
+                        requestUtils.setAttribute("pageName", menu.getMenuNm());
+                        requestUtils.setAttribute("pageRemark", program.getRemark());
 
-                    if (program.getAuthCheck().equals(AXBootTypes.Used.YES.getLabel())) {
-                        AuthGroupMenu authGroupMenu = authGroupMenuService.getCurrentAuthGroupMenu(menuId, user);
-                        if (authGroupMenu == null) {
-                            throw new AccessDeniedException("Access is denied");
+                        if (program.getAuthCheck().equals(AXBootTypes.Used.YES.getLabel())) {
+                            AuthGroupMenu authGroupMenu = authGroupMenuService.getCurrentAuthGroupMenu(menuId, user);
+                            if (authGroupMenu == null) {
+                                throw new AccessDeniedException("Access is denied");
+                            }
+                            requestUtils.setAttribute("authGroupMenu", authGroupMenu);
                         }
-                        requestUtils.setAttribute("authGroupMenu", authGroupMenu);
                     }
                 }
             }

@@ -46,7 +46,7 @@ public class ModelExtractController extends BaseController {
         try {
             JPAMvcModelExtractedCode jpaMvcModelExtractedCode = modelExtractService.getJpaMvcModel(tableName, className, apiPath);
             modelAndView.addObject("jpaMvcModel", jpaMvcModelExtractedCode);
-            modelAndView.addObject("downloadLink", String.format("/modelExtractor/download?tableName=%s&className=%s&apiPath=%s&templateType", tableName, className, apiPath));
+            modelAndView.addObject("downloadLink", String.format("/modelExtractor/download?tableName=%s&className=%s&templateType", tableName, className));
             modelAndView.addObject("copyLink", String.format("/modelExtractor/makeFiles?tableName=%s&apiPath=%s", tableName, className, apiPath));
         } catch (Exception e) {
             e.printStackTrace();
@@ -95,10 +95,9 @@ public class ModelExtractController extends BaseController {
             @RequestParam(defaultValue = "") String packageName,
             @RequestParam(defaultValue = "") String tableName,
             @RequestParam(defaultValue = "") String className,
-            @RequestParam(required = false, defaultValue = "") String apiPath,
             @RequestParam(defaultValue = "") List<String> templateTypes) throws IOException {
 
-        modelExtractService.makeFiles(templateTypes, tableName, className, apiPath, packageName);
+        modelExtractService.makeFiles(templateTypes, tableName, className, packageName);
 
         return ok();
     }

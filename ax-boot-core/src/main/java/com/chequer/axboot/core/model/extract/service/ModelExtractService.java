@@ -103,7 +103,10 @@ public class ModelExtractService {
         return null;
     }
 
-    public void makeFiles(List<String> templateTypes, String tableName, String className, String apiPath, String packageName) {
+    public void makeFiles(List<String> templateTypes, String tableName, String className, String packageName) {
+        String apiPath = className.toLowerCase();
+        className = Character.toUpperCase(className.charAt(0)) + className.substring(1);
+
         for (String templateType : templateTypes) {
             Table table = jdbcMetadataService.getTable(tableName);
 
