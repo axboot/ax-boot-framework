@@ -13,24 +13,32 @@
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
-    <meta name="viewport"
-          content="width=device-width, user-scalable=no, initial-scale=1, maximum-scale=1, minimum-scale=1"/>
+    <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1, maximum-scale=1, minimum-scale=1"/>
     <meta name="apple-mobile-web-app-capable" content="yes">
     <title>${config.title}</title>
     <link rel="shortcut icon" href="<c:url value='/assets/favicon.ico'/>" type="image/x-icon"/>
     <link rel="icon" href="<c:url value='/assets/favicon.ico'/>" type="image/x-icon"/>
 
     <c:forEach var="css" items="${config.extendedCss}">
-        <link rel="stylesheet" type="text/css" href="<c:url value='${css}'/>"/></c:forEach>
-    <!--[if lt IE 10]><c:forEach var="css" items="${config.extendedCssforIE9}">
-    <link rel="stylesheet" type="text/css" href="<c:url value='${css}'/>"/></c:forEach>
+        <link rel="stylesheet" type="text/css" href="<c:url value='${css}'/>"/>
+    </c:forEach>
+    <!--[if lt IE 10]>
+    <c:forEach var="css" items="${config.extendedCssforIE9}">
+        <link rel="stylesheet" type="text/css" href="<c:url value='${css}'/>"/>
+    </c:forEach>
     <![endif]-->
 
     <script type="text/javascript">
         var CONTEXT_PATH = "<%=ContextUtil.getContext()%>";
-        var TOP_MENU_DATA = (function(json){return json;})(${menuJson});
-        var COMMON_CODE = (function(json){return json;})(<%=commonCodeJson%>);
-        var SCRIPT_SESSION = (function(json){return json;})(${scriptSession});
+        var TOP_MENU_DATA = (function (json) {
+            return json;
+        })(${menuJson});
+        var COMMON_CODE = (function (json) {
+            return json;
+        })(<%=commonCodeJson%>);
+        var SCRIPT_SESSION = (function (json) {
+            return json;
+        })(${scriptSession});
     </script>
 
     <script type="text/javascript" src="<c:url value='/assets/js/plugins.min.js' />"></script>
@@ -51,6 +59,10 @@
             <div class="ax-split-panel text-align-right">
 
                 <div class="ax-split-col ax-frame-user-info">
+                    <div class="ax-split-panel">
+                        <a href="/?language=en">English</a> / <a href="/?language=ko">한국어</a>
+                    </div>
+                    <div class="panel-split"></div>
                     <c:if test="${isDevelopmentMode}">
                         <!-- 개발자 툴 연결 아이콘 -->
                         <div class="ax-split-panel">
@@ -73,7 +85,6 @@
 
             </div>
         </div>
-
     </div>
 
     <div class="ax-frame-header">
@@ -122,9 +133,7 @@
 
     <div class="ax-frame-foot">
         <div class="ax-split-col" style="height: 100%;">
-            <div class="ax-split-panel text-align-left">
-                ${config.copyrights}
-            </div>
+            <div class="ax-split-panel text-align-left"> ${config.copyrights} </div>
             <div class="ax-split-panel text-align-right">
                 Last account activity <b id="account-activity-timer">00</b> ago.
             </div>
