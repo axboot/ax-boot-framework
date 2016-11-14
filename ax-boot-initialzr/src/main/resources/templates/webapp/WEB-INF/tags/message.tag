@@ -25,7 +25,7 @@
         if (StringUtils.isNotEmpty(localeCookie)) {
             locale = new Locale(localeCookie);
         } else {
-            locale = new Locale(SessionUtils.getCurrentUser().getLocale().getLanguage());
+            locale = new Locale("ko_KR");
         }
     }
 
