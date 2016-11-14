@@ -8,6 +8,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.Transient;
+import java.time.Instant;
 import java.time.LocalDateTime;
 
 @Data
@@ -46,11 +47,11 @@ public class BaseVO {
 		return __modified__;
 	}
 
-	public LocalDateTime createdAt;
+	public Instant createdAt;
 
 	public String createdBy;
 
-	public LocalDateTime updatedAt;
+	public Instant updatedAt;
 
 	public String updatedBy;
 }
