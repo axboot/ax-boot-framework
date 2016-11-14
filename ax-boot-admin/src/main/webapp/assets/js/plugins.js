@@ -14709,7 +14709,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
          * ax5 version
          * @member {String} ax5.info.version
          */
-        var version = "1.3.26";
+        var version = "1.3.29";
 
         /**
          * ax5 library path
@@ -17976,7 +17976,7 @@ ax5.ui = function () {
 
     UI.addClass({
         className: "dialog",
-        version: "1.3.26"
+        version: "1.3.29"
     }, function () {
         /**
          * @class ax5dialog
@@ -18515,7 +18515,7 @@ ax5.ui = function () {
 
     UI.addClass({
         className: "mask",
-        version: "1.3.26"
+        version: "1.3.29"
     }, function () {
         /**
          * @class ax5mask
@@ -18846,7 +18846,7 @@ ax5.ui = function () {
 
     UI.addClass({
         className: "toast",
-        version: "1.3.26"
+        version: "1.3.29"
     }, function () {
         /**
          * @class ax5toast
@@ -19210,7 +19210,7 @@ ax5.ui = function () {
 
     UI.addClass({
         className: "modal",
-        version: "${VERSION}"
+        version: "1.3.29"
     }, function () {
         /**
          * @class ax5modal
@@ -19617,21 +19617,24 @@ ax5.ui = function () {
                         if (this.activeModal) {
 
                             // 프레임 제거
-                            var $iframe = this.$["iframe"],
-                                // iframe jQuery Object
-                            iframeObject = $iframe.get(0),
-                                idoc = iframeObject.contentDocument ? iframeObject.contentDocument : iframeObject.contentWindow.document;
+                            if (opts.iframe) {
+                                var $iframe = this.$["iframe"]; // iframe jQuery Object
+                                if ($iframe) {
+                                    var iframeObject = $iframe.get(0),
+                                        idoc = iframeObject.contentDocument ? iframeObject.contentDocument : iframeObject.contentWindow.document;
 
-                            try {
-                                $(idoc.body).children().each(function () {
-                                    $(this).remove();
-                                });
-                            } catch (e) {}
-                            idoc.innerHTML = "";
-                            $iframe.attr('src', 'about:blank').remove();
+                                    try {
+                                        $(idoc.body).children().each(function () {
+                                            $(this).remove();
+                                        });
+                                    } catch (e) {}
+                                    idoc.innerHTML = "";
+                                    $iframe.attr('src', 'about:blank').remove();
 
-                            // force garbarge collection for IE only
-                            window.CollectGarbage && window.CollectGarbage();
+                                    // force garbarge collection for IE only
+                                    window.CollectGarbage && window.CollectGarbage();
+                                }
+                            }
 
                             this.activeModal.remove();
                             this.activeModal = null;
@@ -19827,6 +19830,7 @@ ax5.ui = function () {
 
     MODAL = ax5.ui.modal;
 })();
+
 // ax5.ui.modal.tmpl
 (function () {
     var MODAL = ax5.ui.modal;
@@ -19854,7 +19858,7 @@ ax5.ui = function () {
 
     UI.addClass({
         className: "calendar",
-        version: "1.3.26"
+        version: "1.3.29"
     }, function () {
 
         /**
@@ -20917,7 +20921,7 @@ ax5.ui = function () {
 
     UI.addClass({
         className: "picker",
-        version: "1.3.26"
+        version: "1.3.29"
     }, function () {
         /**
          * @class ax5picker
@@ -21957,7 +21961,7 @@ jQuery.fn.ax5picker = function () {
 
     UI.addClass({
         className: "formatter",
-        version: "1.3.26"
+        version: "1.3.29"
     }, function () {
         var TODAY = new Date();
         var setSelectionRange = function setSelectionRange(input, pos) {
@@ -22595,7 +22599,7 @@ jQuery.fn.ax5formatter = function () {
 
     UI.addClass({
         className: "menu",
-        version: "1.3.26"
+        version: "1.3.29"
     }, function () {
         /**
          * @class ax5.ui.menu
@@ -23408,7 +23412,7 @@ jQuery.fn.ax5formatter = function () {
 
     UI.addClass({
         className: "select",
-        version: "1.3.26"
+        version: "1.3.29"
     }, function () {
         /**
          * @class ax5select
@@ -24550,7 +24554,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
 
     UI.addClass({
         className: "grid",
-        version: "${VERSION}"
+        version: "1.3.29"
     }, function () {
         /**
          * @class ax5grid
@@ -25821,12 +25825,10 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
                     var dindex = _selectObject;
 
                     if (!this.config.multipleSelect) {
-                        GRID.body.updateRowState.call(this, ["selectedClear"]);
-                        GRID.data.clearSelect.call(this);
+                        this.clearSelect();
                     } else {
                         if (_options && _options.selectedClear) {
-                            GRID.body.updateRowState.call(this, ["selectedClear"]);
-                            GRID.data.clearSelect.call(this);
+                            this.clearSelect();
                         }
                     }
 
@@ -25837,19 +25839,40 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
             };
 
             /**
+             * @method ax5grid.clearSelect
+             * @returns {ax5grid}
+             * @example
+             * ```js
+             * firstGrid.clearSelect();
+             * ```
+             */
+            this.clearSelect = function () {
+                GRID.body.updateRowState.call(this, ["selectedClear"]);
+                GRID.data.clearSelect.call(this);
+                return this;
+            };
+
+            /**
              * @method ax5grid.selectAll
              * @param {Object} _options
              * @param {Boolean} _options.selected
+             * @param {Function} _options.filter
              * @returns {ax5grid}
              * @example
              * ```js
              * firstGrid.selectAll();
              * firstGrid.selectAll({selected: true});
              * firstGrid.selectAll({selected: false});
+             * firstGrid.selectAll({filter: function(){
+             *      return this["b"] == "A01";
+             * });
+             * firstGrid.selectAll({selected: true, filter: function(){
+             *      return this["b"] == "A01";
+             * });
              * ```
              */
             this.selectAll = function (_options) {
-                GRID.data.selectAll.call(this, _options && _options.selected);
+                GRID.data.selectAll.call(this, _options && _options.selected, _options);
                 GRID.body.updateRowStateAll.call(this, ["selected"]);
                 return this;
             };
@@ -26365,7 +26388,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
         };
 
         if (_key === "__d-index__") {
-            return _item["__index"] + 1;
+            return typeof _item["__index"] !== "undefined" ? _item["__index"] + 1 : "";
         } else if (_key === "__d-checkbox__") {
             return '<div class="checkBox"></div>';
         } else {
@@ -28227,10 +28250,17 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
     var selectAll = function selectAll(_selected, _options) {
         var cfg = this.config;
 
+        console.log(_options);
+
         var dindex = this.list.length;
         if (typeof _selected === "undefined") {
             while (dindex--) {
                 if (this.list[dindex].__isGrouping) continue;
+                if (_options && _options.filter) {
+                    if (_options.filter.call(this.list[dindex]) !== true) {
+                        continue;
+                    }
+                }
                 if (this.list[dindex][cfg.columnKeys.selected] = !this.list[dindex][cfg.columnKeys.selected]) {
                     this.selectedDataIndexs.push(dindex);
                 }
@@ -28238,6 +28268,11 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
         } else {
             while (dindex--) {
                 if (this.list[dindex].__isGrouping) continue;
+                if (_options && _options.filter) {
+                    if (_options.filter.call(this.list[dindex]) !== true) {
+                        continue;
+                    }
+                }
                 if (this.list[dindex][cfg.columnKeys.selected] = _selected) {
                     this.selectedDataIndexs.push(dindex);
                 }
@@ -29879,7 +29914,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
 
     UI.addClass({
         className: "combobox",
-        version: "1.3.26"
+        version: "1.3.29"
     }, function () {
         /**
          * @class ax5combobox
@@ -31559,7 +31594,7 @@ jQuery.fn.ax5combobox = function () {
 
     UI.addClass({
         className: "layout",
-        version: "1.3.26"
+        version: "1.3.29"
     }, function () {
         /**
          * @class ax5layout
@@ -32590,7 +32625,7 @@ jQuery.fn.ax5layout = function () {
 
     UI.addClass({
         className: "binder",
-        version: "1.3.26"
+        version: "1.3.29"
     }, function () {
 
         /**
@@ -33547,7 +33582,7 @@ jQuery.fn.ax5layout = function () {
 
     UI.addClass({
         className: "autocomplete",
-        version: "1.3.26"
+        version: "1.3.29"
     }, function () {
         /**
          * @class ax5autocomplete

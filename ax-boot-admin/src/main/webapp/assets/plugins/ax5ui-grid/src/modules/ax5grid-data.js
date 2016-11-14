@@ -415,18 +415,30 @@
     var selectAll = function (_selected, _options) {
         var cfg = this.config;
 
+        console.log(_options);
+        
         var dindex = this.list.length;
         if (typeof _selected === "undefined") {
             while (dindex--) {
                 if (this.list[dindex].__isGrouping) continue;
-                if(this.list[dindex][cfg.columnKeys.selected] = !this.list[dindex][cfg.columnKeys.selected]){
+                if (_options && _options.filter) {
+                    if (_options.filter.call(this.list[dindex]) !== true) {
+                        continue;
+                    } 
+                }
+                if (this.list[dindex][cfg.columnKeys.selected] = !this.list[dindex][cfg.columnKeys.selected]) {
                     this.selectedDataIndexs.push(dindex);
                 }
             }
-        }else{
+        } else {
             while (dindex--) {
                 if (this.list[dindex].__isGrouping) continue;
-                if(this.list[dindex][cfg.columnKeys.selected] = _selected) {
+                if (_options && _options.filter) {
+                    if (_options.filter.call(this.list[dindex]) !== true) {
+                        continue;
+                    }
+                }
+                if (this.list[dindex][cfg.columnKeys.selected] = _selected) {
                     this.selectedDataIndexs.push(dindex);
                 }
             }
