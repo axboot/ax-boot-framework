@@ -526,7 +526,7 @@
         };
 
         if (_key === "__d-index__") {
-            return _item["__index"] + 1;
+            return (typeof _item["__index"] !== "undefined") ? _item["__index"] + 1 : "";
         }
         else if (_key === "__d-checkbox__") {
             return '<div class="checkBox"></div>';
