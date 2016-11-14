@@ -85,7 +85,7 @@ public class User extends BaseJpaModel<String> {
     @Column(name = "LOCALE", length = 10)
     @Comment(value = "Locale")
     @ColumnPosition(11)
-    private String locale;
+    private String locale = "ko_KR";
 
     @Column(name = "MENU_GRP_CD", length = 100)
     @Comment(value = "메뉴그룹코드")
