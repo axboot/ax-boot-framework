@@ -287,7 +287,7 @@ axboot.ajax = function () {
 
         jqxhr = $.ajax(http);
         jqxhr.done(function (data, textStatus, jqXHR) {
-            if (typeof data == "string") arguments[0] = data == "" ? {} : data.object();
+            if (typeof data == "string") arguments[0] = data == "" ? {} : JSON.parse(data);
             if (data.redirect && options.apiType != "login") {
                 location.href = data.redirect;
                 return;

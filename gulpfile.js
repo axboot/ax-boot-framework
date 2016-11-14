@@ -89,6 +89,10 @@ gulp.task('axboot-js', function () {
         .pipe(gulp.dest(ASSETS + '/js/axboot/dist'));
 });
 
+gulp.task('axboot-initializr-deploy', function () {
+
+});
+
 /**
  * SASS
  */
