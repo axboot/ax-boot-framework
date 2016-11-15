@@ -4,7 +4,9 @@ import lombok.AccessLevel;
 import lombok.Data;
 import lombok.Getter;
 
+import java.util.HashMap;
 import java.util.Locale;
+import java.util.Map;
 
 @Data
 public class ScriptSessionVO {
@@ -13,10 +15,6 @@ public class ScriptSessionVO {
 
     protected String userNm;
 
-    protected String compCd;
-
-    protected String storCd;
-
     protected Locale locale;
 
     protected String timeZone;
@@ -24,6 +22,8 @@ public class ScriptSessionVO {
     protected String dateFormat;
 
     protected boolean login = true;
+
+    private Map<String, Object> details = new HashMap<>();
 
     @Getter(AccessLevel.NONE)
     protected String dateTimeFormat;

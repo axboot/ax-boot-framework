@@ -72,9 +72,9 @@
         case "radio":
             for (CommonCode commonCode : commonCodes) {
                 if (StringUtils.isNotEmpty(defaultValue) && defaultValue.equals(commonCode.getCode())) {
-                    builder.append(String.format("<input type=\"radio\" name=\"%s\" data-ax-path=\"%s\" value=\"%s\" checked> %s ", name, dataPath, commonCode.getCode(), commonCode.getName()));
+                    builder.append(String.format(" <input type=\"radio\" name=\"%s\" data-ax-path=\"%s\" value=\"%s\" checked> %s &nbsp;", name, dataPath, commonCode.getCode(), commonCode.getName()));
                 } else {
-                    builder.append(String.format("<input type=\"radio\" name=\"%s\" data-ax-path=\"%s\" value=\"%s\"> %s ", name, dataPath, commonCode.getCode(), commonCode.getName()));
+                    builder.append(String.format(" <input type=\"radio\" name=\"%s\" data-ax-path=\"%s\" value=\"%s\"> %s &nbsp;", name, dataPath, commonCode.getCode(), commonCode.getName()));
                 }
             }
             break;

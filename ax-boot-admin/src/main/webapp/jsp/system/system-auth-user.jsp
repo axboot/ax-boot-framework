@@ -95,10 +95,10 @@
                             </ax:td>
                         </ax:tr>
                         <ax:tr>
-                            <ax:td label="국가" width="300px">
-                                <select name="country" data-ax-path="country" class="form-control W100">
-                                    <option value="ko_KR">대한민국</option>
-                                    <option value="en_US">미국</option>
+                            <ax:td label="언어" width="300px">
+                                <select name="locale" data-ax-path="locale" class="form-control W100">
+                                    <option value="ko_KR">한국어</option>
+                                    <option value="en_US">영어</option>
                                 </select>
                             </ax:td>
                         </ax:tr>
