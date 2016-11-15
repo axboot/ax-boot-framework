@@ -90,7 +90,21 @@ gulp.task('axboot-js', function () {
 });
 
 gulp.task('axboot-initializr-deploy', function () {
+    gulp.src([
+        '!' + ASSETS_SRC + '/**/plugins/**/*',
+        ASSETS_SRC + '/**/*'
+    ], {base: ASSETS_SRC})
+        .pipe(gulp.dest('ax-boot-initialzr/src/main/resources/templates/webapp/assets'));
 
+    gulp.src([
+        ROOT + '/*.*'
+    ], {base: ROOT})
+        .pipe(gulp.dest('ax-boot-initialzr/src/main/resources/templates/webapp'));
+
+    gulp.src([
+        '*.json'
+    ], {base: ""})
+        .pipe(gulp.dest('ax-boot-initialzr/src/main/resources/templates/root'));
 });
 
 /**

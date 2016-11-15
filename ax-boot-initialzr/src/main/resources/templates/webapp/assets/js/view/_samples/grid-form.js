@@ -1,4 +1,4 @@
-var fnObj = {};
+var fnObj = {}, CODE = {};
 var ACTIONS = axboot.actionExtend(fnObj, {
     PAGE_SEARCH: function (caller, act, data) {
         axboot.ajax({
@@ -7,11 +7,6 @@ var ACTIONS = axboot.actionExtend(fnObj, {
             data: $.extend({}, this.searchView.getData(), this.gridView01.getPageData()),
             callback: function (res) {
                 caller.gridView01.setData(res);
-            },
-            options: {
-                onError: function (err) {
-                    console.log(err);
-                }
             }
         });
 
@@ -80,9 +75,6 @@ var ACTIONS = axboot.actionExtend(fnObj, {
     }
 });
 
-var CODE = {};
-
-// fnObj 기본 함수 스타트와 리사이즈
 fnObj.pageStart = function () {
     var _this = this;
 
@@ -119,7 +111,6 @@ fnObj.pageResize = function () {
 
 };
 
-
 fnObj.pageButtonView = axboot.viewExtend({
     initView: function () {
         axboot.buttonClick(this, "data-page-btn", {
@@ -153,9 +144,8 @@ fnObj.searchView = axboot.viewExtend(axboot.searchView, {
     }
 });
 
-
 /**
- * gridView
+ * gridView01
  */
 fnObj.gridView01 = axboot.viewExtend(axboot.gridView, {
     page: {
@@ -216,7 +206,6 @@ fnObj.gridView01 = axboot.viewExtend(axboot.gridView, {
     }
 });
 
-
 /**
  * formView01
  */
@@ -254,24 +243,23 @@ fnObj.formView01 = axboot.viewExtend(axboot.formView, {
         this.model.setModel(data);
         this.modelFormatter.formatting(); // 입력된 값을 포메팅 된 값으로 변경
     },
-    validate: function () {
-        var rs = this.model.validate();
-        if (rs.error) {
-            alert(rs.error[0].jquery.attr("title") + '을(를) 입력해주세요.');
-            rs.error[0].jquery.focus();
-            return false;
-        }
-        return true;
-    },
+validate: function () {
+    var rs = this.model.validate();
+    if (rs.error) {
+        alert(rs.error[0].jquery.attr("title") + '을(를) 입력해주세요.');
+        rs.error[0].jquery.focus();
+        return false;
+    }
+    return true;
+},
     clear: function () {
         this.model.setModel(this.getDefaultData());
         this.target.find('[data-ax-path="key"]').removeAttr("readonly");
     }
 });
 
-
 /**
- * gridView
+ * gridView02
  */
 fnObj.gridView02 = axboot.viewExtend(axboot.gridView, {
     initView: function () {

@@ -7,7 +7,7 @@ var ACTIONS = axboot.actionExtend(fnObj, {
         axboot.ajax({
             type: "GET",
             url: ["files"],
-            data: this.searchView.getData(),
+            data: $.extend({}, this.searchView.getData(), this.gridView01.getPageData()),
             callback: function (res) {
                 caller.gridView01.setData(res);
             }
@@ -45,9 +45,6 @@ var ACTIONS = axboot.actionExtend(fnObj, {
     },
     ITEM_CLICK: function (caller, act, data) {
         caller.formView01.setData(data);
-    },
-    GRID_0_PAGING: function (caller, act, data) {
-        this.searchView.setPageNumber(data);
     },
     dispatch: function (caller, act, data) {
         var result = ACTIONS.exec(caller, act, data);
@@ -108,14 +105,8 @@ fnObj.searchView = axboot.viewExtend(axboot.searchView, {
         this.target.attr("onsubmit", "return ACTIONS.dispatch(ACTIONS.PAGE_SEARCH);");
         this.filter = $("#filter");
     },
-    setPageNumber: function (pageNumber) {
-        this.pageNumber = pageNumber;
-        ACTIONS.dispatch(ACTIONS.PAGE_SEARCH);
-    },
     getData: function () {
         return {
-            pageNumber: this.pageNumber,
-            pageSize: 100, //this.pageSize,
             filter: this.filter.val()
         }
     }
@@ -126,6 +117,10 @@ fnObj.searchView = axboot.viewExtend(axboot.searchView, {
  * gridView
  */
 fnObj.gridView01 = axboot.viewExtend(axboot.gridView, {
+    page: {
+        pageNumber: 0,
+        pageSize: 20
+    },
     useYn: {
         Y: "사용",
         N: "사용안함"
@@ -169,8 +164,12 @@ fnObj.gridView01 = axboot.viewExtend(axboot.gridView, {
                     ACTIONS.dispatch(ACTIONS.ITEM_CLICK, this.list[this.dindex]);
                 }
             },
+            page: {
+                navigationItemCount: 5
+            },
             onPageChange: function (pageNumber) {
-                ACTIONS.dispatch(ACTIONS.GRID_0_PAGING, pageNumber);
+                _this.setPageData({pageNumber: pageNumber});
+                ACTIONS.dispatch(ACTIONS.PAGE_SEARCH);
             }
         });
     },
