@@ -393,6 +393,7 @@
         return path.join("");
     };
 
+
     GRID.util = {
         divideTableByFrozenColumnIndex: divideTableByFrozenColumnIndex,
         getMousePosition: getMousePosition,

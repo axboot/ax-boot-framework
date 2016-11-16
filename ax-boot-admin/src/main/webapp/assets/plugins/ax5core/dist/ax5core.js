@@ -53,7 +53,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
          * ax5 version
          * @member {String} ax5.info.version
          */
-        var version = "1.3.29";
+        var version = "1.3.39";
 
         /**
          * ax5 library path
@@ -2564,10 +2564,12 @@ ax5.info.errorMsg["ax5combobox"] = {
     var html = document.getElementsByTagName('html')[0];
     var body = document.getElementsByTagName('body')[0];
 
+    /*
     if (!window.innerWidth) window.innerWidth = html.clientWidth;
     if (!window.innerHeight) window.innerHeight = html.clientHeight;
     if (!window.scrollX) window.scrollX = window.pageXOffset || html.scrollLeft;
     if (!window.scrollY) window.scrollY = window.pageYOffset || html.scrollTop;
+    */
 }).call(window);
 /**
  * Refer to this by {@link ax5}.

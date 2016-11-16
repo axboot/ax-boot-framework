@@ -87,6 +87,7 @@
         return `<span>{{fromRowIndex}} - {{toRowIndex}} of {{totalElements}}{{#dataRowCount}} ({{dataRowCount}}){{/dataRowCount}}</span>`;
     };
 
+
     GRID.tmpl = {
         "main": main,
         "page_navigation": page_navigation,

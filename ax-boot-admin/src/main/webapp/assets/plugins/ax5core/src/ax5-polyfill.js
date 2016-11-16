@@ -384,9 +384,10 @@
     var html = document.getElementsByTagName('html')[0];
     var body = document.getElementsByTagName('body')[0];
 
+    /*
     if (!window.innerWidth) window.innerWidth = html.clientWidth;
     if (!window.innerHeight) window.innerHeight = html.clientHeight;
     if (!window.scrollX) window.scrollX = window.pageXOffset || html.scrollLeft;
     if (!window.scrollY) window.scrollY = window.pageYOffset || html.scrollTop;
-
+    */
 }.call(window));

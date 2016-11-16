@@ -111,7 +111,7 @@
             fromRowIndex: U.number(fromRowIndex + 1, {"money": true}),
             toRowIndex: U.number(toRowIndex, {"money": true}),
             totalElements: U.number(totalElements, {"money": true}),
-            dataRowCount: (totalElements !== this.xvar.dataRealRowCount) ? this.xvar.dataRealRowCount : false
+            dataRowCount: (totalElements !== this.xvar.dataRealRowCount) ? U.number(this.xvar.dataRealRowCount, {"money": true}) : false
         }));
     };
 

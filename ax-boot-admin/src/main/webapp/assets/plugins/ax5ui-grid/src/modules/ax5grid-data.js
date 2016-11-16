@@ -387,6 +387,7 @@
         var cfg = this.config;
 
         if (this.list[_dindex].__isGrouping) return false;
+        if (this.list[_dindex][cfg.columnKeys.disableSelection]) return false;
 
         if (typeof _selected === "undefined") {
             if (this.list[_dindex][cfg.columnKeys.selected] = !this.list[_dindex][cfg.columnKeys.selected]) {
@@ -415,8 +416,6 @@
     var selectAll = function (_selected, _options) {
         var cfg = this.config;
 
-        console.log(_options);
-        
         var dindex = this.list.length;
         if (typeof _selected === "undefined") {
             while (dindex--) {
@@ -424,8 +423,10 @@
                 if (_options && _options.filter) {
                     if (_options.filter.call(this.list[dindex]) !== true) {
                         continue;
-                    } 
+                    }
                 }
+                if (this.list[dindex][cfg.columnKeys.disableSelection]) continue;
+
                 if (this.list[dindex][cfg.columnKeys.selected] = !this.list[dindex][cfg.columnKeys.selected]) {
                     this.selectedDataIndexs.push(dindex);
                 }
@@ -438,6 +439,8 @@
                         continue;
                     }
                 }
+                if (this.list[dindex][cfg.columnKeys.disableSelection]) continue;
+
                 if (this.list[dindex][cfg.columnKeys.selected] = _selected) {
                     this.selectedDataIndexs.push(dindex);
                 }
@@ -458,6 +461,18 @@
         var self = this;
         var list = _list || this.list;
         var sortInfoArray = [];
+        var getKeyValue = function (_item, _key, _value) {
+            if (/[\.\[\]]/.test(_key)) {
+                try {
+                    _value = (Function("", "return this" + GRID.util.getRealPathForDataItem(_key) + ";")).call(_item);
+                } catch (e) {
+
+                }
+            } else {
+                _value = _item[_key];
+            }
+            return _value;
+        };
 
         for (var k in _sortInfo) {
             sortInfoArray[_sortInfo[k].seq] = {key: k, order: _sortInfo[k].orderBy};
@@ -467,10 +482,12 @@
         });
 
         var i = 0, l = sortInfoArray.length, _a_val, _b_val;
+
         list.sort(function (_a, _b) {
             for (i = 0; i < l; i++) {
-                _a_val = _a[sortInfoArray[i].key];
-                _b_val = _b[sortInfoArray[i].key];
+                _a_val = getKeyValue(_a, sortInfoArray[i].key);
+                _b_val = getKeyValue(_b, sortInfoArray[i].key);
+
                 if (typeof _a_val !== typeof _b_val) {
                     _a_val = '' + _a_val;
                     _b_val = '' + _b_val;

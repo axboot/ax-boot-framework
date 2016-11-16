@@ -18,6 +18,7 @@
          * 2014-06-21 tom : 시작
          * @example
          * ```js
+         * ax5.info.months = ["1월","2월","3월","4월","5월","6월","7월","8월","9월","10월","11월"];
          * ax5.info.weekNames = [
          *     {label: "일"},
          *     {label: "월"},
@@ -99,7 +100,7 @@
                     yearHeading: "Choose the year",
                     monthHeading: "Choose the month",
                     yearTmpl: "%s",
-                    months: ['JAN', 'FEB', 'MAR', 'APR', 'MAY', 'JUN', 'JUL', 'AUG', 'SEP', 'OCT', 'NOV', 'DEC'],
+                    months: ax5.info.months || ['JAN', 'FEB', 'MAR', 'APR', 'MAY', 'JUN', 'JUL', 'AUG', 'SEP', 'OCT', 'NOV', 'DEC'],
                     dayTmpl: "%s"
                 },
                 multipleSelect: false,
