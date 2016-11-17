@@ -18,7 +18,7 @@
     .ax-base-title {
         display: table;
         height: 60px;
-        margin: 0 10px;
+        margin: 0;
         .title {
             padding-left: 5px;
             display: table-cell;
@@ -41,7 +41,7 @@
         }
     }
     .ax-base-content{
-        margin: 0 10px;
+        margin: 0;
     }
 
     h1, h2, h3, h4, h5, h6 {
@@ -70,7 +70,7 @@
 
 &.baseStyle {
     @extend #ax-modal-base-root;
-    padding: 0 10px;
+    padding: 0;
 
     [data-page-buttons] {
         position: absolute;
@@ -78,6 +78,13 @@
         .btn {
             padding: 5px 10px;
         }
+    }
+
+    .ax-base-title {
+        padding: 0 10px;
+    }
+    .ax-base-content{
+        padding: 0 10px;
     }
 }
 
