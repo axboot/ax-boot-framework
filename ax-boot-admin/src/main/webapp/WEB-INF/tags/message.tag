@@ -12,22 +12,7 @@
 <%
     MessageSource messageSource = AppContextManager.getBean(MessageSource.class);
 
-    RequestUtils requestUtils = RequestUtils.of(request);
-    String language = requestUtils.getString(GlobalConstants.LANGUAGE_PARAMETER_KEY);
-
-    Locale locale;
-
-    if (StringUtils.isNotEmpty(language)) {
-        locale = new Locale(language);
-    } else {
-        String localeCookie = CookieUtils.getCookieValue(request, GlobalConstants.LANGUAGE_COOKIE_KEY);
-
-        if (StringUtils.isNotEmpty(localeCookie)) {
-            locale = new Locale(localeCookie);
-        } else {
-            locale = new Locale("ko_KR");
-        }
-    }
+    Locale locale = RequestUtils.getLocale(request);
 
     String message = "";
 

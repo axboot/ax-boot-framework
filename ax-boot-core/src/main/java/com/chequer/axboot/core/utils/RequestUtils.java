@@ -6,10 +6,7 @@ import org.apache.commons.lang3.StringUtils;
 import javax.servlet.ServletRequest;
 import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
-import java.util.Enumeration;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.StringJoiner;
+import java.util.*;
 
 public class RequestUtils {
 
@@ -226,6 +223,27 @@ public class RequestUtils {
     public boolean isAjax() {
         String requestedWithHeader = request.getHeader("X-Requested-With");
         return "XMLHttpRequest".equals(requestedWithHeader);
+    }
+
+    public static Locale getLocale(HttpServletRequest request) {
+        RequestUtils requestUtils = RequestUtils.of(request);
+        String language = requestUtils.getString("language");
+
+        Locale locale;
+
+        if (StringUtils.isNotEmpty(language)) {
+            locale = new Locale(language);
+        } else {
+            String localeCookie = CookieUtils.getCookieValue(request, "language");
+
+            if (StringUtils.isNotEmpty(localeCookie)) {
+                locale = new Locale(localeCookie);
+            } else {
+                locale = new Locale("ko_KR");
+            }
+        }
+
+        return locale;
     }
 }
 
