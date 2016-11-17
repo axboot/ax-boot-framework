@@ -9,7 +9,7 @@
 
     UI.addClass({
         className: "combobox",
-        version: "1.3.41"
+        version: "${VERSION}"
     }, function () {
         /**
          * @class ax5combobox
@@ -65,8 +65,7 @@
 
             cfg = this.config;
 
-            var $window = jQuery(window),
-                $body = jQuery(document.body);
+            var $window = jQuery(window);
             var ctrlKeys = {
                 "18": "KEY_ALT",
                 "8": "KEY_BACKSPACE",
@@ -173,8 +172,8 @@
                     height: item.$target.outerHeight()
                 };
                 pickerDim = {
-                    winWidth: Math.max($window.width(), $body.width()),
-                    winHeight: Math.max($window.height(), $body.height()),
+                    winWidth: Math.max($window.width(), jQuery(document.body).width()),
+                    winHeight: Math.max($window.height(), jQuery(document.body).height()),
                     width: this.activecomboboxOptionGroup.outerWidth(),
                     height: this.activecomboboxOptionGroup.outerHeight()
                 };

@@ -14709,7 +14709,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
          * ax5 version
          * @member {String} ax5.info.version
          */
-        var version = "1.3.41";
+        var version = "1.3.42";
 
         /**
          * ax5 library path
@@ -17978,7 +17978,7 @@ ax5.ui = function () {
 
     UI.addClass({
         className: "dialog",
-        version: "1.3.41"
+        version: "1.3.42"
     }, function () {
         /**
          * @class ax5dialog
@@ -18517,7 +18517,7 @@ ax5.ui = function () {
 
     UI.addClass({
         className: "mask",
-        version: "1.3.41"
+        version: "1.3.42"
     }, function () {
         /**
          * @class ax5mask
@@ -18848,7 +18848,7 @@ ax5.ui = function () {
 
     UI.addClass({
         className: "toast",
-        version: "1.3.41"
+        version: "1.3.42"
     }, function () {
         /**
          * @class ax5toast
@@ -19212,7 +19212,7 @@ ax5.ui = function () {
 
     UI.addClass({
         className: "modal",
-        version: "1.3.41"
+        version: "1.3.42"
     }, function () {
         /**
          * @class ax5modal
@@ -19860,7 +19860,7 @@ ax5.ui = function () {
 
     UI.addClass({
         className: "calendar",
-        version: "1.3.41"
+        version: "1.3.42"
     }, function () {
 
         /**
@@ -20924,7 +20924,7 @@ ax5.ui = function () {
 
     UI.addClass({
         className: "picker",
-        version: "1.3.41"
+        version: "1.3.42"
     }, function () {
         /**
          * @class ax5picker
@@ -21965,7 +21965,7 @@ jQuery.fn.ax5picker = function () {
 
     UI.addClass({
         className: "formatter",
-        version: "1.3.41"
+        version: "1.3.42"
     }, function () {
         var TODAY = new Date();
         var setSelectionRange = function setSelectionRange(input, pos) {
@@ -22603,7 +22603,7 @@ jQuery.fn.ax5formatter = function () {
 
     UI.addClass({
         className: "menu",
-        version: "1.3.41"
+        version: "1.3.42"
     }, function () {
         /**
          * @class ax5.ui.menu
@@ -23416,7 +23416,7 @@ jQuery.fn.ax5formatter = function () {
 
     UI.addClass({
         className: "select",
-        version: "1.3.41"
+        version: "${VERSION}"
     }, function () {
         /**
          * @class ax5select
@@ -23478,8 +23478,7 @@ jQuery.fn.ax5formatter = function () {
 
             cfg = this.config;
 
-            var $window = jQuery(window),
-                $body = jQuery(document.body);
+            var $window = jQuery(window);
             var ctrlKeys = {
                 "18": "KEY_ALT",
                 "8": "KEY_BACKSPACE",
@@ -23569,8 +23568,8 @@ jQuery.fn.ax5formatter = function () {
                     height: item.$target.outerHeight()
                 };
                 pickerDim = {
-                    winWidth: Math.max($window.width(), $body.width()),
-                    winHeight: Math.max($window.height(), $body.height()),
+                    winWidth: Math.max($window.width(), jQuery(document.body).width()),
+                    winHeight: Math.max($window.height(), jQuery(document.body).height()),
                     width: this.activeSelectOptionGroup.outerWidth(),
                     height: this.activeSelectOptionGroup.outerHeight()
                 };
@@ -24593,7 +24592,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
 
     UI.addClass({
         className: "grid",
-        version: "1.3.41"
+        version: "1.3.42"
     }, function () {
         /**
          * @class ax5grid
@@ -30211,7 +30210,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
 
     UI.addClass({
         className: "combobox",
-        version: "1.3.41"
+        version: "${VERSION}"
     }, function () {
         /**
          * @class ax5combobox
@@ -30267,8 +30266,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
 
             cfg = this.config;
 
-            var $window = jQuery(window),
-                $body = jQuery(document.body);
+            var $window = jQuery(window);
             var ctrlKeys = {
                 "18": "KEY_ALT",
                 "8": "KEY_BACKSPACE",
@@ -30375,8 +30373,8 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
                     height: item.$target.outerHeight()
                 };
                 pickerDim = {
-                    winWidth: Math.max($window.width(), $body.width()),
-                    winHeight: Math.max($window.height(), $body.height()),
+                    winWidth: Math.max($window.width(), jQuery(document.body).width()),
+                    winHeight: Math.max($window.height(), jQuery(document.body).height()),
                     width: this.activecomboboxOptionGroup.outerWidth(),
                     height: this.activecomboboxOptionGroup.outerHeight()
                 };
@@ -31848,7 +31846,7 @@ jQuery.fn.ax5combobox = function () {
 
     UI.addClass({
         className: "layout",
-        version: "1.3.41"
+        version: "1.3.42"
     }, function () {
         /**
          * @class ax5layout
@@ -32879,7 +32877,7 @@ jQuery.fn.ax5layout = function () {
 
     UI.addClass({
         className: "binder",
-        version: "1.3.41"
+        version: "1.3.42"
     }, function () {
 
         /**

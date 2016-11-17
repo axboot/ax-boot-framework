@@ -64,7 +64,7 @@
 
             cfg = this.config;
 
-            var $window = jQuery(window), $body = jQuery(document.body);
+            var $window = jQuery(window);
             var
                 ctrlKeys = {
                     "18": "KEY_ALT",
@@ -171,8 +171,8 @@
                         height: item.$target.outerHeight()
                     };
                     pickerDim = {
-                        winWidth: Math.max($window.width(), $body.width()),
-                        winHeight: Math.max($window.height(), $body.height()),
+                        winWidth: Math.max($window.width(), jQuery(document.body).width()),
+                        winHeight: Math.max($window.height(), jQuery(document.body).height()),
                         width: this.activecomboboxOptionGroup.outerWidth(),
                         height: this.activecomboboxOptionGroup.outerHeight()
                     };
