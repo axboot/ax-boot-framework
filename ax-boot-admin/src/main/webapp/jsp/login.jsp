@@ -22,8 +22,6 @@
     <c:redirect url="${redirect}"/>
 </c:if>
 
-<ax:lang key="axboot.admin.login"/>
-
 <ax:set key="axbody_class" value="login"/>
 
 <ax:layout name="empty">
