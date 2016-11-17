@@ -175,7 +175,6 @@
                 alignAutocompleteOptionGroup = function (append) {
                     if (append && !this.activeautocompleteOptionGroup) return this;
 
-
                     var item = this.queue[this.activeautocompleteQueueIndex],
                         pos = {}, positionMargin = 0,
                         dim = {}, pickerDim = {},
@@ -278,7 +277,7 @@
                             }
                         }, undefined, "optionItemClick");
                         alignAutocompleteDisplay.call(this);
-
+                        alignAutocompleteOptionGroup.call(this);
                         if (!item.multiple) {
                             this.close();
                         }
@@ -859,12 +858,15 @@
                                     syncLabel.call(this, queIdx);
                                     printLabel.call(this, queIdx);
                                     focusLabel.call(this, queIdx);
+                                    alignAutocompleteDisplay.call(this);
+                                    alignAutocompleteOptionGroup.call(this);
                                     U.stopEvent(e);
                                     return this;
                                 } else if (clickEl === "clear") {
                                     setSelected.call(this, queIdx, {clear: true});
+                                    alignAutocompleteDisplay.call(this);
+                                    alignAutocompleteOptionGroup.call(this);
                                 }
-                                alignAutocompleteDisplay.call(this);
                             }
                             else {
                                 if (self.activeautocompleteQueueIndex == queIdx) {
@@ -903,6 +905,8 @@
                                     syncLabel.call(this, queIdx);
                                     printLabel.call(this, queIdx);
                                     focusLabel.call(this, queIdx);
+                                    alignAutocompleteDisplay.call(this);
+                                    alignAutocompleteOptionGroup.call(this);
                                     U.stopEvent(e);
                                 } else {
                                     debouncedFocusWord.call(this, queIdx);
@@ -910,19 +914,24 @@
                             }
                         },
                         'keyDown': function (queIdx, e) {
-
                             if (e.which == ax5.info.eventKeys.ESC) {
                                 clearLabel.call(this, queIdx);
                                 this.close();
                                 U.stopEvent(e);
                             }
                             else if (e.which == ax5.info.eventKeys.RETURN) {
-                                setSelected.call(this, item.id, {
-                                    optionIndex: {
-                                        index: item.optionFocusIndex
-                                    }
-                                }, undefined, "optionItemClick");
+                                var inputValue = this.queue[queIdx].$displayLabelInput.val();
+                                if(item.optionFocusIndex > -1) {
+                                    setSelected.call(this, item.id, {
+                                        optionIndex: {
+                                            index: item.optionFocusIndex
+                                        }
+                                    }, undefined, "optionItemClick");
+                                }else if(inputValue != ""){
+                                    setSelected.call(this, queIdx, inputValue, true);
+                                }
                                 clearLabel.call(this, queIdx);
+
                                 U.stopEvent(e);
                             }
                             else if (e.which == ax5.info.eventKeys.DOWN) {
@@ -1446,3 +1455,7 @@ jQuery.fn.ax5autocomplete = (function () {
         return this;
     }
 })();
+
+
+// todo : editable 지원.
+// 아이템 박스 안에서 제거 할때 디스플레이 정렬

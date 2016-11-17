@@ -14709,7 +14709,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
          * ax5 version
          * @member {String} ax5.info.version
          */
-        var version = "1.3.29";
+        var version = "1.3.41";
 
         /**
          * ax5 library path
@@ -17220,10 +17220,12 @@ ax5.info.errorMsg["ax5combobox"] = {
     var html = document.getElementsByTagName('html')[0];
     var body = document.getElementsByTagName('body')[0];
 
+    /*
     if (!window.innerWidth) window.innerWidth = html.clientWidth;
     if (!window.innerHeight) window.innerHeight = html.clientHeight;
     if (!window.scrollX) window.scrollX = window.pageXOffset || html.scrollLeft;
     if (!window.scrollY) window.scrollY = window.pageYOffset || html.scrollTop;
+    */
 }).call(window);
 /**
  * Refer to this by {@link ax5}.
@@ -17976,7 +17978,7 @@ ax5.ui = function () {
 
     UI.addClass({
         className: "dialog",
-        version: "1.3.29"
+        version: "1.3.41"
     }, function () {
         /**
          * @class ax5dialog
@@ -18515,7 +18517,7 @@ ax5.ui = function () {
 
     UI.addClass({
         className: "mask",
-        version: "1.3.29"
+        version: "1.3.41"
     }, function () {
         /**
          * @class ax5mask
@@ -18846,7 +18848,7 @@ ax5.ui = function () {
 
     UI.addClass({
         className: "toast",
-        version: "1.3.29"
+        version: "1.3.41"
     }, function () {
         /**
          * @class ax5toast
@@ -19210,7 +19212,7 @@ ax5.ui = function () {
 
     UI.addClass({
         className: "modal",
-        version: "1.3.29"
+        version: "1.3.41"
     }, function () {
         /**
          * @class ax5modal
@@ -19858,7 +19860,7 @@ ax5.ui = function () {
 
     UI.addClass({
         className: "calendar",
-        version: "1.3.29"
+        version: "1.3.41"
     }, function () {
 
         /**
@@ -19869,6 +19871,7 @@ ax5.ui = function () {
          * 2014-06-21 tom : 시작
          * @example
          * ```js
+         * ax5.info.months = ["1월","2월","3월","4월","5월","6월","7월","8월","9월","10월","11월"];
          * ax5.info.weekNames = [
          *     {label: "일"},
          *     {label: "월"},
@@ -19948,7 +19951,7 @@ ax5.ui = function () {
                     yearHeading: "Choose the year",
                     monthHeading: "Choose the month",
                     yearTmpl: "%s",
-                    months: ['JAN', 'FEB', 'MAR', 'APR', 'MAY', 'JUN', 'JUL', 'AUG', 'SEP', 'OCT', 'NOV', 'DEC'],
+                    months: ax5.info.months || ['JAN', 'FEB', 'MAR', 'APR', 'MAY', 'JUN', 'JUL', 'AUG', 'SEP', 'OCT', 'NOV', 'DEC'],
                     dayTmpl: "%s"
                 },
                 multipleSelect: false,
@@ -20921,7 +20924,7 @@ ax5.ui = function () {
 
     UI.addClass({
         className: "picker",
-        version: "1.3.29"
+        version: "1.3.41"
     }, function () {
         /**
          * @class ax5picker
@@ -21150,6 +21153,7 @@ ax5.ui = function () {
                     };
 
                     // picker css(width, left, top) & direction 결정
+
                     if (!item.direction || item.direction === "" || item.direction === "auto") {
                         // set direction
                         pickerDirection = "top";
@@ -21961,7 +21965,7 @@ jQuery.fn.ax5picker = function () {
 
     UI.addClass({
         className: "formatter",
-        version: "1.3.29"
+        version: "1.3.41"
     }, function () {
         var TODAY = new Date();
         var setSelectionRange = function setSelectionRange(input, pos) {
@@ -22599,7 +22603,7 @@ jQuery.fn.ax5formatter = function () {
 
     UI.addClass({
         className: "menu",
-        version: "1.3.29"
+        version: "1.3.41"
     }, function () {
         /**
          * @class ax5.ui.menu
@@ -23412,7 +23416,7 @@ jQuery.fn.ax5formatter = function () {
 
     UI.addClass({
         className: "select",
-        version: "1.3.29"
+        version: "1.3.41"
     }, function () {
         /**
          * @class ax5select
@@ -23474,6 +23478,8 @@ jQuery.fn.ax5formatter = function () {
 
             cfg = this.config;
 
+            var $window = jQuery(window),
+                $body = jQuery(document.body);
             var ctrlKeys = {
                 "18": "KEY_ALT",
                 "8": "KEY_BACKSPACE",
@@ -23550,7 +23556,10 @@ jQuery.fn.ax5formatter = function () {
 
                 var item = this.queue[this.activeSelectQueueIndex],
                     pos = {},
-                    dim = {};
+                    positionMargin = 0,
+                    dim = {},
+                    pickerDim = {},
+                    pickerDirection;
 
                 if (append) jQuery(document.body).append(this.activeSelectOptionGroup);
 
@@ -23559,27 +23568,57 @@ jQuery.fn.ax5formatter = function () {
                     width: item.$target.outerWidth(),
                     height: item.$target.outerHeight()
                 };
+                pickerDim = {
+                    winWidth: Math.max($window.width(), $body.width()),
+                    winHeight: Math.max($window.height(), $body.height()),
+                    width: this.activeSelectOptionGroup.outerWidth(),
+                    height: this.activeSelectOptionGroup.outerHeight()
+                };
 
                 // picker css(width, left, top) & direction 결정
                 if (!item.direction || item.direction === "" || item.direction === "auto") {
                     // set direction
-                    item.direction = "top";
-                }
+                    pickerDirection = "top";
 
+                    if (pos.top - pickerDim.height - positionMargin < 0) {
+                        pickerDirection = "top";
+                    } else if (pos.top + dim.height + pickerDim.height + positionMargin > pickerDim.winHeight) {
+                        pickerDirection = "bottom";
+                    }
+                } else {
+                    pickerDirection = item.direction;
+                }
+                // todo : 표현할 공간이 없다면..
                 if (append) {
-                    this.activeSelectOptionGroup.addClass("direction-" + item.direction);
+                    this.activeSelectOptionGroup.addClass("direction-" + pickerDirection);
                 }
                 this.activeSelectOptionGroup.css(function () {
-                    if (item.direction == "top") {
+                    if (pickerDirection == "top") {
+                        if (pos.top + dim.height + pickerDim.height + positionMargin > pickerDim.winHeight) {
+
+                            var newTop = pos.top + dim.height / 2 - pickerDim.height / 2;
+                            if (newTop + pickerDim.height + positionMargin > pickerDim.winHeight) {
+                                newTop = 0;
+                            }
+                            if (newTop < 0) {
+                                newTop = 0;
+                            }
+
+                            return {
+                                left: pos.left,
+                                top: newTop,
+                                width: dim.width
+                            };
+                        }
                         return {
                             left: pos.left,
                             top: pos.top + dim.height + 1,
                             width: dim.width
                         };
-                    } else if (item.direction == "bottom") {
+                    } else if (pickerDirection == "bottom") {
                         return {
                             left: pos.left,
-                            top: pos.top - this.activeSelectOptionGroup.outerHeight() - 1,
+                            top: pos.top - pickerDim.height - 1,
                             width: dim.width
                         };
                     }
@@ -24554,7 +24593,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
 
     UI.addClass({
         className: "grid",
-        version: "1.3.29"
+        version: "1.3.41"
     }, function () {
         /**
          * @class ax5grid
@@ -24616,7 +24655,8 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
                 columnKeys: {
                     selected: '__selected__',
                     modified: '__modified__',
-                    deleted: '__deleted__'
+                    deleted: '__deleted__',
+                    disableSelection: '__disable_selection__'
                 }
             };
             this.xvar = {
@@ -25877,6 +25917,32 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
                 return this;
             };
 
+            /**
+             * @method ax5grid.exportExcel
+             * @param {String} _fileName
+             * @returns {ax5grid|String}
+             * @example
+             * ```js
+             * firstGrid.exportExcel("grid-to-excel.xls");
+             * console.log(firstGrid.exportExcel());
+             * ```
+             */
+            this.exportExcel = function (_fileName) {
+                var table = [];
+                table.push('<table border="1">');
+                table.push(GRID.header.getExcelString.call(this));
+                table.push(GRID.body.getExcelString.call(this));
+                table.push('</table>');
+
+                if (typeof _fileName === "undefined") {
+                    return table.join('');
+                } else {
+                    GRID.excel.export.call(this, [table.join('')], _fileName);
+                }
+
+                return this;
+            };
+
             // 클래스 생성자
             this.main = function () {
                 UI.grid_instance = UI.grid_instance || [];
@@ -25893,6 +25959,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
     GRID = ax5.ui.grid;
 })();
 
+// todo : excel export
 // todo : merge cells
 // todo : filter
 // todo : body menu
@@ -26135,7 +26202,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
         var self = this;
 
         this.$["container"]["body"].on("click", '[data-ax5grid-column-attr]', function (e) {
-            var panelName, attr, row, col, dindex, rowIndex, colIndex;
+            var panelName, attr, row, col, dindex, rowIndex, colIndex, disableSelection;
             var targetClick = {
                 "default": function _default(_column) {
                     var column = self.bodyRowMap[_column.rowIndex + "_" + _column.colIndex];
@@ -26179,6 +26246,9 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
                     }
                 },
                 "rowSelector": function rowSelector(_column) {
+                    if (self.list[_column.dindex][self.config.columnKeys.disableSelection]) {
+                        return false;
+                    }
 
                     if (!self.config.multipleSelect && self.selectedDataIndexs[0] !== _column.dindex) {
                         GRID.body.updateRowState.call(self, ["selectedClear"]);
@@ -26485,7 +26555,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
                 if (_col.formatter) {
                     that.value = value;
                     if (U.isFunction(_col.formatter)) {
-                        return _col.collector.call(that);
+                        return _col.formatter.call(that);
                     } else {
                         return GRID.formatter[_col.formatter].call(that);
                     }
@@ -26615,7 +26685,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
 
                 for (tri = 0, trl = rowTable.rows.length; tri < trl; tri++) {
 
-                    SS.push('<tr class="tr-' + di % 4 + '"', isGroupingRow ? ' data-ax5grid-grouping-tr="true"' : '', ' data-ax5grid-tr-data-index="' + di + '"', ' data-ax5grid-selected="' + (_list[di][cfg.columnKeys.selected] || "false") + '">');
+                    SS.push('<tr class="tr-' + di % 4 + '"', isGroupingRow ? ' data-ax5grid-grouping-tr="true"' : '', ' data-ax5grid-tr-data-index="' + di + '"', ' data-ax5grid-selected="' + (_list[di][cfg.columnKeys.selected] || "false") + '"', ' data-ax5grid-disable-selection="' + (_list[di][cfg.columnKeys.disableSelection] || "false") + '"', '>');
                     for (ci = 0, cl = rowTable.rows[tri].cols.length; ci < cl; ci++) {
                         col = rowTable.rows[tri].cols[ci];
                         cellHeight = cfg.body.columnHeight * col.rowspan - cfg.body.columnBorderWidth;
@@ -27305,6 +27375,14 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
     var scrollTo = function scrollTo(css, noRepaint) {
         var cfg = this.config;
 
+        if (this.isInlineEditing) {
+            for (var key in this.inlineEditing) {
+                //if(this.inlineEditing[key].editor.type === "select") {}
+                // 인라인 에디팅 인데 스크롤 이벤트가 발생하면 디액티브 처리
+                GRID.body.inlineEdit.deActive.call(this, "ESC", key);
+            }
+        }
+
         if (cfg.asidePanelWidth > 0 && "top" in css) {
             this.$.panel["aside-body-scroll"].css({ top: css.top });
         }
@@ -27657,6 +27735,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
                     return false;
                 }
                 this.inlineEditing[key] = {
+                    editor: editor,
                     panelName: panelName,
                     columnKey: key,
                     column: _focusedColumn[key],
@@ -27818,6 +27897,82 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
         }
     };
 
+    var getExcelString = function getExcelString() {
+        var cfg = this.config;
+        var list = this.list;
+        var bodyRowData = this.bodyRowData;
+        var footSumData = this.footSumData;
+        var bodyGroupingData = this.bodyGroupingData;
+
+        // body-scroll 의 포지션에 의존적이므로..
+        var getBody = function getBody(_colGroup, _bodyRow, _groupRow, _list) {
+            var SS = [];
+            var di, dl;
+            var tri, trl;
+            var ci, cl;
+            var col;
+
+            //SS.push('<table border="1">');
+            for (di = 0, dl = _list.length; di < dl; di++) {
+                var isGroupingRow = false;
+                var rowTable;
+
+                if (_groupRow && "__isGrouping" in _list[di]) {
+                    rowTable = _groupRow;
+                    isGroupingRow = true;
+                } else {
+                    rowTable = _bodyRow;
+                }
+
+                for (tri = 0, trl = rowTable.rows.length; tri < trl; tri++) {
+                    SS.push('<tr>');
+                    for (ci = 0, cl = rowTable.rows[tri].cols.length; ci < cl; ci++) {
+                        col = rowTable.rows[tri].cols[ci];
+
+                        SS.push('<td ', 'colspan="' + col.colspan + '" ', 'rowspan="' + col.rowspan + '" ', '>', isGroupingRow ? getGroupingValue.call(this, _list[di], di, col) : getFieldValue.call(this, _list, _list[di], di, col), '</td>');
+                    }
+                    SS.push('</tr>');
+                }
+            }
+            //SS.push('</table>');
+            return SS.join('');
+        };
+        var getSum = function getSum(_colGroup, _bodyRow, _list) {
+            var SS = [];
+            var tri, trl;
+            var ci, cl;
+            var col;
+
+            //SS.push('<table border="1">');
+            for (tri = 0, trl = _bodyRow.rows.length; tri < trl; tri++) {
+                SS.push('<tr>');
+                for (ci = 0, cl = _bodyRow.rows[tri].cols.length; ci < cl; ci++) {
+                    col = _bodyRow.rows[tri].cols[ci];
+                    SS.push('<td ', 'colspan="' + col.colspan + '" ', 'rowspan="' + col.rowspan + '" ', '>', getSumFieldValue.call(this, _list, col), '</td>');
+                }
+                SS.push('</tr>');
+            }
+
+            //SS.push('</table>');
+
+            return SS.join('');
+        };
+
+        var po = [];
+        po.push(getBody.call(this, this.headerColGroup, bodyRowData, bodyGroupingData, list));
+        if (cfg.footSum) {
+            // 바닥 요약
+            po.push(getSum.call(this, this.headerColGroup, footSumData, list));
+        }
+
+        // right
+        if (cfg.rightSum) {
+            // todo : right 표현 정리
+        }
+
+        return po.join('');
+    };
+
     GRID.body = {
         init: init,
         repaint: repaint,
@@ -27828,7 +27983,8 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
         scrollTo: scrollTo,
         blur: blur,
         moveFocus: moveFocus,
-        inlineEdit: inlineEdit
+        inlineEdit: inlineEdit,
+        getExcelString: getExcelString
     };
 })();
 
@@ -28222,6 +28378,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
         var cfg = this.config;
 
         if (this.list[_dindex].__isGrouping) return false;
+        if (this.list[_dindex][cfg.columnKeys.disableSelection]) return false;
 
         if (typeof _selected === "undefined") {
             if (this.list[_dindex][cfg.columnKeys.selected] = !this.list[_dindex][cfg.columnKeys.selected]) {
@@ -28250,8 +28407,6 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
     var selectAll = function selectAll(_selected, _options) {
         var cfg = this.config;
 
-        console.log(_options);
-
         var dindex = this.list.length;
         if (typeof _selected === "undefined") {
             while (dindex--) {
@@ -28261,6 +28416,8 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
                         continue;
                     }
                 }
+                if (this.list[dindex][cfg.columnKeys.disableSelection]) continue;
+
                 if (this.list[dindex][cfg.columnKeys.selected] = !this.list[dindex][cfg.columnKeys.selected]) {
                     this.selectedDataIndexs.push(dindex);
                 }
@@ -28273,6 +28430,8 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
                         continue;
                     }
                 }
+                if (this.list[dindex][cfg.columnKeys.disableSelection]) continue;
+
                 if (this.list[dindex][cfg.columnKeys.selected] = _selected) {
                     this.selectedDataIndexs.push(dindex);
                 }
@@ -28293,6 +28452,16 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
         var self = this;
         var list = _list || this.list;
         var sortInfoArray = [];
+        var getKeyValue = function getKeyValue(_item, _key, _value) {
+            if (/[\.\[\]]/.test(_key)) {
+                try {
+                    _value = Function("", "return this" + GRID.util.getRealPathForDataItem(_key) + ";").call(_item);
+                } catch (e) {}
+            } else {
+                _value = _item[_key];
+            }
+            return _value;
+        };
 
         for (var k in _sortInfo) {
             sortInfoArray[_sortInfo[k].seq] = { key: k, order: _sortInfo[k].orderBy };
@@ -28305,10 +28474,12 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
             l = sortInfoArray.length,
             _a_val,
             _b_val;
+
         list.sort(function (_a, _b) {
             for (i = 0; i < l; i++) {
-                _a_val = _a[sortInfoArray[i].key];
-                _b_val = _b[sortInfoArray[i].key];
+                _a_val = getKeyValue(_a, sortInfoArray[i].key);
+                _b_val = getKeyValue(_b, sortInfoArray[i].key);
+
                 if ((typeof _a_val === "undefined" ? "undefined" : _typeof(_a_val)) !== (typeof _b_val === "undefined" ? "undefined" : _typeof(_b_val))) {
                     _a_val = '' + _a_val;
                     _b_val = '' + _b_val;
@@ -28348,6 +28519,97 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
         sort: sort,
         initData: initData,
         clearGroupingData: clearGroupingData
+    };
+})();
+/*
+ * Copyright (c) 2016. tom@axisj.com
+ * - github.com/thomasjang
+ * - www.axisj.com
+ */
+
+// ax5.ui.grid.excel
+(function () {
+
+    var GRID = ax5.ui.grid;
+    var U = ax5.util;
+
+    var base64 = function base64(s) {
+        return window.btoa(unescape(encodeURIComponent(s)));
+    };
+    var uri = "data:application/vnd.ms-excel;base64,";
+
+    var getExcelTmpl = function getExcelTmpl() {
+        return "\uFEFF\n{{#tables}}{{{body}}}{{/tables}}\n";
+    };
+
+    var tableToExcel = function tableToExcel(table, fileName) {
+        var link, a, output;
+        var tables = [].concat(table);
+
+        output = ax5.mustache.render(getExcelTmpl(), {
+            worksheet: function () {
+                var arr = [];
+                tables.forEach(function (t, ti) {
+                    arr.push({ name: "Sheet" + (ti + 1) });
+                });
+                return arr;
+            }(),
+            tables: function () {
+                var arr = [];
+                tables.forEach(function (t, ti) {
+                    arr.push({ body: t });
+                });
+                return arr;
+            }()
+        });
+
+        var isChrome = navigator.userAgent.indexOf("Chrome") > -1;
+        var isSafari = !isChrome && navigator.userAgent.indexOf("Safari") > -1;
+
+        var isIE = /*@cc_on!@*/false || !!document.documentMode; // this works with IE10 and IE11 both :)
+        if (navigator.msSaveOrOpenBlob) {
+            var blob1 = new Blob([output], { type: "text/html" });
+            window.navigator.msSaveOrOpenBlob(blob1, fileName);
+        } else if (isSafari) {
+            // 사파리는 지원이 안되므로 그냥 테이블을 클립보드에 복사처리
+            //tables
+            var blankWindow = window.open('about:blank', this.id + '-excel-export', 'width=600,height=400');
+            blankWindow.document.write(output);
+            blankWindow = null;
+        } else {
+            if (isIE && typeof Blob === "undefined") {
+
+                //otherwise use the iframe and save
+                //requires a blank iframe on page called txtArea1
+                var $iframe = jQuery('<iframe id="' + this.id + '-excel-export" style="display:none"></iframe>');
+                jQuery(document.body).append($iframe);
+                var iframe = window[this.id + '-excel-export'];
+                iframe.document.open("text/html", "replace");
+                iframe.document.write(output);
+                iframe.document.close();
+                iframe.focus();
+                iframe.document.execCommand("SaveAs", true, fileName);
+                $iframe.remove();
+            } else {
+                // Attempt to use an alternative method
+                var anchor = document.body.appendChild(document.createElement("a"));
+
+                // If the [download] attribute is supported, try to use it
+                if ("download" in anchor) {
+                    anchor.download = fileName;
+                    //anchor.href = URL.createObjectURL( blob );
+                    anchor.href = uri + base64(output);
+                    anchor.click();
+                    document.body.removeChild(anchor);
+                }
+            }
+        }
+
+        return true;
+    };
+
+    GRID.excel = {
+        export: tableToExcel
     };
 })();
 // ax5.ui.grid.formatter
@@ -28441,7 +28703,6 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
                 self.selectAll({ selected: selected });
             } else {
                 if (key && col) {
-                    console.log(key, col);
                     if ((col.sortable === true || self.config.sortable === true) && col.sortable !== false) {
                         if (!col.sortFixed) toggleSort.call(self, col.key);
                     }
@@ -28699,12 +28960,37 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
         GRID.body.updateRowState.call(this, ["selected"], dindex);
     };
 
+    var getExcelString = function getExcelString() {
+        var cfg = this.config;
+        var colGroup = this.colGroup;
+        var headerData = this.headerData;
+
+        var getHeader = function getHeader(_colGroup, _bodyRow) {
+            var SS = [];
+            //SS.push('<table border="1">');
+            for (var tri = 0, trl = _bodyRow.rows.length; tri < trl; tri++) {
+                SS.push('<tr>');
+                for (var ci = 0, cl = _bodyRow.rows[tri].cols.length; ci < cl; ci++) {
+                    var col = _bodyRow.rows[tri].cols[ci];
+                    SS.push('<td ', 'colspan="' + col.colspan + '" ', 'rowspan="' + col.rowspan + '" ', '>', getFieldValue.call(this, col), '</td>');
+                }
+                SS.push('</tr>');
+            }
+            //SS.push('</table>');
+
+            return SS.join('');
+        };
+
+        return getHeader.call(this, colGroup, headerData);
+    };
+
     GRID.header = {
         init: init,
         repaint: repaint,
         scrollTo: scrollTo,
         toggleSort: toggleSort,
-        applySortStatus: applySortStatus
+        applySortStatus: applySortStatus,
+        getExcelString: getExcelString
     };
 })();
 // ax5.ui.grid.inlineEditor
@@ -28848,6 +29134,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
             var self = _root;
             _$el.data("binded-ax5ui", "ax5select");
             _$el.ax5select({
+                direction: "auto",
                 columnKeys: eConfig.columnKeys,
                 options: eConfig.options,
                 onStateChanged: function onStateChanged() {
@@ -29009,7 +29296,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
             fromRowIndex: U.number(fromRowIndex + 1, { "money": true }),
             toRowIndex: U.number(toRowIndex, { "money": true }),
             totalElements: U.number(totalElements, { "money": true }),
-            dataRowCount: totalElements !== this.xvar.dataRealRowCount ? this.xvar.dataRealRowCount : false
+            dataRowCount: totalElements !== this.xvar.dataRealRowCount ? U.number(this.xvar.dataRealRowCount, { "money": true }) : false
         }));
     };
 
@@ -29104,6 +29391,11 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
     var scrollBarMover = {
         "click": function click(track, bar, type, e) {
 
+            // 마우스 무브 완료 타임과 클릭타임 차이가 20 보다 작으면 클릭이벤트 막기.
+            if (new Date().getTime() - GRID.scroller.moveout_timer < 20) {
+                return false;
+            }
+
             var self = this,
                 trackOffset = track.offset(),
                 barBox = {
@@ -29161,7 +29453,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
             if (type === "horizontal") GRID.header.scrollTo.call(self, scrollPositon);
             GRID.body.scrollTo.call(self, scrollPositon);
         },
-        "on": function on(track, bar, type) {
+        "on": function on(track, bar, type, e) {
             var self = this,
                 barOffset = bar.position(),
                 barBox = {
@@ -29233,6 +29525,9 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
             jQuery(document.body).attr('unselectable', 'on').css('user-select', 'none').on('selectstart', false);
         },
         "off": function off() {
+
+            GRID.scroller.moveout_timer = new Date().getTime();
+
             jQuery(document.body).unbind(GRID.util.ENM["mousemove"] + ".ax5grid-" + this.instanceId).unbind(GRID.util.ENM["mouseup"] + ".ax5grid-" + this.instanceId).unbind("mouseleave.ax5grid-" + this.instanceId);
 
             jQuery(document.body).removeAttr('unselectable').css('user-select', 'auto').off('selectstart');
@@ -29365,7 +29660,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
 
         this.$["scroller"]["vertical-bar"].on(GRID.util.ENM["mousedown"], function (e) {
             this.xvar.mousePosition = GRID.util.getMousePosition(e);
-            scrollBarMover.on.call(this, this.$["scroller"]["vertical"], this.$["scroller"]["vertical-bar"], "vertical");
+            scrollBarMover.on.call(this, this.$["scroller"]["vertical"], this.$["scroller"]["vertical-bar"], "vertical", e);
         }.bind(this)).on("dragstart", function (e) {
             U.stopEvent(e);
             return false;
@@ -29379,7 +29674,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
 
         this.$["scroller"]["horizontal-bar"].on(GRID.util.ENM["mousedown"], function (e) {
             this.xvar.mousePosition = GRID.util.getMousePosition(e);
-            scrollBarMover.on.call(this, this.$["scroller"]["horizontal"], this.$["scroller"]["horizontal-bar"], "horizontal");
+            scrollBarMover.on.call(this, this.$["scroller"]["horizontal"], this.$["scroller"]["horizontal-bar"], "horizontal", e);
         }.bind(this)).on("dragstart", function (e) {
             U.stopEvent(e);
             return false;
@@ -29473,6 +29768,8 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
     };
 
     GRID.scroller = {
+        // 타이머
+        moveout_timer: new Date().getTime(),
         init: init,
         resize: resize
     };
@@ -29914,7 +30211,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
 
     UI.addClass({
         className: "combobox",
-        version: "1.3.29"
+        version: "1.3.41"
     }, function () {
         /**
          * @class ax5combobox
@@ -29970,6 +30267,8 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
 
             cfg = this.config;
 
+            var $window = jQuery(window),
+                $body = jQuery(document.body);
             var ctrlKeys = {
                 "18": "KEY_ALT",
                 "8": "KEY_BACKSPACE",
@@ -30047,8 +30346,8 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
 
                             var displayTableHeight = item.$displayTable.outerHeight();
                             if (Math.abs(displayTableHeight - item.$target.height()) > displayTableHeightAdjust) {
-                                item.$target.css({ height: displayTableHeight + displayTableHeightAdjust });
-                                item.$display.css({ height: displayTableHeight + displayTableHeightAdjust });
+                                item.$target.css({ height: displayTableHeight + displayTableHeightAdjust + 4 });
+                                item.$display.css({ height: displayTableHeight + displayTableHeightAdjust + 4 });
                             }
                         }
                     }
@@ -30063,7 +30362,10 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
 
                 var item = this.queue[this.activecomboboxQueueIndex],
                     pos = {},
-                    dim = {};
+                    positionMargin = 0,
+                    dim = {},
+                    pickerDim = {},
+                    pickerDirection;
 
                 if (append) jQuery(document.body).append(this.activecomboboxOptionGroup);
 
@@ -30072,27 +30374,57 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
                     width: item.$target.outerWidth(),
                     height: item.$target.outerHeight()
                 };
+                pickerDim = {
+                    winWidth: Math.max($window.width(), $body.width()),
+                    winHeight: Math.max($window.height(), $body.height()),
+                    width: this.activecomboboxOptionGroup.outerWidth(),
+                    height: this.activecomboboxOptionGroup.outerHeight()
+                };
 
                 // picker css(width, left, top) & direction 결정
                 if (!item.direction || item.direction === "" || item.direction === "auto") {
                     // set direction
-                    item.direction = "top";
+                    pickerDirection = "top";
+
+                    if (pos.top - pickerDim.height - positionMargin < 0) {
+                        pickerDirection = "top";
+                    } else if (pos.top + dim.height + pickerDim.height + positionMargin > pickerDim.winHeight) {
+                        pickerDirection = "bottom";
+                    }
+                } else {
+                    pickerDirection = item.direction;
                 }
 
                 if (append) {
-                    this.activecomboboxOptionGroup.addClass("direction-" + item.direction);
+                    this.activecomboboxOptionGroup.addClass("direction-" + pickerDirection);
                 }
                 this.activecomboboxOptionGroup.css(function () {
-                    if (item.direction == "top") {
+                    if (pickerDirection == "top") {
+                        if (pos.top + dim.height + pickerDim.height + positionMargin > pickerDim.winHeight) {
+
+                            var newTop = pos.top + dim.height / 2 - pickerDim.height / 2;
+                            if (newTop + pickerDim.height + positionMargin > pickerDim.winHeight) {
+                                newTop = 0;
+                            }
+                            if (newTop < 0) {
+                                newTop = 0;
+                            }
+
+                            return {
+                                left: pos.left,
+                                top: newTop,
+                                width: dim.width
+                            };
+                        }
                         return {
                             left: pos.left,
                             top: pos.top + dim.height + 1,
                             width: dim.width
                         };
-                    } else if (item.direction == "bottom") {
+                    } else if (pickerDirection == "bottom") {
                         return {
                             left: pos.left,
-                            top: pos.top - this.activecomboboxOptionGroup.outerHeight() - 1,
+                            top: pos.top - pickerDim.height - 1,
                             width: dim.width
                         };
                     }
@@ -30118,45 +30450,23 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
                     this.close();
                     return this;
                 } else if (clickEl === "optionItem") {
+
                     setOptionSelect.call(this, item.id, {
                         index: {
                             gindex: target.getAttribute("data-option-group-index"),
                             index: target.getAttribute("data-option-index")
                         }
                     }, undefined, true);
-                    U.selectRange(item.$displayLabel, "end"); // 포커스 end || selectAll
+
+                    alignComboboxDisplay.call(this);
+                    alignComboboxOptionGroup.call(this);
+
                     if (!item.multiple) {
                         this.close();
                     }
-                } else {
-                    //open and display click
-                    //console.log(this.instanceId);
-                }
+                } else {}
 
                 return this;
-            },
-                onBodyKeyup = function onBodyKeyup(e) {
-                // 옵션 선택 후 키업
-                if (e.keyCode == ax5.info.eventKeys.ESC) {
-                    blurLabel.call(this, this.activecomboboxQueueIndex);
-                    this.close();
-                } else if (e.which == ax5.info.eventKeys.RETURN) {
-                    var values = [];
-                    var item = this.queue[this.activecomboboxQueueIndex];
-                    var childNodes = item.$displayLabel.get(0).childNodes;
-                    for (var i = 0, l = childNodes.length; i < l; i++) {
-                        var node = childNodes[i];
-                        // nodeType:1 - span, nodeType:3 - text
-                        if (node.nodeType in COMBOBOX.util.nodeTypeProcessor) {
-                            var value = COMBOBOX.util.nodeTypeProcessor[node.nodeType].call(this, this.activecomboboxQueueIndex, node);
-                            if (typeof value !== "undefined") values.push(value);
-                        }
-                    }
-
-                    setOptionSelect.call(this, item.id, values, true, true); // set Value
-                    focusLabel.call(this, this.activecomboboxQueueIndex);
-                    if (!item.multiple) this.close();
-                }
             },
                 getLabel = function getLabel(queIdx) {
                 var item = this.queue[queIdx];
@@ -30173,44 +30483,30 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
                 data.hasSelected = data.selected && data.selected.length > 0;
                 data.removeIcon = item.removeIcon;
 
-                try {
-                    //return ax5.mustache.render(COMBOBOX.tmpl["label"].call(this, item.columnKeys), data) + "&nbsp;";
-                    return COMBOBOX.tmpl.get.call(this, "label", data, item.columnKeys) + "&nbsp;";
-                } finally {
-                    data = null;
-                }
+                return COMBOBOX.tmpl.get.call(this, "label", data, item.columnKeys);
             },
-                syncLabel = function syncLabel(queIdx) {
-                var item = this.queue[queIdx],
-                    displayTableHeight;
-                item.$displayLabel.html(getLabel.call(this, queIdx));
-                item.$target.height('');
-                item.$display.height('');
+                printLabel = function printLabel(queIdx) {
+                var item = this.queue[queIdx];
 
-                // label 사이즈 체크
-                // console.log(item.$target.height(), item.$displayTable.outerHeight());
-                if (item.$target.height() < (displayTableHeight = item.$displayTable.outerHeight())) {
-                    var displayTableHeightAdjust = function () {
-                        return U.number(item.$display.css("border-top-width")) + U.number(item.$display.css("border-bottom-width"));
-                    }();
-                    item.$target.css({ height: displayTableHeight + displayTableHeightAdjust });
-                    item.$display.css({ height: displayTableHeight + displayTableHeightAdjust });
-                }
+                item.$displayLabel.find('[data-ax5combobox-selected-label]').remove();
+                item.$displayLabelInput.before(getLabel.call(this, queIdx));
             },
                 focusLabel = function focusLabel(queIdx) {
+                if (this.queue[queIdx].disabled) return this;
+
                 this.queue[queIdx].$displayLabel.trigger("focus");
-                U.selectRange(this.queue[queIdx].$displayLabel, "end"); // 포커스 end || selectAll
+                this.queue[queIdx].$displayLabelInput.focus();
+            },
+                clearLabel = function clearLabel(queIdx) {
+                this.queue[queIdx].$displayLabelInput.val('');
             },
                 blurLabel = function blurLabel(queIdx) {
                 this.queue[queIdx].$displayLabel.trigger("blur");
+                this.queue[queIdx].$displayLabelInput.trigger("blur");
             },
                 onSearch = function onSearch(queIdx, searchWord) {
                 this.queue[queIdx].waitOptions = true;
-                /*
-                 this.activecomboboxOptionGroup.find('[data-els="content"]').html(
-                 jQuery(ax5.mustache.render(COMBOBOX.tmpl.options.call(this, this.queue[queIdx].columnKeys), this.queue[queIdx]))
-                 );
-                 */
+
                 this.activecomboboxOptionGroup.find('[data-els="content"]').html(jQuery(COMBOBOX.tmpl.get.call(this, "option", this.queue[queIdx], this.queue[queIdx].columnKeys)));
 
                 this.queue[queIdx].onSearch.call({
@@ -30250,11 +30546,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
                     data.multiple = item.multiple;
                     data.lang = item.lang;
                     data.options = item.options;
-                    /*
-                     this.activecomboboxOptionGroup.find('[data-els="content"]').html(jQuery(
-                     ax5.mustache.render(COMBOBOX.tmpl.options.call(this, item.columnKeys), data))
-                     );
-                     */
+
                     this.activecomboboxOptionGroup.find('[data-els="content"]').html(jQuery(COMBOBOX.tmpl.get.call(this, "options", data, item.columnKeys)));
                 }.bind(this));
             },
@@ -30389,18 +30681,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
                             // optionGroup scroll check
 
                             if (typeof direction !== "undefined") {
-                                // 방향이 있으면 커서 업/다운 아니면 사용자 키보드 입력
-                                // 방향이 있으면 라벨 값을 수정
-
-                                var childNodes = item.$displayLabel.get(0).childNodes;
-                                var lastNode = childNodes[childNodes.length - 1];
-                                if (lastNode && lastNode.nodeType == '3') {
-                                    lastNode.nodeValue = item.indexedOptions[_focusIndex].text;
-                                    U.selectRange(item.$displayLabel, "end");
-                                } else if (lastNode && lastNode.nodeType == '1') {
-                                    jQuery(lastNode).after(item.indexedOptions[_focusIndex].text);
-                                    U.selectRange(item.$displayLabel, "end");
-                                }
+                                item.$displayLabelInput.val(item.options[_focusIndex].text);
                             }
                         }
                     }
@@ -30570,7 +30851,6 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
 
                         if (typeof setValueType === "undefined" || setValueType !== "justSetValue") {
                             syncComboboxOptions.call(this, queIdx, item.options);
-                            syncLabel.call(this, queIdx);
                             alignComboboxOptionGroup.call(this);
                         }
                     },
@@ -30589,7 +30869,6 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
                         });
 
                         syncComboboxOptions.call(this, queIdx, this.queue[queIdx].options);
-                        syncLabel.call(this, queIdx);
                         alignComboboxOptionGroup.call(this);
                     },
                     'value': function value(queIdx, _value2, selected, setValueType) {
@@ -30616,7 +30895,6 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
                         }
                         if (typeof setValueType === "undefined" || setValueType !== "justSetValue") {
                             syncComboboxOptions.call(this, queIdx, this.queue[queIdx].options);
-                            syncLabel.call(this, queIdx);
                             alignComboboxOptionGroup.call(this);
                         }
                     },
@@ -30644,7 +30922,6 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
                         }
                         if (typeof setValueType === "undefined" || setValueType !== "justSetValue") {
                             syncComboboxOptions.call(this, queIdx, this.queue[queIdx].options);
-                            syncLabel.call(this, queIdx);
                             alignComboboxOptionGroup.call(this);
                         }
                     },
@@ -30677,11 +30954,9 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
                             clearSelected.call(this, queIdx);
                         }
                         processor.text.call(this, queIdx, value, selected, "justSetValue");
-                        syncLabel.call(this, queIdx);
                     } else {
                         if (value === null) {
                             processor.clear.call(this, queIdx);
-                            syncLabel.call(this, queIdx);
                         } else {
                             if (!this.queue[queIdx].multiple) {
                                 clearSelected.call(this, queIdx);
@@ -30692,12 +30967,12 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
                                     break;
                                 }
                             }
-
-                            syncComboboxOptions.call(this, queIdx, this.queue[queIdx].options);
-                            syncLabel.call(this, queIdx);
-                            alignComboboxOptionGroup.call(this);
                         }
                     }
+
+                    syncComboboxOptions.call(this, queIdx, this.queue[queIdx].options);
+                    printLabel.call(this, queIdx);
+                    focusLabel.call(this, queIdx);
 
                     if (typeof value !== "undefined") {
                         if (_option && !_option.noStateChange) {
@@ -30749,70 +31024,11 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
                 var bindComboboxTarget = function () {
                     var debouncedFocusWord = U.debounce(function (queIdx) {
                         if (this.activecomboboxQueueIndex == -1) return this; // 옵션박스가 닫힌상태이면 진행안함.
-
-                        var values = [];
-                        var searchWord = "";
-                        var item = this.queue[queIdx];
-                        var childNodes = item.$displayLabel.get(0).childNodes;
-
-                        for (var i = 0, l = childNodes.length; i < l; i++) {
-                            var node = childNodes[i];
-
-                            if (node.nodeType in COMBOBOX.util.nodeTypeProcessor) {
-                                var value = COMBOBOX.util.nodeTypeProcessor[node.nodeType].call(this, this.activecomboboxQueueIndex, node, true);
-                                if (typeof value === "undefined") {
-                                    //
-                                } else if (U.isString(value)) {
-                                    searchWord = value;
-                                    if (node.nodeType == '1' && node.getAttribute("data-ax5combobox-selected-text")) {
-                                        // 노드 타입인데 문자열이 리턴 되었다면 선택을 취소해야함.
-                                        searchWord = false; // 검색을 수행하지 않고 값을 변경하자.
-                                    } else {
-                                        values.push(value);
-                                    }
-                                } else {
-                                    values.push(value);
-                                }
-                            }
-                        }
-
-                        if (childNodes.length == 0) {
-                            setOptionSelect.call(this, item.id, null, undefined, "internal"); // clear value
-                        } else if (searchWord === false) {
-                            setOptionSelect.call(this, item.id, null, undefined, "internal"); // clear value
-                            setOptionSelect.call(this, item.id, values, undefined, "internal"); // set Value
-                            U.selectRange(item.$displayLabel, "end"); // label focus end
-                        } else if (searchWord != "") {
-                            focusWord.call(self, queIdx, searchWord);
-                        }
+                        focusWord.call(self, queIdx, this.queue[queIdx].$displayLabelInput.val());
                     }, 150);
 
                     var blurLabel = function blurLabel(queIdx) {
-                        var values = [];
-                        var item = this.queue[queIdx];
-                        var editingText;
-                        var childNodes = item.$displayLabel.get(0).childNodes;
-
-                        for (var i = 0, l = childNodes.length; i < l; i++) {
-                            var node = childNodes[i];
-                            if (node.nodeType == 1) {
-                                if (node.nodeType in COMBOBOX.util.nodeTypeProcessor) {
-
-                                    var value = COMBOBOX.util.nodeTypeProcessor[node.nodeType].call(this, queIdx, node, false);
-                                    if (typeof value === "undefined") {
-                                        //
-                                    } else if (U.isString(value)) {
-                                        //editingText = value;
-                                        //values.push(value);
-                                    } else {
-                                        values.push(value);
-                                    }
-                                }
-                            }
-                        }
-
-                        setOptionSelect.call(this, item.id, values, undefined, false); // set Value
-                        //if(item.selected.length != values.length){}
+                        clearLabel.call(this, queIdx);
                     };
 
                     var comboboxEvent = {
@@ -30838,11 +31054,16 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
                                             index: option['@index']
                                         }
                                     }, false, true);
+                                    alignComboboxDisplay.call(this);
+                                    alignComboboxOptionGroup.call(this);
                                     focusLabel.call(this, queIdx);
                                     U.stopEvent(e);
                                     return this;
                                 } else if (clickEl === "clear") {
                                     setOptionSelect.call(this, queIdx, { clear: true });
+                                    alignComboboxDisplay.call(this);
+                                    alignComboboxOptionGroup.call(this);
+                                    focusLabel.call(this, queIdx);
                                 }
                             } else {
                                 if (self.activecomboboxQueueIndex == queIdx) {
@@ -30852,11 +31073,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
                                     }
                                 } else {
                                     self.open(queIdx);
-
-                                    if (this.queue[queIdx].$displayLabel.text().replace(/^\W*|\W*$/g, '') == "") {
-                                        this.queue[queIdx].$displayLabel.html(getLabel.call(this, queIdx));
-                                        focusLabel.call(this, queIdx);
-                                    }
+                                    focusLabel.call(this, queIdx);
                                 }
                             }
                         },
@@ -30878,14 +31095,44 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
                                 "38": "KEY_UP"
                             };
                             if (!disableCtrlKeys[e.which]) {
-                                debouncedFocusWord.call(this, queIdx);
+
+                                // backspace 감지 하여 input 값이 없으면 스탑이벤트 처리 할 것
+                                if (e.which == ax5.info.eventKeys.BACKSPACE && this.queue[queIdx].$displayLabelInput.val() == "") {
+                                    // 마지막 아이템을 제거.
+                                    if (this.queue[queIdx].selected.length > 0) {
+                                        var option = this.queue[queIdx].selected[this.queue[queIdx].selected.length - 1];
+                                        setOptionSelect.call(this, queIdx, {
+                                            index: {
+                                                gindex: option['@gindex'],
+                                                index: option['@index']
+                                            }
+                                        }, false, true);
+                                    }
+                                    alignComboboxDisplay.call(this);
+                                    alignComboboxOptionGroup.call(this);
+                                    U.stopEvent(e);
+                                } else {
+                                    debouncedFocusWord.call(this, queIdx);
+                                }
                             }
                         },
                         'keyDown': function keyDown(queIdx, e) {
                             if (e.which == ax5.info.eventKeys.ESC) {
+                                clearLabel.call(this, queIdx);
+                                this.close();
                                 U.stopEvent(e);
                             } else if (e.which == ax5.info.eventKeys.RETURN) {
-                                // display label에서 줄넘김막기위한 구문
+
+                                setOptionSelect.call(this, item.id, {
+                                    index: {
+                                        gindex: item.indexedOptions[item.optionFocusIndex]["@gindex"],
+                                        index: item.indexedOptions[item.optionFocusIndex]["@index"]
+                                    }
+                                }, undefined, true);
+                                clearLabel.call(this, queIdx);
+                                alignComboboxDisplay.call(this);
+                                alignComboboxOptionGroup.call(this);
+
                                 U.stopEvent(e);
                             } else if (e.which == ax5.info.eventKeys.DOWN) {
                                 focusMove.call(this, queIdx, 1);
@@ -30932,6 +31179,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
                             item.$display = jQuery(COMBOBOX.tmpl.get.call(this, "comboboxDisplay", data, item.columnKeys));
                             item.$displayTable = item.$display.find('[data-els="display-table"]');
                             item.$displayLabel = item.$display.find('[data-ax5combobox-display="label"]');
+                            item.$displayLabelInput = item.$display.find('[data-ax5combobox-display="input"]');
 
                             if (item.$target.find("select").get(0)) {
                                 item.$select = item.$target.find("select");
@@ -30952,21 +31200,19 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
                             // 라벨에 사용자 입력 필드가 있으므로 displayInput은 필요 없음.
                             // select.options로 item.options를 만들어내거나 item.options로 select.options를 만들어냄
                             item.options = syncComboboxOptions.call(this, queIdx, item.options);
-
-                            alignComboboxDisplay.call(this);
                         } else {
                             item.$displayLabel.html(getLabel.call(this, queIdx));
                             item.options = syncComboboxOptions.call(this, queIdx, item.options);
-
-                            alignComboboxDisplay.call(this);
                         }
+
+                        alignComboboxDisplay.call(this);
 
                         item.$display.unbind('click.ax5combobox').bind('click.ax5combobox', comboboxEvent.click.bind(this, queIdx));
 
                         // combobox 태그에 대한 이벤트 감시
 
 
-                        item.$displayLabel.unbind("focus.ax5combobox").bind("focus.ax5combobox", comboboxEvent.focus.bind(this, queIdx)).unbind("blur.ax5combobox").bind("blur.ax5combobox", comboboxEvent.blur.bind(this, queIdx)).unbind('keyup.ax5combobox').bind('keyup.ax5combobox', comboboxEvent.keyUp.bind(this, queIdx)).unbind("keydown.ax5combobox").bind("keydown.ax5combobox", comboboxEvent.keyDown.bind(this, queIdx));
+                        item.$displayLabelInput.unbind("focus.ax5combobox").bind("focus.ax5combobox", comboboxEvent.focus.bind(this, queIdx)).unbind("blur.ax5combobox").bind("blur.ax5combobox", comboboxEvent.blur.bind(this, queIdx)).unbind('keyup.ax5combobox').bind('keyup.ax5combobox', comboboxEvent.keyUp.bind(this, queIdx)).unbind("keydown.ax5combobox").bind("keydown.ax5combobox", comboboxEvent.keyDown.bind(this, queIdx));
 
                         // select 태그에 대한 change 이벤트 감시
 
@@ -30978,6 +31224,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
                         return this;
                     };
                 }();
+
                 var comboboxConfig = {},
                     queIdx;
 
@@ -31056,9 +31303,8 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
                                 }
                             })(item, O);
 
-                            item.$display.find('[data-ax5combobox-display="label"]').html(getLabel.call(this, this.activecomboboxQueueIndex));
                             item.options = syncComboboxOptions.call(this, this.activecomboboxQueueIndex, O.options);
-
+                            printLabel.call(this, this.activecomboboxQueueIndex);
                             alignComboboxDisplay.call(this);
 
                             /// 템플릿에 전달할 오브젝트 선언
@@ -31147,12 +31393,6 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
                         }
                     }
 
-                    jQuery(window).bind("keyup.ax5combobox-" + this.instanceId, function (e) {
-                        e = e || window.event;
-                        onBodyKeyup.call(this, e);
-                        U.stopEvent(e);
-                    }.bind(this));
-
                     jQuery(window).bind("click.ax5combobox-" + this.instanceId, function (e) {
                         e = e || window.event;
                         onBodyClick.call(this, e);
@@ -31208,6 +31448,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
                 }
 
                 clearSelected.call(this, queIdx);
+
                 if (U.isArray(_value)) {
                     var _values = U.map(_value, function () {
                         return { value: this };
@@ -31215,8 +31456,12 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
                     setOptionSelect.call(this, queIdx, _values, _selected || true, { noStateChange: true });
                 } else if (U.isString(_value) || U.isNumber(_value)) {
                     setOptionSelect.call(this, queIdx, { value: _value }, _selected || true, { noStateChange: true });
+                } else {
+                    printLabel.call(this, queIdx);
                 }
-                //blurLabel.call(this, queIdx);
+
+                blurLabel.call(this, queIdx);
+                alignComboboxDisplay.call(this);
 
                 return this;
             };
@@ -31241,7 +31486,8 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
                 }
                 clearSelected.call(this, queIdx);
                 setOptionSelect.call(this, queIdx, _text, true, { noStateChange: true });
-                //blurLabel.call(this, queIdx);
+                blurLabel.call(this, queIdx);
+                alignComboboxDisplay.call(this);
 
                 return this;
             };
@@ -31271,6 +31517,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
                 item = this.queue[this.activecomboboxQueueIndex];
                 item.optionFocusIndex = -1;
                 item.$display.removeAttr("data-combobox-option-group-opened").trigger("focus");
+                item.$displayLabel.attr("contentEditable", "false");
 
                 this.activecomboboxOptionGroup.addClass("destroy");
 
@@ -31315,9 +31562,10 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
                 var queIdx = getQueIdx.call(this, _boundID);
 
                 if (typeof queIdx !== "undefined") {
+                    this.queue[queIdx].disabled = false;
                     if (this.queue[queIdx].$display[0]) {
-                        this.queue[queIdx].$displayLabel.attr("contentEditable", "true");
                         this.queue[queIdx].$display.removeAttr("disabled");
+                        this.queue[queIdx].$displayLabelInput.removeAttr("disabled");
                     }
                     if (this.queue[queIdx].$select[0]) {
                         this.queue[queIdx].$select.removeAttr("disabled");
@@ -31341,9 +31589,10 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
                 var queIdx = getQueIdx.call(this, _boundID);
 
                 if (typeof queIdx !== "undefined") {
+                    this.queue[queIdx].disabled = true;
                     if (this.queue[queIdx].$display[0]) {
-                        this.queue[queIdx].$displayLabel.attr("contentEditable", "false");
                         this.queue[queIdx].$display.attr("disabled", "disabled");
+                        this.queue[queIdx].$displayLabelInput.attr("disabled", "disabled");
                     }
                     if (this.queue[queIdx].$select[0]) {
                         this.queue[queIdx].$select.attr("disabled", "disabled");
@@ -31466,11 +31715,15 @@ jQuery.fn.ax5combobox = function () {
     };
 
     var comboboxDisplay = function comboboxDisplay(columnKeys) {
-        return "\n            <div class=\"form-control {{formSize}} ax5combobox-display {{theme}}\" \n            data-ax5combobox-display=\"{{id}}\" data-ax5combobox-instance=\"{{instanceId}}\">\n                <div class=\"ax5combobox-display-table\" data-els=\"display-table\">\n                    <div data-ax5combobox-display=\"label-holder\"> \n                    <a {{^tabIndex}}href=\"#ax5combobox-{{id}}\" {{/tabIndex}}{{#tabIndex}}tabindex=\"{{tabIndex}}\" {{/tabIndex}}\n                    data-ax5combobox-display=\"label\"\n                    contentEditable=\"true\"\n                    spellcheck=\"false\">{{{label}}}</a>\n                    </div>\n                    <div data-ax5combobox-display=\"addon\"> \n                        {{#multiple}}{{#reset}}\n                        <span class=\"addon-icon-reset\" data-selected-clear=\"true\">{{{.}}}</span>\n                        {{/reset}}{{/multiple}}\n                        {{#icons}}\n                        <span class=\"addon-icon-closed\">{{clesed}}</span>\n                        <span class=\"addon-icon-opened\">{{opened}}</span>\n                        {{/icons}}\n                        {{^icons}}\n                        <span class=\"addon-icon-closed\"><span class=\"addon-icon-arrow\"></span></span>\n                        <span class=\"addon-icon-opened\"><span class=\"addon-icon-arrow\"></span></span>\n                        {{/icons}}\n                    </div>\n                </div>\n            </a>\n        ";
+        return "\n<div class=\"form-control {{formSize}} ax5combobox-display {{theme}}\" \ndata-ax5combobox-display=\"{{id}}\" data-ax5combobox-instance=\"{{instanceId}}\">\n    <div class=\"ax5combobox-display-table\" data-els=\"display-table\">\n        <div data-ax5combobox-display=\"label-holder\"> \n            <a {{^tabIndex}}{{/tabIndex}}{{#tabIndex}}tabindex=\"{{tabIndex}}\" {{/tabIndex}}\n            data-ax5combobox-display=\"label\"\n            spellcheck=\"false\"><input type=\"text\"data-ax5combobox-display=\"input\" style=\"border:0px none;background: transparent;\" /></a>\n        </div>\n        <div data-ax5combobox-display=\"addon\"> \n            {{#multiple}}{{#reset}}\n            <span class=\"addon-icon-reset\" data-selected-clear=\"true\">{{{.}}}</span>\n            {{/reset}}{{/multiple}}\n            {{#icons}}\n            <span class=\"addon-icon-closed\">{{clesed}}</span>\n            <span class=\"addon-icon-opened\">{{opened}}</span>\n            {{/icons}}\n            {{^icons}}\n            <span class=\"addon-icon-closed\"><span class=\"addon-icon-arrow\"></span></span>\n            <span class=\"addon-icon-opened\"><span class=\"addon-icon-arrow\"></span></span>\n            {{/icons}}\n        </div>\n    </div>\n</div>\n        ";
     };
 
     var formSelect = function formSelect(columnKeys) {
         return "\n            <select tabindex=\"-1\" class=\"form-control {{formSize}}\" name=\"{{name}}\" {{#multiple}}multiple=\"multiple\"{{/multiple}}></select>\n        ";
+    };
+
+    var formSelectOptions = function formSelectOptions(columnKeys) {
+        return "\n{{#selected}}\n<option value=\"{{" + columnKeys.optionValue + "}}\" selected=\"true\">{{" + columnKeys.optionText + "}}</option>\n{{/selected}}\n";
     };
 
     var options = function options(columnKeys) {
@@ -31478,12 +31731,13 @@ jQuery.fn.ax5combobox = function () {
     };
 
     var label = function label(columnKeys) {
-        return "{{#selected}}<div tabindex=\"-1\" data-ax5combobox-selected-label=\"{{@i}}\" data-ax5combobox-selected-text=\"{{text}}\"><div data-ax5combobox-remove=\"true\" data-ax5combobox-remove-index=\"{{@i}}\">{{{removeIcon}}}</div><span>{{text}}</span></div>{{/selected}}";
+        return "{{#selected}}<div tabindex=\"-1\" data-ax5combobox-selected-label=\"{{@i}}\" data-ax5combobox-selected-text=\"{{text}}\"><div data-ax5combobox-remove=\"true\" \ndata-ax5combobox-remove-index=\"{{@i}}\">{{{removeIcon}}}</div><span>{{text}}</span></div>{{/selected}}";
     };
 
     COMBOBOX.tmpl = {
         "comboboxDisplay": comboboxDisplay,
         "formSelect": formSelect,
+        "formSelectOptions": formSelectOptions,
         "optionGroup": optionGroup,
         "options": options,
         "label": label,
@@ -31594,7 +31848,7 @@ jQuery.fn.ax5combobox = function () {
 
     UI.addClass({
         className: "layout",
-        version: "1.3.29"
+        version: "1.3.41"
     }, function () {
         /**
          * @class ax5layout
@@ -32625,7 +32879,7 @@ jQuery.fn.ax5layout = function () {
 
     UI.addClass({
         className: "binder",
-        version: "1.3.29"
+        version: "1.3.41"
     }, function () {
 
         /**
@@ -33567,12 +33821,6 @@ jQuery.fn.ax5layout = function () {
 })();
 "use strict";
 
-/*
- * Copyright (c) 2016. tom@axisj.com
- * - github.com/thomasjang
- * - www.axisj.com
- */
-
 // ax5.ui.autocomplete
 (function () {
 
@@ -33582,7 +33830,7 @@ jQuery.fn.ax5layout = function () {
 
     UI.addClass({
         className: "autocomplete",
-        version: "1.3.29"
+        version: "${VERSION}"
     }, function () {
         /**
          * @class ax5autocomplete
@@ -33654,6 +33902,8 @@ jQuery.fn.ax5layout = function () {
 
             cfg = this.config;
 
+            var $window = jQuery(window),
+                $body = jQuery(document.body);
             var ctrlKeys = {
                 "18": "KEY_ALT",
                 //"8": "KEY_BACKSPACE",
@@ -33731,8 +33981,8 @@ jQuery.fn.ax5layout = function () {
 
                             var displayTableHeight = item.$displayTable.outerHeight();
                             if (Math.abs(displayTableHeight - item.$target.height()) > displayTableHeightAdjust) {
-                                item.$target.css({ height: displayTableHeight + displayTableHeightAdjust });
-                                item.$display.css({ height: displayTableHeight + displayTableHeightAdjust });
+                                item.$target.css({ height: displayTableHeight + displayTableHeightAdjust + 4 });
+                                item.$display.css({ height: displayTableHeight + displayTableHeightAdjust + 4 });
                             }
                         }
                     }
@@ -33743,12 +33993,16 @@ jQuery.fn.ax5layout = function () {
                 return this;
             },
                 alignAutocompleteOptionGroup = function alignAutocompleteOptionGroup(append) {
-                if (!this.activeautocompleteOptionGroup) return this;
+                if (append && !this.activeautocompleteOptionGroup) return this;
 
                 var item = this.queue[this.activeautocompleteQueueIndex],
                     pos = {},
-                    dim = {};
+                    positionMargin = 0,
+                    dim = {},
+                    pickerDim = {},
+                    pickerDirection;
 
+                if (!item) return this;
                 if (append) jQuery(document.body).append(this.activeautocompleteOptionGroup);
 
                 pos = item.$target.offset();
@@ -33756,27 +34010,57 @@ jQuery.fn.ax5layout = function () {
                     width: item.$target.outerWidth(),
                     height: item.$target.outerHeight()
                 };
+                pickerDim = {
+                    winWidth: Math.max($window.width(), $body.width()),
+                    winHeight: Math.max($window.height(), $body.height()),
+                    width: this.activeautocompleteOptionGroup.outerWidth(),
+                    height: this.activeautocompleteOptionGroup.outerHeight()
+                };
 
                 // picker css(width, left, top) & direction 결정
                 if (!item.direction || item.direction === "" || item.direction === "auto") {
                     // set direction
-                    item.direction = "top";
+                    pickerDirection = "top";
+
+                    if (pos.top - pickerDim.height - positionMargin < 0) {
+                        pickerDirection = "top";
+                    } else if (pos.top + dim.height + pickerDim.height + positionMargin > pickerDim.winHeight) {
+                        pickerDirection = "bottom";
+                    }
+                } else {
+                    pickerDirection = item.direction;
                 }
 
                 if (append) {
-                    this.activeautocompleteOptionGroup.addClass("direction-" + item.direction);
+                    this.activeautocompleteOptionGroup.addClass("direction-" + pickerDirection);
                 }
                 this.activeautocompleteOptionGroup.css(function () {
-                    if (item.direction == "top") {
+                    if (pickerDirection == "top") {
+                        if (pos.top + dim.height + pickerDim.height + positionMargin > pickerDim.winHeight) {
+
+                            var newTop = pos.top + pickerDim.height;
+                            if (newTop + pickerDim.height + positionMargin > pickerDim.winHeight) {
+                                newTop = 0;
+                            }
+                            if (newTop < 0) {
+                                newTop = 0;
+                            }
+
+                            return {
+                                left: pos.left,
+                                top: newTop,
+                                width: dim.width
+                            };
+                        }
                         return {
                             left: pos.left,
                             top: pos.top + dim.height + 1,
                             width: dim.width
                         };
-                    } else if (item.direction == "bottom") {
+                    } else if (pickerDirection == "bottom") {
                         return {
                             left: pos.left,
-                            top: pos.top - this.activeautocompleteOptionGroup.outerHeight() - 1,
+                            top: pos.top - pickerDim.height - 1,
                             width: dim.width
                         };
                     }
@@ -33807,40 +34091,14 @@ jQuery.fn.ax5layout = function () {
                             index: target.getAttribute("data-option-index")
                         }
                     }, undefined, "optionItemClick");
-
-                    U.selectRange(item.$displayLabel, "end"); // 포커스 end || selectAll
+                    alignAutocompleteDisplay.call(this);
+                    alignAutocompleteOptionGroup.call(this);
                     if (!item.multiple) {
                         this.close();
                     }
-                } else {
-                    //open and display click
-                    //console.log(this.instanceId);
-                }
+                } else {}
 
                 return this;
-            },
-                onBodyKeyup = function onBodyKeyup(e) {
-                // 옵션 선택 후 키업
-                if (e.keyCode == ax5.info.eventKeys.ESC) {
-                    blurLabel.call(this, this.activeautocompleteQueueIndex);
-                    this.close();
-                } else if (e.which == ax5.info.eventKeys.RETURN) {
-                    var values = [];
-                    var item = this.queue[this.activeautocompleteQueueIndex];
-                    var childNodes = item.$displayLabel.get(0).childNodes;
-                    for (var i = 0, l = childNodes.length; i < l; i++) {
-                        var node = childNodes[i];
-                        // nodeType:1 - span, nodeType:3 - text
-                        if (node.nodeType in AUTOCOMPLETE.util.nodeTypeProcessor) {
-                            var value = AUTOCOMPLETE.util.nodeTypeProcessor[node.nodeType].call(this, this.activeautocompleteQueueIndex, node);
-                            if (typeof value !== "undefined") values.push(value);
-                        }
-                    }
-
-                    setSelected.call(this, item.id, values, true); // set Value
-                    focusLabel.call(this, this.activeautocompleteQueueIndex);
-                    if (!item.multiple) this.close();
-                }
             },
                 getLabel = function getLabel(queIdx) {
                 var item = this.queue[queIdx];
@@ -33856,11 +34114,11 @@ jQuery.fn.ax5layout = function () {
                 data.selected = item.selected;
                 data.hasSelected = data.selected && data.selected.length > 0;
                 data.removeIcon = item.removeIcon;
-                return AUTOCOMPLETE.tmpl.get.call(this, "label", data, item.columnKeys) + "&nbsp;";
+
+                return AUTOCOMPLETE.tmpl.get.call(this, "label", data, item.columnKeys);
             },
                 syncLabel = function syncLabel(queIdx) {
-                var item = this.queue[queIdx],
-                    displayTableHeight;
+                var item = this.queue[queIdx];
 
                 if (!item.multiple && item.selected && item.selected.length > 0) {
                     item.selected = [].concat(item.selected[item.selected.length - 1]);
@@ -33873,23 +34131,21 @@ jQuery.fn.ax5layout = function () {
                 item.$select.html(AUTOCOMPLETE.tmpl.get.call(this, "formSelectOptions", {
                     selected: item.selected
                 }, item.columnKeys));
+            },
+                printLabel = function printLabel(queIdx) {
+                var item = this.queue[queIdx];
 
-                item.$displayLabel.html(getLabel.call(this, queIdx));
-                item.$target.height('');
-                item.$display.height('');
-
-                // label 사이즈 체크
-                if (item.$target.height() < (displayTableHeight = item.$displayTable.outerHeight())) {
-                    var displayTableHeightAdjust = function () {
-                        return U.number(item.$display.css("border-top-width")) + U.number(item.$display.css("border-bottom-width"));
-                    }();
-                    item.$target.css({ height: displayTableHeight + displayTableHeightAdjust });
-                    item.$display.css({ height: displayTableHeight + displayTableHeightAdjust });
-                }
+                item.$displayLabel.find('[data-ax5autocomplete-selected-label]').remove();
+                item.$displayLabelInput.before(getLabel.call(this, queIdx));
             },
                 focusLabel = function focusLabel(queIdx) {
+                if (this.queue[queIdx].disabled) return this;
+
                 this.queue[queIdx].$displayLabel.trigger("focus");
-                U.selectRange(this.queue[queIdx].$displayLabel, "end"); // 포커스 end || selectAll
+                this.queue[queIdx].$displayLabelInput.focus();
+            },
+                clearLabel = function clearLabel(queIdx) {
+                this.queue[queIdx].$displayLabelInput.val('');
             },
                 blurLabel = function blurLabel(queIdx) {
                 this.queue[queIdx].$displayLabel.trigger("blur");
@@ -33941,6 +34197,11 @@ jQuery.fn.ax5layout = function () {
                     this.activeautocompleteOptionGroup.find('[data-els="content"]').html(jQuery(AUTOCOMPLETE.tmpl.get.call(this, "options", data, item.columnKeys)));
 
                     focusWord.call(this, this.activeautocompleteQueueIndex, searchWord);
+                    alignAutocompleteOptionGroup.call(this);
+
+                    setTimeout(function () {
+                        alignAutocompleteOptionGroup.call(this);
+                    }.bind(this));
                 }.bind(this));
             },
                 focusWord = function focusWord(queIdx, searchWord) {
@@ -34045,20 +34306,7 @@ jQuery.fn.ax5layout = function () {
                             // optionGroup scroll check
 
                             if (typeof direction !== "undefined") {
-                                /*
-                                 // 방향이 있으면 커서 업/다운 아니면 사용자 키보드 입력
-                                 // 방향이 있으면 라벨 값을 수정
-                                 var childNodes = item.$displayLabel.get(0).childNodes;
-                                 var lastNode = childNodes[childNodes.length - 1];
-                                 if (lastNode && lastNode.nodeType == '3') {
-                                 //lastNode.nodeValue = item.options[_focusIndex].text;
-                                 U.selectRange(item.$displayLabel, "end");
-                                 } else if (lastNode && lastNode.nodeType == '1') {
-                                 //jQuery(lastNode).after(item.options[_focusIndex].text);
-                                 U.selectRange(item.$displayLabel, "end");
-                                 }
-                                 */
-                                U.selectRange(item.$displayLabel, "end");
+                                item.$displayLabelInput.val(item.options[_focusIndex].text);
                             }
                         }
                     }
@@ -34095,6 +34343,11 @@ jQuery.fn.ax5layout = function () {
                         n.selected = false;
                     }
                 });
+
+                this.queue[queIdx].selected = [];
+                this.queue[queIdx].$select.html(AUTOCOMPLETE.tmpl.get.call(this, "formSelectOptions", {
+                    selected: this.queue[queIdx].selected
+                }, this.queue[queIdx].columnKeys));
             },
                 setSelected = function () {
                 var processor = {
@@ -34301,6 +34554,8 @@ jQuery.fn.ax5layout = function () {
                     }
 
                     syncLabel.call(this, queIdx);
+                    printLabel.call(this, queIdx);
+                    focusLabel.call(this, queIdx);
                     alignAutocompleteOptionGroup.call(this);
 
                     if (typeof value !== "undefined") {
@@ -34352,64 +34607,11 @@ jQuery.fn.ax5layout = function () {
                 var bindAutocompleteTarget = function () {
                     var debouncedFocusWord = U.debounce(function (queIdx) {
                         if (this.activeautocompleteQueueIndex == -1) return this; // 옵션박스가 닫힌상태이면 진행안함.
-
-                        var values = [];
-                        var searchWord = "";
-                        var resetSelected = false;
-                        var item = this.queue[queIdx];
-                        var childNodes = item.$displayLabel.get(0).childNodes;
-
-                        for (var i = 0, l = childNodes.length; i < l; i++) {
-                            var node = childNodes[i];
-
-                            if (node.nodeType in AUTOCOMPLETE.util.nodeTypeProcessor) {
-                                var value = AUTOCOMPLETE.util.nodeTypeProcessor[node.nodeType].call(this, this.activeautocompleteQueueIndex, node, true);
-                                if (typeof value === "undefined") {
-                                    //
-                                } else if (U.isString(value)) {
-                                    searchWord = value;
-                                } else {
-                                    if (value.removeSelectedIndex) {
-                                        resetSelected = true;
-                                    }
-                                    values.push(value);
-                                }
-                            }
-                        }
-
-                        if (childNodes.length == 0) {
-                            setSelected.call(this, item.id, null, undefined, "internal"); // clear value
-                        } else if (searchWord != "") {
-                            onSearch.call(self, queIdx, searchWord);
-                        } else if (resetSelected) {
-                            setSelected.call(this, item.id, values, undefined, "internal"); // set Value
-                            U.selectRange(item.$displayLabel, "end"); // label focus end
-                            self.close();
-                        }
+                        onSearch.call(self, queIdx, this.queue[queIdx].$displayLabelInput.val());
                     }, 150);
 
                     var blurLabel = function blurLabel(queIdx) {
-                        var values = [];
-                        var item = this.queue[queIdx];
-                        var editingText;
-                        var childNodes = item.$displayLabel.get(0).childNodes;
-
-                        for (var i = 0, l = childNodes.length; i < l; i++) {
-                            var node = childNodes[i];
-                            if (node.nodeType in AUTOCOMPLETE.util.nodeTypeProcessor) {
-                                var value = AUTOCOMPLETE.util.nodeTypeProcessor[node.nodeType].call(this, queIdx, node, true);
-                                if (typeof value === "undefined") {
-                                    //
-                                } else if (U.isString(value)) {
-                                    //editingText = value;
-                                    //values.push(value);
-                                } else {
-                                    values.push(value);
-                                }
-                            }
-                        }
-
-                        setSelected.call(this, item.id, values, undefined, "blurLabel"); // set Value
+                        clearLabel.call(this, queIdx);
                     };
 
                     var autocompleteEvent = {
@@ -34430,11 +34632,16 @@ jQuery.fn.ax5layout = function () {
                                     var removeIndex = target.getAttribute("data-ax5autocomplete-remove-index");
                                     this.queue[queIdx].selected.splice(removeIndex, 1);
                                     syncLabel.call(this, queIdx);
+                                    printLabel.call(this, queIdx);
                                     focusLabel.call(this, queIdx);
+                                    alignAutocompleteDisplay.call(this);
+                                    alignAutocompleteOptionGroup.call(this);
                                     U.stopEvent(e);
                                     return this;
                                 } else if (clickEl === "clear") {
                                     setSelected.call(this, queIdx, { clear: true });
+                                    alignAutocompleteDisplay.call(this);
+                                    alignAutocompleteOptionGroup.call(this);
                                 }
                             } else {
                                 if (self.activeautocompleteQueueIndex == queIdx) {
@@ -34443,10 +34650,7 @@ jQuery.fn.ax5layout = function () {
                                         self.close();
                                     }
                                 } else {
-                                    if (this.queue[queIdx].$displayLabel.text().replace(/^\W*|\W*$/g, '') == "") {
-                                        this.queue[queIdx].$displayLabel.html(getLabel.call(this, queIdx));
-                                        focusLabel.call(this, queIdx);
-                                    }
+                                    focusLabel.call(this, queIdx);
                                 }
                             }
                         },
@@ -34457,22 +34661,52 @@ jQuery.fn.ax5layout = function () {
                                 U.stopEvent(e);
                                 return this;
                             }
+                            if (e.which == ax5.info.eventKeys.TAB) {
+                                // nothing
+
+                                this.close();
+                                return this;
+                            }
                             if (self.activeautocompleteQueueIndex != queIdx) {
                                 // 닫힌 상태 인경우
-                                self.open(queIdx);
-                                U.stopEvent(e);
+                                self.open(queIdx); // open and align
                             }
                             if (ctrlKeys[e.which]) {
                                 U.stopEvent(e);
                             } else {
-                                debouncedFocusWord.call(this, queIdx);
+                                // backspace 감지 하여 input 값이 없으면 스탑이벤트 처리 할 것
+                                if (e.which == ax5.info.eventKeys.BACKSPACE && this.queue[queIdx].$displayLabelInput.val() == "") {
+                                    // 마지막 아이템을 제거.
+                                    this.queue[queIdx].selected.pop();
+                                    syncLabel.call(this, queIdx);
+                                    printLabel.call(this, queIdx);
+                                    focusLabel.call(this, queIdx);
+                                    alignAutocompleteDisplay.call(this);
+                                    alignAutocompleteOptionGroup.call(this);
+                                    U.stopEvent(e);
+                                } else {
+                                    debouncedFocusWord.call(this, queIdx);
+                                }
                             }
                         },
                         'keyDown': function keyDown(queIdx, e) {
                             if (e.which == ax5.info.eventKeys.ESC) {
+                                clearLabel.call(this, queIdx);
+                                this.close();
                                 U.stopEvent(e);
                             } else if (e.which == ax5.info.eventKeys.RETURN) {
-                                // display label에서 줄넘김막기위한 구문
+                                var inputValue = this.queue[queIdx].$displayLabelInput.val();
+                                if (item.optionFocusIndex > -1) {
+                                    setSelected.call(this, item.id, {
+                                        optionIndex: {
+                                            index: item.optionFocusIndex
+                                        }
+                                    }, undefined, "optionItemClick");
+                                } else if (inputValue != "") {
+                                    setSelected.call(this, queIdx, inputValue, true);
+                                }
+                                clearLabel.call(this, queIdx);
+
                                 U.stopEvent(e);
                             } else if (e.which == ax5.info.eventKeys.DOWN) {
                                 focusMove.call(this, queIdx, 1);
@@ -34483,8 +34717,8 @@ jQuery.fn.ax5layout = function () {
                             }
                         },
                         'focus': function focus(queIdx, e) {
-                            //console.log(e);
-                            U.selectRange(this.queue[queIdx].$displayLabel, "end"); // 포커스 end || selectAll
+                            // console.log(e);
+
                         },
                         'blur': function blur(queIdx, e) {
                             blurLabel.call(this, queIdx);
@@ -34517,6 +34751,7 @@ jQuery.fn.ax5layout = function () {
                             item.$display = jQuery(AUTOCOMPLETE.tmpl.get.call(this, "autocompleteDisplay", data, item.columnKeys));
                             item.$displayTable = item.$display.find('[data-els="display-table"]');
                             item.$displayLabel = item.$display.find('[data-ax5autocomplete-display="label"]');
+                            item.$displayLabelInput = item.$display.find('[data-ax5autocomplete-display="input"]');
 
                             if (item.$target.find("select").get(0)) {
                                 item.$select = item.$target.find("select");
@@ -34532,20 +34767,17 @@ jQuery.fn.ax5layout = function () {
                             }
 
                             item.$target.append(item.$display);
-
-                            alignAutocompleteDisplay.call(this);
                         } else {
-                            item.$displayLabel.html(getLabel.call(this, queIdx));
-
-                            alignAutocompleteDisplay.call(this);
+                            printLabel.call(this, queIdx);
                         }
+
+                        alignAutocompleteDisplay.call(this);
 
                         item.$display.unbind('click.ax5autocomplete').bind('click.ax5autocomplete', autocompleteEvent.click.bind(this, queIdx));
 
                         // autocomplete 태그에 대한 이벤트 감시
 
-
-                        item.$displayLabel.unbind("focus.ax5autocomplete").bind("focus.ax5autocomplete", autocompleteEvent.focus.bind(this, queIdx)).unbind("blur.ax5autocomplete").bind("blur.ax5autocomplete", autocompleteEvent.blur.bind(this, queIdx)).unbind('keyup.ax5autocomplete').bind('keyup.ax5autocomplete', autocompleteEvent.keyUp.bind(this, queIdx)).unbind("keydown.ax5autocomplete").bind("keydown.ax5autocomplete", autocompleteEvent.keyDown.bind(this, queIdx));
+                        item.$displayLabelInput.off("focus.ax5autocomplete").on("focus.ax5autocomplete", autocompleteEvent.focus.bind(this, queIdx)).off("blur.ax5autocomplete").on("blur.ax5autocomplete", autocompleteEvent.blur.bind(this, queIdx)).off("keydown.ax5autocomplete").on("keydown.ax5autocomplete", autocompleteEvent.keyUp.bind(this, queIdx)).off("keyup.ax5autocomplete").on("keyup.ax5autocomplete", autocompleteEvent.keyDown.bind(this, queIdx));
 
                         // select 태그에 대한 change 이벤트 감시
 
@@ -34675,12 +34907,6 @@ jQuery.fn.ax5layout = function () {
                         }
                     }
 
-                    jQuery(window).bind("keyup.ax5autocomplete-" + this.instanceId, function (e) {
-                        e = e || window.event;
-                        onBodyKeyup.call(this, e);
-                        U.stopEvent(e);
-                    }.bind(this));
-
                     jQuery(window).bind("click.ax5autocomplete-" + this.instanceId, function (e) {
                         e = e || window.event;
                         onBodyClick.call(this, e);
@@ -34719,18 +34945,21 @@ jQuery.fn.ax5layout = function () {
                     return;
                 }
 
-                this.queue[queIdx].selected = [];
                 clearSelected.call(this, queIdx);
+
                 if (U.isArray(_value)) {
                     var _values = U.map(_value, function () {
                         return { value: this };
                     });
                     setSelected.call(this, queIdx, _values, true, { noStateChange: true });
                 } else if (U.isObject(_value)) {
-                    console.log(_value);
                     setSelected.call(this, queIdx, { value: _value }, true, { noStateChange: true });
+                } else {
+                    printLabel.call(this, queIdx);
                 }
+
                 blurLabel.call(this, queIdx);
+                alignAutocompleteDisplay.call(this);
 
                 return this;
             };
@@ -34756,6 +34985,7 @@ jQuery.fn.ax5layout = function () {
                 clearSelected.call(this, queIdx);
                 setSelected.call(this, queIdx, _text, true, { noStateChange: true });
                 blurLabel.call(this, queIdx);
+                alignAutocompleteDisplay.call(this);
 
                 return this;
             };
@@ -34829,9 +35059,10 @@ jQuery.fn.ax5layout = function () {
                 var queIdx = getQueIdx.call(this, _boundID);
 
                 if (typeof queIdx !== "undefined") {
+                    this.queue[queIdx].disable = false;
                     if (this.queue[queIdx].$display[0]) {
-                        this.queue[queIdx].$displayLabel.attr("contentEditable", "true");
                         this.queue[queIdx].$display.removeAttr("disabled");
+                        this.queue[queIdx].$displayLabelInput.removeAttr("disabled");
                     }
                     if (this.queue[queIdx].$select[0]) {
                         this.queue[queIdx].$select.removeAttr("disabled");
@@ -34855,9 +35086,10 @@ jQuery.fn.ax5layout = function () {
                 var queIdx = getQueIdx.call(this, _boundID);
 
                 if (typeof queIdx !== "undefined") {
+                    this.queue[queIdx].disable = true;
                     if (this.queue[queIdx].$display[0]) {
-                        this.queue[queIdx].$displayLabel.attr("contentEditable", "false");
                         this.queue[queIdx].$display.attr("disabled", "disabled");
+                        this.queue[queIdx].$displayLabelInput.attr("disabled", "disabled");
                     }
                     if (this.queue[queIdx].$select[0]) {
                         this.queue[queIdx].$select.attr("disabled", "disabled");
@@ -34968,6 +35200,9 @@ jQuery.fn.ax5autocomplete = function () {
         return this;
     };
 }();
+
+// todo : editable 지원.
+// 아이템 박스 안에서 제거 할때 디스플레이 정렬
 // ax5.ui.autocomplete.tmpl
 (function () {
     var AUTOCOMPLETE = ax5.ui.autocomplete;
@@ -34978,7 +35213,7 @@ jQuery.fn.ax5autocomplete = function () {
     };
 
     var autocompleteDisplay = function autocompleteDisplay(columnKeys) {
-        return " \n<div class=\"form-control {{formSize}} ax5autocomplete-display {{theme}}\" \ndata-ax5autocomplete-display=\"{{id}}\" data-ax5autocomplete-instance=\"{{instanceId}}\">\n    <div class=\"ax5autocomplete-display-table\" data-els=\"display-table\">\n        <div data-ax5autocomplete-display=\"label-holder\"> \n        <a {{^tabIndex}}href=\"#ax5autocomplete-{{id}}\" {{/tabIndex}}{{#tabIndex}}tabindex=\"{{tabIndex}}\" {{/tabIndex}}\n        data-ax5autocomplete-display=\"label\"\n        contentEditable=\"true\"\n        spellcheck=\"false\">{{{label}}}</a>\n        </div>\n        <div data-ax5autocomplete-display=\"addon\"> \n            {{#multiple}}{{#reset}}\n            <span class=\"addon-icon-reset\" data-selected-clear=\"true\">{{{.}}}</span>\n            {{/reset}}{{/multiple}}\n        </div>\n    </div>\n</a>\n";
+        return " \n<input tabindex=\"-1\" type=\"text\" data-input-dummy=\"\" style=\"display: none;\" />\n<div class=\"form-control {{formSize}} ax5autocomplete-display {{theme}}\" \ndata-ax5autocomplete-display=\"{{id}}\" data-ax5autocomplete-instance=\"{{instanceId}}\">\n    <div class=\"ax5autocomplete-display-table\" data-els=\"display-table\">\n        <div data-ax5autocomplete-display=\"label-holder\"> \n        <a {{^tabIndex}}{{/tabIndex}}{{#tabIndex}}tabindex=\"{{tabIndex}}\" {{/tabIndex}}\n        data-ax5autocomplete-display=\"label\"\n        spellcheck=\"false\"><input type=\"text\"data-ax5autocomplete-display=\"input\" style=\"border:0px none;background: transparent;\" /></a>\n        </div>\n        <div data-ax5autocomplete-display=\"addon\"> \n            {{#multiple}}{{#reset}}\n            <span class=\"addon-icon-reset\" data-selected-clear=\"true\">{{{.}}}</span>\n            {{/reset}}{{/multiple}}\n        </div>\n    </div>\n</a>\n";
     };
 
     var formSelect = function formSelect(columnKeys) {
@@ -35008,79 +35243,5 @@ jQuery.fn.ax5autocomplete = function () {
         get: function get(tmplName, data, columnKeys) {
             return ax5.mustache.render(AUTOCOMPLETE.tmpl[tmplName].call(this, columnKeys), data);
         }
-    };
-})();
-// ax5.ui.autocomplete.util
-(function () {
-
-    var AUTOCOMPLETE = ax5.ui.autocomplete;
-    var U = ax5.util;
-
-    var nodeTypeProcessor = {
-        '1': function _(queIdx, node, editable) {
-            var cfg = this.config;
-            var textNode = node;
-
-            if ($(node).find("span").get(0)) {
-                textNode = $(node).find("span").get(0);
-            }
-
-            var text = (textNode.textContent || textNode.innerText).replace(/^[\s\r\n\t]*|[\s\r\n\t]*$/g, '');
-            var item = this.queue[queIdx];
-
-            var selectedIndex, option;
-
-            if (item.selected && item.selected.length > 0) {
-                if (node.getAttribute("data-ax5autocomplete-selected-text") == text) {
-                    selectedIndex = node.getAttribute("data-ax5autocomplete-selected-label");
-                    option = item.selected[selectedIndex];
-                    return {
-                        selectedIndex: {
-                            index: option["@index"],
-                            value: option[cfg.columnKeys.optionValue]
-                        }
-                    };
-                } else {
-                    selectedIndex = node.getAttribute("data-ax5autocomplete-selected-label");
-                    option = item.selected[selectedIndex];
-                    return {
-                        removeSelectedIndex: {
-                            index: option["@index"],
-                            value: option[cfg.columnKeys.optionValue]
-                        }
-                    };
-                }
-            }
-        },
-        '3': function _(queIdx, node, editable) {
-            var cfg = this.config;
-            var text = (node.textContent || node.innerText).replace(/^[\s\r\n\t]*|[\s\r\n\t]*$/g, '');
-            var item = this.queue[queIdx];
-
-            if (text != "") {
-                if (editable) {
-                    return text;
-                } else {
-                    var $option;
-                    if (item.optionFocusIndex > -1) $option = this.activeautocompleteOptionGroup.find('[data-option-focus-index="' + item.optionFocusIndex + '"]');
-                    if (item.optionFocusIndex > -1 && $option.get(0) && $option.attr("data-option-value")) {
-                        return {
-                            optionIndex: {
-                                gindex: $option.attr("data-option-group-index"),
-                                index: $option.attr("data-option-index")
-                            }
-                        };
-                    } else {
-                        return item.editable ? text : undefined;
-                    }
-                }
-            } else {
-                return undefined;
-            }
-        }
-    };
-
-    AUTOCOMPLETE.util = {
-        nodeTypeProcessor: nodeTypeProcessor
     };
 })();
