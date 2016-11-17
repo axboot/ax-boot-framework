@@ -35,8 +35,8 @@
 
         </style>
     </jsp:attribute>
-
     <jsp:attribute name="js">
+        <ax:lang key="axboot.admin.login"/>
         <script>
             axboot.requireSession('${config.sessionCookie}');
         </script>
