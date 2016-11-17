@@ -72,6 +72,7 @@
 
             cfg = this.config;
 
+            var $window = jQuery(window);
             var
                 ctrlKeys = {
                     "18": "KEY_ALT",
@@ -148,10 +149,10 @@
                 alignSelectOptionGroup = function (append) {
                     if (!this.activeSelectOptionGroup) return this;
 
-                    var
-                        item = this.queue[this.activeSelectQueueIndex],
-                        pos = {},
-                        dim = {};
+                    var item = this.queue[this.activeSelectQueueIndex],
+                        pos = {}, positionMargin = 0,
+                        dim = {}, pickerDim = {},
+                        pickerDirection;
 
                     if (append) jQuery(document.body).append(this.activeSelectOptionGroup);
 
@@ -160,30 +161,60 @@
                         width: item.$target.outerWidth(),
                         height: item.$target.outerHeight()
                     };
+                    pickerDim = {
+                        winWidth: Math.max($window.width(), jQuery(document.body).width()),
+                        winHeight: Math.max($window.height(), jQuery(document.body).height()),
+                        width: this.activeSelectOptionGroup.outerWidth(),
+                        height: this.activeSelectOptionGroup.outerHeight()
+                    };
 
                     // picker css(width, left, top) & direction 결정
                     if (!item.direction || item.direction === "" || item.direction === "auto") {
                         // set direction
-                        item.direction = "top";
-                    }
+                        pickerDirection = "top";
 
+                        if (pos.top - pickerDim.height - positionMargin < 0) {
+                            pickerDirection = "top";
+                        } else if (pos.top + dim.height + pickerDim.height + positionMargin > pickerDim.winHeight) {
+                            pickerDirection = "bottom";
+                        }
+                    } else {
+                        pickerDirection = item.direction;
+                    }
+                    // todo : 표현할 공간이 없다면..
                     if (append) {
                         this.activeSelectOptionGroup
-                            .addClass("direction-" + item.direction);
+                            .addClass("direction-" + pickerDirection);
                     }
                     this.activeSelectOptionGroup
                         .css((function () {
-                            if (item.direction == "top") {
+                            if (pickerDirection == "top") {
+                                if (pos.top + dim.height + pickerDim.height + positionMargin > pickerDim.winHeight) {
+
+                                    var newTop = pos.top + dim.height / 2 - pickerDim.height / 2;
+                                    if (newTop + pickerDim.height + positionMargin > pickerDim.winHeight) {
+                                        newTop = 0;
+                                    }
+                                    if(newTop < 0){
+                                        newTop = 0;
+                                    }
+
+                                    return {
+                                        left: pos.left,
+                                        top: newTop,
+                                        width: dim.width
+                                    }
+                                }
                                 return {
                                     left: pos.left,
                                     top: pos.top + dim.height + 1,
                                     width: dim.width
                                 }
                             }
-                            else if (item.direction == "bottom") {
+                            else if (pickerDirection == "bottom") {
                                 return {
                                     left: pos.left,
-                                    top: pos.top - this.activeSelectOptionGroup.outerHeight() - 1,
+                                    top: pos.top - pickerDim.height - 1,
                                     width: dim.width
                                 }
                             }

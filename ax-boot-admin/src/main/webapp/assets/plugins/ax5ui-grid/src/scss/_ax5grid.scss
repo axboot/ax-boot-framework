@@ -221,6 +221,20 @@
             }
         }
     }
+    &[data-ax5grid-disable-selection="true"] {
+        // background: $ax5grid-row-selected;
+        td {
+            &[data-ax5grid-column-attr="rowSelector"] {
+                .checkBox {
+                    cursor: not-allowed;
+                    @include ax-background(top, $ax5grid-cell-disable-checkbox-bg-colors);
+                    &:after {
+                        opacity: 0;
+                    }
+                }
+            }
+        }
+    }
 }
 
 @mixin gridPanel($container) {

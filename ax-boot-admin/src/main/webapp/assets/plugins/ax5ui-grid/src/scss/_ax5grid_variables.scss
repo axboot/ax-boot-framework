@@ -71,6 +71,7 @@ $ax5grid-cell-padding: 3px 5px !default;
 $ax5grid-cell-checkbox-border: 1px solid #ccc !default;
 $ax5grid-cell-checkbox-border-radius: 3px !default;
 $ax5grid-cell-checkbox-bg-colors: (#FFFFFF, #F0F0F0) !default;
+$ax5grid-cell-disable-checkbox-bg-colors: (darken(nth($ax5grid-cell-checkbox-bg-colors, 2), 10%), darken(nth($ax5grid-cell-checkbox-bg-colors, 1), 10%)) !default;
 $ax5grid-cell-checkbox-arrow-color: #3372ff !default;
 
 $ax5grid-cell-focused-box-shadow: inset 0px 0px 1px 1px #0581f2 !default;

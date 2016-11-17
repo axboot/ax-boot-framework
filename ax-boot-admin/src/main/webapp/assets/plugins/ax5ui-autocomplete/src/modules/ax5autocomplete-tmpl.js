@@ -16,14 +16,14 @@
 
     var autocompleteDisplay = function (columnKeys) {
         return ` 
+<input tabindex="-1" type="text" data-input-dummy="" style="display: none;" />
 <div class="form-control {{formSize}} ax5autocomplete-display {{theme}}" 
 data-ax5autocomplete-display="{{id}}" data-ax5autocomplete-instance="{{instanceId}}">
     <div class="ax5autocomplete-display-table" data-els="display-table">
         <div data-ax5autocomplete-display="label-holder"> 
-        <a {{^tabIndex}}href="#ax5autocomplete-{{id}}" {{/tabIndex}}{{#tabIndex}}tabindex="{{tabIndex}}" {{/tabIndex}}
+        <a {{^tabIndex}}{{/tabIndex}}{{#tabIndex}}tabindex="{{tabIndex}}" {{/tabIndex}}
         data-ax5autocomplete-display="label"
-        contentEditable="true"
-        spellcheck="false">{{{label}}}</a>
+        spellcheck="false"><input type="text"data-ax5autocomplete-display="input" style="border:0px none;background: transparent;" /></a>
         </div>
         <div data-ax5autocomplete-display="addon"> 
             {{#multiple}}{{#reset}}

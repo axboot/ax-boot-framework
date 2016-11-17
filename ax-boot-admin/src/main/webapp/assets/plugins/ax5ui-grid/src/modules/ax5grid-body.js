@@ -268,7 +268,7 @@
         var self = this;
 
         this.$["container"]["body"].on("click", '[data-ax5grid-column-attr]', function (e) {
-            var panelName, attr, row, col, dindex, rowIndex, colIndex;
+            var panelName, attr, row, col, dindex, rowIndex, colIndex, disableSelection;
             var targetClick = {
                 "default": function (_column) {
                     var column = self.bodyRowMap[_column.rowIndex + "_" + _column.colIndex];
@@ -311,6 +311,9 @@
                     }
                 },
                 "rowSelector": function (_column) {
+                    if (self.list[_column.dindex][self.config.columnKeys.disableSelection]) {
+                        return false;
+                    }
 
                     if (!self.config.multipleSelect && self.selectedDataIndexs[0] !== _column.dindex) {
                         GRID.body.updateRowState.call(self, ["selectedClear"]);
@@ -580,7 +583,7 @@
                     if (_value !== null && typeof _value !== "undefined") returnValue = _value;
                 }
 
-                return (typeof returnValue === "number") ? returnValue: returnValue.replace(/[<>]/g, function (tag) {
+                return (typeof returnValue === "number") ? returnValue : returnValue.replace(/[<>]/g, function (tag) {
                     return tagsToReplace[tag] || tag;
                 });
             }
@@ -626,7 +629,7 @@
                 if (_col.formatter) {
                     that.value = value;
                     if (U.isFunction(_col.formatter)) {
-                        return _col.collector.call(that);
+                        return _col.formatter.call(that);
                     } else {
                         return GRID.formatter[_col.formatter].call(that);
                     }
@@ -761,7 +764,9 @@
                     SS.push('<tr class="tr-' + (di % 4) + '"',
                         (isGroupingRow) ? ' data-ax5grid-grouping-tr="true"' : '',
                         ' data-ax5grid-tr-data-index="' + di + '"',
-                        ' data-ax5grid-selected="' + (_list[di][cfg.columnKeys.selected] || "false") + '">');
+                        ' data-ax5grid-selected="' + (_list[di][cfg.columnKeys.selected] || "false") + '"',
+                        ' data-ax5grid-disable-selection="' + (_list[di][cfg.columnKeys.disableSelection] || "false") + '"',
+                        '>');
                     for (ci = 0, cl = rowTable.rows[tri].cols.length; ci < cl; ci++) {
                         col = rowTable.rows[tri].cols[ci];
                         cellHeight = cfg.body.columnHeight * col.rowspan - cfg.body.columnBorderWidth;
@@ -1602,6 +1607,15 @@
     var scrollTo = function (css, noRepaint) {
         var cfg = this.config;
 
+        if (this.isInlineEditing) {
+            for (var key in this.inlineEditing) {
+                //if(this.inlineEditing[key].editor.type === "select") {}
+                // 인라인 에디팅 인데 스크롤 이벤트가 발생하면 디액티브 처리
+                GRID.body.inlineEdit.deActive.call(this, "ESC", key);
+            }
+        }
+
+
         if (cfg.asidePanelWidth > 0 && "top" in css) {
             this.$.panel["aside-body-scroll"].css({top: css.top});
         }
@@ -1969,6 +1983,7 @@
                     return false;
                 }
                 this.inlineEditing[key] = {
+                    editor: editor,
                     panelName: panelName,
                     columnKey: key,
                     column: _focusedColumn[key],
@@ -1980,7 +1995,7 @@
 
                 var originalValue = GRID.data.getValue.call(self, dindex, col.key);
                 var initValue = (function (__value, __editor) {
-                    if(U.isNothing(__value)){
+                    if (U.isNothing(__value)) {
                         __value = U.isNothing(originalValue) ? "" : originalValue;
                     }
 
@@ -2138,6 +2153,88 @@
         }
     };
 
+    var getExcelString = function () {
+        var cfg = this.config;
+        var list = this.list;
+        var bodyRowData = this.bodyRowData;
+        var footSumData = this.footSumData;
+        var bodyGroupingData = this.bodyGroupingData;
+
+        // body-scroll 의 포지션에 의존적이므로..
+        var getBody = function (_colGroup, _bodyRow, _groupRow, _list) {
+            var SS = [];
+            var di, dl;
+            var tri, trl;
+            var ci, cl;
+            var col;
+
+            //SS.push('<table border="1">');
+            for (di = 0, dl = _list.length; di < dl; di++) {
+                var isGroupingRow = false;
+                var rowTable;
+
+                if (_groupRow && "__isGrouping" in _list[di]) {
+                    rowTable = _groupRow;
+                    isGroupingRow = true;
+                } else {
+                    rowTable = _bodyRow;
+                }
+
+                for (tri = 0, trl = rowTable.rows.length; tri < trl; tri++) {
+                    SS.push('<tr>');
+                    for (ci = 0, cl = rowTable.rows[tri].cols.length; ci < cl; ci++) {
+                        col = rowTable.rows[tri].cols[ci];
+
+                        SS.push('<td ',
+                            'colspan="' + col.colspan + '" ',
+                            'rowspan="' + col.rowspan + '" ',
+                            '>', (isGroupingRow) ? getGroupingValue.call(this, _list[di], di, col) : getFieldValue.call(this, _list, _list[di], di, col), '</td>');
+                    }
+                    SS.push('</tr>');
+                }
+            }
+            //SS.push('</table>');
+            return SS.join('');
+        };
+        var getSum = function (_colGroup, _bodyRow, _list) {
+            var SS = [];
+            var tri, trl;
+            var ci, cl;
+            var col;
+
+            //SS.push('<table border="1">');
+            for (tri = 0, trl = _bodyRow.rows.length; tri < trl; tri++) {
+                SS.push('<tr>');
+                for (ci = 0, cl = _bodyRow.rows[tri].cols.length; ci < cl; ci++) {
+                    col = _bodyRow.rows[tri].cols[ci];
+                    SS.push('<td ',
+                        'colspan="' + col.colspan + '" ',
+                        'rowspan="' + col.rowspan + '" ',
+                        '>', getSumFieldValue.call(this, _list, col), '</td>');
+                }
+                SS.push('</tr>');
+            }
+
+            //SS.push('</table>');
+
+            return SS.join('');
+        };
+
+        var po = [];
+        po.push(getBody.call(this, this.headerColGroup, bodyRowData, bodyGroupingData, list));
+        if (cfg.footSum) {
+            // 바닥 요약
+            po.push(getSum.call(this, this.headerColGroup, footSumData, list));
+        }
+
+        // right
+        if (cfg.rightSum) {
+            // todo : right 표현 정리
+        }
+
+        return po.join('');
+    };
+
     GRID.body = {
         init: init,
         repaint: repaint,
@@ -2148,6 +2245,7 @@
         scrollTo: scrollTo,
         blur: blur,
         moveFocus: moveFocus,
-        inlineEdit: inlineEdit
+        inlineEdit: inlineEdit,
+        getExcelString: getExcelString
     };
 })();

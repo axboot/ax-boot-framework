@@ -1,3 +1,4 @@
 {
-    "root": "src/main/webapp/"
+    "root": "ax-boot-admin/src/main/webapp",
+    "ax5uiPath": "/Users/tom/Works-OSS/ax5ui/ax5ui-kernel/src/"
 }

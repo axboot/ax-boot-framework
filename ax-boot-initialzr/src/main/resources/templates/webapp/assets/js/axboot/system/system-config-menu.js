@@ -495,6 +495,7 @@ fnObj.formView01 = axboot.viewExtend(axboot.formView, {
                                     data: n
                                 });
                             });
+
                             _this.programList = programList;
                             callBack({
                                 options: programList

@@ -17,30 +17,29 @@
 
     var comboboxDisplay = function (columnKeys) {
         return `
-            <div class="form-control {{formSize}} ax5combobox-display {{theme}}" 
-            data-ax5combobox-display="{{id}}" data-ax5combobox-instance="{{instanceId}}">
-                <div class="ax5combobox-display-table" data-els="display-table">
-                    <div data-ax5combobox-display="label-holder"> 
-                    <a {{^tabIndex}}href="#ax5combobox-{{id}}" {{/tabIndex}}{{#tabIndex}}tabindex="{{tabIndex}}" {{/tabIndex}}
-                    data-ax5combobox-display="label"
-                    contentEditable="true"
-                    spellcheck="false">{{{label}}}</a>
-                    </div>
-                    <div data-ax5combobox-display="addon"> 
-                        {{#multiple}}{{#reset}}
-                        <span class="addon-icon-reset" data-selected-clear="true">{{{.}}}</span>
-                        {{/reset}}{{/multiple}}
-                        {{#icons}}
-                        <span class="addon-icon-closed">{{clesed}}</span>
-                        <span class="addon-icon-opened">{{opened}}</span>
-                        {{/icons}}
-                        {{^icons}}
-                        <span class="addon-icon-closed"><span class="addon-icon-arrow"></span></span>
-                        <span class="addon-icon-opened"><span class="addon-icon-arrow"></span></span>
-                        {{/icons}}
-                    </div>
-                </div>
-            </a>
+<div class="form-control {{formSize}} ax5combobox-display {{theme}}" 
+data-ax5combobox-display="{{id}}" data-ax5combobox-instance="{{instanceId}}">
+    <div class="ax5combobox-display-table" data-els="display-table">
+        <div data-ax5combobox-display="label-holder"> 
+            <a {{^tabIndex}}{{/tabIndex}}{{#tabIndex}}tabindex="{{tabIndex}}" {{/tabIndex}}
+            data-ax5combobox-display="label"
+            spellcheck="false"><input type="text"data-ax5combobox-display="input" style="border:0px none;background: transparent;" /></a>
+        </div>
+        <div data-ax5combobox-display="addon"> 
+            {{#multiple}}{{#reset}}
+            <span class="addon-icon-reset" data-selected-clear="true">{{{.}}}</span>
+            {{/reset}}{{/multiple}}
+            {{#icons}}
+            <span class="addon-icon-closed">{{clesed}}</span>
+            <span class="addon-icon-opened">{{opened}}</span>
+            {{/icons}}
+            {{^icons}}
+            <span class="addon-icon-closed"><span class="addon-icon-arrow"></span></span>
+            <span class="addon-icon-opened"><span class="addon-icon-arrow"></span></span>
+            {{/icons}}
+        </div>
+    </div>
+</div>
         `;
     };
 
@@ -48,6 +47,14 @@
         return `
             <select tabindex="-1" class="form-control {{formSize}}" name="{{name}}" {{#multiple}}multiple="multiple"{{/multiple}}></select>
         `;
+    };
+
+    var formSelectOptions = function (columnKeys) {
+        return `
+{{#selected}}
+<option value="{{${columnKeys.optionValue}}}" selected="true">{{${columnKeys.optionText}}}</option>
+{{/selected}}
+`;
     };
 
     var options = function (columnKeys) {
@@ -117,12 +124,14 @@
     };
 
     var label = function (columnKeys) {
-        return `{{#selected}}<div tabindex="-1" data-ax5combobox-selected-label="{{@i}}" data-ax5combobox-selected-text="{{text}}"><div data-ax5combobox-remove="true" data-ax5combobox-remove-index="{{@i}}">{{{removeIcon}}}</div><span>{{text}}</span></div>{{/selected}}`;
+        return `{{#selected}}<div tabindex="-1" data-ax5combobox-selected-label="{{@i}}" data-ax5combobox-selected-text="{{text}}"><div data-ax5combobox-remove="true" 
+data-ax5combobox-remove-index="{{@i}}">{{{removeIcon}}}</div><span>{{text}}</span></div>{{/selected}}`;
     };
 
     COMBOBOX.tmpl = {
         "comboboxDisplay": comboboxDisplay,
         "formSelect": formSelect,
+        "formSelectOptions": formSelectOptions,
         "optionGroup": optionGroup,
         "options": options,
         "label": label,

@@ -76,7 +76,8 @@
                 columnKeys: {
                     selected: '__selected__',
                     modified: '__modified__',
-                    deleted: '__deleted__'
+                    deleted: '__deleted__',
+                    disableSelection: '__disable_selection__'
                 }
             };
             this.xvar = {
@@ -1360,6 +1361,33 @@
                 return this;
             };
 
+            /**
+             * @method ax5grid.exportExcel
+             * @param {String} _fileName
+             * @returns {ax5grid|String}
+             * @example
+             * ```js
+             * firstGrid.exportExcel("grid-to-excel.xls");
+             * console.log(firstGrid.exportExcel());
+             * ```
+             */
+            this.exportExcel = function (_fileName) {
+                var table = [];
+                table.push('<table border="1">');
+                table.push(GRID.header.getExcelString.call(this));
+                table.push(GRID.body.getExcelString.call(this));
+                table.push('</table>');
+
+                if (typeof _fileName === "undefined") {
+                    return table.join('');
+                }
+                else {
+                    GRID.excel.export.call(this, [table.join('')], _fileName);
+                }
+
+                return this;
+            };
+
             // 클래스 생성자
             this.main = (function () {
                 UI.grid_instance = UI.grid_instance || [];
@@ -1376,6 +1404,7 @@
     GRID = ax5.ui.grid;
 })();
 
+// todo : excel export
 // todo : merge cells
 // todo : filter
 // todo : body menu

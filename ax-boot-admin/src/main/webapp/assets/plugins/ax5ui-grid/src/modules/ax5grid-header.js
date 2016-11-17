@@ -92,7 +92,6 @@
             }
             else{
                 if (key && col) {
-                    console.log(key, col);
                     if ((col.sortable === true || self.config.sortable === true) && col.sortable !== false) {
                         if (!col.sortFixed) toggleSort.call(self, col.key);
                     }
@@ -373,12 +372,40 @@
         GRID.body.updateRowState.call(this, ["selected"], dindex);
     };
 
+    var getExcelString = function () {
+        var cfg = this.config;
+        var colGroup = this.colGroup;
+        var headerData = this.headerData;
+
+        var getHeader = function (_colGroup, _bodyRow) {
+            var SS = [];
+            //SS.push('<table border="1">');
+            for (var tri = 0, trl = _bodyRow.rows.length; tri < trl; tri++) {
+                SS.push('<tr>');
+                for (var ci = 0, cl = _bodyRow.rows[tri].cols.length; ci < cl; ci++) {
+                    var col = _bodyRow.rows[tri].cols[ci];
+                    SS.push('<td ',
+                        'colspan="' + col.colspan + '" ',
+                        'rowspan="' + col.rowspan + '" ',
+                        '>', getFieldValue.call(this, col), '</td>');
+                }
+                SS.push('</tr>');
+            }
+            //SS.push('</table>');
+
+            return SS.join('');
+        };
+
+        return getHeader.call(this, colGroup, headerData);
+    };
+
     GRID.header = {
         init: init,
         repaint: repaint,
         scrollTo: scrollTo,
         toggleSort: toggleSort,
-        applySortStatus: applySortStatus
+        applySortStatus: applySortStatus,
+        getExcelString: getExcelString
     };
 
 })();

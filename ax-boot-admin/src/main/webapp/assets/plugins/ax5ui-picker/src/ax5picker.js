@@ -246,6 +246,7 @@
                         };
 
                         // picker css(width, left, top) & direction 결정
+
                         if (!item.direction || item.direction === "" || item.direction === "auto") {
                             // set direction
                             pickerDirection = "top";

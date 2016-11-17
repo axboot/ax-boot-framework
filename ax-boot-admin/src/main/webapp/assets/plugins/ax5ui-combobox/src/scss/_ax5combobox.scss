@@ -381,41 +381,51 @@ $hover-types: (
                 display: block;
                 clear: both;
             }
-            div {
-                &[data-ax5combobox-selected-label] {
-                    position: relative;
-                    display: block;
-                    float: left;
-                    background: transparent;
-                    padding: 0px 3px;
-                    border: 1px solid transparent;
-                    border-radius: 0px;
-                    margin: 1px 0px 1px -0.5em;
 
-                    @include ax-background(top, $ax5combobox-label-bg-colors);
-                    border: $ax5combobox-label-border;
-                    color: $ax5combobox-label-color;
-                    border-radius: 3px;
+            [data-ax5combobox-selected-label] {
+                position: relative;
+                display: block;
+                float: left;
+                background: transparent;
+                padding: 0px 3px;
+                border: 1px solid transparent;
+                border-radius: 0px;
+                margin: 1px 0px 1px -0.5em;
+
+                @include ax-background(top, $ax5combobox-label-bg-colors);
+                border: $ax5combobox-label-border;
+                color: $ax5combobox-label-color;
+                border-radius: 3px;
+                margin-left: 0px;
+                margin-right: 3px;
+
+                &:first-child {
                     margin-left: 0px;
-                    margin-right: 3px;
+                }
 
-                    &:first-child {
-                        margin-left: 0px;
-                    }
-
-                    [data-ax5combobox-remove] {
-                        width: 15px;
-                        position: absolute;
-                        right: 0;
-                        &:hover {
-                            color: $brand-danger;
-                        }
-                    }
-                    span {
-                        padding-right: 15px;
+                [data-ax5combobox-remove] {
+                    width: 15px;
+                    position: absolute;
+                    right: 0;
+                    &:hover {
+                        color: $brand-danger;
                     }
                 }
+                span {
+                    padding-right: 15px;
+                }
             }
+            [data-ax5combobox-display="input"] {
+                float: left;
+                width: 100px;
+                &:focus{
+                    outline: none;
+                }
+                &::-ms-clear {
+                    display: none;
+                }
+            }
+
         }
         [data-ax5combobox-display="addon"] {
             display: table-cell;

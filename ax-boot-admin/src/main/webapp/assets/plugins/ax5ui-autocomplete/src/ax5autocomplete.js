@@ -1,9 +1,3 @@
-/*
- * Copyright (c) 2016. tom@axisj.com
- * - github.com/thomasjang
- * - www.axisj.com
- */
-
 // ax5.ui.autocomplete
 (function () {
 
@@ -87,6 +81,7 @@
 
             cfg = this.config;
 
+            var $window = jQuery(window);
             var
                 ctrlKeys = {
                     "18": "KEY_ALT",
@@ -166,8 +161,8 @@
 
                                 var displayTableHeight = item.$displayTable.outerHeight();
                                 if (Math.abs(displayTableHeight - item.$target.height()) > displayTableHeightAdjust) {
-                                    item.$target.css({height: displayTableHeight + displayTableHeightAdjust});
-                                    item.$display.css({height: displayTableHeight + displayTableHeightAdjust});
+                                    item.$target.css({height: displayTableHeight + displayTableHeightAdjust + 4});
+                                    item.$display.css({height: displayTableHeight + displayTableHeightAdjust + 4});
                                 }
                             }
                         }
@@ -178,13 +173,14 @@
                     return this;
                 },
                 alignAutocompleteOptionGroup = function (append) {
-                    if (!this.activeautocompleteOptionGroup) return this;
+                    if (append && !this.activeautocompleteOptionGroup) return this;
 
-                    var
-                        item = this.queue[this.activeautocompleteQueueIndex],
-                        pos = {},
-                        dim = {};
+                    var item = this.queue[this.activeautocompleteQueueIndex],
+                        pos = {}, positionMargin = 0,
+                        dim = {}, pickerDim = {},
+                        pickerDirection;
 
+                    if (!item) return this;
                     if (append) jQuery(document.body).append(this.activeautocompleteOptionGroup);
 
                     pos = item.$target.offset();
@@ -192,30 +188,60 @@
                         width: item.$target.outerWidth(),
                         height: item.$target.outerHeight()
                     };
+                    pickerDim = {
+                        winWidth: Math.max($window.width(), jQuery(document.body).width()),
+                        winHeight: Math.max($window.height(), jQuery(document.body).height()),
+                        width: this.activeautocompleteOptionGroup.outerWidth(),
+                        height: this.activeautocompleteOptionGroup.outerHeight()
+                    };
 
                     // picker css(width, left, top) & direction 결정
                     if (!item.direction || item.direction === "" || item.direction === "auto") {
                         // set direction
-                        item.direction = "top";
+                        pickerDirection = "top";
+
+                        if (pos.top - pickerDim.height - positionMargin < 0) {
+                            pickerDirection = "top";
+                        } else if (pos.top + dim.height + pickerDim.height + positionMargin > pickerDim.winHeight) {
+                            pickerDirection = "bottom";
+                        }
+                    } else {
+                        pickerDirection = item.direction;
                     }
 
                     if (append) {
                         this.activeautocompleteOptionGroup
-                            .addClass("direction-" + item.direction);
+                            .addClass("direction-" + pickerDirection);
                     }
                     this.activeautocompleteOptionGroup
                         .css((function () {
-                            if (item.direction == "top") {
+                            if (pickerDirection == "top") {
+                                if (pos.top + dim.height + pickerDim.height + positionMargin > pickerDim.winHeight) {
+
+                                    var newTop = pos.top + pickerDim.height;
+                                    if (newTop + pickerDim.height + positionMargin > pickerDim.winHeight) {
+                                        newTop = 0;
+                                    }
+                                    if (newTop < 0) {
+                                        newTop = 0;
+                                    }
+
+                                    return {
+                                        left: pos.left,
+                                        top: newTop,
+                                        width: dim.width
+                                    }
+                                }
                                 return {
                                     left: pos.left,
                                     top: pos.top + dim.height + 1,
                                     width: dim.width
                                 }
                             }
-                            else if (item.direction == "bottom") {
+                            else if (pickerDirection == "bottom") {
                                 return {
                                     left: pos.left,
-                                    top: pos.top - this.activeautocompleteOptionGroup.outerHeight() - 1,
+                                    top: pos.top - pickerDim.height - 1,
                                     width: dim.width
                                 }
                             }
@@ -250,42 +276,19 @@
                                 index: target.getAttribute("data-option-index")
                             }
                         }, undefined, "optionItemClick");
-
-                        U.selectRange(item.$displayLabel, "end"); // 포커스 end || selectAll
+                        alignAutocompleteDisplay.call(this);
+                        alignAutocompleteOptionGroup.call(this);
                         if (!item.multiple) {
                             this.close();
                         }
                     }
                     else {
-                        //open and display click
-                        //console.log(this.instanceId);
+
                     }
 
                     return this;
                 },
-                onBodyKeyup = function (e) { // 옵션 선택 후 키업
-                    if (e.keyCode == ax5.info.eventKeys.ESC) {
-                        blurLabel.call(this, this.activeautocompleteQueueIndex);
-                        this.close();
-                    }
-                    else if (e.which == ax5.info.eventKeys.RETURN) {
-                        var values = [];
-                        var item = this.queue[this.activeautocompleteQueueIndex];
-                        var childNodes = item.$displayLabel.get(0).childNodes;
-                        for (var i = 0, l = childNodes.length; i < l; i++) {
-                            var node = childNodes[i];
-                            // nodeType:1 - span, nodeType:3 - text
-                            if (node.nodeType in AUTOCOMPLETE.util.nodeTypeProcessor) {
-                                var value = AUTOCOMPLETE.util.nodeTypeProcessor[node.nodeType].call(this, this.activeautocompleteQueueIndex, node);
-                                if (typeof value !== "undefined") values.push(value);
-                            }
-                        }
 
-                        setSelected.call(this, item.id, values, true); // set Value
-                        focusLabel.call(this, this.activeautocompleteQueueIndex);
-                        if (!item.multiple) this.close();
-                    }
-                },
                 getLabel = function (queIdx) {
                     var item = this.queue[queIdx];
 
@@ -300,10 +303,11 @@
                     data.selected = item.selected;
                     data.hasSelected = (data.selected && data.selected.length > 0);
                     data.removeIcon = item.removeIcon;
-                    return AUTOCOMPLETE.tmpl.get.call(this, "label", data, item.columnKeys) + "&nbsp;";
+
+                    return AUTOCOMPLETE.tmpl.get.call(this, "label", data, item.columnKeys);
                 },
                 syncLabel = function (queIdx) {
-                    var item = this.queue[queIdx], displayTableHeight;
+                    var item = this.queue[queIdx];
 
                     if (!item.multiple && item.selected && item.selected.length > 0) {
                         item.selected = [].concat(item.selected[item.selected.length - 1]);
@@ -316,24 +320,21 @@
                     item.$select.html(AUTOCOMPLETE.tmpl.get.call(this, "formSelectOptions", {
                         selected: item.selected
                     }, item.columnKeys));
+                },
+                printLabel = function (queIdx) {
+                    var item = this.queue[queIdx];
 
-                    item.$displayLabel
-                        .html(getLabel.call(this, queIdx));
-                    item.$target.height('');
-                    item.$display.height('');
-
-                    // label 사이즈 체크
-                    if (item.$target.height() < (displayTableHeight = item.$displayTable.outerHeight())) {
-                        var displayTableHeightAdjust = (function () {
-                            return U.number(item.$display.css("border-top-width")) + U.number(item.$display.css("border-bottom-width"));
-                        })();
-                        item.$target.css({height: displayTableHeight + displayTableHeightAdjust});
-                        item.$display.css({height: displayTableHeight + displayTableHeightAdjust});
-                    }
+                    item.$displayLabel.find('[data-ax5autocomplete-selected-label]').remove();
+                    item.$displayLabelInput.before(getLabel.call(this, queIdx));
                 },
                 focusLabel = function (queIdx) {
+                    if (this.queue[queIdx].disabled) return this;
+
                     this.queue[queIdx].$displayLabel.trigger("focus");
-                    U.selectRange(this.queue[queIdx].$displayLabel, "end"); // 포커스 end || selectAll
+                    this.queue[queIdx].$displayLabelInput.focus();
+                },
+                clearLabel = function (queIdx) {
+                    this.queue[queIdx].$displayLabelInput.val('');
                 },
                 blurLabel = function (queIdx) {
                     this.queue[queIdx].$displayLabel.trigger("blur");
@@ -385,6 +386,12 @@
                         this.activeautocompleteOptionGroup.find('[data-els="content"]').html(jQuery(AUTOCOMPLETE.tmpl.get.call(this, "options", data, item.columnKeys)));
 
                         focusWord.call(this, this.activeautocompleteQueueIndex, searchWord);
+                        alignAutocompleteOptionGroup.call(this);
+
+                        setTimeout((function () {
+                            alignAutocompleteOptionGroup.call(this);
+                        }).bind(this));
+
 
                     }).bind(this));
                 },
@@ -502,20 +509,7 @@
                                 // optionGroup scroll check
 
                                 if (typeof direction !== "undefined") {
-                                    /*
-                                     // 방향이 있으면 커서 업/다운 아니면 사용자 키보드 입력
-                                     // 방향이 있으면 라벨 값을 수정
-                                     var childNodes = item.$displayLabel.get(0).childNodes;
-                                     var lastNode = childNodes[childNodes.length - 1];
-                                     if (lastNode && lastNode.nodeType == '3') {
-                                     //lastNode.nodeValue = item.options[_focusIndex].text;
-                                     U.selectRange(item.$displayLabel, "end");
-                                     } else if (lastNode && lastNode.nodeType == '1') {
-                                     //jQuery(lastNode).after(item.options[_focusIndex].text);
-                                     U.selectRange(item.$displayLabel, "end");
-                                     }
-                                     */
-                                    U.selectRange(item.$displayLabel, "end");
+                                    item.$displayLabelInput.val(item.options[_focusIndex].text);
                                 }
                             }
                         }
@@ -553,6 +547,11 @@
                             n.selected = false;
                         }
                     });
+
+                    this.queue[queIdx].selected = [];
+                    this.queue[queIdx].$select.html(AUTOCOMPLETE.tmpl.get.call(this, "formSelectOptions", {
+                        selected: this.queue[queIdx].selected
+                    }, this.queue[queIdx].columnKeys));
                 },
                 setSelected = (function () {
                     var processor = {
@@ -778,6 +777,8 @@
                         }
 
                         syncLabel.call(this, queIdx);
+                        printLabel.call(this, queIdx);
+                        focusLabel.call(this, queIdx);
                         alignAutocompleteOptionGroup.call(this);
 
                         if (typeof value !== "undefined") {
@@ -829,71 +830,11 @@
                 var bindAutocompleteTarget = (function () {
                     var debouncedFocusWord = U.debounce(function (queIdx) {
                         if (this.activeautocompleteQueueIndex == -1) return this; // 옵션박스가 닫힌상태이면 진행안함.
-
-                        var values = [];
-                        var searchWord = "";
-                        var resetSelected = false;
-                        var item = this.queue[queIdx];
-                        var childNodes = item.$displayLabel.get(0).childNodes;
-
-                        for (var i = 0, l = childNodes.length; i < l; i++) {
-                            var node = childNodes[i];
-
-                            if (node.nodeType in AUTOCOMPLETE.util.nodeTypeProcessor) {
-                                var value = AUTOCOMPLETE.util.nodeTypeProcessor[node.nodeType].call(this, this.activeautocompleteQueueIndex, node, true);
-                                if (typeof value === "undefined") {
-                                    //
-                                }
-                                else if (U.isString(value)) {
-                                    searchWord = value;
-                                }
-                                else {
-                                    if (value.removeSelectedIndex) {
-                                        resetSelected = true;
-                                    }
-                                    values.push(value);
-                                }
-                            }
-                        }
-
-                        if (childNodes.length == 0) {
-                            setSelected.call(this, item.id, null, undefined, "internal"); // clear value
-                        }
-                        else if (searchWord != "") {
-                            onSearch.call(self, queIdx, searchWord);
-                        }
-                        else if (resetSelected) {
-                            setSelected.call(this, item.id, values, undefined, "internal"); // set Value
-                            U.selectRange(item.$displayLabel, "end"); // label focus end
-                            self.close();
-                        }
-
+                        onSearch.call(self, queIdx, this.queue[queIdx].$displayLabelInput.val());
                     }, 150);
 
                     var blurLabel = function (queIdx) {
-                        var values = [];
-                        var item = this.queue[queIdx];
-                        var editingText;
-                        var childNodes = item.$displayLabel.get(0).childNodes;
-
-                        for (var i = 0, l = childNodes.length; i < l; i++) {
-                            var node = childNodes[i];
-                            if (node.nodeType in AUTOCOMPLETE.util.nodeTypeProcessor) {
-                                var value = AUTOCOMPLETE.util.nodeTypeProcessor[node.nodeType].call(this, queIdx, node, true);
-                                if (typeof value === "undefined") {
-                                    //
-                                }
-                                else if (U.isString(value)) {
-                                    //editingText = value;
-                                    //values.push(value);
-                                }
-                                else {
-                                    values.push(value);
-                                }
-                            }
-                        }
-
-                        setSelected.call(this, item.id, values, undefined, "blurLabel"); // set Value
+                        clearLabel.call(this, queIdx);
                     };
 
                     var autocompleteEvent = {
@@ -915,11 +856,16 @@
                                     var removeIndex = target.getAttribute("data-ax5autocomplete-remove-index");
                                     this.queue[queIdx].selected.splice(removeIndex, 1);
                                     syncLabel.call(this, queIdx);
+                                    printLabel.call(this, queIdx);
                                     focusLabel.call(this, queIdx);
+                                    alignAutocompleteDisplay.call(this);
+                                    alignAutocompleteOptionGroup.call(this);
                                     U.stopEvent(e);
                                     return this;
                                 } else if (clickEl === "clear") {
                                     setSelected.call(this, queIdx, {clear: true});
+                                    alignAutocompleteDisplay.call(this);
+                                    alignAutocompleteOptionGroup.call(this);
                                 }
                             }
                             else {
@@ -929,11 +875,7 @@
                                     }
                                 }
                                 else {
-                                    if (this.queue[queIdx].$displayLabel.text().replace(/^\W*|\W*$/g, '') == "") {
-                                        this.queue[queIdx].$displayLabel
-                                            .html(getLabel.call(this, queIdx));
-                                        focusLabel.call(this, queIdx);
-                                    }
+                                    focusLabel.call(this, queIdx);
                                 }
                             }
                         },
@@ -943,23 +885,53 @@
                                 U.stopEvent(e);
                                 return this;
                             }
+                            if (e.which == ax5.info.eventKeys.TAB) {
+                                // nothing
+
+                                this.close();
+                                return this;
+                            }
                             if (self.activeautocompleteQueueIndex != queIdx) { // 닫힌 상태 인경우
-                                self.open(queIdx);
-                                U.stopEvent(e);
+                                self.open(queIdx); // open and align
                             }
                             if (ctrlKeys[e.which]) {
                                 U.stopEvent(e);
-                            } else {
-                                debouncedFocusWord.call(this, queIdx);
                             }
-
+                            else {
+                                // backspace 감지 하여 input 값이 없으면 스탑이벤트 처리 할 것
+                                if (e.which == ax5.info.eventKeys.BACKSPACE && this.queue[queIdx].$displayLabelInput.val() == "") {
+                                    // 마지막 아이템을 제거.
+                                    this.queue[queIdx].selected.pop();
+                                    syncLabel.call(this, queIdx);
+                                    printLabel.call(this, queIdx);
+                                    focusLabel.call(this, queIdx);
+                                    alignAutocompleteDisplay.call(this);
+                                    alignAutocompleteOptionGroup.call(this);
+                                    U.stopEvent(e);
+                                } else {
+                                    debouncedFocusWord.call(this, queIdx);
+                                }
+                            }
                         },
                         'keyDown': function (queIdx, e) {
                             if (e.which == ax5.info.eventKeys.ESC) {
+                                clearLabel.call(this, queIdx);
+                                this.close();
                                 U.stopEvent(e);
                             }
                             else if (e.which == ax5.info.eventKeys.RETURN) {
-                                // display label에서 줄넘김막기위한 구문
+                                var inputValue = this.queue[queIdx].$displayLabelInput.val();
+                                if(item.optionFocusIndex > -1) {
+                                    setSelected.call(this, item.id, {
+                                        optionIndex: {
+                                            index: item.optionFocusIndex
+                                        }
+                                    }, undefined, "optionItemClick");
+                                }else if(inputValue != ""){
+                                    setSelected.call(this, queIdx, inputValue, true);
+                                }
+                                clearLabel.call(this, queIdx);
+
                                 U.stopEvent(e);
                             }
                             else if (e.which == ax5.info.eventKeys.DOWN) {
@@ -972,8 +944,8 @@
                             }
                         },
                         'focus': function (queIdx, e) {
-                            //console.log(e);
-                            U.selectRange(this.queue[queIdx].$displayLabel, "end"); // 포커스 end || selectAll
+                            // console.log(e);
+
                         },
                         'blur': function (queIdx, e) {
                             blurLabel.call(this, queIdx);
@@ -1006,6 +978,7 @@
                             item.$display = jQuery(AUTOCOMPLETE.tmpl.get.call(this, "autocompleteDisplay", data, item.columnKeys));
                             item.$displayTable = item.$display.find('[data-els="display-table"]');
                             item.$displayLabel = item.$display.find('[data-ax5autocomplete-display="label"]');
+                            item.$displayLabelInput = item.$display.find('[data-ax5autocomplete-display="input"]');
 
                             if (item.$target.find("select").get(0)) {
                                 item.$select = item.$target.find("select");
@@ -1025,14 +998,12 @@
 
                             item.$target.append(item.$display);
 
-                            alignAutocompleteDisplay.call(this);
                         }
                         else {
-                            item.$displayLabel
-                                .html(getLabel.call(this, queIdx));
-
-                            alignAutocompleteDisplay.call(this);
+                            printLabel.call(this, queIdx);
                         }
+
+                        alignAutocompleteDisplay.call(this);
 
                         item.$display
                             .unbind('click.ax5autocomplete')
@@ -1040,16 +1011,15 @@
 
                         // autocomplete 태그에 대한 이벤트 감시
 
-
-                        item.$displayLabel
-                            .unbind("focus.ax5autocomplete")
-                            .bind("focus.ax5autocomplete", autocompleteEvent.focus.bind(this, queIdx))
-                            .unbind("blur.ax5autocomplete")
-                            .bind("blur.ax5autocomplete", autocompleteEvent.blur.bind(this, queIdx))
-                            .unbind('keyup.ax5autocomplete')
-                            .bind('keyup.ax5autocomplete', autocompleteEvent.keyUp.bind(this, queIdx))
-                            .unbind("keydown.ax5autocomplete")
-                            .bind("keydown.ax5autocomplete", autocompleteEvent.keyDown.bind(this, queIdx));
+                        item.$displayLabelInput
+                            .off("focus.ax5autocomplete")
+                            .on("focus.ax5autocomplete", autocompleteEvent.focus.bind(this, queIdx))
+                            .off("blur.ax5autocomplete")
+                            .on("blur.ax5autocomplete", autocompleteEvent.blur.bind(this, queIdx))
+                            .off("keydown.ax5autocomplete")
+                            .on("keydown.ax5autocomplete", autocompleteEvent.keyUp.bind(this, queIdx))
+                            .off("keyup.ax5autocomplete")
+                            .on("keyup.ax5autocomplete", autocompleteEvent.keyDown.bind(this, queIdx));
 
                         // select 태그에 대한 change 이벤트 감시
 
@@ -1184,12 +1154,6 @@
                         }
                     }
 
-                    jQuery(window).bind("keyup.ax5autocomplete-" + this.instanceId, (function (e) {
-                        e = e || window.event;
-                        onBodyKeyup.call(this, e);
-                        U.stopEvent(e);
-                    }).bind(this));
-
                     jQuery(window).bind("click.ax5autocomplete-" + this.instanceId, (function (e) {
                         e = e || window.event;
                         onBodyClick.call(this, e);
@@ -1228,8 +1192,8 @@
                     return;
                 }
 
-                this.queue[queIdx].selected = [];
                 clearSelected.call(this, queIdx);
+
                 if (U.isArray(_value)) {
                     var _values = U.map(_value, function () {
                         return {value: this};
@@ -1237,10 +1201,13 @@
                     setSelected.call(this, queIdx, _values, true, {noStateChange: true});
                 }
                 else if (U.isObject(_value)) {
-                    console.log(_value);
                     setSelected.call(this, queIdx, {value: _value}, true, {noStateChange: true});
+                } else {
+                    printLabel.call(this, queIdx);
                 }
+
                 blurLabel.call(this, queIdx);
+                alignAutocompleteDisplay.call(this);
 
                 return this;
             };
@@ -1266,6 +1233,7 @@
                 clearSelected.call(this, queIdx);
                 setSelected.call(this, queIdx, _text, true, {noStateChange: true});
                 blurLabel.call(this, queIdx);
+                alignAutocompleteDisplay.call(this);
 
                 return this;
             };
@@ -1343,12 +1311,14 @@
                 var queIdx = getQueIdx.call(this, _boundID);
 
                 if (typeof queIdx !== "undefined") {
+                    this.queue[queIdx].disable = false;
                     if (this.queue[queIdx].$display[0]) {
-                        this.queue[queIdx].$displayLabel.attr("contentEditable", "true");
                         this.queue[queIdx].$display.removeAttr("disabled");
+                        this.queue[queIdx].$displayLabelInput.removeAttr("disabled");
                     }
                     if (this.queue[queIdx].$select[0]) {
                         this.queue[queIdx].$select.removeAttr("disabled");
+
                     }
 
                     onStateChanged.call(this, this.queue[queIdx], {
@@ -1369,9 +1339,10 @@
                 var queIdx = getQueIdx.call(this, _boundID);
 
                 if (typeof queIdx !== "undefined") {
+                    this.queue[queIdx].disable = true;
                     if (this.queue[queIdx].$display[0]) {
-                        this.queue[queIdx].$displayLabel.attr("contentEditable", "false");
                         this.queue[queIdx].$display.attr("disabled", "disabled");
+                        this.queue[queIdx].$displayLabelInput.attr("disabled", "disabled");
                     }
                     if (this.queue[queIdx].$select[0]) {
                         this.queue[queIdx].$select.attr("disabled", "disabled");
@@ -1484,3 +1455,7 @@ jQuery.fn.ax5autocomplete = (function () {
         return this;
     }
 })();
+
+
+// todo : editable 지원.
+// 아이템 박스 안에서 제거 할때 디스플레이 정렬
