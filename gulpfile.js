@@ -11,6 +11,8 @@ var babel = require('gulp-babel');
 var spawn = require('child_process').spawn;
 var fs = require('fs');
 
+var sourcemaps = require('gulp-sourcemaps');
+
 var CONFIG = JSON.parse(fs.readFileSync('config.json', 'utf8'));
 var ROOT = CONFIG.root;
 var ASSETS_SRC = ROOT + "/assets";
@@ -56,10 +58,12 @@ gulp.task('plugin-js', function () {
 
     gulp.src(jss)
         .pipe(plumber({errorHandler: errorAlert}))
+        .pipe(sourcemaps.init())
         .pipe(concat('plugins.js'))
         .pipe(gulp.dest(ASSETS + '/js'))
         .pipe(concat('plugins.min.js'))
         .pipe(uglify())
+        .pipe(sourcemaps.write('.'))
         .pipe(gulp.dest(ASSETS + '/js'));
 });
 
@@ -78,6 +82,7 @@ gulp.task('axboot-js', function () {
 
     gulp.src(jss)
         .pipe(plumber({errorHandler: errorAlert}))
+        .pipe(sourcemaps.init())
         .pipe(concat('axboot.js'))
         .pipe(babel({
             presets: ['es2015'],
@@ -86,6 +91,7 @@ gulp.task('axboot-js', function () {
         .pipe(gulp.dest(ASSETS + '/js/axboot/dist'))
         .pipe(concat('axboot.min.js'))
         .pipe(uglify())
+        .pipe(sourcemaps.write('.'))
         .pipe(gulp.dest(ASSETS + '/js/axboot/dist'));
 });
 
@@ -102,7 +108,7 @@ gulp.task('axboot-initializr-deploy', function () {
         .pipe(gulp.dest('ax-boot-initialzr/src/main/resources/templates/webapp'));
 
     gulp.src([
-        '*.json'
+        '*.json', 'gulpfile.js'
     ], {base: ""})
         .pipe(gulp.dest('ax-boot-initialzr/src/main/resources/templates/root'));
 });
