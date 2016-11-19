@@ -90,34 +90,34 @@
             </div>
 
             <div class="panel">
-                <div class="panel-heading"><ax:message code="axboot.admin.login.guide.message"/></div>
+                <div class="panel-heading"><ax:lang code="axboot.admin.login.guide.message"/></div>
                 <div class="panel-body">
                     <form name="login-form" class="" method="post" action="/api/login" onsubmit="return fnObj.login();" autocomplete="off">
 
                         <div class="form-group">
-                            <label for="userCd"><i class="cqc-new-message"></i> <ax:message code="axboot.admin.id"/></label>
+                            <label for="userCd"><i class="cqc-new-message"></i> <ax:lang code="axboot.admin.id"/></label>
                             <input type="text" name="userCd" id="userCd" value="system" class="form-control ime-false" placeholder=""/>
                         </div>
 
                         <div class="form-group">
-                            <label for="userPs"><i class="cqc-key"></i> <ax:message code="axboot.admin.password"/></label>
+                            <label for="userPs"><i class="cqc-key"></i> <ax:lang code="axboot.admin.password"/></label>
                             <input type="password" name="userPs" id="userPs" value="1234" class="form-control ime-false" placeholder=""/>
                         </div>
 
                         <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
 
                         <div class="ax-padding-box" style="text-align: right;">
-                            <button type="submit" class="btn">&nbsp;&nbsp;<ax:message code="axboot.admin.login"/>&nbsp;&nbsp;</button>
+                            <button type="submit" class="btn">&nbsp;&nbsp;<ax:lang code="axboot.admin.login"/>&nbsp;&nbsp;</button>
                         </div>
 
                     </form>
                 </div>
                 <ul class="list-group">
                     <li class="list-group-item">
-                        <a href="#"><ax:message code="axboot.admin.find.id"/></a>
+                        <a href="#"><ax:lang code="axboot.admin.find.id"/></a>
                         &nbsp;
                         &nbsp;
-                        <a href="#"><ax:message code="axboot.admin.find.password"/></a>
+                        <a href="#"><ax:lang code="axboot.admin.find.password"/></a>
                     </li>
                 </ul>
             </div>
