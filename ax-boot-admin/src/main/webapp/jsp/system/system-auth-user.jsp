@@ -9,6 +9,8 @@
 
 <ax:layout name="base">
     <jsp:attribute name="script">
+        <ax:script-lang key="ax.script" var="LANG" />
+        <ax:script-lang key="ax.admin" var="COL" />
         <script type="text/javascript" src="<c:url value='/assets/js/axboot/system/system-auth-user.js' />"></script>
     </jsp:attribute>
     <jsp:body>
@@ -69,7 +71,7 @@
                             <ax:td label="ax.admin.user.name" width="300px">
                                 <input type="text" name="userNm" data-ax-path="userNm" maxlength="15" title="이름" class="av-required form-control W120" value=""/>
                             </ax:td>
-                            <ax:td label="ax.admin.user.id" width="220px">
+                            <ax:td label="ax.admin.user.id" width="220px" labelWidth="120px">
                                 <input type="text" name="userCd" data-ax-path="userCd" maxlength="100" title="아이디" class="av-required form-control W150" value=""/>
                             </ax:td>
                         </ax:tr>
@@ -77,7 +79,7 @@
                             <ax:td label="ax.admin.user.password" width="300px">
                                 <input type="password" name="userPs" data-ax-path="userPs" maxlength="128" class="form-control W120" value="" readonly="readonly"/>
                             </ax:td>
-                            <ax:td label="ax.admin.user.password.confirm" width="360px">
+                            <ax:td label="ax.admin.user.password.confirm" width="460px" labelWidth="120px">
                                 <input type="password" name="userPs_chk" data-ax-path="userPs_chk" maxlength="128" class="form-control inline-block W120" value="" readonly="readonly"/>
                                 &nbsp;
                                 <label>
@@ -90,7 +92,7 @@
                             <ax:td label="ax.admin.user.email" width="300px">
                                 <input type="text" name="email" data-ax-path="email" maxlength="50" title="이메일" placeholder="abc@abc.com" class="av-email form-control W180" value=""/>
                             </ax:td>
-                            <ax:td label="ax.admin.user.hp" width="220px">
+                            <ax:td label="ax.admin.user.hp" width="220px" labelWidth="120px">
                                 <input type="text" name="hpNo" data-ax-path="hpNo" maxlength="15" placeholder="" class="av-phone form-control W120" data-ax5formatter="phone" value=""/>
                             </ax:td>
                         </ax:tr>
@@ -103,7 +105,7 @@
                             <ax:td label="ax.admin.use.or.not" width="300px">
                                 <ax:common-code groupCd="USE_YN" dataPath="useYn" clazz="form-control W100"/>
                             </ax:td>
-                            <ax:td label="ax.admin.user.account.status" width="220px">
+                            <ax:td label="ax.admin.user.account.status" width="220px" labelWidth="120px">
                                 <ax:common-code groupCd="USER_STATUS" dataPath="userStatus"/>
                             </ax:td>
                         </ax:tr>

@@ -27,7 +27,13 @@ var ACTIONS = axboot.actionExtend(fnObj, {
         }
     },
     FORM_CLEAR: function (caller, act, data) {
-        caller.formView01.clear();
+        axDialog.confirm({
+            msg: LANG("ax.script.form.clearconfirm")
+        }, function () {
+            if (this.key == "ok") {
+                caller.formView01.clear();
+            }
+        });
     },
     ITEM_CLICK: function (caller, act, data) {
         axboot.ajax({
@@ -158,16 +164,16 @@ fnObj.gridView01 = axboot.viewExtend(axboot.gridView, {
             columns: [
                 {
                     key: "userCd",
-                    label: "아이디",
+                    label: COL("user.id"),
                     width: 120
                 },
                 {
                     key: "userNm",
-                    label: "이름",
+                    label: COL("user.name"),
                     width: 120
                 },
-                {key: "locale"},
-                {key: "useYn"}
+                {key: "locale", label:COL("user.language")},
+                {key: "useYn", label:COL("ax.admin.use.or.not")}
             ],
             body: {
                 onClick: function () {
@@ -209,13 +215,7 @@ fnObj.formView01 = axboot.viewExtend(axboot.formView, {
 
         axboot.buttonClick(this, "data-form-view-01-btn", {
             "form-clear": function () {
-                axDialog.confirm({
-                    msg: "정말 양식을 초기화 하시겠습니까?"
-                }, function () {
-                    if (this.key == "ok") {
-                        ACTIONS.dispatch(ACTIONS.FORM_CLEAR);
-                    }
-                });
+                ACTIONS.dispatch(ACTIONS.FORM_CLEAR);
             }
         });
 
@@ -275,7 +275,7 @@ fnObj.formView01 = axboot.viewExtend(axboot.formView, {
     validate: function () {
         var rs = this.model.validate();
         if (rs.error) {
-            alert(rs.error[0].jquery.attr("title") + '을(를) 입력해주세요.');
+            alert(LANG("ax.script.form.validate", rs.error[0].jquery.attr("title")));
             rs.error[0].jquery.focus();
             return false;
         }
@@ -298,9 +298,9 @@ fnObj.gridView02 = axboot.viewExtend(axboot.gridView, {
             showLineNumber: false,
             target: $('[data-ax5grid="grid-view-02"]'),
             columns: [
-                {key: "hasYn", label: "선택", width: 50, align: "center", editor: "checkYn"},
-                {key: "roleCd", label: "역할코드", width: 150},
-                {key: "roleNm", label: "역할명", width: 180},
+                {key: "hasYn", label: COL("ax.admin.select"), width: 50, align: "center", editor: "checkYn"},
+                {key: "roleCd", label: COL("ax.admin.user.role.code"), width: 150},
+                {key: "roleNm", label: COL("ax.admin.user.role.name"), width: 180},
             ],
             body: {
                 onClick: function () {

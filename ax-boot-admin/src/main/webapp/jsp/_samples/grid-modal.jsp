@@ -8,7 +8,7 @@
 
 <ax:layout name="base">
     <jsp:attribute name="script">
-        <ax:script-lang key="ax.admin" />
+        <ax:script-lang key="ax.script" />
         <script type="text/javascript" src="<c:url value='/assets/js/view/_samples/grid-modal.js' />"></script>
     </jsp:attribute>
     <jsp:body>
@@ -78,7 +78,7 @@
                         <ax:tr>
                             <ax:td label="ax.admin.sample.form.address" width="100%">
                                 <input type="text" data-ax-path="etc1" class="form-control inline-block W100" readonly="readonly"/>
-                                <button class="btn btn-default" data-form-view-01-btn="etc1find"><i class="cqc-magnifier"></i> 찾기</button>
+                                <button class="btn btn-default" data-form-view-01-btn="etc1find"><i class="cqc-magnifier"></i> <ax:lang id="ax.admin.sample.form.find"/></button>
                                 <div class="H5"></div>
                                 <input type="text" data-ax-path="etc2" class="form-control"/>
                             </ax:td>

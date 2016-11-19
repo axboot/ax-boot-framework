@@ -20,8 +20,8 @@
             <ax:form name="searchView0">
                 <ax:tbl clazz="ax-search-tbl" minWidth="500px">
                     <ax:tr>
-                        <ax:td label='검색' width="300px">
-                            <input type="text" name="filter" id="filter" class="form-control" value="" placeholder="검색어를 입력하세요."/>
+                        <ax:td label="ax.admin.search" width="300px">
+                            <input type="text" name="filter" id="filter" class="form-control" value="" placeholder="<ax:lang id="ax.admin.input.search"/>"/>
                         </ax:td>
                     </ax:tr>
                 </ax:tbl>
@@ -36,7 +36,7 @@
                 <div class="ax-button-group" data-fit-height-aside="grid-view-01">
                     <div class="left">
                         <h2><i class="cqc-list"></i>
-                            사용자정보
+                            <ax:lang id="ax.admin.user.title"/>
                         </h2>
                     </div>
                     <div class="right"></div>
@@ -51,13 +51,13 @@
                 <div class="ax-button-group" role="panel-header">
                     <div class="left">
                         <h2><i class="cqc-news"></i>
-                            사용자등록
+                            <ax:lang id="ax.admin.user.information"/>
                         </h2>
                     </div>
                     <div class="right">
                         <button type="button" class="btn btn-default" data-form-view-01-btn="form-clear">
                             <i class="cqc-erase"></i>
-                            <lang data-id="신규"></lang>
+                            <ax:lang id="ax.admin.clear"/>
                         </button>
                     </div>
                 </div>
@@ -66,55 +66,49 @@
                     <input type="hidden" name="act_tp" id="act_tp" value=""/>
                     <ax:tbl clazz="ax-form-tbl" minWidth="500px">
                         <ax:tr>
-                            <ax:td label="이름" width="300px">
+                            <ax:td label="ax.admin.user.name" width="300px">
                                 <input type="text" name="userNm" data-ax-path="userNm" maxlength="15" title="이름" class="av-required form-control W120" value=""/>
                             </ax:td>
-                            <ax:td label="아이디" width="220px">
+                            <ax:td label="ax.admin.user.id" width="220px">
                                 <input type="text" name="userCd" data-ax-path="userCd" maxlength="100" title="아이디" class="av-required form-control W150" value=""/>
                             </ax:td>
                         </ax:tr>
                         <ax:tr>
-                            <ax:td label="비밀번호" width="300px">
+                            <ax:td label="ax.admin.user.password" width="300px">
                                 <input type="password" name="userPs" data-ax-path="userPs" maxlength="128" class="form-control W120" value="" readonly="readonly"/>
                             </ax:td>
-                            <ax:td label="비밀번호 확인" width="360px">
+                            <ax:td label="ax.admin.user.password.confirm" width="360px">
                                 <input type="password" name="userPs_chk" data-ax-path="userPs_chk" maxlength="128" class="form-control inline-block W120" value="" readonly="readonly"/>
                                 &nbsp;
                                 <label>
                                     <input type="checkbox" data-ax-path="password_change" name="password_change" value="Y"/>
-                                    비밀번호 변경
+                                    <ax:lang id="ax.admin.user.password.change"/>
                                 </label>
                             </ax:td>
                         </ax:tr>
                         <ax:tr>
-                            <ax:td label="이메일" width="300px">
+                            <ax:td label="ax.admin.user.email" width="300px">
                                 <input type="text" name="email" data-ax-path="email" maxlength="50" title="이메일" placeholder="abc@abc.com" class="av-email form-control W180" value=""/>
                             </ax:td>
-                            <ax:td label="핸드폰번호" width="220px">
+                            <ax:td label="ax.admin.user.hp" width="220px">
                                 <input type="text" name="hpNo" data-ax-path="hpNo" maxlength="15" placeholder="" class="av-phone form-control W120" data-ax5formatter="phone" value=""/>
                             </ax:td>
                         </ax:tr>
                         <ax:tr>
-                            <ax:td label="언어" width="300px">
-                                <select name="locale" data-ax-path="locale" class="form-control W100">
-                                    <option value="ko_KR">한국어</option>
-                                    <option value="en_US">영어</option>
-                                </select>
+                            <ax:td label="ax.admin.user.language" width="300px">
+                                <ax:common-code groupCd="LOCALE" dataPath="locale" clazz="form-control W100"/>
                             </ax:td>
                         </ax:tr>
                         <ax:tr>
-                            <ax:td label="사용여부" width="300px">
-                                <select name="useYn" data-ax-path="useYn" class="form-control W100">
-                                    <option value="Y">사용</option>
-                                    <option value="N">사용안함</option>
-                                </select>
+                            <ax:td label="ax.admin.use.or.not" width="300px">
+                                <ax:common-code groupCd="USE_YN" dataPath="useYn" clazz="form-control W100"/>
                             </ax:td>
-                            <ax:td label="계정상태" width="220px">
+                            <ax:td label="ax.admin.user.account.status" width="220px">
                                 <ax:common-code groupCd="USER_STATUS" dataPath="userStatus"/>
                             </ax:td>
                         </ax:tr>
                         <ax:tr>
-                            <ax:td label="비고" width="100%">
+                            <ax:td label="ax.admin.remark" width="100%">
                                 <input type="text" name="remark" data-ax-path="remark" maxlength="100" class="form-control" value=""/>
                             </ax:td>
                         </ax:tr>
@@ -123,12 +117,12 @@
                     <div class="H5"></div>
                     <div class="ax-button-group sm">
                         <div class="left">
-                            <h3>메뉴그룹 선택</h3>
+                            <h3><ax:lang id="ax.admin.user.menu.group.setting"/></h3>
                         </div>
                     </div>
                     <ax:tbl clazz="ax-form-tbl">
                         <ax:tr>
-                            <ax:td label="메뉴그룹" width="250px">
+                            <ax:td label="ax.admin.user.menu.group" width="250px">
                                 <ax:common-code groupCd="MENU_GROUP" dataPath="menuGrpCd"/>
                             </ax:td>
                         </ax:tr>
@@ -137,12 +131,12 @@
                     <div class="H5"></div>
                     <div class="ax-button-group sm">
                         <div class="left">
-                            <h3>권한설정</h3>
+                            <h3><ax:lang id="ax.admin.user.auth.group.setting"/></h3>
                         </div>
                     </div>
                     <ax:tbl clazz="ax-form-tbl">
                         <ax:tr>
-                            <ax:td label="권한그룹" width="100%">
+                            <ax:td label="ax.admin.user.auth.group" width="100%">
                                 <ax:common-code groupCd="AUTH_GROUP" dataPath="grpAuthCd" name="grpAuthCd" type="checkbox"/>
                             </ax:td>
                         </ax:tr>
@@ -151,7 +145,7 @@
                     <div class="H5"></div>
                     <div class="ax-button-group sm">
                         <div class="left">
-                            <h3>롤 설정</h3>
+                            <h3><ax:lang id="ax.admin.user.role.setting"/></h3>
                         </div>
                     </div>
 

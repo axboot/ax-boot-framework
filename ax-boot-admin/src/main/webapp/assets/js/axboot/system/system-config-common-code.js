@@ -21,7 +21,7 @@ var ACTIONS = axboot.actionExtend(fnObj, {
             data: JSON.stringify(saveList),
             callback: function (res) {
                 ACTIONS.dispatch(ACTIONS.PAGE_SEARCH);
-                axToast.push("저장 되었습니다");
+                axToast.push(LANG("onsave"));
             }
         });
     },
@@ -102,8 +102,8 @@ fnObj.gridView01 = axboot.viewExtend(axboot.gridView, {
             multipleSelect: true,
             target: $('[data-ax5grid="grid-view-01"]'),
             columns: [
-                {key: "groupCd", label: "분류코드", width: 250, align: "center", editor: {type: "text", disabled: "notCreated"}},
-                {key: "groupNm", label: "분류명", width: 200, align: "center", editor: "text"},
+                {key: "groupCd", label: COL("commoncode.group.code"), width: 250, align: "center", editor: {type: "text", disabled: "notCreated"}},
+                {key: "groupNm", label: COL("commoncode.group.code"), width: 200, align: "center", editor: "text"},
                 {key: "code", label: "코드", width: 100, align: "center", editor: {type: "text", disabled: "notCreated"}},
                 {key: "name", label: "코드값", width: 150, align: "left", editor: "text"},
                 {key: "sort", editor: "number"},

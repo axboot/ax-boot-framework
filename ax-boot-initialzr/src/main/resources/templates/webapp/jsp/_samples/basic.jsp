@@ -8,24 +8,24 @@
 
 <ax:layout name="base">
     <jsp:attribute name="script">
+        <ax:script-lang key="ax.script" />
         <script type="text/javascript" src="<c:url value='/assets/js/view/_samples/basic.js' />"></script>
     </jsp:attribute>
     <jsp:body>
 
         <ax:page-buttons></ax:page-buttons>
 
-
         <div role="page-header">
             <ax:form name="searchView0">
                 <ax:tbl clazz="ax-search-tbl" minWidth="500px">
                     <ax:tr>
-                        <ax:td label='검색조건' width="300px">
+                        <ax:td label='ax.admin.sample.search.condition1' width="300px">
                             <input type="text" class="form-control" />
                         </ax:td>
-                        <ax:td label='검색조건 1' width="300px">
+                        <ax:td label='ax.admin.sample.search.condition2' width="300px">
                             <input type="text" class="form-control" />
                         </ax:td>
-                        <ax:td label='검색조건 2' width="300px">
+                        <ax:td label='ax.admin.sample.search.condition3' width="300px">
                             <input type="text" class="form-control" />
                         </ax:td>
                     </ax:tr>
@@ -41,11 +41,11 @@
                 <div class="ax-button-group" data-fit-height-aside="grid-view-01">
                     <div class="left">
                         <h2><i class="cqc-list"></i>
-                            프로그램 목록 </h2>
+                            <ax:lang id="ax.admin.sample.grid.title"/> </h2>
                     </div>
                     <div class="right">
-                        <button type="button" class="btn btn-default" data-grid-view-01-btn="add"><i class="cqc-circle-with-plus"></i> 추가</button>
-                        <button type="button" class="btn btn-default" data-grid-view-01-btn="delete"><i class="cqc-circle-with-plus"></i> 삭제</button>
+                        <button type="button" class="btn btn-default" data-grid-view-01-btn="add"><i class="cqc-circle-with-plus"></i> <ax:lang id="ax.admin.add"/></button>
+                        <button type="button" class="btn btn-default" data-grid-view-01-btn="delete"><i class="cqc-circle-with-plus"></i> <ax:lang id="ax.admin.delete"/></button>
                     </div>
                 </div>
                 <div data-ax5grid="grid-view-01" data-fit-height-content="grid-view-01" style="height: 300px;"></div>

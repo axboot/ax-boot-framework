@@ -23,11 +23,11 @@ var ACTIONS = axboot.actionExtend(fnObj, {
                 parent.axboot.modal.callback(list[0]);
             }
         } else {
-            alert("선택된 목록이 없습니다.");
+            alert(LANG("ax.script.requireselect"));
         }
     },
     PAGE_DEL: function (caller, act, data) {
-        if (!confirm("정말 삭제 하시겠습니까?")) return;
+        if (!confirm(LANG("ax.script.deleteconfirm"))) return;
 
         var list = caller.gridView01.getData("selected");
         list.forEach(function (n) {

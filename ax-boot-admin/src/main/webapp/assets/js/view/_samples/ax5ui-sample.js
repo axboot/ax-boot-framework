@@ -49,7 +49,7 @@ var ACTIONS = axboot.actionExtend(fnObj, {
     },
     FORM_CLEAR: function (caller, act, data) {
         axDialog.confirm({
-            msg: "정말 양식을 초기화 하시겠습니까?"
+            msg: LANG("ax.script.form.clearconfirm")
         }, function () {
             if (this.key == "ok") {
                 caller.formView01.clear();
@@ -381,30 +381,30 @@ fnObj.formView01 = axboot.viewExtend(axboot.formView, {
         //$('[data-ui-btn]').click
         axboot.buttonClick(this, "data-ui-btn", {
             "toast": function () {
-                axToast.push("토스트 기능 테스트 입니다");
+                axToast.push(LANG("ax.script.toast.test"));
             },
             "toast-confirm": function () {
                 axToast.confirm({
                     theme: "danger",
-                    msg: "토스트 기능 테스트 입니다"
+                    msg: LANG("ax.script.toast.test")
                 });
             },
             "dialog-alert": function () {
                 axDialog.alert({
                     theme: "primary",
-                    msg: "Alert 기능 테스트 입니다."
+                    msg: LANG("ax.script.alert.test")
                 });
             },
             "dialog-confirm": function () {
                 axDialog.confirm({
                     theme: "primary",
-                    msg: "Alert 기능 테스트 입니다."
+                    msg: LANG("ax.script.alert.test")
                 });
             },
             "dialog-prompt": function () {
                 axDialog.prompt({
                     theme: "primary",
-                    msg: "Alert 기능 테스트 입니다."
+                    msg: LANG("ax.script.alert.test")
                 });
             }
         });
@@ -426,7 +426,7 @@ fnObj.formView01 = axboot.viewExtend(axboot.formView, {
     validate: function () {
         var rs = this.model.validate();
         if (rs.error) {
-            alert(rs.error[0].jquery.attr("title") + '을(를) 입력해주세요.');
+            alert(LANG("ax.script.form.validate", rs.error[0].jquery.attr("title")));
             rs.error[0].jquery.focus();
             return false;
         }

@@ -16,6 +16,7 @@
         <link rel="stylesheet" type="text/css" href="/assets/plugins/prettify/skins/github.css"/>
     </jsp:attribute>
     <jsp:attribute name="script">
+        <ax:script-lang key="ax.script" />
         <script type="text/javascript" src="<c:url value='/assets/js/axboot/system/system-operation-log.js' />"></script>
     </jsp:attribute>
     <jsp:body>
