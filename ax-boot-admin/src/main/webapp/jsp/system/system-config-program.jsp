@@ -35,7 +35,7 @@
                 <div class="ax-button-group" data-fit-height-aside="grid-view-01">
                     <div class="left">
                         <h2><i class="cqc-list"></i>
-                            <ax:lang id="ax.admin.page.title.program"/> </h2>
+                            <ax:lang id="ax.admin.program.title"/> </h2>
                     </div>
                     <div class="right">
                         <button type="button" class="btn btn-default" data-grid-view-01-btn="add"><i class="cqc-circle-with-plus"></i> <ax:lang id="ax.admin.add"/></button>
