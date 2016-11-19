@@ -19,13 +19,13 @@
             <ax:form name="searchView0">
                 <ax:tbl clazz="ax-search-tbl" minWidth="500px">
                     <ax:tr>
-                        <ax:td label='ax.admin.sample.search.condition' width="300px">
-                            <input type="text" class="form-control" />
-                        </ax:td>
                         <ax:td label='ax.admin.sample.search.condition1' width="300px">
                             <input type="text" class="form-control" />
                         </ax:td>
                         <ax:td label='ax.admin.sample.search.condition2' width="300px">
+                            <input type="text" class="form-control" />
+                        </ax:td>
+                        <ax:td label='ax.admin.sample.search.condition3' width="300px">
                             <input type="text" class="form-control" />
                         </ax:td>
                     </ax:tr>

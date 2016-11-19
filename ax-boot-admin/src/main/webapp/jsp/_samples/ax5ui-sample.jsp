@@ -19,7 +19,7 @@
             <ax:form name="searchView0">
                 <ax:tbl clazz="ax-search-tbl" minWidth="500px">
                     <ax:tr>
-                        <ax:td label='기간선택' width="300px" labelWidth="80px">
+                        <ax:td label='ax.admin.sample.form.period' width="300px" labelWidth="80px">
 
                             <div class="input-group" data-ax5picker="date">
                                 <input type="text" class="form-control" placeholder="yyyy/mm/dd">
@@ -29,7 +29,7 @@
                             </div>
 
                         </ax:td>
-                        <ax:td label='모달선택' width="300px" labelWidth="80px">
+                        <ax:td label='ax.admin.sample.form.show.code.list' width="300px" labelWidth="80px">
 
                             <div class="form-inline">
                                 <div class="form-group">
@@ -37,13 +37,13 @@
                                     <input type="text" id="compStorLabel" class="form-control W80" value=""/>
                                     <button type="button" class="btn btn-primary" data-searchview-btn="modal">
                                         <i class="cqc-magnifier"></i>
-                                        찾기
+                                        <ax:lang id="ax.admin.search"/>
                                     </button>
                                 </div>
                             </div>
 
                         </ax:td>
-                        <ax:td label='날자' width="250px">
+                        <ax:td label='ax.admin.sample.form.date' width="250px">
 
                             <div class="input-group" data-ax5picker="date">
                                 <input type="text" class="form-control" placeholder="yyyy/mm/dd"/>
@@ -52,7 +52,7 @@
 
                         </ax:td>
                         <!--
-                        <ax:td label='검색어' width="400px">
+                        <ax:td label='ax.admin.sample.search.condition' width="400px">
 
                             <div class="form-inline">
                                 <div class="form-group">
@@ -81,7 +81,7 @@
                 <div class="ax-button-group" data-fit-height-aside="grid-view-01">
                     <div class="left">
                         <h2><i class="cqc-list"></i>
-                            Parent List </h2>
+                            <ax:lang id="ax.admin.sample.parent.list"/> </h2>
                     </div>
                     <div class="right">
 
@@ -97,12 +97,12 @@
                 <div class="ax-button-group" role="panel-header">
                     <div class="left">
                         <h2><i class="cqc-news"></i>
-                            Parent Info </h2>
+                            <ax:lang id="ax.admin.sample.parent.information"/> </h2>
                     </div>
                     <div class="right">
                         <button type="button" class="btn btn-default" data-form-view-01-btn="form-clear">
                             <i class="cqc-erase"></i>
-                            신규
+                            <ax:lang id="ax.admin.clear"/>
                         </button>
                     </div>
                 </div>
@@ -110,23 +110,23 @@
                 <ax:form name="formView01">
                     <ax:tbl clazz="ax-form-tbl">
                         <ax:tr>
-                            <ax:td label="키(KEY) *" width="300px">
-                                <input type="text" data-ax-path="key" title="키(KEY)" class="form-control" data-ax-validate="required"/>
+                            <ax:td label="ax.admin.sample.form.key" width="300px">
+                                <input type="text" data-ax-path="key" title="Key" class="form-control" data-ax-validate="required"/>
                             </ax:td>
-                            <ax:td label="값(VALUE)" width="300px">
+                            <ax:td label="ax.admin.sample.form.value" width="300px">
                                 <input type="text" data-ax-path="value" class="form-control"/>
                             </ax:td>
                         </ax:tr>
                         <ax:tr>
-                            <ax:td label="ETC1" width="300px">
+                            <ax:td label="ax.admin.sample.form.etc1" width="300px">
                                 <input type="text" data-ax-path="etc1" class="form-control" data-ax5formatter="money"/>
                             </ax:td>
-                            <ax:td label="select" width="300px">
+                            <ax:td label="ax.admin.sample.form.select" width="300px">
                                 <div data-ax5select="select1"></div>
                             </ax:td>
                         </ax:tr>
                         <ax:tr>
-                            <ax:td label="picker" width="300px">
+                            <ax:td label="ax.admin.sample.form.picker" width="300px">
                                 <div class="input-group" data-ax5picker="numpad">
                                     <input type="text" class="form-control" placeholder>
                                     <span class="input-group-addon"><i class="cqc-phone"></i></span>
@@ -134,21 +134,21 @@
                             </ax:td>
                         </ax:tr>
                         <ax:tr>
-                            <ax:td label="autocomplete" width="100%">
+                            <ax:td label="ax.admin.sample.form.auto.complete" width="100%">
                                 <div class="form-group">
                                     <div data-ax5autocomplete="autocomplete1" data-ax5autocomplete-config="{}"></div>
                                 </div>
                             </ax:td>
                         </ax:tr>
                         <ax:tr>
-                            <ax:td label="combobox" width="100%">
+                            <ax:td label="ax.admin.sample.form.auto.combobox" width="100%">
                                 <div class="form-group">
                                     <div data-ax5combobox="combobox1" data-ax5combobox-config="{}"></div>
                                 </div>
                             </ax:td>
                         </ax:tr>
                         <ax:tr>
-                            <ax:td label="calendar" width="100%">
+                            <ax:td label="ax.admin.sample.form.auto.calendar" width="100%">
                                 <div id="calendar-target" style="
                 width:300px;
                 border:1px solid #ccc;

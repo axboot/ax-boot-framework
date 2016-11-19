@@ -25,13 +25,13 @@
             <ax:form name="searchView0">
                 <ax:tbl clazz="ax-search-tbl" minWidth="500px">
                     <ax:tr>
-                        <ax:td label='검색조건' width="300px">
+                        <ax:td label='ax.admin.sample.search.condition1' width="300px">
                             <input type="text" class="form-control" />
                         </ax:td>
-                        <ax:td label='검색조건 1' width="300px">
+                        <ax:td label='ax.admin.sample.search.condition2' width="300px">
                             <input type="text" class="form-control" />
                         </ax:td>
-                        <ax:td label='검색조건 2' width="300px">
+                        <ax:td label='ax.admin.sample.search.condition3' width="300px">
                             <input type="text" class="form-control" />
                         </ax:td>
                     </ax:tr>
@@ -48,10 +48,10 @@
                     <div class="left">
                         <h2>
                             <i class="cqc-list"></i>
-                            상단 패널 </h2>
+                            <ax:lang id="ax.admin.sample.layout.toppanel"/> </h2>
                     </div>
                     <div class="right">
-                        <button type="button" class="btn btn-default" data-left-view-01-btn="add"><i class="cqc-circle-with-plus"></i> 추가</button>
+                        <button type="button" class="btn btn-default" data-left-view-01-btn="add"><i class="cqc-circle-with-plus"></i> <ax:lang id="ax.admin.add"/></button>
                     </div>
                 </div>
 
@@ -70,12 +70,12 @@
 
                 <div class="ax-button-group ax-button-group-bottom" data-fit-height-aside="left-view-01">
                     <div class="left">
-                        <button type="button" class="btn btn-default" data-left-view-01-btn="add">버튼 FN0</button>
-                        <button type="button" class="btn btn-primary" data-left-view-01-btn="add">버튼 FN1</button>
-                        <button type="button" class="btn btn-info" data-left-view-01-btn="add">버튼 FN2</button>
-                        <button type="button" class="btn btn-success" data-left-view-01-btn="add">버튼 FN3</button>
-                        <button type="button" class="btn btn-warning" data-left-view-01-btn="add">버튼 FN3</button>
-                        <button type="button" class="btn btn-danger" data-left-view-01-btn="add">버튼 FN3</button>
+                        <button type="button" class="btn btn-default" data-left-view-01-btn="add"><ax:lang id="ax.admin.button"/> FN0</button>
+                        <button type="button" class="btn btn-primary" data-left-view-01-btn="add"><ax:lang id="ax.admin.button"/> FN1</button>
+                        <button type="button" class="btn btn-info" data-left-view-01-btn="add"><ax:lang id="ax.admin.button"/> FN2</button>
+                        <button type="button" class="btn btn-success" data-left-view-01-btn="add"><ax:lang id="ax.admin.button"/> FN3</button>
+                        <button type="button" class="btn btn-warning" data-left-view-01-btn="add"><ax:lang id="ax.admin.button"/> FN3</button>
+                        <button type="button" class="btn btn-danger" data-left-view-01-btn="add"><ax:lang id="ax.admin.button"/> FN3</button>
                     </div>
                 </div>
 
@@ -87,10 +87,10 @@
                     <div class="left">
                         <h2>
                             <i class="cqc-list"></i>
-                            하단 패널 </h2>
+                            <ax:lang id="ax.admin.sample.layout.bottompanel"/> </h2>
                     </div>
                     <div class="right">
-                        <button type="button" class="btn btn-default" data-right-view-01-btn="add"><i class="cqc-circle-with-plus"></i> 추가</button>
+                        <button type="button" class="btn btn-default" data-right-view-01-btn="add"><i class="cqc-circle-with-plus"></i> <ax:lang id="ax.admin.add"/></button>
                     </div>
                 </div>
 
@@ -106,12 +106,12 @@
 
                 <div class="ax-button-group ax-button-group-bottom" data-fit-height-aside="right-view-01">
                     <div class="right">
-                        <button type="button" class="btn btn-default" data-left-view-01-btn="add">버튼 FN0</button>
-                        <button type="button" class="btn btn-primary" data-left-view-01-btn="add">버튼 FN1</button>
-                        <button type="button" class="btn btn-info" data-left-view-01-btn="add">버튼 FN2</button>
-                        <button type="button" class="btn btn-success" data-left-view-01-btn="add">버튼 FN3</button>
-                        <button type="button" class="btn btn-warning" data-left-view-01-btn="add">버튼 FN3</button>
-                        <button type="button" class="btn btn-danger" data-left-view-01-btn="add">버튼 FN3</button>
+                        <button type="button" class="btn btn-default" data-left-view-01-btn="add"><ax:lang id="ax.admin.button"/> FN0</button>
+                        <button type="button" class="btn btn-primary" data-left-view-01-btn="add"><ax:lang id="ax.admin.button"/> FN1</button>
+                        <button type="button" class="btn btn-info" data-left-view-01-btn="add"><ax:lang id="ax.admin.button"/> FN2</button>
+                        <button type="button" class="btn btn-success" data-left-view-01-btn="add"><ax:lang id="ax.admin.button"/> FN3</button>
+                        <button type="button" class="btn btn-warning" data-left-view-01-btn="add"><ax:lang id="ax.admin.button"/> FN3</button>
+                        <button type="button" class="btn btn-danger" data-left-view-01-btn="add"><ax:lang id="ax.admin.button"/> FN3</button>
                     </div>
                 </div>
 
