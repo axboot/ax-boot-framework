@@ -28,7 +28,7 @@ var ACTIONS = axboot.actionExtend(fnObj, {
             data: JSON.stringify(saveList),
             callback: function (res) {
                 ACTIONS.dispatch(ACTIONS.PAGE_SEARCH);
-                axToast.push("저장 되었습니다");
+                axToast.push(LANG(""));
             }
         });
     },

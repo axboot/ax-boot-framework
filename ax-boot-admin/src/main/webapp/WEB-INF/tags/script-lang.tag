@@ -33,17 +33,15 @@
         }
 
         json = JsonUtils.toJson(filterMap);
-    }
-%>
-<%
-    if (StringUtils.isNotEmpty(json)) {
-%>
+    }%>
+<%if (StringUtils.isNotEmpty(json)) {%>
 
 <script type="text/javascript">
-    window.LANG = (function (json) {
-        return json;
+    window.LANG_INSTANCE = (function (json) {
+        return new axboot.lang(json);
     })(<%=json%>);
-</script>
-<%
+    window.LANG = function () {
+        return LANG_INSTANCE.get.apply(LANG_INSTANCE, arguments);
     }
-%>
+</script>
+<%}%>
