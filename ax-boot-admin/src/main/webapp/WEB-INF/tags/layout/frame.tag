@@ -71,7 +71,7 @@
                         <div class="panel-split"></div>
                     </c:if>
                     <div class="ax-split-panel">
-                        <a href="#ax" onclick="fcObj.open_user_info();"><ax:lang id="ax.admin.login.status.message" arguments="${loginUser.userNm}"/></a>
+                        <a href="#ax" onclick="fcObj.open_user_info();"><ax:lang id="ax.admin.login.status.message" args="${loginUser.userNm}"/></a>
                     </div>
                     <div class="panel-split"></div>
                     <div class="ax-split-panel">
