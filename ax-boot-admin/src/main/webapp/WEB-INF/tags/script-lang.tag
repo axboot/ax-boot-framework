@@ -7,7 +7,11 @@
 <%@ tag language="java" pageEncoding="UTF-8" body-content="scriptless" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ attribute name="key" required="true" %>
+<%@ attribute name="var" %>
 <%
+    if(StringUtils.isEmpty(var)) {
+        var = "LANG";
+    }
 
     String json = "";
 
@@ -37,11 +41,11 @@
 <%if (StringUtils.isNotEmpty(json)) {%>
 
 <script type="text/javascript">
-    window.LANG_INSTANCE = (function (json) {
+    window.<%=var%>_INSTANCE = (function (json) {
         return new axboot.lang(json);
     })(<%=json%>);
-    window.LANG = function () {
-        return LANG_INSTANCE.get.apply(LANG_INSTANCE, arguments);
+    window.<%=var%> = function () {
+        return <%=var%>_INSTANCE.get.apply(<%=var%>_INSTANCE, arguments);
     }
 </script>
 <%}%>

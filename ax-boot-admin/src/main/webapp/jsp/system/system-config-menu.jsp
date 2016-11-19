@@ -9,6 +9,7 @@
 
 <ax:layout name="base">
     <jsp:attribute name="script">
+        <ax:script-lang key="ax.script" />
         <script type="text/javascript" src="<c:url value='/assets/js/axboot/system/system-config-menu.js' />"></script>
     </jsp:attribute>
     <jsp:body>

@@ -13,6 +13,7 @@
 
 <ax:layout name="modal">
     <jsp:attribute name="script">
+        <ax:script-lang key="ax.script" />
         <script>
             var GROUP_CD = "${GROUP_CD}";
             var GROUP_NM = "${GROUP_NM}";
