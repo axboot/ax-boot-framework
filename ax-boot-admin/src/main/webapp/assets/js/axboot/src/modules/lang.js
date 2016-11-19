@@ -1,3 +1,11 @@
+/**
+ * @Class axboot.lang
+ *
+ * @method axboot.lang.get
+ * @param {String} _message
+ * @param {*} [args]
+ * @return {String}
+ */
 axboot.lang = (function () {
     function langClass(_json) {
 

@@ -43,7 +43,7 @@ var ACTIONS = axboot.actionExtend(fnObj, {
     },
     FORM_CLEAR: function (caller, act, data) {
         axDialog.confirm({
-            msg: "정말 양식을 초기화 하시겠습니까?"
+            msg: LANG("ax.script.form.clearconfirm")
         }, function () {
             if (this.key == "ok") {
                 caller.formView01.clear();
@@ -57,6 +57,7 @@ var ACTIONS = axboot.actionExtend(fnObj, {
         axboot.modal.open({
             modalType: "ZIPCODE",
             param: "",
+            header:{title: LANG("ax.script.address.finder.title")},
             sendData: function(){
                 return {};
             },
@@ -273,7 +274,7 @@ fnObj.formView01 = axboot.viewExtend(axboot.formView, {
     validate: function () {
         var rs = this.model.validate();
         if (rs.error) {
-            alert(rs.error[0].jquery.attr("title") + '을(를) 입력해주세요.');
+            alert(LANG("ax.script.form.validate", rs.error[0].jquery.attr("title")));
             rs.error[0].jquery.focus();
             return false;
         }

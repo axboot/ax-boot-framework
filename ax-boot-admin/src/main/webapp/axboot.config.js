@@ -22,9 +22,6 @@
                 height: 500,
                 iframe: {
                     url: "/jsp/common/zipcode.jsp"
-                },
-                header: {
-                    title: "우편번호 찾기"
                 }
             },
             "SAMPLE-MODAL": {

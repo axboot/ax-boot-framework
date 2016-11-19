@@ -44,7 +44,7 @@ var ACTIONS = axboot.actionExtend(fnObj, {
     },
     FORM_CLEAR: function (caller, act, data) {
         axDialog.confirm({
-            msg: "정말 양식을 초기화 하시겠습니까?"
+            msg: LANG("ax.script.form.clearconfirm")
         }, function () {
             if (this.key == "ok") {
                 caller.formView01.clear();
@@ -243,15 +243,15 @@ fnObj.formView01 = axboot.viewExtend(axboot.formView, {
         this.model.setModel(data);
         this.modelFormatter.formatting(); // 입력된 값을 포메팅 된 값으로 변경
     },
-validate: function () {
-    var rs = this.model.validate();
-    if (rs.error) {
-        alert(rs.error[0].jquery.attr("title") + '을(를) 입력해주세요.');
-        rs.error[0].jquery.focus();
-        return false;
-    }
-    return true;
-},
+    validate: function () {
+        var rs = this.model.validate();
+        if (rs.error) {
+            alert(LANG("ax.script.form.validate", rs.error[0].jquery.attr("title")));
+            rs.error[0].jquery.focus();
+            return false;
+        }
+        return true;
+    },
     clear: function () {
         this.model.setModel(this.getDefaultData());
         this.target.find('[data-ax-path="key"]').removeAttr("readonly");
