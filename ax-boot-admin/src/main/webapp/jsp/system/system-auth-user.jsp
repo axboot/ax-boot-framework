@@ -36,7 +36,7 @@
                 <div class="ax-button-group" data-fit-height-aside="grid-view-01">
                     <div class="left">
                         <h2><i class="cqc-list"></i>
-                            사용자정보
+                            <ax:lang id="ax.admin.user.title"/>
                         </h2>
                     </div>
                     <div class="right"></div>
@@ -51,13 +51,13 @@
                 <div class="ax-button-group" role="panel-header">
                     <div class="left">
                         <h2><i class="cqc-news"></i>
-                            사용자등록
+                            <ax:lang id="ax.admin.user.information"/>
                         </h2>
                     </div>
                     <div class="right">
                         <button type="button" class="btn btn-default" data-form-view-01-btn="form-clear">
                             <i class="cqc-erase"></i>
-                            <lang data-id="신규"></lang>
+                            <ax:lang id="ax.admin.clear"/>
                         </button>
                     </div>
                 </div>

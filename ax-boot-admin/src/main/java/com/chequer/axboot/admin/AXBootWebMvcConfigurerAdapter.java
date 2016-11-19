@@ -192,7 +192,7 @@ public class AXBootWebMvcConfigurerAdapter extends WebMvcConfigurerAdapter imple
 
         String[] activeProfiles = applicationContext.getEnvironment().getActiveProfiles();
 
-        if (activeProfiles != null && activeProfiles.length > 0 && activeProfiles[0].equals("local") ||
+        if ((activeProfiles != null && activeProfiles.length > 0 && activeProfiles[0].equals("local")) ||
                 Boolean.parseBoolean(System.getProperty("axboot.profiles.development"))) {
             axBootReloadableResourceBundleMessageSource.setCacheSeconds(1);
         }

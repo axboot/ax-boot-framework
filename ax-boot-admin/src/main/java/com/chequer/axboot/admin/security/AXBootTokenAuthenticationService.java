@@ -72,7 +72,7 @@ public class AXBootTokenAuthenticationService {
         final String language = requestUtils.getString(GlobalConstants.LANGUAGE_PARAMETER_KEY, "");
 
         if (StringUtils.isNotEmpty(language)) {
-            CookieUtils.addCookie(response, GlobalConstants.LANGUAGE_COOKIE_KEY, language);
+            CookieUtils.addCookie(response, GlobalConstants.LANGUAGE_PARAMETER_KEY, language);
         }
 
         if (token == null) {

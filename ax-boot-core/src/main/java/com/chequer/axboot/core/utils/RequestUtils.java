@@ -239,7 +239,7 @@ public class RequestUtils {
             if (StringUtils.isNotEmpty(localeCookie)) {
                 locale = new Locale(localeCookie);
             } else {
-                locale = new Locale("ko");
+                locale = new Locale("ko_KR");
             }
         }
 
