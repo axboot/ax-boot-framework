@@ -20,7 +20,7 @@
             <ax:form name="searchView0">
                 <ax:tbl clazz="ax-search-tbl" minWidth="500px">
                     <ax:tr>
-                        <ax:td label='검색조건' width="300px">
+                        <ax:td label='ax.admin.sample.search.condition' width="300px">
                             <input type="text" class="form-control"/>
                         </ax:td>
                     </ax:tr>
@@ -36,7 +36,7 @@
                 <div class="ax-button-group" data-fit-height-aside="grid-view-01">
                     <div class="left">
                         <h2><i class="cqc-list"></i>
-                            Parent List </h2>
+                            <ax:lang id="ax.admin.sample.parent.list"/> </h2>
                     </div>
                     <div class="right">
 
@@ -52,13 +52,13 @@
                 <div class="ax-button-group" role="panel-header">
                     <div class="left">
                         <h2><i class="cqc-news"></i>
-                            Parent Info
+                            <ax:lang id="ax.admin.sample.parent.information"/>
                         </h2>
                     </div>
                     <div class="right">
                         <button type="button" class="btn btn-default" data-form-view-01-btn="form-clear">
                             <i class="cqc-erase"></i>
-                            신규
+                            <ax:lang id="ax.admin.clear"/>
                         </button>
                     </div>
                 </div>
@@ -66,17 +66,17 @@
                 <ax:form name="formView01">
                     <ax:tbl clazz="ax-form-tbl" minWidth="500px">
                         <ax:tr>
-                            <ax:td label="키(KEY) *" width="300px">
-                                <input type="text" data-ax-path="key" title="키(KEY)" class="form-control" data-ax-validate="required"/>
+                            <ax:td label="ax.admin.sample.form.key" width="300px">
+                                <input type="text" data-ax-path="key" title="Key" class="form-control" data-ax-validate="required"/>
                             </ax:td>
                         </ax:tr>
                         <ax:tr>
-                            <ax:td label="값(VALUE)" width="300px">
+                            <ax:td label="ax.admin.sample.form.value" width="300px">
                                 <input type="text" data-ax-path="value" class="form-control"/>
                             </ax:td>
                         </ax:tr>
                         <ax:tr>
-                            <ax:td label="주소찾기" width="100%">
+                            <ax:td label="ax.admin.sample.form.address" width="100%">
                                 <input type="text" data-ax-path="etc1" class="form-control inline-block W100" readonly="readonly"/>
                                 <button class="btn btn-default" data-form-view-01-btn="etc1find"><i class="cqc-magnifier"></i> 찾기</button>
                                 <div class="H5"></div>
@@ -84,10 +84,10 @@
                             </ax:td>
                         </ax:tr>
                         <ax:tr>
-                            <ax:td label="코드찾기" width="100%">
+                            <ax:td label="ax.admin.sample.form.code" width="100%">
                                 <input type="text" data-ax-path="etc3" class="form-control inline-block W60" readonly="readonly" />
                                 <input type="text" data-ax-path="etc4" class="form-control inline-block W150"/>
-                                <button class="btn btn-default" data-form-view-01-btn="etc3find"><i class="cqc-magnifier"></i> 찾기</button>
+                                <button class="btn btn-default" data-form-view-01-btn="etc3find"><i class="cqc-magnifier"></i> <ax:lang id="ax.admin.sample.form.show.code.list"/></button>
                             </ax:td>
                         </ax:tr>
                     </ax:tbl>
