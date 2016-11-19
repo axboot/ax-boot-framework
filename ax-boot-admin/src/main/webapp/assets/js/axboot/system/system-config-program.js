@@ -22,7 +22,7 @@ var ACTIONS = axboot.actionExtend(fnObj, {
             data: JSON.stringify(saveList),
             callback: function (res) {
                 ACTIONS.dispatch(ACTIONS.PAGE_SEARCH);
-                axToast.push("저장 되었습니다");
+                axToast.push(LANG("onsave"));
             }
         });
     },
@@ -102,19 +102,19 @@ fnObj.gridView01 = axboot.viewExtend(axboot.gridView, {
             multipleSelect: true,
             target: $('[data-ax5grid="grid-view-01"]'),
             columns: [
-                {key: "progNm", label: "프로그램명", width: 160, align: "left", editor: "text"},
-                {key: "progPh", label: "경로", width: 350, align: "left", editor: "text"},
-                {key: "authCheck", label: "권한체크여부", width: 80, align: "center", editor: "checkYn"},
-                {key: "schAh", label: "조회", width: 50, align: "center", editor: "checkYn"},
-                {key: "savAh", label: "저장", width: 50, align: "center", editor: "checkYn"},
-                {key: "exlAh", label: "엑셀", width: 50, align: "center", editor: "checkYn"},
-                {key: "delAh", label: "삭제", width: 50, align: "center", editor: "checkYn"},
+                {key: "progNm", label: COL("ax.admin.program.name"), width: 160, align: "left", editor: "text"},
+                {key: "progPh", label: COL("ax.admin.program.progPh"), width: 350, align: "left", editor: "text"},
+                {key: "authCheck", label: COL("ax.admin.program.auth.check.or.not"), width: 80, align: "center", editor: "checkYn"},
+                {key: "schAh", label: COL("ax.admin.program.auth.inquery"), width: 50, align: "center", editor: "checkYn"},
+                {key: "savAh", label: COL("ax.admin.program.auth.save"), width: 50, align: "center", editor: "checkYn"},
+                {key: "exlAh", label: COL("ax.admin.program.auth.excel"), width: 50, align: "center", editor: "checkYn"},
+                {key: "delAh", label: COL("ax.admin.program.auth.delete"), width: 50, align: "center", editor: "checkYn"},
                 {key: "fn1Ah", label: "FN1", width: 50, align: "center", editor: "checkYn"},
                 {key: "fn2Ah", label: "FN2", width: 50, align: "center", editor: "checkYn"},
                 {key: "fn3Ah", label: "FN3", width: 50, align: "center", editor: "checkYn"},
                 {key: "fn4Ah", label: "FN4", width: 50, align: "center", editor: "checkYn"},
                 {key: "fn5Ah", label: "FN5", width: 50, align: "center", editor: "checkYn"},
-                {key: "remark", label: "설명", width: 300, editor: "text"}
+                {key: "remark", label: COL("ax.admin.remark"), width: 300, editor: "text"}
             ],
             body: {
                 onClick: function () {

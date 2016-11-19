@@ -24,7 +24,7 @@ var ACTIONS = axboot.actionExtend(fnObj, {
             data: JSON.stringify(obj),
             callback: function (res) {
                 caller.treeView01.clearDeletedList();
-                axToast.push("메뉴 카테고리가 저장 되었습니다");
+                axToast.push(LANG("ax.script.menu.category.saved"));
 
                 if (data && data.callback) {
                     data.callback();
@@ -45,7 +45,7 @@ var ACTIONS = axboot.actionExtend(fnObj, {
                     url: ["menu", "auth"],
                     data: JSON.stringify(caller.gridView01.getData()),
                     callback: function (res) {
-                        axToast.push("메뉴 권한그룹 정보가 저장 되었습니다");
+                        axToast.push(LANG("ax.script.menu.authgroup.saved"));
                         ACTIONS.dispatch(ACTIONS.SEARCH_AUTH, {menuId: caller.formView01.getData().menuId});
                     }
                 });
@@ -57,7 +57,7 @@ var ACTIONS = axboot.actionExtend(fnObj, {
     TREEITEM_CLICK: function (caller, act, data) {
         if (typeof data.menuId === "undefined") {
             caller.formView01.clear();
-            if (confirm("신규 생성된 메뉴는 저장 후 편집 할수 있습니다. 지금 저장 하시겠습니까?")) {
+            if (confirm(LANG("ax.script.menu.save.confirm"))) {
                 ACTIONS.dispatch(ACTIONS.PAGE_SAVE);
             }
             return;
@@ -88,7 +88,7 @@ var ACTIONS = axboot.actionExtend(fnObj, {
                 data: JSON.stringify(obj),
                 callback: function (res) {
                     caller.treeView01.clearDeletedList();
-                    axToast.push("메뉴 카테고리가 저장 되었습니다");
+                    axToast.push(LANG("ax.script.menu.category.saved"));
                 }
             })
             .call({
@@ -468,7 +468,7 @@ fnObj.formView01 = axboot.viewExtend(axboot.formView, {
         this.mask = new ax5.ui.mask({
             theme: "form-mask",
             target: $('#split-panel-form'),
-            content: '좌측 메뉴를 선택해주세요.'
+            content: COL("ax.admin.menu.form.d1")
         });
         this.mask.open();
 
@@ -577,13 +577,13 @@ fnObj.gridView01 = axboot.viewExtend(axboot.gridView, {
             target: $('[data-ax5grid="grid-view-01"]'),
             columns: [
                 //menuId
-                {key: "grpAuthCd", label: "권한그룹코드", width: 80, align: "center"},
-                {key: "grpAuthNm", label: "권한그룹명", width: 160, align: "left"},
-                {key: "useYn", label: "권한적용", editor: "checkYn"},
-                {key: "schAh", label: "조회", width: 50, align: "center", editor: "menu-program-auth-checkYn"},
-                {key: "savAh", label: "저장", width: 50, align: "center", editor: "menu-program-auth-checkYn"},
-                {key: "exlAh", label: "엑셀", width: 50, align: "center", editor: "menu-program-auth-checkYn"},
-                {key: "delAh", label: "삭제", width: 50, align: "center", editor: "menu-program-auth-checkYn"},
+                {key: "grpAuthCd", label: COL("ax.admin.menu.auth.group.code"), width: 80, align: "center"},
+                {key: "grpAuthNm", label: COL("ax.admin.menu.auth.group.name"), width: 160, align: "left"},
+                {key: "useYn", label: COL("ax.admin.menu.auth.apply"), editor: "checkYn"},
+                {key: "schAh", label: COL("ax.admin.menu.auth.inquery"), width: 50, align: "center", editor: "menu-program-auth-checkYn"},
+                {key: "savAh", label: COL("ax.admin.menu.auth.save"), width: 50, align: "center", editor: "menu-program-auth-checkYn"},
+                {key: "exlAh", label: COL("ax.admin.menu.auth.excel"), width: 50, align: "center", editor: "menu-program-auth-checkYn"},
+                {key: "delAh", label: COL("ax.admin.menu.auth.delete"), width: 50, align: "center", editor: "menu-program-auth-checkYn"},
                 {key: "fn1Ah", label: "FN1", width: 50, align: "center", editor: "menu-program-auth-checkYn"},
                 {key: "fn2Ah", label: "FN2", width: 50, align: "center", editor: "menu-program-auth-checkYn"},
                 {key: "fn3Ah", label: "FN3", width: 50, align: "center", editor: "menu-program-auth-checkYn"},
