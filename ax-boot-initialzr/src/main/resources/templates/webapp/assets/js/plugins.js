@@ -14709,7 +14709,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
          * ax5 version
          * @member {String} ax5.info.version
          */
-        var version = "1.3.42";
+        var version = "${VERSION}";
 
         /**
          * ax5 library path
@@ -16662,6 +16662,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
          * "&amp;" represents the & sign.
          * "&quot; represents the " mark.
          * [Character entity references](https://www.w3.org/TR/html401/charset.html#h-5.3)
+         * @method ax5.util.escapeHtml
          * @param {String} s
          * @returns {string}
          * @example
@@ -16692,6 +16693,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
         /**
          * HTML 문자열을 unescape 처리합니다.
          * escapeHtml를 참고하세요.
+         * @method ax5.util.unescapeHtml
          * @param {String} s
          * @returns {string}
          * @example
@@ -16717,6 +16719,99 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
                         return match;
                 }
             });
+        }
+
+        /**
+         * @method ax5.util.string
+         * @param {String} tmpl
+         * @param {*} args
+         * @return {ax5string}
+         * @example
+         * ```js
+         * ax5.util.string("{0} is dead, but {1} is alive! {0} {2}").format("ASP", "ASP.NET");
+         * ax5.util.string("{0} is dead, but {1} is alive! {0} {2}").format(["ASP", "ASP.NET"]);
+         * ax5.util.stinrg("{0} counts").format(100);
+         * ```
+         */
+        function string(_string) {
+            function ax5string(_string) {
+                this.value = _string;
+                this.toString = function () {
+                    return this.value;
+                };
+                /**
+                 * @method ax5.util.string.format
+                 * @returns {*}
+                 */
+                this.format = function () {
+                    var args = [];
+                    for (var i = 0, l = arguments.length; i < l; i++) {
+                        args = args.concat(arguments[i]);
+                    }
+                    return this.value.replace(/{(\d+)}/g, function (match, number) {
+                        return typeof args[number] != 'undefined' ? args[number] : match;
+                    });
+                };
+                /**
+                 * @method ax5.util.string.escape
+                 * @returns {*}
+                 */
+                this.escape = function () {
+                    return escapeHtml(this.value);
+                };
+                /**
+                 * @method ax5.util.string.unescape
+                 * @returns {*}
+                 */
+                this.unescape = function () {
+                    return unescapeHtml(this.value);
+                };
+                /**
+                 * @method ax5.util.string.encode
+                 * @returns {*}
+                 */
+                this.encode = function () {
+                    return encode(this.value);
+                };
+                /**
+                 * @method ax5.util.string.decode
+                 * @returns {*}
+                 */
+                this.decode = function () {
+                    return decode(this.value);
+                };
+                /**
+                 * @method ax5.util.string.left
+                 * @param {String|Number} pos - 찾을 문자열 또는 포지션
+                 * @returns {*}
+                 */
+                this.left = function (_pos) {
+                    return left(this.value, _pos);
+                };
+                /**
+                 * @method ax5.util.string.right
+                 * @param {String|Number} pos - 찾을 문자열 또는 포지션
+                 * @returns {*}
+                 */
+                this.right = function (_pos) {
+                    return right(this.value, _pos);
+                };
+                /**
+                 * @method ax5.util.string.camelCase
+                 * @returns {*}
+                 */
+                this.camelCase = function () {
+                    return camelCase(this.value);
+                };
+                /**
+                 * @method ax5.util.string.snakeCase
+                 * @returns {*}
+                 */
+                this.snakeCase = function () {
+                    return snakeCase(this.value);
+                };
+            }
+            return new ax5string(_string);
         }
 
         return {
@@ -16772,7 +16867,9 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
             selectRange: selectRange,
             debounce: debounce,
             escapeHtml: escapeHtml,
-            unescapeHtml: unescapeHtml
+            unescapeHtml: unescapeHtml,
+
+            string: string
         };
     }();
 
@@ -17978,7 +18075,7 @@ ax5.ui = function () {
 
     UI.addClass({
         className: "dialog",
-        version: "1.3.42"
+        version: "1.3.44"
     }, function () {
         /**
          * @class ax5dialog
@@ -18517,7 +18614,7 @@ ax5.ui = function () {
 
     UI.addClass({
         className: "mask",
-        version: "1.3.42"
+        version: "1.3.44"
     }, function () {
         /**
          * @class ax5mask
@@ -18848,7 +18945,7 @@ ax5.ui = function () {
 
     UI.addClass({
         className: "toast",
-        version: "1.3.42"
+        version: "1.3.44"
     }, function () {
         /**
          * @class ax5toast
@@ -19212,7 +19309,7 @@ ax5.ui = function () {
 
     UI.addClass({
         className: "modal",
-        version: "1.3.42"
+        version: "1.3.44"
     }, function () {
         /**
          * @class ax5modal
@@ -19860,7 +19957,7 @@ ax5.ui = function () {
 
     UI.addClass({
         className: "calendar",
-        version: "1.3.42"
+        version: "1.3.44"
     }, function () {
 
         /**
@@ -20924,7 +21021,7 @@ ax5.ui = function () {
 
     UI.addClass({
         className: "picker",
-        version: "1.3.42"
+        version: "1.3.44"
     }, function () {
         /**
          * @class ax5picker
@@ -21965,7 +22062,7 @@ jQuery.fn.ax5picker = function () {
 
     UI.addClass({
         className: "formatter",
-        version: "1.3.42"
+        version: "1.3.44"
     }, function () {
         var TODAY = new Date();
         var setSelectionRange = function setSelectionRange(input, pos) {
@@ -22603,7 +22700,7 @@ jQuery.fn.ax5formatter = function () {
 
     UI.addClass({
         className: "menu",
-        version: "1.3.42"
+        version: "1.3.44"
     }, function () {
         /**
          * @class ax5.ui.menu
@@ -22900,6 +22997,19 @@ jQuery.fn.ax5formatter = function () {
                     _activeMenu = null;
                 });
 
+                // mouse out
+                activeMenu.find('[data-menu-item-index]').bind("mouseout", function () {
+                    var depth = this.getAttribute("data-menu-item-depth"),
+                        index = this.getAttribute("data-menu-item-index"),
+                        path = this.getAttribute("data-menu-item-path"),
+                        _items;
+
+                    _items = self.queue[depth].data[cfg.columnKeys.items][index][cfg.columnKeys.items];
+                    if (_items && _items.length > 0) {} else {
+                        jQuery(this).removeClass("hover");
+                    }
+                });
+
                 // is Root
                 if (depth == 0) {
                     if (data.direction) activeMenu.addClass("direction-" + data.direction);
@@ -23147,8 +23257,11 @@ jQuery.fn.ax5formatter = function () {
                         };
                         items = filteringItem(items);
                     }
-                    popup.call(this, opt, items, 0); // 0 is seq of queue
-                    appEventAttach.call(this, true); // 이벤트 연결
+
+                    if (items.length) {
+                        popup.call(this, opt, items, 0); // 0 is seq of queue
+                        appEventAttach.call(this, true); // 이벤트 연결
+                    }
 
                     e = null;
                     //opt = null;
@@ -23416,7 +23529,7 @@ jQuery.fn.ax5formatter = function () {
 
     UI.addClass({
         className: "select",
-        version: "${VERSION}"
+        version: "1.3.44"
     }, function () {
         /**
          * @class ax5select
@@ -24592,7 +24705,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
 
     UI.addClass({
         className: "grid",
-        version: "1.3.42"
+        version: "${VERSION}"
     }, function () {
         /**
          * @class ax5grid
@@ -26591,7 +26704,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
                 if (_col.formatter) {
                     that.value = value;
                     if (U.isFunction(_col.formatter)) {
-                        return _col.collector.call(that);
+                        return _col.formatter.call(that);
                     } else {
                         return GRID.formatter[_col.formatter].call(that);
                     }
@@ -31129,7 +31242,9 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
                                 }, undefined, true);
                                 clearLabel.call(this, queIdx);
                                 alignComboboxDisplay.call(this);
-                                alignComboboxOptionGroup.call(this);
+
+                                this.close();
+                                //alignComboboxOptionGroup.call(this);
 
                                 U.stopEvent(e);
                             } else if (e.which == ax5.info.eventKeys.DOWN) {
@@ -31846,7 +31961,7 @@ jQuery.fn.ax5combobox = function () {
 
     UI.addClass({
         className: "layout",
-        version: "1.3.42"
+        version: "1.3.44"
     }, function () {
         /**
          * @class ax5layout
@@ -32877,7 +32992,7 @@ jQuery.fn.ax5layout = function () {
 
     UI.addClass({
         className: "binder",
-        version: "1.3.42"
+        version: "1.3.44"
     }, function () {
 
         /**
@@ -33900,8 +34015,7 @@ jQuery.fn.ax5layout = function () {
 
             cfg = this.config;
 
-            var $window = jQuery(window),
-                $body = jQuery(document.body);
+            var $window = jQuery(window);
             var ctrlKeys = {
                 "18": "KEY_ALT",
                 //"8": "KEY_BACKSPACE",
@@ -34009,8 +34123,8 @@ jQuery.fn.ax5layout = function () {
                     height: item.$target.outerHeight()
                 };
                 pickerDim = {
-                    winWidth: Math.max($window.width(), $body.width()),
-                    winHeight: Math.max($window.height(), $body.height()),
+                    winWidth: Math.max($window.width(), jQuery(document.body).width()),
+                    winHeight: Math.max($window.height(), jQuery(document.body).height()),
                     width: this.activeautocompleteOptionGroup.outerWidth(),
                     height: this.activeautocompleteOptionGroup.outerHeight()
                 };
@@ -34704,6 +34818,8 @@ jQuery.fn.ax5layout = function () {
                                     setSelected.call(this, queIdx, inputValue, true);
                                 }
                                 clearLabel.call(this, queIdx);
+                                alignAutocompleteDisplay.call(this);
+                                this.close();
 
                                 U.stopEvent(e);
                             } else if (e.which == ax5.info.eventKeys.DOWN) {
