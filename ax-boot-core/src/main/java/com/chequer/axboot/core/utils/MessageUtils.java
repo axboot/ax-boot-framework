@@ -11,7 +11,7 @@ public class MessageUtils {
 
     public static MessageSource messageSource = null;
 
-    public static String getMessage(HttpServletRequest request, String code, String arguments) {
+    public static String getMessage(HttpServletRequest request, String id, String arguments) {
         String message = null;
 
         try {
@@ -23,9 +23,9 @@ public class MessageUtils {
 
 
             if (StringUtils.isNotEmpty(arguments)) {
-                message = messageSource.getMessage(code, arguments.split(","), locale);
+                message = messageSource.getMessage(id, arguments.split(","), locale);
             } else {
-                message = messageSource.getMessage(code, null, locale);
+                message = messageSource.getMessage(id, null, locale);
             }
         } catch (Exception e) {
         }
@@ -33,7 +33,7 @@ public class MessageUtils {
         return message;
     }
 
-    public static String getMessage(HttpServletRequest request, String code) {
-        return getMessage(request, code, null);
+    public static String getMessage(HttpServletRequest request, String id) {
+        return getMessage(request, id, null);
     }
 }

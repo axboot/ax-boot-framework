@@ -90,34 +90,34 @@
             </div>
 
             <div class="panel">
-                <div class="panel-heading"><ax:lang code="ax.admin.login.guide.message"/></div>
+                <div class="panel-heading"><ax:lang id="ax.admin.login.guide.message"/></div>
                 <div class="panel-body">
                     <form name="login-form" class="" method="post" action="/api/login" onsubmit="return fnObj.login();" autocomplete="off">
 
                         <div class="form-group">
-                            <label for="userCd"><i class="cqc-new-message"></i> <ax:lang code="ax.admin.id"/></label>
+                            <label for="userCd"><i class="cqc-new-message"></i> <ax:lang id="ax.admin.id"/></label>
                             <input type="text" name="userCd" id="userCd" value="system" class="form-control ime-false" placeholder=""/>
                         </div>
 
                         <div class="form-group">
-                            <label for="userPs"><i class="cqc-key"></i> <ax:lang code="ax.admin.password"/></label>
+                            <label for="userPs"><i class="cqc-key"></i> <ax:lang id="ax.admin.password"/></label>
                             <input type="password" name="userPs" id="userPs" value="1234" class="form-control ime-false" placeholder=""/>
                         </div>
 
                         <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
 
                         <div class="ax-padding-box" style="text-align: right;">
-                            <button type="submit" class="btn">&nbsp;&nbsp;<ax:lang code="ax.admin.login"/>&nbsp;&nbsp;</button>
+                            <button type="submit" class="btn">&nbsp;&nbsp;<ax:lang id="ax.admin.login"/>&nbsp;&nbsp;</button>
                         </div>
 
                     </form>
                 </div>
                 <ul class="list-group">
                     <li class="list-group-item">
-                        <a href="#"><ax:lang code="ax.admin.find.id"/></a>
+                        <a href="#"><ax:lang id="ax.admin.find.id"/></a>
                         &nbsp;
                         &nbsp;
-                        <a href="#"><ax:lang code="ax.admin.find.password"/></a>
+                        <a href="#"><ax:lang id="ax.admin.find.password"/></a>
                     </li>
                 </ul>
             </div>
