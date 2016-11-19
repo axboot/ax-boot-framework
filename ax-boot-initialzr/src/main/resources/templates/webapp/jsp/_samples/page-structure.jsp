@@ -32,7 +32,7 @@
 
         <div class="ax-button-group">
             <div class="left">
-                <h2><i class="cqc-checkmark"></i> 기본 페이지 구성 </h2>
+                <h2><i class="cqc-checkmark"></i> <ax:lang id="ax.admin.sample.layout.basic.d1"/> </h2>
             </div>
         </div>
         <pre>

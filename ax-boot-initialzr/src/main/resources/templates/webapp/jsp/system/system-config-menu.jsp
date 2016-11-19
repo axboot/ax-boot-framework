@@ -20,7 +20,7 @@
             <ax:form name="searchView0">
                 <ax:tbl clazz="ax-search-tbl" minWidth="500px">
                     <ax:tr>
-                        <ax:td label='메뉴그룹' width="300px">
+                        <ax:td label='ax.admin.menu.group' width="300px">
                             <ax:common-code groupCd="MENU_GROUP" id="menuGrpCd"/>
                         </ax:td>
                     </ax:tr>
@@ -37,10 +37,10 @@
                     <div class="left">
                         <h2>
                             <i class="cqc-list"></i>
-                            메뉴 카테고리 </h2>
+                            <ax:lang id="ax.admin.menu.title"/> </h2>
                     </div>
                     <div class="right">
-                        <button type="button" class="btn btn-default" data-tree-view-01-btn="add"><i class="cqc-circle-with-plus"></i> 추가</button>
+                        <button type="button" class="btn btn-default" data-tree-view-01-btn="add"><i class="cqc-circle-with-plus"></i> <ax:lang id="ax.admin.add"/></button>
                     </div>
                 </div>
 
@@ -55,7 +55,7 @@
                         <div class="left">
                             <h2>
                                 <i class="cqc-news"></i>
-                                메뉴 정보 </h2>
+                                <ax:lang id="ax.admin.menu.program.setting"/> </h2>
                         </div>
                         <div class="right">
 
@@ -65,12 +65,12 @@
                     <ax:form name="formView01">
                         <ax:tbl clazz="ax-form-tbl" minWidth="500px">
                             <ax:tr>
-                                <ax:td label="프로그램코드" width="100%">
+                                <ax:td label="ax.admin.menu.program.code" width="100%">
                                     <input type="text" data-ax-path="progCd" class="form-control" value="" readonly="readonly"/>
                                 </ax:td>
                             </ax:tr>
                             <ax:tr>
-                                <ax:td label="프로그램 명" width="100%">
+                                <ax:td label="ax.admin.menu.program.name" width="100%">
                                     <input type="hidden" data-ax-path="menuId" class="form-control" value=""/>
                                     <input type="hidden" data-ax-path="progNm" class="form-control" value=""/>
                                     <div class="form-group">
@@ -86,7 +86,7 @@
                     <div class="ax-button-group">
                         <div class="left">
                             <h2><i class="cqc-list"></i>
-                                권한그룹 설정 </h2>
+                                <ax:lang id="ax.admin.menu.auth.group.setting"/> </h2>
                         </div>
                         <div class="right">
 

@@ -26,13 +26,13 @@
             <ax:form name="searchView0">
                 <ax:tbl clazz="ax-search-tbl" minWidth="500px">
                     <ax:tr>
-                        <ax:td label='검색조건' width="300px">
+                        <ax:td label='ax.admin.sample.search.condition1' width="300px">
                             <input type="text" class="form-control" />
                         </ax:td>
-                        <ax:td label='검색조건 1' width="300px">
+                        <ax:td label='ax.admin.sample.search.condition2' width="300px">
                             <input type="text" class="form-control" />
                         </ax:td>
-                        <ax:td label='검색조건 2' width="300px">
+                        <ax:td label='ax.admin.sample.search.condition3' width="300px">
                             <input type="text" class="form-control" />
                         </ax:td>
                     </ax:tr>
@@ -51,7 +51,7 @@
                             상단 패널 </h2>
                     </div>
                     <div class="right">
-                        <button type="button" class="btn btn-default" data-left-view-01-btn="add"><i class="cqc-circle-with-plus"></i> 추가</button>
+                        <button type="button" class="btn btn-default" data-left-view-01-btn="add"><i class="cqc-circle-with-plus"></i> <ax:lang id="ax.admin.add"/></button>
                     </div>
                 </div>
 
@@ -70,12 +70,12 @@
 
                 <div class="ax-button-group ax-button-group-bottom" data-fit-height-aside="left-view-01">
                     <div class="left">
-                        <button type="button" class="btn btn-default" data-left-view-01-btn="add">버튼 FN0</button>
-                        <button type="button" class="btn btn-primary" data-left-view-01-btn="add">버튼 FN1</button>
-                        <button type="button" class="btn btn-info" data-left-view-01-btn="add">버튼 FN2</button>
-                        <button type="button" class="btn btn-success" data-left-view-01-btn="add">버튼 FN3</button>
-                        <button type="button" class="btn btn-warning" data-left-view-01-btn="add">버튼 FN3</button>
-                        <button type="button" class="btn btn-danger" data-left-view-01-btn="add">버튼 FN3</button>
+                        <button type="button" class="btn btn-default" data-left-view-01-btn="add"><ax:lang id="ax.admin.button"/> FN0</button>
+                        <button type="button" class="btn btn-primary" data-left-view-01-btn="add"><ax:lang id="ax.admin.button"/> FN1</button>
+                        <button type="button" class="btn btn-info" data-left-view-01-btn="add"><ax:lang id="ax.admin.button"/> FN2</button>
+                        <button type="button" class="btn btn-success" data-left-view-01-btn="add"><ax:lang id="ax.admin.button"/> FN3</button>
+                        <button type="button" class="btn btn-warning" data-left-view-01-btn="add"><ax:lang id="ax.admin.button"/> FN3</button>
+                        <button type="button" class="btn btn-danger" data-left-view-01-btn="add"><ax:lang id="ax.admin.button"/> FN3</button>
                     </div>
                 </div>
 
@@ -84,18 +84,18 @@
             <ax:split-panel height="*" style="padding-top: 10px;">
 
                 <ax:tab-layout name="ax2" data_fit_height_content="layout-view-01" style="height:100%;">
-                    <ax:tab-panel label="기본정보" scroll="scroll">
+                    <ax:tab-panel label="ax.admin.sample.layout.tab.d1" scroll="scroll">
                         <p>
-                            기본정보
+                            <ax:lang id="ax.admin.sample.layout.tab.d1"/>
                         </p>
                     </ax:tab-panel>
-                    <ax:tab-panel label="일반정보" scroll="scroll" active="true">
+                    <ax:tab-panel label="ax.admin.sample.layout.tab.d2" scroll="scroll" active="true">
 
                         <div class="ax-button-group" data-fit-height-aside="right-view-01">
                             <div class="left">
                                 <h2>
                                     <i class="cqc-list"></i>
-                                    탭 레이아웃 만들기 </h2>
+                                    <ax:lang id="ax.admin.sample.layout.tabpanel"/> </h2>
                             </div>
                         </div>
 
@@ -133,23 +133,22 @@
 &lt;/ax:tab-layout>
 
 </pre>
-
                         </div>
 
                     </ax:tab-panel>
-                    <ax:tab-panel label="상세정보" scroll="scroll">
+                    <ax:tab-panel label="ax.admin.sample.layout.tab.d3" scroll="scroll">
                         <p>
-                            상세정보
+                            <ax:lang id="ax.admin.sample.layout.tab.d3"/>
                         </p>
                     </ax:tab-panel>
-                    <ax:tab-panel label="기타정보" scroll="scroll">
+                    <ax:tab-panel label="ax.admin.sample.layout.tab.d4" scroll="scroll">
                         <p>
-                            기타정보
+                            <ax:lang id="ax.admin.sample.layout.tab.d4"/>
                         </p>
                     </ax:tab-panel>
-                    <ax:tab-panel label="이력조회" scroll="scroll">
+                    <ax:tab-panel label="ax.admin.sample.layout.tab.d5" scroll="scroll">
                         <p>
-                            이력조회
+                            <ax:lang id="ax.admin.sample.layout.tab.d5"/>
                         </p>
                     </ax:tab-panel>
                 </ax:tab-layout>

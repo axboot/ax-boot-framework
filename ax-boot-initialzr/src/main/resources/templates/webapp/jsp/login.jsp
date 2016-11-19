@@ -94,14 +94,15 @@
                 <div class="panel-body">
                     <form name="login-form" class="" method="post" action="/api/login" onsubmit="return fnObj.login();" autocomplete="off">
 
+
                         <div class="form-group">
                             <label for="userCd"><i class="cqc-new-message"></i> <ax:lang id="ax.admin.id"/></label>
-                            <input type="text" name="userCd" id="userCd" value="system" class="form-control ime-false" placeholder=""/>
+                            <ax:input id="userCd" value="system" clazz="ime-false" />
                         </div>
 
                         <div class="form-group">
                             <label for="userPs"><i class="cqc-key"></i> <ax:lang id="ax.admin.password"/></label>
-                            <input type="password" name="userPs" id="userPs" value="1234" class="form-control ime-false" placeholder=""/>
+                            <ax:input type="password" id="userPs" value="1234" clazz="ime-false" />
                         </div>
 
                         <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
