@@ -20,8 +20,8 @@
             <ax:form name="searchView0">
                 <ax:tbl clazz="ax-search-tbl" minWidth="500px">
                     <ax:tr>
-                        <ax:td label='검색' width="300px">
-                            <input type="text" name="filter" id="filter" class="form-control" value="" placeholder="검색어를 입력하세요."/>
+                        <ax:td label="axboot.admin.search" width="300px">
+                            <input type="text" name="filter" id="filter" class="form-control" value="" placeholder="<ax:message code="axboot.admin.input.search"/>"/>
                         </ax:td>
                     </ax:tr>
                 </ax:tbl>
@@ -96,18 +96,12 @@
                         </ax:tr>
                         <ax:tr>
                             <ax:td label="언어" width="300px">
-                                <select name="locale" data-ax-path="locale" class="form-control W100">
-                                    <option value="ko_KR">한국어</option>
-                                    <option value="en_US">영어</option>
-                                </select>
+                                <ax:common-code groupCd="LOCALE" dataPath="locale" clazz="form-control W100"/>
                             </ax:td>
                         </ax:tr>
                         <ax:tr>
                             <ax:td label="사용여부" width="300px">
-                                <select name="useYn" data-ax-path="useYn" class="form-control W100">
-                                    <option value="Y">사용</option>
-                                    <option value="N">사용안함</option>
-                                </select>
+                                <ax:common-code groupCd="USE_YN" dataPath="useYn" clazz="form-control W100"/>
                             </ax:td>
                             <ax:td label="계정상태" width="220px">
                                 <ax:common-code groupCd="USER_STATUS" dataPath="userStatus"/>
