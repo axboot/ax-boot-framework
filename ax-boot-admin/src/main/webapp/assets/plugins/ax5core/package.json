@@ -1,6 +1,6 @@
 {
   "name": "ax5core",
-  "version": "1.3.42",
+  "version": "1.3.44",
   "description": "`ax5core` is a collection of utility functions that have been designed for use in ax5ui",
   "license": "MIT",
   "repository": {

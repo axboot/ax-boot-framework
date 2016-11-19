@@ -928,7 +928,9 @@
                                 }, undefined, true);
                                 clearLabel.call(this, queIdx);
                                 alignComboboxDisplay.call(this);
-                                alignComboboxOptionGroup.call(this);
+
+                                this.close();
+                                //alignComboboxOptionGroup.call(this);
 
                                 U.stopEvent(e);
                             } else if (e.which == ax5.info.eventKeys.DOWN) {

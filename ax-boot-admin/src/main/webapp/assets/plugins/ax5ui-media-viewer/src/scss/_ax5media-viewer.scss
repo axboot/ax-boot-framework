@@ -1,0 +1,186 @@
+/*
+ * Copyright (c) 2016. tom@axisj.com
+ * - github.com/thomasjang
+ * - www.axisj.com
+ */
+
+// themes
+$border-colors: (
+        default: $ax5media-viewer-default-border-color,
+        primary: $ax5media-viewer-primary-border-color,
+        success: $ax5media-viewer-success-border-color,
+        info: $ax5media-viewer-info-border-color,
+        warning: $ax5media-viewer-warning-border-color,
+        danger: $ax5media-viewer-danger-border-color
+);
+$font-colors: (
+        default: $ax5media-viewer-default-font-color,
+        primary: $ax5media-viewer-primary-font-color,
+        success: $ax5media-viewer-success-font-color,
+        info: $ax5media-viewer-info-font-color,
+        warning: $ax5media-viewer-warning-font-color,
+        danger: $ax5media-viewer-danger-font-color
+);
+
+@include keyframes(ax-media-viewer) {
+    from {
+        @include transform(translateY(-10%) scaleY(0.0));
+        opacity: 0;
+    }
+    to {
+        @include transform(translateY(0%) scaleY(1.0));
+        opacity: 1;
+    }
+}
+
+@include keyframes(ax-media-viewer-option-destroy) {
+    from {
+        @include transform(translateY(0%) scaleY(1.0));
+        opacity: 1;
+    }
+    to {
+        @include transform(translateY(-10%) scaleY(0.0));
+        opacity: 0;
+    }
+}
+
+@mixin ax5-ui-media-viewer-theme($border-color, $font-color){
+    [data-media-viewer-els="viewer-loading"] {
+        background: #eee;
+        //border-color: $border-color;
+    }
+    [data-media-viewer-els="media-list-holder"] {
+        [data-media-viewer-els] {
+        }
+        [data-media-viewer-els="media-list-prev-handle"], [data-media-viewer-els="media-list-next-handle"] {
+            &:hover {
+                color: $font-color;
+            }
+        }
+        [data-media-viewer-els="media-list"] {
+            [data-media-viewer-els="media-list-table"] {
+                [data-media-viewer-els="media-list-table-td"] {
+                }
+                [data-media-thumbnail] {
+                    &:hover, &.selected {
+                        border-color: $border-color;
+                    }
+                    [data-media-thumbnail-image] {
+                    }
+                    [data-media-thumbnail-video] {
+                    }
+                }
+            }
+        }
+    }
+}
+
+/// media-viewer-display
+[data-ax5-ui-media-viewer] {
+    position: relative;
+    overflow: hidden;
+    *{
+        box-sizing: border-box;
+    }
+    [data-media-viewer-els="viewer-holder"] {
+        position: relative;
+    }
+    [data-media-viewer-els="viewer"] {
+        position: absolute;
+        left: 0;
+        top: 0;
+        overflow: hidden;
+        text-align: center;
+        width: 100%;
+        height: 100%;
+        img {
+            position: absolute;
+            left: 0;
+            top: 0;
+            border: 0;
+        }
+    }
+    [data-media-viewer-els="viewer-loading"] {
+        display: none;
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        left: 0px;
+        top: 0px;
+        box-sizing: border-box;
+        background: #eee;
+        //border: 1px solid;
+        //border-color: #ccc;
+        .ax5-ui-media-viewer-loading-holder {
+            display: table;
+            width: 100%;
+            height: 100%;
+            .ax5-ui-media-viewer-loading-cell {
+                display: table-cell;
+                text-align: center;
+                vertical-align: middle;
+                height: 100%;
+            }
+        }
+    }
+    [data-media-viewer-els="media-list-holder"] {
+        margin: 10px 0px;
+        display: table;
+        table-layout: fixed;
+        width: 100%;
+        border-collapse: collapse;
+        [data-media-viewer-els] {
+            display: table-cell;
+            vertical-align: middle;
+        }
+        [data-media-viewer-els="media-list-prev-handle"], [data-media-viewer-els="media-list-next-handle"] {
+            text-align: center;
+            font-size: 20px;
+            cursor: pointer;
+            &:hover {
+                color: $brand-primary;
+            }
+        }
+        [data-media-viewer-els="media-list"] {
+            overflow: hidden;
+            position: relative;
+            [data-media-viewer-els="media-list-table"] {
+                position: absolute;
+                left: 0px;
+                top: 0px;
+                display: table;
+                border-collapse: collapse;
+                [data-media-viewer-els="media-list-table-td"] {
+                    display: table-cell;
+                    vertical-align: middle;
+                    padding: 0px 1px;
+                }
+                [data-media-thumbnail] {
+                    overflow: hidden;
+                    cursor: pointer;
+                    border: 2px solid;
+                    border-color: transparent;
+                    overflow: hidden;
+                    &:hover, &.selected {
+                        border-color: #ccc;
+                    }
+                    [data-media-thumbnail-image] {
+                        width: 100%;
+                        height: 100%;
+                    }
+                    [data-media-thumbnail-video] {
+                        display: table-cell;
+                        text-align: center;
+                        vertical-align: middle;
+                        background: #eee;
+                    }
+                }
+            }
+        }
+    }
+    @each $theme in $border-colors {
+        &.#{nth($theme, 1)} {
+            @include ax5-ui-media-viewer-theme(map_get($border-colors, nth($theme, 1)), map_get($font-colors, nth($theme, 1)));
+        }
+    }
+}

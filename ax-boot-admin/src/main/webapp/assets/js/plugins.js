@@ -14709,7 +14709,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
          * ax5 version
          * @member {String} ax5.info.version
          */
-        var version = "1.3.42";
+        var version = "1.3.44";
 
         /**
          * ax5 library path
@@ -17978,7 +17978,7 @@ ax5.ui = function () {
 
     UI.addClass({
         className: "dialog",
-        version: "1.3.42"
+        version: "1.3.44"
     }, function () {
         /**
          * @class ax5dialog
@@ -18517,7 +18517,7 @@ ax5.ui = function () {
 
     UI.addClass({
         className: "mask",
-        version: "1.3.42"
+        version: "1.3.44"
     }, function () {
         /**
          * @class ax5mask
@@ -18848,7 +18848,7 @@ ax5.ui = function () {
 
     UI.addClass({
         className: "toast",
-        version: "1.3.42"
+        version: "1.3.44"
     }, function () {
         /**
          * @class ax5toast
@@ -19212,7 +19212,7 @@ ax5.ui = function () {
 
     UI.addClass({
         className: "modal",
-        version: "1.3.42"
+        version: "1.3.44"
     }, function () {
         /**
          * @class ax5modal
@@ -19860,7 +19860,7 @@ ax5.ui = function () {
 
     UI.addClass({
         className: "calendar",
-        version: "1.3.42"
+        version: "1.3.44"
     }, function () {
 
         /**
@@ -20924,7 +20924,7 @@ ax5.ui = function () {
 
     UI.addClass({
         className: "picker",
-        version: "1.3.42"
+        version: "1.3.44"
     }, function () {
         /**
          * @class ax5picker
@@ -21965,7 +21965,7 @@ jQuery.fn.ax5picker = function () {
 
     UI.addClass({
         className: "formatter",
-        version: "1.3.42"
+        version: "1.3.44"
     }, function () {
         var TODAY = new Date();
         var setSelectionRange = function setSelectionRange(input, pos) {
@@ -22603,7 +22603,7 @@ jQuery.fn.ax5formatter = function () {
 
     UI.addClass({
         className: "menu",
-        version: "1.3.42"
+        version: "1.3.44"
     }, function () {
         /**
          * @class ax5.ui.menu
@@ -22900,6 +22900,19 @@ jQuery.fn.ax5formatter = function () {
                     _activeMenu = null;
                 });
 
+                // mouse out
+                activeMenu.find('[data-menu-item-index]').bind("mouseout", function () {
+                    var depth = this.getAttribute("data-menu-item-depth"),
+                        index = this.getAttribute("data-menu-item-index"),
+                        path = this.getAttribute("data-menu-item-path"),
+                        _items;
+
+                    _items = self.queue[depth].data[cfg.columnKeys.items][index][cfg.columnKeys.items];
+                    if (_items && _items.length > 0) {} else {
+                        jQuery(this).removeClass("hover");
+                    }
+                });
+
                 // is Root
                 if (depth == 0) {
                     if (data.direction) activeMenu.addClass("direction-" + data.direction);
@@ -23147,8 +23160,11 @@ jQuery.fn.ax5formatter = function () {
                         };
                         items = filteringItem(items);
                     }
-                    popup.call(this, opt, items, 0); // 0 is seq of queue
-                    appEventAttach.call(this, true); // 이벤트 연결
+
+                    if (items.length) {
+                        popup.call(this, opt, items, 0); // 0 is seq of queue
+                        appEventAttach.call(this, true); // 이벤트 연결
+                    }
 
                     e = null;
                     //opt = null;
@@ -23416,7 +23432,7 @@ jQuery.fn.ax5formatter = function () {
 
     UI.addClass({
         className: "select",
-        version: "${VERSION}"
+        version: "1.3.44"
     }, function () {
         /**
          * @class ax5select
@@ -24592,7 +24608,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
 
     UI.addClass({
         className: "grid",
-        version: "1.3.42"
+        version: "${VERSION}"
     }, function () {
         /**
          * @class ax5grid
@@ -26591,7 +26607,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
                 if (_col.formatter) {
                     that.value = value;
                     if (U.isFunction(_col.formatter)) {
-                        return _col.collector.call(that);
+                        return _col.formatter.call(that);
                     } else {
                         return GRID.formatter[_col.formatter].call(that);
                     }
@@ -31129,7 +31145,9 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
                                 }, undefined, true);
                                 clearLabel.call(this, queIdx);
                                 alignComboboxDisplay.call(this);
-                                alignComboboxOptionGroup.call(this);
+
+                                this.close();
+                                //alignComboboxOptionGroup.call(this);
 
                                 U.stopEvent(e);
                             } else if (e.which == ax5.info.eventKeys.DOWN) {
@@ -31846,7 +31864,7 @@ jQuery.fn.ax5combobox = function () {
 
     UI.addClass({
         className: "layout",
-        version: "1.3.42"
+        version: "1.3.44"
     }, function () {
         /**
          * @class ax5layout
@@ -32877,7 +32895,7 @@ jQuery.fn.ax5layout = function () {
 
     UI.addClass({
         className: "binder",
-        version: "1.3.42"
+        version: "1.3.44"
     }, function () {
 
         /**
@@ -33900,8 +33918,7 @@ jQuery.fn.ax5layout = function () {
 
             cfg = this.config;
 
-            var $window = jQuery(window),
-                $body = jQuery(document.body);
+            var $window = jQuery(window);
             var ctrlKeys = {
                 "18": "KEY_ALT",
                 //"8": "KEY_BACKSPACE",
@@ -34009,8 +34026,8 @@ jQuery.fn.ax5layout = function () {
                     height: item.$target.outerHeight()
                 };
                 pickerDim = {
-                    winWidth: Math.max($window.width(), $body.width()),
-                    winHeight: Math.max($window.height(), $body.height()),
+                    winWidth: Math.max($window.width(), jQuery(document.body).width()),
+                    winHeight: Math.max($window.height(), jQuery(document.body).height()),
                     width: this.activeautocompleteOptionGroup.outerWidth(),
                     height: this.activeautocompleteOptionGroup.outerHeight()
                 };
@@ -34704,6 +34721,8 @@ jQuery.fn.ax5layout = function () {
                                     setSelected.call(this, queIdx, inputValue, true);
                                 }
                                 clearLabel.call(this, queIdx);
+                                alignAutocompleteDisplay.call(this);
+                                this.close();
 
                                 U.stopEvent(e);
                             } else if (e.which == ax5.info.eventKeys.DOWN) {

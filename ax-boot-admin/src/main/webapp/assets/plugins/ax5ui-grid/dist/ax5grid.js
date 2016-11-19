@@ -17,7 +17,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
 
     UI.addClass({
         className: "grid",
-        version: "1.3.42"
+        version: "${VERSION}"
     }, function () {
         /**
          * @class ax5grid
@@ -2016,7 +2016,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
                 if (_col.formatter) {
                     that.value = value;
                     if (U.isFunction(_col.formatter)) {
-                        return _col.collector.call(that);
+                        return _col.formatter.call(that);
                     } else {
                         return GRID.formatter[_col.formatter].call(that);
                     }

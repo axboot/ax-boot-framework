@@ -1,10 +1,11 @@
 @font-face {
   font-family: 'cheqcon';
-  src:
-    url('fonts/cheqcon.woff2?qw7648') format('woff2'),
-    url('fonts/cheqcon.ttf?qw7648') format('truetype'),
-    url('fonts/cheqcon.woff?qw7648') format('woff'),
-    url('fonts/cheqcon.svg?qw7648#cheqcon') format('svg');
+  src:  url('fonts/cheqcon.eot?yemx27');
+  src:  url('fonts/cheqcon.eot?yemx27#iefix') format('embedded-opentype'),
+    url('fonts/cheqcon.woff2?yemx27') format('woff2'),
+    url('fonts/cheqcon.ttf?yemx27') format('truetype'),
+    url('fonts/cheqcon.woff?yemx27') format('woff'),
+    url('fonts/cheqcon.svg?yemx27#cheqcon') format('svg');
   font-weight: normal;
   font-style: normal;
 }
@@ -24,6 +25,96 @@ i {
   -moz-osx-font-smoothing: grayscale;
 }
 
+.cqc-ax5ui-black:before {
+  content: "\e9c9";
+}
+.cqc-ax5ui .path1:before {
+  content: "\e9ca";
+  color: rgb(158, 201, 40);
+}
+.cqc-ax5ui .path2:before {
+  content: "\e9cb";
+  margin-left: -1.58203125em;
+  color: rgb(158, 201, 40);
+}
+.cqc-ax5ui .path3:before {
+  content: "\e9cc";
+  margin-left: -1.58203125em;
+  color: rgb(95, 156, 195);
+}
+.cqc-ax5ui .path4:before {
+  content: "\e9cd";
+  margin-left: -1.58203125em;
+  color: rgb(95, 156, 195);
+}
+.cqc-ax5ui .path5:before {
+  content: "\e9ce";
+  margin-left: -1.58203125em;
+  color: rgb(234, 85, 20);
+}
+.cqc-check:before {
+  content: "\f00c";
+}
+.cqc-check-circle:before {
+  content: "\f058";
+}
+.cqc-check-circle-o:before {
+  content: "\f05d";
+}
+.cqc-github-square:before {
+  content: "\f092";
+}
+.cqc-github:before {
+  content: "\f09b";
+}
+.cqc-square3:before {
+  content: "\f0c8";
+}
+.cqc-circle-o:before {
+  content: "\f10c";
+}
+.cqc-circle:before {
+  content: "\f111";
+}
+.cqc-file-word-o:before {
+  content: "\f1c2";
+}
+.cqc-file-excel-o:before {
+  content: "\f1c3";
+}
+.cqc-file-image-o:before {
+  content: "\f1c5";
+}
+.cqc-file-photo-o:before {
+  content: "\f1c5";
+}
+.cqc-file-picture-o:before {
+  content: "\f1c5";
+}
+.cqc-file-archive-o:before {
+  content: "\f1c6";
+}
+.cqc-file-zip-o:before {
+  content: "\f1c6";
+}
+.cqc-file-audio-o:before {
+  content: "\f1c7";
+}
+.cqc-file-sound-o:before {
+  content: "\f1c7";
+}
+.cqc-file-movie-o:before {
+  content: "\f1c8";
+}
+.cqc-file-video-o:before {
+  content: "\f1c8";
+}
+.cqc-file-code-o:before {
+  content: "\f1c9";
+}
+.cqc-git-square:before {
+  content: "\f1d2";
+}
 .cqc-spinner:before {
   content: "\e9bf";
 }
@@ -908,69 +999,6 @@ i {
 }
 .cqc-switch2:before {
   content: "\e97e";
-}
-.cqc-uni6B:before {
-  content: "\6b";
-}
-.cqc-uni6C:before {
-  content: "\6c";
-}
-.cqc-uni6D:before {
-  content: "\6d";
-}
-.cqc-uni6E:before {
-  content: "\6e";
-}
-.cqc-uni6F:before {
-  content: "\6f";
-}
-.cqc-uni70:before {
-  content: "\70";
-}
-.cqc-uni71:before {
-  content: "\71";
-}
-.cqc-uni72:before {
-  content: "\72";
-}
-.cqc-uni73:before {
-  content: "\73";
-}
-.cqc-uni74:before {
-  content: "\74";
-}
-.cqc-uni75:before {
-  content: "\75";
-}
-.cqc-uni76:before {
-  content: "\76";
-}
-.cqc-uni77:before {
-  content: "\77";
-}
-.cqc-uni78:before {
-  content: "\78";
-}
-.cqc-uni79:before {
-  content: "\79";
-}
-.cqc-uni7A:before {
-  content: "\7a";
-}
-.cqc-uni7B:before {
-  content: "\7b";
-}
-.cqc-uni7C:before {
-  content: "\7c";
-}
-.cqc-uni7D:before {
-  content: "\7d";
-}
-.cqc-uni7E:before {
-  content: "\7e";
-}
-.cqc-uniA9:before {
-  content: "\a9";
 }
 .cqc-chequer:before {
   content: "\e900";

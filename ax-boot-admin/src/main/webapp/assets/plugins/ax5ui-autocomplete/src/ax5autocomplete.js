@@ -931,6 +931,8 @@
                                     setSelected.call(this, queIdx, inputValue, true);
                                 }
                                 clearLabel.call(this, queIdx);
+                                alignAutocompleteDisplay.call(this);
+                                this.close();
 
                                 U.stopEvent(e);
                             }

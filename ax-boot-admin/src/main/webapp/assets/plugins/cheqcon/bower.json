@@ -1,0 +1,20 @@
+{
+  "name": "cheqcon",
+  "description": "CHEQUER Font Icon",
+  "main": "style.css",
+  "authors": [
+    "Thomas Jang"
+  ],
+  "license": "MIT",
+  "keywords": [
+    "CHEQUER"
+  ],
+  "homepage": "",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ]
+}

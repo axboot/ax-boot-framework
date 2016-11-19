@@ -1,6 +1,6 @@
 {
 	"name": "ax5ui-toast",
-	"version": "1.3.42",
+	"version": "1.3.44",
 	"description": "A toast plugin that works with Bootstrap & jQuery",
 	"license": "MIT",
 	"repository": {

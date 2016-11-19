@@ -2,11 +2,12 @@
 
 @font-face {
   font-family: 'cheqcon';
-  src:
-    url('#{$icomoon-font-path}/cheqcon.woff2?qw7648') format('woff2'),
-    url('#{$icomoon-font-path}/cheqcon.ttf?qw7648') format('truetype'),
-    url('#{$icomoon-font-path}/cheqcon.woff?qw7648') format('woff'),
-    url('#{$icomoon-font-path}/cheqcon.svg?qw7648#cheqcon') format('svg');
+  src:  url('#{$icomoon-font-path}/cheqcon.eot?yemx27');
+  src:  url('#{$icomoon-font-path}/cheqcon.eot?yemx27#iefix') format('embedded-opentype'),
+    url('#{$icomoon-font-path}/cheqcon.woff2?yemx27') format('woff2'),
+    url('#{$icomoon-font-path}/cheqcon.ttf?yemx27') format('truetype'),
+    url('#{$icomoon-font-path}/cheqcon.woff?yemx27') format('woff'),
+    url('#{$icomoon-font-path}/cheqcon.svg?yemx27#cheqcon') format('svg');
   font-weight: normal;
   font-style: normal;
 }
@@ -26,6 +27,150 @@ i {
   -moz-osx-font-smoothing: grayscale;
 }
 
+.cqc-ax5ui-black {
+  &:before {
+    content: $cqc-ax5ui-black;
+  }
+}
+.cqc-ax5ui .path1 {
+  &:before {
+    content: $cqc-ax5ui-path1;  
+    color: rgb(158, 201, 40);
+  }
+}
+.cqc-ax5ui .path2 {
+  &:before {
+    content: $cqc-ax5ui-path2;  
+    margin-left: -1.58203125em;  
+    color: rgb(158, 201, 40);
+  }
+}
+.cqc-ax5ui .path3 {
+  &:before {
+    content: $cqc-ax5ui-path3;  
+    margin-left: -1.58203125em;  
+    color: rgb(95, 156, 195);
+  }
+}
+.cqc-ax5ui .path4 {
+  &:before {
+    content: $cqc-ax5ui-path4;  
+    margin-left: -1.58203125em;  
+    color: rgb(95, 156, 195);
+  }
+}
+.cqc-ax5ui .path5 {
+  &:before {
+    content: $cqc-ax5ui-path5;  
+    margin-left: -1.58203125em;  
+    color: rgb(234, 85, 20);
+  }
+}
+.cqc-check {
+  &:before {
+    content: $cqc-check;
+  }
+}
+.cqc-check-circle {
+  &:before {
+    content: $cqc-check-circle;
+  }
+}
+.cqc-check-circle-o {
+  &:before {
+    content: $cqc-check-circle-o;
+  }
+}
+.cqc-github-square {
+  &:before {
+    content: $cqc-github-square;
+  }
+}
+.cqc-github {
+  &:before {
+    content: $cqc-github;
+  }
+}
+.cqc-square3 {
+  &:before {
+    content: $cqc-square3;
+  }
+}
+.cqc-circle-o {
+  &:before {
+    content: $cqc-circle-o;
+  }
+}
+.cqc-circle {
+  &:before {
+    content: $cqc-circle;
+  }
+}
+.cqc-file-word-o {
+  &:before {
+    content: $cqc-file-word-o;
+  }
+}
+.cqc-file-excel-o {
+  &:before {
+    content: $cqc-file-excel-o;
+  }
+}
+.cqc-file-image-o {
+  &:before {
+    content: $cqc-file-image-o;
+  }
+}
+.cqc-file-photo-o {
+  &:before {
+    content: $cqc-file-photo-o;
+  }
+}
+.cqc-file-picture-o {
+  &:before {
+    content: $cqc-file-picture-o;
+  }
+}
+.cqc-file-archive-o {
+  &:before {
+    content: $cqc-file-archive-o;
+  }
+}
+.cqc-file-zip-o {
+  &:before {
+    content: $cqc-file-zip-o;
+  }
+}
+.cqc-file-audio-o {
+  &:before {
+    content: $cqc-file-audio-o;
+  }
+}
+.cqc-file-sound-o {
+  &:before {
+    content: $cqc-file-sound-o;
+  }
+}
+.cqc-file-movie-o {
+  &:before {
+    content: $cqc-file-movie-o;
+  }
+}
+.cqc-file-video-o {
+  &:before {
+    content: $cqc-file-video-o;
+  }
+}
+.cqc-file-code-o {
+  &:before {
+    content: $cqc-file-code-o;
+  }
+}
+.cqc-git-square {
+  &:before {
+    content: $cqc-git-square;
+  }
+}
 .cqc-spinner {
   &:before {
     content: $cqc-spinner;
@@ -1499,111 +1644,6 @@ i {
 .cqc-switch2 {
   &:before {
     content: $cqc-switch2;
-  }
-}
-.cqc-uni6B {
-  &:before {
-    content: $cqc-uni6B;
-  }
-}
-.cqc-uni6C {
-  &:before {
-    content: $cqc-uni6C;
-  }
-}
-.cqc-uni6D {
-  &:before {
-    content: $cqc-uni6D;
-  }
-}
-.cqc-uni6E {
-  &:before {
-    content: $cqc-uni6E;
-  }
-}
-.cqc-uni6F {
-  &:before {
-    content: $cqc-uni6F;
-  }
-}
-.cqc-uni70 {
-  &:before {
-    content: $cqc-uni70;
-  }
-}
-.cqc-uni71 {
-  &:before {
-    content: $cqc-uni71;
-  }
-}
-.cqc-uni72 {
-  &:before {
-    content: $cqc-uni72;
-  }
-}
-.cqc-uni73 {
-  &:before {
-    content: $cqc-uni73;
-  }
-}
-.cqc-uni74 {
-  &:before {
-    content: $cqc-uni74;
-  }
-}
-.cqc-uni75 {
-  &:before {
-    content: $cqc-uni75;
-  }
-}
-.cqc-uni76 {
-  &:before {
-    content: $cqc-uni76;
-  }
-}
-.cqc-uni77 {
-  &:before {
-    content: $cqc-uni77;
-  }
-}
-.cqc-uni78 {
-  &:before {
-    content: $cqc-uni78;
-  }
-}
-.cqc-uni79 {
-  &:before {
-    content: $cqc-uni79;
-  }
-}
-.cqc-uni7A {
-  &:before {
-    content: $cqc-uni7A;
-  }
-}
-.cqc-uni7B {
-  &:before {
-    content: $cqc-uni7B;
-  }
-}
-.cqc-uni7C {
-  &:before {
-    content: $cqc-uni7C;
-  }
-}
-.cqc-uni7D {
-  &:before {
-    content: $cqc-uni7D;
-  }
-}
-.cqc-uni7E {
-  &:before {
-    content: $cqc-uni7E;
-  }
-}
-.cqc-uniA9 {
-  &:before {
-    content: $cqc-uniA9;
   }
 }
 .cqc-chequer {

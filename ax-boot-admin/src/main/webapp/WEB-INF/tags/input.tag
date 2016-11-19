@@ -4,23 +4,36 @@
 
 <%@ attribute name="id" %>
 <%@ attribute name="name" %>
-<%@ attribute name="type" required="true" %>
+<%@ attribute name="type" %>
 <%@ attribute name="clazz" %>
 <%@ attribute name="style" %>
 <%@ attribute name="value" %>
 <%@ attribute name="placeholder" %>
+<%@ attribute name="maxLength" %>
+<%@ attribute name="dataPath" required="false" %>
 
 <%
     StringBuilder builder = new StringBuilder();
 
+    if(StringUtils.isEmpty(type)) {
+        type = "text";
+    }
     builder.append(String.format("<input type=\"%s\"", type));
 
     if(StringUtils.isNotEmpty(id)) {
         builder.append(String.format(" id=\"%s\"", id));
     }
 
+    if(StringUtils.isNotEmpty(name)) {
+        builder.append(String.format(" name=\"%s\"", name));
+    }
+
+    if (StringUtils.isNotEmpty(dataPath)) {
+        builder.append(String.format(" data-ax-path=\"%s\"", dataPath));
+    }
+
     if(StringUtils.isNotEmpty(clazz)) {
-        builder.append(String.format(" class=\"%s\"", clazz));
+        builder.append(String.format(" class=\"form-control %s\"", clazz));
     }
 
     if(StringUtils.isNotEmpty(style)) {
@@ -29,6 +42,10 @@
 
     if(StringUtils.isNotEmpty(value)) {
         builder.append(String.format(" value=\"%s\"", value));
+    }
+
+    if(StringUtils.isNotEmpty(maxLength)) {
+        builder.append(String.format(" maxLength=\"%s\"", maxLength));
     }
 
     if (StringUtils.isNotEmpty(placeholder)) {
@@ -44,5 +61,4 @@
     builder.append("/>");
 
 %>
-
 <%=builder.toString()%>

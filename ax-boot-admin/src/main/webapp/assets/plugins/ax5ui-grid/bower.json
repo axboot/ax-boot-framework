@@ -1,6 +1,6 @@
 {
 	"name": "ax5ui-grid",
-	"version": "1.3.42",
+	"version": "1.3.44",
 	"description": "A grid plugin that works with Bootstrap & jQuery",
 	"authors": [
 		"ThomasJ <tom@axisj.com>"

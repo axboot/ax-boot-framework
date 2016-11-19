@@ -312,6 +312,21 @@
                         _activeMenu = null;
                     });
 
+                    // mouse out
+                    activeMenu.find('[data-menu-item-index]').bind("mouseout", function () {
+                        var depth = this.getAttribute("data-menu-item-depth"),
+                            index = this.getAttribute("data-menu-item-index"),
+                            path = this.getAttribute("data-menu-item-path"),
+                            _items;
+
+                        _items = self.queue[depth].data[cfg.columnKeys.items][index][cfg.columnKeys.items];
+                        if (_items && _items.length > 0) {
+
+                        }else{
+                            jQuery(this).removeClass("hover");
+                        }
+                    });
+
                     // is Root
                     if (depth == 0) {
                         if (data.direction) activeMenu.addClass("direction-" + data.direction);
@@ -567,8 +582,11 @@
                         };
                         items = filteringItem(items);
                     }
-                    popup.call(this, opt, items, 0); // 0 is seq of queue
-                    appEventAttach.call(this, true); // 이벤트 연결
+
+                    if (items.length) {
+                        popup.call(this, opt, items, 0); // 0 is seq of queue
+                        appEventAttach.call(this, true); // 이벤트 연결
+                    }
 
                     e = null;
                     //opt = null;

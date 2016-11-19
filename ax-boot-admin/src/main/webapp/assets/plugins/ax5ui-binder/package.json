@@ -1,6 +1,6 @@
 {
 	"name": "ax5ui-binder",
-	"version": "1.3.42",
+	"version": "1.3.44",
 	"description": "Simple 2way binder plugin that works with Bootstrap & jQuery",
 	"license": "MIT",
 	"repository": {

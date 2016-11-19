@@ -15,5 +15,10 @@
   "sessionCookie": "a_x_b_a_a_t_k",
   "extendedCss": [
     "http://axboot-theme:2022/doberman/axboot.css"
+  ],
+  "extendedCssforIE9": [
+    "/assets/css/axboot-01.css",
+    "/assets/css/axboot-02.css",
+    "/assets/css/axboot-03.css"
   ]
 }
