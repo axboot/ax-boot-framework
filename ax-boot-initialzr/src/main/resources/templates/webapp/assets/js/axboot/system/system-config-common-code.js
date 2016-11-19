@@ -21,7 +21,7 @@ var ACTIONS = axboot.actionExtend(fnObj, {
             data: JSON.stringify(saveList),
             callback: function (res) {
                 ACTIONS.dispatch(ACTIONS.PAGE_SEARCH);
-                axToast.push("저장 되었습니다");
+                axToast.push(LANG("onsave"));
             }
         });
     },
@@ -102,17 +102,17 @@ fnObj.gridView01 = axboot.viewExtend(axboot.gridView, {
             multipleSelect: true,
             target: $('[data-ax5grid="grid-view-01"]'),
             columns: [
-                {key: "groupCd", label: "분류코드", width: 250, align: "center", editor: {type: "text", disabled: "notCreated"}},
-                {key: "groupNm", label: "분류명", width: 200, align: "center", editor: "text"},
-                {key: "code", label: "코드", width: 100, align: "center", editor: {type: "text", disabled: "notCreated"}},
-                {key: "name", label: "코드값", width: 150, align: "left", editor: "text"},
-                {key: "sort", editor: "number"},
-                {key: "useYn", editor: "checkYn"},
-                {key: "remark", label: "비고", width: 200, align: "left", editor: "text"},
-                {key: "data1", label: "데이터1", width: 70, align: "left", editor: "text"},
-                {key: "data2", label: "데이터2", width: 70, align: "left", editor: "text"},
-                {key: "data3", label: "데이터3", width: 70, align: "left", editor: "text"},
-                {key: "data4", label: "데이터4", width: 70, align: "left", editor: "text"}
+                {key: "groupCd", label: COL("ax.admin.commoncode.group.code"), width: 250, align: "center", editor: {type: "text", disabled: "notCreated"}},
+                {key: "groupNm", label: COL("ax.admin.commoncode.group.name"), width: 200, align: "center", editor: "text"},
+                {key: "code", label: COL("ax.admin.commoncode.code"), width: 100, align: "center", editor: {type: "text", disabled: "notCreated"}},
+                {key: "name", label: COL("ax.admin.commoncode.name"), width: 150, align: "left", editor: "text"},
+                {key: "sort", label: COL("ax.admin.sort"), editor: "number"},
+                {key: "useYn", label: COL("ax.admin.use.or.not"), editor: "checkYn"},
+                {key: "remark", label: COL("ax.admin.remark"), width: 200, align: "left", editor: "text"},
+                {key: "data1", label: COL("ax.admin.commoncode.data1"), width: 70, align: "left", editor: "text"},
+                {key: "data2", label: COL("ax.admin.commoncode.data2"), width: 70, align: "left", editor: "text"},
+                {key: "data3", label: COL("ax.admin.commoncode.data3"), width: 70, align: "left", editor: "text"},
+                {key: "data4", label: COL("ax.admin.commoncode.data4"), width: 70, align: "left", editor: "text"}
             ],
             body: {
                 onClick: function () {
