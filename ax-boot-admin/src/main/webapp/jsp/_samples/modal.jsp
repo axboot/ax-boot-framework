@@ -11,6 +11,7 @@
 
 <ax:layout name="modal">
     <jsp:attribute name="script">
+        <ax:script-lang key="ax.admin" />
         <script type="text/javascript" src="<c:url value='/assets/js/view/_samples/modal.js' />"></script>
     </jsp:attribute>
     <jsp:attribute name="header">

@@ -932,7 +932,7 @@
             }
             else {
                 if (O.length > 7) {
-                    if(date(O) instanceof Date){
+                    if (date(O) instanceof Date) {
                         return true;
                     }
                 }
@@ -2081,6 +2081,7 @@
          * "&amp;" represents the & sign.
          * "&quot; represents the " mark.
          * [Character entity references](https://www.w3.org/TR/html401/charset.html#h-5.3)
+         * @method ax5.util.escapeHtml
          * @param {String} s
          * @returns {string}
          * @example
@@ -2092,7 +2093,7 @@
         function escapeHtml(s) {
             if (_toString.call(s) != "[object String]") return s;
             if (!s) return "";
-            return s.replace(/[\<\>\&\"]/gm, function(match){
+            return s.replace(/[\<\>\&\"]/gm, function (match) {
                 switch (match) {
                     case "<":
                         return "&lt;";
@@ -2111,6 +2112,7 @@
         /**
          * HTML 문자열을 unescape 처리합니다.
          * escapeHtml를 참고하세요.
+         * @method ax5.util.unescapeHtml
          * @param {String} s
          * @returns {string}
          * @example
@@ -2122,7 +2124,7 @@
         function unescapeHtml(s) {
             if (_toString.call(s) != "[object String]") return s;
             if (!s) return "";
-            return s.replace(/(&lt;)|(&gt;)|(&amp;)|(&quot;)/gm, function(match){
+            return s.replace(/(&lt;)|(&gt;)|(&amp;)|(&quot;)/gm, function (match) {
                 switch (match) {
                     case "&lt;":
                         return "<";
@@ -2136,6 +2138,32 @@
                         return match;
                 }
             });
+        }
+
+        /**
+         * @method ax5.util.string
+         * @param {String} tmpl
+         * @param {*} args
+         * @return {ax5string}
+         * @example
+         * ```js
+         * ax5.util.string("{0} is dead, but {1} is alive! {0} {2}").format("ASP", "ASP.NET");
+         * ```
+         */
+        function string(_string) {
+            function ax5string(_string) {
+                this.value = _string;
+                this.toString = function () {
+                    return this.value;
+                };
+                this.format = function () {
+                    var args = arguments;
+                    return this.value.replace(/{(\d+)}/g, function (match, number) {
+                        return typeof args[number] != 'undefined' ? args[number] : match;
+                    });
+                };
+            }
+            return new ax5string(_string);
         }
 
         return {
@@ -2191,7 +2219,9 @@
             selectRange: selectRange,
             debounce: debounce,
             escapeHtml: escapeHtml,
-            unescapeHtml: unescapeHtml
+            unescapeHtml: unescapeHtml,
+
+            string: string
         }
     })();
 
