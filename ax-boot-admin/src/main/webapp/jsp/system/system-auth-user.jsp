@@ -20,8 +20,8 @@
             <ax:form name="searchView0">
                 <ax:tbl clazz="ax-search-tbl" minWidth="500px">
                     <ax:tr>
-                        <ax:td label="axboot.admin.search" width="300px">
-                            <input type="text" name="filter" id="filter" class="form-control" value="" placeholder="<ax:lang code="axboot.admin.input.search"/>"/>
+                        <ax:td label="ax.admin.search" width="300px">
+                            <input type="text" name="filter" id="filter" class="form-control" value="" placeholder="<ax:lang code="ax.admin.input.search"/>"/>
                         </ax:td>
                     </ax:tr>
                 </ax:tbl>

@@ -66,19 +66,19 @@
                     <c:if test="${isDevelopmentMode}">
                         <!-- 개발자 툴 연결 아이콘 -->
                         <div class="ax-split-panel">
-                            <a href="#ax" onclick="window.open('/jsp/system/system-dev-tools.jsp');"><i class="cqc-tools"></i> <ax:lang code="axboot.devtools"/></a>
+                            <a href="#ax" onclick="window.open('/jsp/system/system-dev-tools.jsp');"><i class="cqc-tools"></i> <ax:lang code="ax.devtools"/></a>
                         </div>
                         <div class="panel-split"></div>
                     </c:if>
                     <div class="ax-split-panel">
-                        <a href="#ax" onclick="fcObj.open_user_info();"><ax:lang code="axboot.admin.login.status.message" arguments="${loginUser.userNm}"/></a>
+                        <a href="#ax" onclick="fcObj.open_user_info();"><ax:lang code="ax.admin.login.status.message" arguments="${loginUser.userNm}"/></a>
                     </div>
                     <div class="panel-split"></div>
                     <div class="ax-split-panel">
 
                         <a href="#ax" class="ax-frame-logout" onclick="location.href = '${pageContext.request.contextPath}/api/logout';">
                             <i class="cqc-log-out"></i>
-                            <ax:lang code="axboot.admin.logout"/>
+                            <ax:lang code="ax.admin.logout"/>
                         </a>
                     </div>
                 </div>
