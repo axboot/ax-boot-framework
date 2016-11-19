@@ -28,7 +28,6 @@ public class MessageUtils {
                 message = messageSource.getMessage(code, null, locale);
             }
         } catch (Exception e) {
-            e.printStackTrace();
         }
 
         return message;
