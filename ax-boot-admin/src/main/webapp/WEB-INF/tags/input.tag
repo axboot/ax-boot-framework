@@ -15,7 +15,21 @@
 
     builder.append(String.format("<input type=\"%s\"", type));
 
+    if(StringUtils.isNotEmpty(id)) {
+        builder.append(String.format(" id=\"%s\"", id));
+    }
 
+    if(StringUtils.isNotEmpty(clazz)) {
+        builder.append(String.format(" class=\"%s\"", clazz));
+    }
+
+    if(StringUtils.isNotEmpty(style)) {
+        builder.append(String.format(" style=\"%s\"", style));
+    }
+
+    if(StringUtils.isNotEmpty(value)) {
+        builder.append(String.format(" value=\"%s\"", value));
+    }
 
     if (StringUtils.isNotEmpty(placeholder)) {
         String localizedMessage = MessageUtils.getMessage(request, placeholder);
@@ -30,3 +44,5 @@
     builder.append("/>");
 
 %>
+
+<%=builder.toString()%>
