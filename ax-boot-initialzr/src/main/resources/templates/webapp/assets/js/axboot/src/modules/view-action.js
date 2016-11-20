@@ -114,7 +114,7 @@ axboot.formView = {
  * @Object {Object} axboot.formView.defaultData
  */
 axboot.formView.defaultData = {
-    masterCompCd: "ACN"
+    masterCompCd: ""
 };
 
 /**

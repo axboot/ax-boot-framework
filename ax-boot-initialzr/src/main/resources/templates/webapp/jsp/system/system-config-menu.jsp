@@ -66,12 +66,26 @@
 
                     <ax:form name="formView01">
                         <ax:tbl clazz="ax-form-tbl" minWidth="500px">
-                            <ax:tr>
+                            <ax:tr labelWidth="150px">
                                 <ax:td label="ax.admin.menu.program.code" width="100%">
                                     <input type="text" data-ax-path="progCd" class="form-control" value="" readonly="readonly"/>
                                 </ax:td>
                             </ax:tr>
-                            <ax:tr>
+                            <ax:tr labelWidth="150px">
+                                <ax:td label="ax.admin.menu.name.lang.multi" width="100%">
+                                    <div class="form-inline">
+                                        <div class="form-group">
+                                            <label>한국어</label>
+                                            <ax:input dataPath="multiLanguageJson.ko"/>
+                                        </div>
+                                        <div class="form-group">
+                                            <label>English</label>
+                                            <ax:input dataPath="multiLanguageJson.en"/>
+                                        </div>
+                                    </div>
+                                </ax:td>
+                            </ax:tr>
+                            <ax:tr labelWidth="150px">
                                 <ax:td label="ax.admin.menu.program.name" width="100%">
                                     <input type="hidden" data-ax-path="menuId" class="form-control" value=""/>
                                     <input type="hidden" data-ax-path="progNm" class="form-control" value=""/>
