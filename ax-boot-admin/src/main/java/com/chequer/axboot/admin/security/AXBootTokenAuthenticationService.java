@@ -94,7 +94,7 @@ public class AXBootTokenAuthenticationService {
 
                     if (program != null) {
                         requestUtils.setAttribute("program", program);
-                        requestUtils.setAttribute("pageName", menu.getMenuNm());
+                        requestUtils.setAttribute("pageName", menu.getLocalizedMenuName(request));
                         requestUtils.setAttribute("pageRemark", program.getRemark());
 
                         if (program.getAuthCheck().equals(AXBootTypes.Used.YES.getLabel())) {

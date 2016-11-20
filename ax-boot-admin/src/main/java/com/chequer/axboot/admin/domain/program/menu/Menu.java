@@ -5,6 +5,8 @@ import com.chequer.axboot.admin.domain.program.Program;
 import com.chequer.axboot.core.annotations.ColumnPosition;
 import com.chequer.axboot.core.annotations.Comment;
 import com.chequer.axboot.core.jpa.JsonNodeConverter;
+import com.chequer.axboot.core.utils.RequestUtils;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.JsonNode;
 import lombok.EqualsAndHashCode;
@@ -15,8 +17,10 @@ import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.DynamicUpdate;
 
 import javax.persistence.*;
+import javax.servlet.http.HttpServletRequest;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 
 @Setter
@@ -128,5 +132,19 @@ public class Menu extends BaseJpaModel<Long> implements Cloneable {
         menu.setSort(sort);
         menu.setProgCd(progCd);
         return menu;
+    }
+
+    @JsonIgnore
+    public String getLocalizedMenuName(HttpServletRequest request) {
+        Locale locale = RequestUtils.getLocale(request);
+
+        if (getMultiLanguageJson() != null) {
+            JsonNode jsonNode = getMultiLanguageJson().findPath(locale.getLanguage());
+
+            if (jsonNode != null) {
+                return jsonNode.asText();
+            }
+        }
+        return menuNm;
     }
 }
