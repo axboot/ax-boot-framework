@@ -27,6 +27,24 @@ var ACTIONS = axboot.actionExtend(fnObj, {
 
 // fnObj 기본 함수 스타트와 리사이즈
 fnObj.pageStart = function () {
+
+    var convertMenuItems = function(list){
+        var _list = [];
+        list.forEach(function (m) {
+            var item = $.extend({}, m);
+            if(item.hasChildren = (item.children && item.children.length)){
+                item.children = convertMenuItems(item.children);
+            }
+            if(SCRIPT_SESSION.details.language === "ko" && item.multiLanguageJson){
+                item.name = item.multiLanguageJson["ko"];
+            }
+            _list.push(item);
+        });
+        return _list;
+    };
+    this.menuItems = convertMenuItems(TOP_MENU_DATA);
+    this.menuItems[0].open = true;
+
     this.topMenuView.initView();
     this.frameView.initView();
     this.tabView.initView();
@@ -162,12 +180,7 @@ fnObj.frameView = axboot.viewExtend({
             this.tmpl = $('[data-tmpl="ax-frame-aside"]').html();
         },
         print: function () {
-
-            var menuItems = ax5.util.deepCopy(TOP_MENU_DATA);
-            menuItems.forEach(function (m) {
-                m.hasChildren = (m.children && m.children.length);
-            });
-            menuItems[0].open = true;
+            var menuItems = fnObj.menuItems;
             this.openedIndex = 0;
 
             fnObj.frameView.aside
@@ -231,9 +244,11 @@ fnObj.topMenuView = axboot.viewExtend({
     initView: function () {
         this.target = $("#ax-top-menu");
 
-        var menuItems = ax5.util.deepCopy(TOP_MENU_DATA);
+        var menuItems = fnObj.menuItems;
         menuItems.forEach(function (n) {
-            n.name += ' <i class="cqc-chevron-down"></i>';
+            if(n.hasChildren) {
+                n.name += ' <i class="cqc-chevron-down"></i>';
+            }
         });
 
         this.menu = new ax5.ui.menu({
