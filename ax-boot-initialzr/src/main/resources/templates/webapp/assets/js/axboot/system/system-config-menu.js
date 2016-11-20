@@ -14,45 +14,52 @@ var ACTIONS = axboot.actionExtend(fnObj, {
         return false;
     },
     PAGE_SAVE: function (caller, act, data) {
+        var formData = caller.formView01.getData();
+
         var obj = {
             list: caller.treeView01.getData(),
             deletedList: caller.treeView01.getDeletedList()
         };
-        axboot.ajax({
-            type: "PUT",
-            url: ["menu"],
-            data: JSON.stringify(obj),
-            callback: function (res) {
-                caller.treeView01.clearDeletedList();
-                axToast.push(LANG("ax.script.menu.category.saved"));
 
+        axboot
+            .call({
+                type: "PUT",
+                url: ["menu"],
+                data: JSON.stringify(obj),
+                callback: function (res) {
+                    caller.treeView01.clearDeletedList();
+                    axToast.push(LANG("ax.script.menu.category.saved"));
+                }
+            })
+            .call({
+                type: "PUT",
+                url: ["menu", formData.menuId],
+                data: JSON.stringify(formData),
+                callback: function (res) {
+
+                }
+            })
+            .done(function () {
                 if (data && data.callback) {
                     data.callback();
                 } else {
                     ACTIONS.dispatch(ACTIONS.PAGE_SEARCH, {menuId: caller.formView01.getData().menuId});
-                }
-            }
-        });
 
-        if (data && data.callback) {
+                    if (formData.progCd) {
+                        axboot.ajax({
+                            type: "PUT",
+                            url: ["menu", "auth"],
+                            data: JSON.stringify(caller.gridView01.getData()),
+                            callback: function (res) {
+                                axToast.push(LANG("ax.script.menu.authgroup.saved"));
+                                ACTIONS.dispatch(ACTIONS.SEARCH_AUTH, {menuId: caller.formView01.getData().menuId});
+                            }
+                        });
+                    } else {
 
-        } else {
-
-            var formData = caller.formView01.getData();
-            if (formData.progCd) {
-                axboot.ajax({
-                    type: "PUT",
-                    url: ["menu", "auth"],
-                    data: JSON.stringify(caller.gridView01.getData()),
-                    callback: function (res) {
-                        axToast.push(LANG("ax.script.menu.authgroup.saved"));
-                        ACTIONS.dispatch(ACTIONS.SEARCH_AUTH, {menuId: caller.formView01.getData().menuId});
                     }
-                });
-            } else {
-
-            }
-        }
+                }
+            });
     },
     TREEITEM_CLICK: function (caller, act, data) {
         if (typeof data.menuId === "undefined") {
@@ -63,7 +70,14 @@ var ACTIONS = axboot.actionExtend(fnObj, {
             return;
         }
 
-        caller.formView01.setData(data);
+        axboot.ajax({
+            type: "GET",
+            url: ["menu", data.menuId],
+            data: {},
+            callback: function (res) {
+                caller.formView01.setData(res);
+            }
+        });
     },
     TREEITEM_DESELECTE: function (caller, act, data) {
         caller.formView01.clear();
@@ -285,7 +299,7 @@ fnObj.treeView01 = axboot.viewExtend(axboot.treeView, {
         treeNode = _this.target.zTree.addNodes(null, {
             id: "_isnew_" + (++_this.newCount),
             pId: 0,
-            name: "새 메뉴",
+            name: "New Item",
             __created__: true,
             menuGrpCd: _this.param.menuGrpCd
         });
@@ -327,7 +341,7 @@ fnObj.treeView01 = axboot.viewExtend(axboot.treeView, {
                                 {
                                     id: "_isnew_" + (++_this.newCount),
                                     pId: treeNode.id,
-                                    name: "새 메뉴",
+                                    name: "New Item",
                                     __created__: true,
                                     menuGrpCd: _this.param.menuGrpCd
                                 }
@@ -408,7 +422,8 @@ fnObj.treeView01 = axboot.viewExtend(axboot.treeView, {
                         parentId: n.parentId,
                         sort: nidx,
                         progCd: n.progCd,
-                        level: n.level
+                        level: n.level,
+                        multiLanguageJson: n.multiLanguageJson
                     };
                 } else {
                     item = {
@@ -418,7 +433,8 @@ fnObj.treeView01 = axboot.viewExtend(axboot.treeView, {
                         parentId: n.parentId,
                         sort: nidx,
                         progCd: n.progCd,
-                        level: n.level
+                        level: n.level,
+                        multiLanguageJson: n.multiLanguageJson
                     };
                 }
                 if (n.children && n.children.length) {
@@ -454,7 +470,11 @@ fnObj.treeView01 = axboot.viewExtend(axboot.treeView, {
  */
 fnObj.formView01 = axboot.viewExtend(axboot.formView, {
     getDefaultData: function () {
-        return $.extend({}, axboot.formView.defaultData, {});
+        return $.extend({}, axboot.formView.defaultData, {
+            multiLanguageJson: {
+                ko: "", en: ""
+            }
+        });
     },
     initView: function () {
         var _this = this;
@@ -552,7 +572,15 @@ fnObj.formView01 = axboot.viewExtend(axboot.formView, {
             ACTIONS.dispatch(ACTIONS.SEARCH_AUTH, {menuId: data.menuId});
         }
 
-        //this.combobox.ax5combobox("blur");
+        if (!data.multiLanguageJson) {
+            _data.multiLanguageJson = {
+                ko: "",
+                en: data.name
+            }
+        }else{
+            _data.multiLanguageJson = data.multiLanguageJson;
+        }
+
         this.model.setModel(_data);
         this.modelFormatter.formatting(); // 입력된 값을 포메팅 된 값으로 변경
     },
