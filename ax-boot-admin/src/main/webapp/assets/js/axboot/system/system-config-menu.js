@@ -456,7 +456,7 @@ fnObj.formView01 = axboot.viewExtend(axboot.formView, {
     getDefaultData: function () {
         return $.extend({}, axboot.formView.defaultData, {
             json: {
-                ko:"", en:""
+                ko: "", en: ""
             }
         });
     },
@@ -554,6 +554,14 @@ fnObj.formView01 = axboot.viewExtend(axboot.formView, {
 
             this.combobox.ax5combobox("setValue", _data.progCd);
             ACTIONS.dispatch(ACTIONS.SEARCH_AUTH, {menuId: data.menuId});
+        }
+
+        if (!data.json) {
+            console.log(data);
+            _data.json = {
+                ko: "",
+                en: data.name
+            }
         }
 
         this.model.setModel(_data);
