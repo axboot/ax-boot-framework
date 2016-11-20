@@ -4,7 +4,9 @@ import com.chequer.axboot.admin.domain.BaseJpaModel;
 import com.chequer.axboot.admin.domain.program.Program;
 import com.chequer.axboot.core.annotations.ColumnPosition;
 import com.chequer.axboot.core.annotations.Comment;
+import com.chequer.axboot.core.jpa.JsonNodeConverter;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.databind.JsonNode;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
@@ -45,24 +47,30 @@ public class Menu extends BaseJpaModel<Long> implements Cloneable {
     @ColumnPosition(3)
     private String menuNm;
 
+    @Column(name = "MULTI_LANGUAGE", length = 100)
+    @Comment(value = "메뉴 다국어 필드")
+    @ColumnPosition(4)
+    @Convert(converter = JsonNodeConverter.class)
+    private JsonNode multiLanguageJson;
+
     @Column(name = "PARENT_ID", precision = 19)
     @Comment(value = "부모 ID")
-    @ColumnPosition(4)
+    @ColumnPosition(5)
     private Long parentId;
 
     @Column(name = "LEVEL", precision = 10)
     @Comment(value = "레벨")
-    @ColumnPosition(5)
+    @ColumnPosition(6)
     private Integer level;
 
     @Column(name = "SORT", precision = 10)
     @Comment(value = "정렬")
-    @ColumnPosition(6)
+    @ColumnPosition(7)
     private Integer sort;
 
     @Column(name = "PROG_CD", length = 50)
     @Comment(value = "프로그램 코드")
-    @ColumnPosition(7)
+    @ColumnPosition(8)
     private String progCd;
 
     @Transient
