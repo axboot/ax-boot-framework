@@ -72,6 +72,20 @@
                                 </ax:td>
                             </ax:tr>
                             <ax:tr>
+                                <ax:td label="ax.admin.menu.name.lang.multi" width="100%">
+                                    <div class="form-inline">
+                                        <div class="form-group">
+                                            <label>한국어</label>
+                                            <ax:input dataPath="json.ko"/>
+                                        </div>
+                                        <div class="form-group">
+                                            <label>English</label>
+                                            <ax:input dataPath="json.en"/>
+                                        </div>
+                                    </div>
+                                </ax:td>
+                            </ax:tr>
+                            <ax:tr>
                                 <ax:td label="ax.admin.menu.program.name" width="100%">
                                     <input type="hidden" data-ax-path="menuId" class="form-control" value=""/>
                                     <input type="hidden" data-ax-path="progNm" class="form-control" value=""/>

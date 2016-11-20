@@ -285,7 +285,7 @@ fnObj.treeView01 = axboot.viewExtend(axboot.treeView, {
         treeNode = _this.target.zTree.addNodes(null, {
             id: "_isnew_" + (++_this.newCount),
             pId: 0,
-            name: "새 메뉴",
+            name: "New Item",
             __created__: true,
             menuGrpCd: _this.param.menuGrpCd
         });
@@ -327,7 +327,7 @@ fnObj.treeView01 = axboot.viewExtend(axboot.treeView, {
                                 {
                                     id: "_isnew_" + (++_this.newCount),
                                     pId: treeNode.id,
-                                    name: "새 메뉴",
+                                    name: "New Item",
                                     __created__: true,
                                     menuGrpCd: _this.param.menuGrpCd
                                 }
@@ -454,7 +454,11 @@ fnObj.treeView01 = axboot.viewExtend(axboot.treeView, {
  */
 fnObj.formView01 = axboot.viewExtend(axboot.formView, {
     getDefaultData: function () {
-        return $.extend({}, axboot.formView.defaultData, {});
+        return $.extend({}, axboot.formView.defaultData, {
+            json: {
+                ko:"", en:""
+            }
+        });
     },
     initView: function () {
         var _this = this;
@@ -552,7 +556,6 @@ fnObj.formView01 = axboot.viewExtend(axboot.formView, {
             ACTIONS.dispatch(ACTIONS.SEARCH_AUTH, {menuId: data.menuId});
         }
 
-        //this.combobox.ax5combobox("blur");
         this.model.setModel(_data);
         this.modelFormatter.formatting(); // 입력된 값을 포메팅 된 값으로 변경
     },

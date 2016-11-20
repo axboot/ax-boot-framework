@@ -32,9 +32,11 @@
         builder.append(String.format(" data-ax-path=\"%s\"", dataPath));
     }
 
-    if(StringUtils.isNotEmpty(clazz)) {
-        builder.append(String.format(" class=\"form-control %s\"", clazz));
+    if (StringUtils.isEmpty(clazz)) {
+        clazz = "";
     }
+
+    builder.append(String.format(" class=\"form-control %s\"", clazz));
 
     if(StringUtils.isNotEmpty(style)) {
         builder.append(String.format(" style=\"%s\"", style));
