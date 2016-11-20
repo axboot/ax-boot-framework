@@ -86,7 +86,7 @@ public class AXBootTokenAuthenticationService {
         }
 
         if (!requestUri.startsWith(ContextUtil.getBaseApiPath())) {
-            if(menuId > 0) {
+            if (menuId > 0) {
                 Menu menu = menuService.findOne(menuId);
 
                 if (menu != null) {
@@ -110,6 +110,7 @@ public class AXBootTokenAuthenticationService {
 
             ScriptSessionVO scriptSessionVO = ModelMapperUtils.map(user, ScriptSessionVO.class);
             scriptSessionVO.setDateFormat(scriptSessionVO.getDateFormat().toUpperCase());
+            scriptSessionVO.getDetails().put("language", requestUtils.getLocale(request).getLanguage());
             requestUtils.setAttribute("loginUser", user);
             requestUtils.setAttribute("scriptSession", JsonUtils.toJson(scriptSessionVO));
 
