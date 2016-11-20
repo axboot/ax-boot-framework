@@ -22,7 +22,7 @@ public class AXBootSwaggerConfig {
     public SwaggerSpringMvcPlugin customImplementation() {
         return new SwaggerSpringMvcPlugin(this.springSwaggerConfig)
                 .apiInfo(new ApiInfo("AXBoot API Swagger", "API Demonstration", "", "", "", ""))
-                .includePatterns("/api/*")
+                .includePatterns("/api/v.*")
                 .ignoredParameterTypes(AuthenticationPrincipal.class, RequestParams.class);
     }
 }
