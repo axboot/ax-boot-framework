@@ -28,6 +28,9 @@ var ACTIONS = axboot.actionExtend(fnObj, {
 // fnObj 기본 함수 스타트와 리사이즈
 fnObj.pageStart = function () {
 
+    axboot.def["DEFAULT_TAB_LIST"][0].progNm = COL("ax.admin.home");
+    axboot.def["DEFAULT_TAB_LIST"][0].menuNm = COL("ax.admin.home");
+
     var convertMenuItems = function(list){
         var _list = [];
         list.forEach(function (m) {
@@ -35,8 +38,8 @@ fnObj.pageStart = function () {
             if(item.hasChildren = (item.children && item.children.length)){
                 item.children = convertMenuItems(item.children);
             }
-            if(SCRIPT_SESSION.details.language === "ko" && item.multiLanguageJson){
-                item.name = item.multiLanguageJson["ko"];
+            if(item.multiLanguageJson && item.multiLanguageJson[SCRIPT_SESSION.details.language]){
+                item.name = item.multiLanguageJson[SCRIPT_SESSION.details.language];
             }
             _list.push(item);
         });
@@ -212,7 +215,13 @@ fnObj.frameView = axboot.viewExtend({
                                     zTree.expandNode(treeNode);
 
                                     if (treeNode.program) {
-                                        ACTIONS.dispatch(ACTIONS.MENU_OPEN, $.extend({}, treeNode.program, {menuId: treeNode.menuId, menuNm: treeNode.menuNm}));
+
+                                        var menuNm = treeNode.menuNm;
+                                        if(treeNode.multiLanguageJson && treeNode.multiLanguageJson[SCRIPT_SESSION.details.language]){
+                                            menuNm = treeNode.multiLanguageJson[SCRIPT_SESSION.details.language];
+                                        }
+
+                                        ACTIONS.dispatch(ACTIONS.MENU_OPEN, $.extend({}, treeNode.program, {menuId: treeNode.menuId, menuNm: menuNm}));
                                     }
                                 }
                             }
@@ -269,7 +278,11 @@ fnObj.topMenuView = axboot.viewExtend({
         this.menu.attach(this.target);
         this.menu.onClick = function () {
             if (this.program) {
-                ACTIONS.dispatch(ACTIONS.MENU_OPEN, $.extend({}, this.program, {menuId: this.menuId, menuNm: this.menuNm}));
+                var menuNm = this.menuNm;
+                if(this.multiLanguageJson && this.multiLanguageJson[SCRIPT_SESSION.details.language]){
+                    menuNm = this.multiLanguageJson[SCRIPT_SESSION.details.language];
+                }
+                ACTIONS.dispatch(ACTIONS.MENU_OPEN, $.extend({}, this.program, {menuId: this.menuId, menuNm: menuNm}));
             }
         };
         this.menu.onStateChanged = function () {
@@ -358,7 +371,7 @@ fnObj.tabView = axboot.viewExtend({
     _getItem: function (item) {
         var po = [];
         po.push('<div class="tab-item ' + item.status + '" data-tab-id="' + item.menuId + '">');
-        po.push('<span data-toggle="tooltip" data-placement="bottom" title=\'' + item.progNm + '\'>', item.progNm, '</span>');
+        po.push('<span data-toggle="tooltip" data-placement="bottom" title=\'' + item.menuNm + '\'>', item.menuNm, '</span>');
         if (!item.fixed) po.push('<i class="cqc-cancel3" data-tab-close="true" data-tab-id="' + item.menuId + '"></i>');
         po.push('</div>');
         return po.join('');

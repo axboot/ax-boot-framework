@@ -5,6 +5,8 @@
 
 <ax:layout name="frame">
     <jsp:attribute name="script">
+        <ax:script-lang key="ax.script" var="LANG" />
+        <ax:script-lang key="ax.admin" var="COL" />
 		<script type="text/javascript" src="<c:url value='/assets/js/view/frame.js' />"></script>
 	</jsp:attribute>
     <jsp:body>
