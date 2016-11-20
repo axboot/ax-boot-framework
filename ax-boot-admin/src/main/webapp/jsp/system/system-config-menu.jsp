@@ -76,11 +76,11 @@
                                     <div class="form-inline">
                                         <div class="form-group">
                                             <label>한국어</label>
-                                            <ax:input dataPath="json.ko"/>
+                                            <ax:input dataPath="multiLanguageJson.ko"/>
                                         </div>
                                         <div class="form-group">
                                             <label>English</label>
-                                            <ax:input dataPath="json.en"/>
+                                            <ax:input dataPath="multiLanguageJson.en"/>
                                         </div>
                                     </div>
                                 </ax:td>
