@@ -41,6 +41,12 @@ public class MenuController extends BaseController {
         return ok();
     }
 
+    @RequestMapping(value = "/update", method = {RequestMethod.PUT}, produces = APPLICATION_JSON)
+    public ApiResponse update(@RequestBody Menu menu) {
+        menuService.updateMenu(menu);
+        return ok();
+    }
+
     @RequestMapping(value = "/auth", method = RequestMethod.GET, produces = APPLICATION_JSON)
     public AuthGroupMenuVO authMapList(RequestParams requestParams) {
         return authGroupMenuService.get(requestParams);
