@@ -182,8 +182,8 @@ public class MenuService extends BaseService<Menu, Long> {
     }
 
     @Transactional
-    public void updateMenu(Menu request) {
-        Menu exist = findOne(request.getId());
+    public void updateMenu(Long id, Menu request) {
+        Menu exist = findOne(id);
         exist.setMultiLanguageJson(request.getMultiLanguageJson());
         save(exist);
     }

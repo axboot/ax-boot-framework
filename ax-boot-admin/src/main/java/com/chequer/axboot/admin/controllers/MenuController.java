@@ -11,6 +11,7 @@ import com.chequer.axboot.core.api.response.Responses;
 import com.chequer.axboot.core.controllers.BaseController;
 import com.chequer.axboot.core.parameter.RequestParams;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -41,10 +42,15 @@ public class MenuController extends BaseController {
         return ok();
     }
 
-    @RequestMapping(value = "/update", method = {RequestMethod.PUT}, produces = APPLICATION_JSON)
-    public ApiResponse update(@RequestBody Menu menu) {
-        menuService.updateMenu(menu);
+    @RequestMapping(value = "/{id}", method = {RequestMethod.PUT}, produces = APPLICATION_JSON)
+    public ApiResponse update(@PathVariable Long id, @RequestBody Menu menu) {
+        menuService.updateMenu(id, menu);
         return ok();
+    }
+
+    @RequestMapping(value = "/{id}", method = {RequestMethod.GET}, produces = APPLICATION_JSON)
+    public Menu update(@PathVariable Long id) {
+        return menuService.findOne(id);
     }
 
     @RequestMapping(value = "/auth", method = RequestMethod.GET, produces = APPLICATION_JSON)
