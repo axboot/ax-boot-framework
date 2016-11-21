@@ -5,7 +5,8 @@
     "node": ">=0.10.0"
   },
   "scripts": {
-    "build": "babel assets/js -d lib"
+    "build": "babel assets/js -d lib",
+    "postinstall": "node node_modules/bower/bin/bower install && gulp plugin-js"
   },
   "devDependencies": {
     "node-sass": "^3.11.3",
