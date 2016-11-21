@@ -25,9 +25,12 @@ $ax-frame-foot-color: #7C7C7C !default;
 
 &.frame-set {
     overflow: hidden;
-
+    overflow-x: auto;
     #ax-frame-root {
-        min-width: 960px;
+        min-width: 1000px;
+        height: 100%;
+        position: relative;
+
         // 프레임셋 용
         .ax-frame-header-tool {
             @include transition(all 0.3s ease-in-out);
