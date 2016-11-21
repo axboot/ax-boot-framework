@@ -5,6 +5,7 @@ import com.chequer.axboot.admin.domain.program.Program;
 import com.chequer.axboot.core.annotations.ColumnPosition;
 import com.chequer.axboot.core.annotations.Comment;
 import com.chequer.axboot.core.jpa.JsonNodeConverter;
+import com.chequer.axboot.core.utils.JsonUtils;
 import com.chequer.axboot.core.utils.RequestUtils;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -122,11 +123,12 @@ public class Menu extends BaseJpaModel<Long> implements Cloneable {
         return null;
     }
 
-    public static Menu of(Long id, String menuGrpCd, String menuNm, Long parentId, int level, int sort, String progCd) {
+    public static Menu of(Long id, String menuGrpCd, String menuNm, String languageJson, Long parentId, int level, int sort, String progCd) {
         Menu menu = new Menu();
         menu.setMenuId(id);
         menu.setMenuGrpCd(menuGrpCd);
         menu.setMenuNm(menuNm);
+        menu.setMultiLanguageJson(JsonUtils.fromJson(languageJson));
         menu.setParentId(parentId);
         menu.setLevel(level);
         menu.setSort(sort);
