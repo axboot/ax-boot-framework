@@ -21,6 +21,7 @@
     "gulp-clean": "^0.3.2",
     "gulp-plumber": "",
     "gulp-notify": "",
+    "gulp-replace": "",
     "js-beautify": "^1.5.10",
     "babel-cli": "^6.0.0",
     "gulp-babel": "^6.1.2",

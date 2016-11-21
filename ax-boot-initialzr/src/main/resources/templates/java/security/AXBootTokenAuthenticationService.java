@@ -1,7 +1,6 @@
 package ${basePackage}.security;
 
 import ${basePackage}.code.GlobalConstants;
-import ${basePackage}.code.GlobalConstants;
 import ${basePackage}.domain.program.Program;
 import ${basePackage}.domain.program.ProgramService;
 import ${basePackage}.domain.program.menu.Menu;
@@ -73,7 +72,7 @@ public class AXBootTokenAuthenticationService {
         final String language = requestUtils.getString(GlobalConstants.LANGUAGE_PARAMETER_KEY, "");
 
         if (StringUtils.isNotEmpty(language)) {
-            CookieUtils.addCookie(response, GlobalConstants.LANGUAGE_COOKIE_KEY, language);
+            CookieUtils.addCookie(response, GlobalConstants.LANGUAGE_PARAMETER_KEY, language);
         }
 
         if (token == null) {
@@ -87,7 +86,7 @@ public class AXBootTokenAuthenticationService {
         }
 
         if (!requestUri.startsWith(ContextUtil.getBaseApiPath())) {
-            if(menuId > 0) {
+            if (menuId > 0) {
                 Menu menu = menuService.findOne(menuId);
 
                 if (menu != null) {
@@ -95,7 +94,7 @@ public class AXBootTokenAuthenticationService {
 
                     if (program != null) {
                         requestUtils.setAttribute("program", program);
-                        requestUtils.setAttribute("pageName", menu.getMenuNm());
+                        requestUtils.setAttribute("pageName", menu.getLocalizedMenuName(request));
                         requestUtils.setAttribute("pageRemark", program.getRemark());
 
                         if (program.getAuthCheck().equals(AXBootTypes.Used.YES.getLabel())) {
@@ -111,6 +110,7 @@ public class AXBootTokenAuthenticationService {
 
             ScriptSessionVO scriptSessionVO = ModelMapperUtils.map(user, ScriptSessionVO.class);
             scriptSessionVO.setDateFormat(scriptSessionVO.getDateFormat().toUpperCase());
+            scriptSessionVO.getDetails().put("language", requestUtils.getLocale(request).getLanguage());
             requestUtils.setAttribute("loginUser", user);
             requestUtils.setAttribute("scriptSession", JsonUtils.toJson(scriptSessionVO));
 

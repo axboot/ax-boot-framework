@@ -180,4 +180,11 @@ public class MenuService extends BaseService<Menu, Long> {
             deleteMenu(menu.getChildren());
         });
     }
+
+    @Transactional
+    public void updateMenu(Long id, Menu request) {
+        Menu exist = findOne(id);
+        exist.setMultiLanguageJson(request.getMultiLanguageJson());
+        save(exist);
+    }
 }

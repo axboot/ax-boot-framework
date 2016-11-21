@@ -1,7 +1,7 @@
-<%@ tag import="${basePackage}.domain.code.CommonCode" %>
-<%@ tag import="${basePackage}.utils.CommonCodeUtils" %>
 <%@ tag import="org.apache.commons.lang3.StringUtils" %>
 <%@ tag import="java.util.List" %>
+<%@ tag import="${basePackage}.utils.CommonCodeUtils" %>
+<%@ tag import="${basePackage}.domain.code.CommonCode" %>
 <%@ tag language="java" pageEncoding="UTF-8" body-content="empty" %>
 <%@ attribute name="groupCd" required="true" %>
 <%@ attribute name="name" required="false" %>

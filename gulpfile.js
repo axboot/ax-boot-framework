@@ -10,13 +10,15 @@ var notify = require("gulp-notify");
 var babel = require('gulp-babel');
 var spawn = require('child_process').spawn;
 var fs = require('fs');
+var replace = require('gulp-replace');
 
 var sourcemaps = require('gulp-sourcemaps');
 
 var CONFIG = JSON.parse(fs.readFileSync('config.json', 'utf8'));
-var ROOT = CONFIG.root;
-var ASSETS_SRC = ROOT + "/assets";
-var ASSETS = ROOT + "/assets";
+var WEBAPP = CONFIG.webapp;
+var JAVA = CONFIG.java;
+var ASSETS_SRC = WEBAPP + "/assets";
+var ASSETS = WEBAPP + "/assets";
 var AX5UI_PATH = CONFIG.ax5uiPath;
 var AX5UI_PLUGINS = {
     "ax5core": "ax5core",
@@ -103,14 +105,35 @@ gulp.task('axboot-initializr-deploy', function () {
         .pipe(gulp.dest('ax-boot-initialzr/src/main/resources/templates/webapp/assets'));
 
     gulp.src([
-        ROOT + '/*.*'
-    ], {base: ROOT})
+        WEBAPP + '/*.*'
+    ], {base: WEBAPP})
         .pipe(gulp.dest('ax-boot-initialzr/src/main/resources/templates/webapp'));
 
     gulp.src([
         '*.json', 'gulpfile.js'
     ], {base: ""})
         .pipe(gulp.dest('ax-boot-initialzr/src/main/resources/templates/root'));
+
+    gulp.src([
+        WEBAPP + '/WEB-INF/**/*.*',
+        WEBAPP + '/swagger/**/*.*',
+        WEBAPP + '/jsp/**/*.*',
+        '!' + WEBAPP + '/jsp/**/not-authorized.jsp'
+    ], {base: WEBAPP})
+        .pipe(replace(/import=\"com\.chequer\.axboot\.admin/g, 'import="${basePackage}'))
+        .pipe(gulp.dest('ax-boot-initialzr/src/main/resources/templates/webapp'));
+
+    gulp.src([
+        JAVA + '/**/*.*',
+        '!' + JAVA + '/**/GlobalConstants.java'
+    ], {base: JAVA})
+        .pipe(replace(/com\.chequer\.axboot\.admin/g, '${basePackage}'))
+        .pipe(gulp.dest('ax-boot-initialzr/src/main/resources/templates/java'));
+
+    gulp.src([
+        CONFIG.resources + '/messages/*.*'
+    ], {base: CONFIG.resources})
+        .pipe(gulp.dest('ax-boot-initialzr/src/main/resources/templates/resources'));
 });
 
 /**
@@ -170,7 +193,7 @@ gulp.task('import-ax5ui-file', function () {
 gulp.task('watching', function () {
 
     // PLUGIN-JS
-    //gulp.watch(ROOT + '/plugins/**/*.js', ['plugin-js']);
+    //gulp.watch(WEBAPP + '/plugins/**/*.js', ['plugin-js']);
     // JS
     gulp.watch(ASSETS_SRC + '/js/axboot/src/**/*.js', ['axboot-js']);
     // SASS
@@ -182,7 +205,7 @@ gulp.task('watching', function () {
 gulp.task('default', function () {
     var process;
 
-    //gulp.watch(ROOT + '/plugins/*.js', spawnChildren);
+    //gulp.watch(WEBAPP + '/plugins/*.js', spawnChildren);
 
     spawnChildren();
 

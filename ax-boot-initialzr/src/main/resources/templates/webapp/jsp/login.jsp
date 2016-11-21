@@ -4,8 +4,7 @@
 <%@ page language="java" contentType="text/html; charset=utf-8" pageEncoding="utf-8" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="ax" tagdir="/WEB-INF/tags" %>
-<%
-    boolean initialized = AppContextManager.getBean(DatabaseInitService.class).initialized();
+<%boolean initialized = AppContextManager.getBean(DatabaseInitService.class).initialized();
 
     String lastNavigatedPage = null;
 
@@ -17,8 +16,7 @@
         request.setAttribute("redirect", lastNavigatedPage);
     } else {
         request.setAttribute("redirect", "/setup");
-    }
-%>
+    }%>
 
 <c:if test="${redirect!=null}">
     <c:redirect url="${redirect}"/>
@@ -34,9 +32,9 @@
                 background-size: cover;
                 color: #ccc;
             }
+
         </style>
     </jsp:attribute>
-
     <jsp:attribute name="js">
         <script>
             axboot.requireSession('${config.sessionCookie}');
@@ -86,7 +84,7 @@
     <jsp:body>
         <ax:flex-layout valign="middle" align="center" style="width:100%;height:100%;">
             <div>
-                <img src="${pageContext.request.contextPath}${config.logo.login}" class="img-logo">
+                <img src="${pageContext.request.contextPath}${config.logo.login}" class="img-logo" />
             </div>
 
             <div class="panel">
@@ -124,7 +122,7 @@
             </div>
 
             <div class="txt-copyrights">
-                    ${config.copyrights}
+                ${config.copyrights}
             </div>
 
             <div class="txt-good-words" id="good_words">

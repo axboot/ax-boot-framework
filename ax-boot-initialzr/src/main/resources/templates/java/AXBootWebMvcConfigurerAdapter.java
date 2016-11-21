@@ -4,6 +4,7 @@ import com.chequer.axboot.core.filters.AXBootConfigFilter;
 import com.chequer.axboot.core.filters.AXBootCorsFilter;
 import com.chequer.axboot.core.filters.MultiReadableHttpServletRequestFilter;
 import com.chequer.axboot.core.json.ContentTypeSwitchableMappingJackson2JsonView;
+import com.chequer.axboot.core.message.AXBootReloadableResourceBundleMessageSource;
 import com.chequer.axboot.core.parameter.RequestParamsArgumentResolver;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.core.JsonEncoding;
@@ -184,20 +185,21 @@ public class AXBootWebMvcConfigurerAdapter extends WebMvcConfigurerAdapter imple
 
     @Bean
     public MessageSource messageSource() {
-        ReloadableResourceBundleMessageSource resourceBundleMessageSource = new ReloadableResourceBundleMessageSource();
-        resourceBundleMessageSource.setBasename("classpath:messages/messages");
-        resourceBundleMessageSource.setDefaultEncoding("UTF-8");
-        resourceBundleMessageSource.setFallbackToSystemLocale(true);
+        AXBootReloadableResourceBundleMessageSource axBootReloadableResourceBundleMessageSource = new AXBootReloadableResourceBundleMessageSource();
+        axBootReloadableResourceBundleMessageSource.setBasename("classpath:messages/messages");
+        axBootReloadableResourceBundleMessageSource.setDefaultEncoding("UTF-8");
+        axBootReloadableResourceBundleMessageSource.setFallbackToSystemLocale(true);
 
         String[] activeProfiles = applicationContext.getEnvironment().getActiveProfiles();
 
-        if (activeProfiles != null && activeProfiles.length > 0 && activeProfiles[0].equals("local") ||
+        if ((activeProfiles != null && activeProfiles.length > 0 && activeProfiles[0].equals("local")) ||
                 Boolean.parseBoolean(System.getProperty("axboot.profiles.development"))) {
-            resourceBundleMessageSource.setCacheSeconds(1);
+            axBootReloadableResourceBundleMessageSource.setCacheSeconds(1);
         }
 
-        return resourceBundleMessageSource;
+        return axBootReloadableResourceBundleMessageSource;
     }
+
 
     @Bean
     public LocaleResolver localeResolver() {

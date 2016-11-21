@@ -9,23 +9,14 @@
 
 <ax:layout name="empty">
     <jsp:attribute name="css">
-        <link href="https://fonts.googleapis.com/css?family=Unica+One" rel="stylesheet">
+
     </jsp:attribute>
     <jsp:attribute name="script">
-        <script>
-            var isHeadless = true;
-        </script>
+
     </jsp:attribute>
     <jsp:body>
-        <div class="robotpage-bottom-half">
-            <div>
-                <p id="robot-text">PAGE NOT FOUND</p>
-                <p>TO RETURN TO THE PREVIOUS PAGE, PLEASE CLICK BUTTON.</p>
-                <div class="robot-buttons">
-                    <a class="robot-buttons" onclick="history.back();">BACK</a>
-                </div>
-            </div>
-            <div class="clear"></div>
-        </div>
+
+        <h1>Not Authorized</h1>
+
     </jsp:body>
 </ax:layout>

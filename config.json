@@ -1,4 +1,6 @@
 {
-    "root": "ax-boot-admin/src/main/webapp",
+    "webapp": "ax-boot-admin/src/main/webapp",
+    "java": "ax-boot-admin/src/main/java/com/chequer/axboot/admin",
+    "resources": "ax-boot-admin/src/main/resources",
     "ax5uiPath": "/Users/tom/Works-OSS/ax5ui/ax5ui-kernel/src/"
 }

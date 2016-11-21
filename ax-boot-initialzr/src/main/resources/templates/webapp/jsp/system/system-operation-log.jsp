@@ -30,17 +30,17 @@
                     <ax:tbl clazz="ax-search-box" style="width:300px;margin-bottom: 7px;">
                         <ax:form name="searchView0">
                             <div class="input-group">
-                                <input type="text" name="filter" id="filter" class="form-control" value="" placeholder="검색어를 입력하세요."/>
+                                <ax:input type="text" name="filter" id="filter" clazz="form-control" value="" placeholder="ax.admin.input.search"/>
                                 <span class="input-group-btn">
-                                    <button class="btn btn-primary">확인</button>
+                                    <button class="btn btn-primary"><ax:lang id="ax.admin.search"/></button>
                                 </span>
                             </div>
                         </ax:form>
                     </ax:tbl>
 
                     <div class="right">
-                        <button type="button" class="btn btn-default" data-grid-view-01-btn="remove"><i class="cqc-circle-with-minus"></i> 삭제</button>
-                        <button type="button" class="btn btn-default" data-grid-view-01-btn="removeAll"><i class="cqc-circle-with-minus"></i> 전체삭제</button>
+                        <button type="button" class="btn btn-default" data-grid-view-01-btn="remove"><i class="cqc-circle-with-minus"></i> <ax:lang id="ax.admin.delete"/></button>
+                        <button type="button" class="btn btn-default" data-grid-view-01-btn="removeAll"><i class="cqc-circle-with-minus"></i> <ax:lang id="ax.admin.delete.all"/></button>
                     </div>
                 </div>
                 <div data-ax5grid="grid-view-01" data-fit-height-content="grid-view-01" style="height: 300px;"></div>
@@ -60,7 +60,7 @@
 
                     <div class="ax-button-group">
                         <div class="left">
-                            <h3><i class="cqc-info-with-circle"></i> 에러 메시지</h3>
+                            <h3><i class="cqc-info-with-circle"></i> <ax:lang id="ax.admin.errorlog.message"/></h3>
                         </div>
                     </div>
 
@@ -68,7 +68,7 @@
 
                     <div class="ax-button-group">
                         <div class="left">
-                            <h3><i class="cqc-info-with-circle"></i> Request 파라미터 정보</h3>
+                            <h3><i class="cqc-info-with-circle"></i> <ax:lang id="ax.admin.errorlog.parameter.info"/></h3>
                         </div>
                     </div>
 
@@ -76,7 +76,7 @@
 
                     <div class="ax-button-group">
                         <div class="left">
-                            <h2><i class="cqc-info-with-circle"></i> Request 헤더 정보</h2>
+                            <h2><i class="cqc-info-with-circle"></i> <ax:lang id="ax.admin.errorlog.header.info"/></h2>
                         </div>
                         <div class="right">
                             <!--<button type="button" class="AXButton" id="ax-form-btn-new"><i class="axi axi-plus-circle"></i> 신규</button>-->
@@ -87,7 +87,7 @@
 
                     <div class="ax-button-group">
                         <div class="left">
-                            <h2><i class="cqc-info-with-circle"></i> Request 사용자 정보</h2>
+                            <h2><i class="cqc-info-with-circle"></i> <ax:lang id="ax.admin.errorlog.user.info"/></h2>
                         </div>
                     </div>
 
