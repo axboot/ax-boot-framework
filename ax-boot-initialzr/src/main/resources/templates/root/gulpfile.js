@@ -130,7 +130,6 @@ gulp.task('axboot-initializr-deploy', function () {
         .pipe(replace(/com\.chequer\.axboot\.admin/g, '${basePackage}'))
         .pipe(gulp.dest('ax-boot-initialzr/src/main/resources/templates/java'));
 
-
     gulp.src([
         CONFIG.resources + '/messages/*.*'
     ], {base: CONFIG.resources})

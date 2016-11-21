@@ -48,7 +48,7 @@
                     <div class="left">
                         <h2>
                             <i class="cqc-list"></i>
-                            상단 패널 </h2>
+                            <ax:lang id="ax.admin.sample.layout.toppanel"/> </h2>
                     </div>
                     <div class="right">
                         <button type="button" class="btn btn-default" data-left-view-01-btn="add"><i class="cqc-circle-with-plus"></i> <ax:lang id="ax.admin.add"/></button>

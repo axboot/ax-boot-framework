@@ -8,13 +8,13 @@
 
 <ax:layout name="base">
     <jsp:attribute name="css">
-        <link rel="stylesheet" type="text/css" href="<c:url value='/assets/plugins/light-bootstrap-dashboard/css/light-bootstrap-dashboard.css'/>"/>
+        <link rel="stylesheet" type="text/css" href="<c:url value='/assets/plugins-fix/light-bootstrap-dashboard/css/light-bootstrap-dashboard.css'/>"/>
     </jsp:attribute>
     <jsp:attribute name="script">
-        <script src="<c:url value='/assets/plugins/light-bootstrap-dashboard/js/chartist.min.js'/>"></script>
-        <script src="<c:url value='/assets/plugins/light-bootstrap-dashboard/js/bootstrap-checkbox-radio-switch.js'/>"></script>
-        <script src="<c:url value='/assets/plugins/light-bootstrap-dashboard/js/light-bootstrap-dashboard.js'/>"></script>
-        <script src="<c:url value='/assets/plugins/light-bootstrap-dashboard/js/demo.js'/>"></script>
+        <script src="<c:url value='/assets/plugins-fix/light-bootstrap-dashboard/js/chartist.min.js'/>"></script>
+        <script src="<c:url value='/assets/plugins-fix/light-bootstrap-dashboard/js/bootstrap-checkbox-radio-switch.js'/>"></script>
+        <script src="<c:url value='/assets/plugins-fix/light-bootstrap-dashboard/js/light-bootstrap-dashboard.js'/>"></script>
+        <script src="<c:url value='/assets/plugins-fix/light-bootstrap-dashboard/js/demo.js'/>"></script>
 
         <script type="text/javascript">
             $(document).ready(function () {
