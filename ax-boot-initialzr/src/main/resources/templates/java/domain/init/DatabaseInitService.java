@@ -100,21 +100,21 @@ public class DatabaseInitService {
 
         for (Menu menu : menuService.findAll()) {
             if (menu.getParentId() == null) {
-                String line = String.format("menuService.save(Menu.of(%dL,\"%s\",\"%s\",\"%s\", null, %d, %d, null));",
+                String line = String.format("menuService.save(Menu.of(%dL,\"%s\",\"%s\",JsonUtils.fromJson(%s), null, %d, %d, null));",
                         menu.getId(),
                         menu.getMenuGrpCd(),
                         menu.getMenuNm(),
-                        JsonUtils.toJson(menu.getMultiLanguageJson()),
+                        JsonUtils.toJson(JsonUtils.toJson(menu.getMultiLanguageJson())),
                         menu.getLevel(),
                         menu.getSort());
 
                 lines.add(line);
             } else {
-                String line = String.format("menuService.save(Menu.of(%dL,\"%s\",\"%s\",\"%s\",%dL, %d, %d, \"%s\"));",
+                String line = String.format("menuService.save(Menu.of(%dL,\"%s\",\"%s\",JsonUtils.fromJson(%s),%dL, %d, %d, \"%s\"));",
                         menu.getId(),
                         menu.getMenuGrpCd(),
                         menu.getMenuNm(),
-                        JsonUtils.toJson(menu.getMultiLanguageJson()),
+                        JsonUtils.toJson(JsonUtils.toJson(menu.getMultiLanguageJson())),
                         menu.getParentId(),
                         menu.getLevel(),
                         menu.getSort(),
@@ -216,23 +216,22 @@ public class DatabaseInitService {
         programService.save(Program.of("tab-layout", "Tap Layout", "/jsp/_samples/tab-layout.jsp", "_self", "N", "N", "N", "N", "N", "N", "N", "N", "N", "N"));
         programService.save(Program.of("vertical-layout", "Left-Right Layout", "/jsp/_samples/vertical-layout.jsp", "_self", "N", "N", "N", "N", "N", "N", "N", "N", "N", "N"));
 
-
-        menuService.save(Menu.of(1L, "SYSTEM_MANAGER", "System Management", "\"{\"ko\":\"시스템 관리\",\"en\":\"System Management\"}\"", null, 0, 0, null));
-        menuService.save(Menu.of(2L, "SYSTEM_MANAGER", "CommonCode Mgmt", "\"{\"ko\":\"공통코드 관리\",\"en\":\"CommonCode Mgmt\"}\"", 1L, 1, 0, "system-config-common-code"));
-        menuService.save(Menu.of(3L, "SYSTEM_MANAGER", "Program Mgmt", "\"{\"ko\":\"프로그램 관리\",\"en\":\"Program Mgmt\"}\"", 1L, 1, 1, "system-config-program"));
-        menuService.save(Menu.of(4L, "SYSTEM_MANAGER", "Menu Mgmt", "\"{\"ko\":\"메뉴 관리\",\"en\":\"Menu Mgmt\"}\"", 1L, 1, 2, "system-config-menu"));
-        menuService.save(Menu.of(5L, "SYSTEM_MANAGER", "User Mgmt", "\"{\"ko\":\"사용자 관리\",\"en\":\"User Mgmt\"}\"", 1L, 1, 3, "system-auth-user"));
-        menuService.save(Menu.of(6L, "SYSTEM_MANAGER", "ErrorLog Mgmt", "\"{\"ko\":\"에러로그 관리\",\"en\":\"ErrorLog Mgmt\"}\"", 1L, 1, 4, "system-operation-log"));
-        menuService.save(Menu.of(7L, "SYSTEM_MANAGER", "Samples", "\"{\"ko\":\"샘플\",\"en\":\"Samples\"}\"", null, 0, 1, null));
-        menuService.save(Menu.of(8L, "SYSTEM_MANAGER", "Basic Template", "\"{\"ko\":\"샘플\",\"en\":\"Samples\"}\"", 7L, 1, 4, "basic"));
-        menuService.save(Menu.of(9L, "SYSTEM_MANAGER", "Page Structure", "\"{\"ko\":\"샘플\",\"en\":\"Samples\"}\"", 7L, 1, 0, "page-structure"));
-        menuService.save(Menu.of(10L, "SYSTEM_MANAGER", "Left-Right Layout", "\"{\"ko\":\"좌우 레이아웃\",\"en\":\"Left - Right Layout\"}\"", 7L, 1, 1, "vertical-layout"));
-        menuService.save(Menu.of(11L, "SYSTEM_MANAGER", "Top-Bottom Layout", "\"{\"ko\":\"상하 레이아웃\",\"en\":\"Top - Bottom Layout\"}\"", 7L, 1, 2, "horizontal-layout"));
-        menuService.save(Menu.of(12L, "SYSTEM_MANAGER", "Tab Layout", "\"{\"ko\":\"탭 레이아웃\",\"en\":\"Tab Layout\"}\"", 7L, 1, 3, "tab-layout"));
-        menuService.save(Menu.of(13L, "SYSTEM_MANAGER", "Grid&Form Template", "\"{\"ko\":\"그리드 & 폼 템플릿\",\"en\":\"Grid & Form Template\"}\"", 7L, 1, 5, "grid-form"));
-        menuService.save(Menu.of(14L, "SYSTEM_MANAGER", "Grid&Form with Tab", "\"{\"ko\":\"그리드 & 탭폼 템플릿\",\"en\":\"Grid & Form with Tab\"}\"", 7L, 1, 6, "grid-tabform"));
-        menuService.save(Menu.of(15L, "SYSTEM_MANAGER", "Grid&Modal Template", "\"{\"ko\":\"그리드 & 모달 템플릿\",\"en\":\"Grid & Modal Template\"}\"", 7L, 1, 7, "grid-modal"));
-        menuService.save(Menu.of(16L, "SYSTEM_MANAGER", "UI Template", "\"{\"ko\":\"UI 템플릿\",\"en\":\"UI Template\"}\"", 7L, 1, 8, "ax5ui-sample"));
+        menuService.save(Menu.of(1L, "SYSTEM_MANAGER", "System Management", JsonUtils.fromJson("{\"ko\":\"시스템 관리\",\"en\":\"System Management\"}"), null, 0, 0, null));
+        menuService.save(Menu.of(2L, "SYSTEM_MANAGER", "CommonCode Mgmt", JsonUtils.fromJson("{\"ko\":\"공통코드 관리\",\"en\":\"CommonCode Mgmt\"}"), 1L, 1, 0, "system-config-common-code"));
+        menuService.save(Menu.of(3L, "SYSTEM_MANAGER", "Program Mgmt", JsonUtils.fromJson("{\"ko\":\"프로그램 관리\",\"en\":\"Program Mgmt\"}"), 1L, 1, 1, "system-config-program"));
+        menuService.save(Menu.of(4L, "SYSTEM_MANAGER", "Menu Mgmt", JsonUtils.fromJson("{\"ko\":\"메뉴 관리\",\"en\":\"Menu Mgmt\"}"), 1L, 1, 2, "system-config-menu"));
+        menuService.save(Menu.of(5L, "SYSTEM_MANAGER", "User Mgmt", JsonUtils.fromJson("{\"ko\":\"사용자 관리\",\"en\":\"User Mgmt\"}"), 1L, 1, 3, "system-auth-user"));
+        menuService.save(Menu.of(6L, "SYSTEM_MANAGER", "ErrorLog Mgmt", JsonUtils.fromJson("{\"ko\":\"에러로그 관리\",\"en\":\"ErrorLog Mgmt\"}"), 1L, 1, 4, "system-operation-log"));
+        menuService.save(Menu.of(7L, "SYSTEM_MANAGER", "Samples", JsonUtils.fromJson("{\"ko\":\"샘플\",\"en\":\"Samples\"}"), null, 0, 1, null));
+        menuService.save(Menu.of(8L, "SYSTEM_MANAGER", "Basic Template", JsonUtils.fromJson("{\"ko\":\"기본 템플릿\",\"en\":\"Basic Template\"}"), 7L, 1, 4, "basic"));
+        menuService.save(Menu.of(9L, "SYSTEM_MANAGER", "Page Structure", JsonUtils.fromJson("{\"ko\":\"페이지 구조\",\"en\":\"Page Structure\"}"), 7L, 1, 0, "page-structure"));
+        menuService.save(Menu.of(10L, "SYSTEM_MANAGER", "Left-Right Layout", JsonUtils.fromJson("{\"ko\":\"좌우 레이아웃\",\"en\":\"Left-Right Layout\"}"), 7L, 1, 1, "vertical-layout"));
+        menuService.save(Menu.of(11L, "SYSTEM_MANAGER", "Top-Bottom Layout", JsonUtils.fromJson("{\"ko\":\"상하 레이아웃\",\"en\":\"Top-Bottom Layout\"}"), 7L, 1, 2, "horizontal-layout"));
+        menuService.save(Menu.of(12L, "SYSTEM_MANAGER", "Tab Layout", JsonUtils.fromJson("{\"ko\":\"탭 레이아웃\",\"en\":\"Tab Layout\"}"), 7L, 1, 3, "tab-layout"));
+        menuService.save(Menu.of(13L, "SYSTEM_MANAGER", "Grid&Form Template", JsonUtils.fromJson("{\"ko\":\"그리드&폼 템플릿\",\"en\":\"Grid&Form Template\"}"), 7L, 1, 5, "grid-form"));
+        menuService.save(Menu.of(14L, "SYSTEM_MANAGER", "Grid&Form with Tab", JsonUtils.fromJson("{\"ko\":\"그리드&탭폼 템플릿\",\"en\":\"Grid&Form with Tab\"}"), 7L, 1, 6, "grid-tabform"));
+        menuService.save(Menu.of(15L, "SYSTEM_MANAGER", "Grid&Modal Template", JsonUtils.fromJson("{\"ko\":\"그리드&모달 템플릿\",\"en\":\"Grid&Modal Template\"}"), 7L, 1, 7, "grid-modal"));
+        menuService.save(Menu.of(16L, "SYSTEM_MANAGER", "UI Template", JsonUtils.fromJson("{\"ko\":\"UI 템플릿\",\"en\":\"UI Template\"}"), 7L, 1, 8, "ax5ui-sample"));
 
         /*
         commonCodeService.save(CommonCode.of("USER_STATUS", "계정상태", "ACCOUNT_LOCK", "잠김", 2));

@@ -123,12 +123,12 @@ public class Menu extends BaseJpaModel<Long> implements Cloneable {
         return null;
     }
 
-    public static Menu of(Long id, String menuGrpCd, String menuNm, String languageJson, Long parentId, int level, int sort, String progCd) {
+    public static Menu of(Long id, String menuGrpCd, String menuNm, JsonNode languageJson, Long parentId, int level, int sort, String progCd) {
         Menu menu = new Menu();
         menu.setMenuId(id);
         menu.setMenuGrpCd(menuGrpCd);
         menu.setMenuNm(menuNm);
-        menu.setMultiLanguageJson(JsonUtils.fromJson(languageJson));
+        menu.setMultiLanguageJson(languageJson);
         menu.setParentId(parentId);
         menu.setLevel(level);
         menu.setSort(sort);
