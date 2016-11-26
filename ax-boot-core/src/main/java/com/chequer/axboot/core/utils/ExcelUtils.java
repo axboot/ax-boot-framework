@@ -12,6 +12,8 @@ import java.io.InputStream;
 import java.net.URLEncoder;
 import java.util.List;
 
+import static eu.bitwalker.useragentutils.Browser.*;
+
 
 public class ExcelUtils {
 
@@ -19,9 +21,10 @@ public class ExcelUtils {
         try {
             Browser browser = AgentUtils.getBrowser(request);
 
-            switch (browser) {
+            switch (browser.getGroup()) {
                 case IE:
                     return URLEncoder.encode(fileName, "UTF-8").replaceAll("\\+", "%20");
+
                 case CHROME:
                     StringBuffer sb = new StringBuffer();
                     for (int i = 0; i < fileName.length(); i++) {
@@ -37,12 +40,10 @@ public class ExcelUtils {
                 case OPERA:
                 case FIREFOX:
                     return new String(fileName.getBytes("UTF-8"), "8859_1");
-
             }
         } catch (Exception e) {
-            // ignore;
-        }
 
+        }
         return fileName;
     }
 

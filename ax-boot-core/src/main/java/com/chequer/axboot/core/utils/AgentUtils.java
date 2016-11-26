@@ -92,7 +92,7 @@ public class AgentUtils {
     }
 
     public static boolean isExplorer(HttpServletRequest request) {
-        return getUserAgent(request).getBrowser() == Browser.IE;
+        return getUserAgent(request).getBrowser().getGroup() == Browser.IE;
     }
 
     public static boolean isExplorer() {
