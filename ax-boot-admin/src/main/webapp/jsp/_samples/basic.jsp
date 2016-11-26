@@ -29,6 +29,11 @@
                             <input type="text" class="form-control" />
                         </ax:td>
                     </ax:tr>
+                    <ax:tr>
+                        <ax:td label='ax.admin.sample.search.condition1' width="300px">
+                            <input type="text" class="form-control" />
+                        </ax:td>
+                    </ax:tr>
                 </ax:tbl>
             </ax:form>
             <div class="H10"></div>
