@@ -36,7 +36,7 @@
                             url: "/setup/init",
                             data: {},
                             callback: function (response) {
-                                alert("초기화가 완료 되었습니다");
+                                alert("Initializing completed");
                                 location.href = CONTEXT_PATH + "/";
                             }
                         });
@@ -57,7 +57,7 @@
                 </div>
 
                 <div class="panel panel-primary">
-                    <div class="panel-heading">데이터베이스 연결 정보</div>
+                    <div class="panel-heading"><ax:lang id="ax.setup.database.info"/></div>
                     <table class="table">
                         <colgroup>
                             <col width="100"/>
@@ -89,11 +89,11 @@
                     </table>
                 </div>
                 <div class="alert alert-info" role="alert">
-                    WARNING! 데이터베이스가 초기화된 후 재생성됩니다.
+                    <ax:lang id="ax.setup.warning"/>
                 </div>
 
                 <!-- TODO : AJAX Call로 처리 -->
-                <button class="btn btn-info btn-lg" data-btn="setup">스키마 및 초기 데이터 생성하기</button>
+                <button class="btn btn-info btn-lg" data-btn="setup"><ax:lang id="ax.setup.start.btn"/></button>
             </div>
 
 

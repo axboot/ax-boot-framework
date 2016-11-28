@@ -239,7 +239,9 @@ public class RequestUtils {
             if (StringUtils.isNotEmpty(localeCookie)) {
                 locale = new Locale(localeCookie);
             } else {
-                locale = new Locale("ko");
+                String acceptLanguage = request.getHeader("Accept-Language");
+                String acceptCharset = request.getHeader("Accept-Charset");
+                locale = new Locale("en");
             }
         }
 
