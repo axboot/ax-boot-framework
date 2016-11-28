@@ -209,3 +209,11 @@ $(document.body).ready(function () {
 
     document.createElement("lang");
 });
+
+window.onError = function(){
+    window.CollectGarbage && window.CollectGarbage();
+};
+
+window.onUnload = function () {
+    window.CollectGarbage && window.CollectGarbage();
+};

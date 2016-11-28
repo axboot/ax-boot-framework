@@ -128,7 +128,6 @@
                         <div data-ax5grid="grid-view-02" data-fit-height-content="grid-view-02" style="height: 300px;"></div>
 
                     </ax:tab-panel>
-
                     <ax:tab-panel label="ax.admin.sample.form.etc5" scroll="scroll">
 
                         <ax:tbl clazz="ax-form-tbl" minWidth="500px">
