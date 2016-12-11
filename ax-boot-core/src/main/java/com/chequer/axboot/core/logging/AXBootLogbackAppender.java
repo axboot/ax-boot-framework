@@ -58,7 +58,7 @@ public class AXBootLogbackAppender extends UnsynchronizedAppenderBase<ILoggingEv
             AXBootErrorLog errorLog = getErrorLog(loggingEvent);
 
             if (axBootLoggingConfig.getDatabase().isEnabled()) {
-                if (axBootLoggingConfig.getSlack().isEnabled() || axBootLoggingConfig.getJandi().isEnable()) {
+                if (axBootLoggingConfig.getSlack().isEnabled()) {
                     errorLog.setAlertYn("Y");
                 }
                 toDatabase(errorLog);

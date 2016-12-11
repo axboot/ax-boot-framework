@@ -67,9 +67,9 @@ public class TemplateBuilder {
                         code.append(TAB + "@GeneratedValue(strategy = GenerationType.IDENTITY)");
                     }
 
-                    code.append(NEW_LINE);
-                    code.append(TAB + "@ColumnPosition(" + (index++) + ")");
-                    code.append(NEW_LINE);
+                    //code.append(NEW_LINE);
+                    //code.append(TAB + "@ColumnPosition(" + (index++) + ")");
+                    //code.append(NEW_LINE);
                     code.append(TAB + String.format("private %s %s;", hibernateField.getJavaType(), hibernateField.getFieldName()));
 
                     code.append(NEW_LINE);
