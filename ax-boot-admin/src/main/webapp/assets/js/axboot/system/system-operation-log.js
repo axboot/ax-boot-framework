@@ -148,14 +148,14 @@ fnObj.gridView01 = axboot.viewExtend(axboot.gridView, {
             target: $('[data-ax5grid="grid-view-01"]'),
             columns: [
                 {key: "id", label: "ID", width: 60, align: "center"},
-                {key: "phase", label: "빌드단계", width: 80, align: "center"},
-                {key: "system", label: "시스템명", width: 70, align: "center"},
-                {key: "serverName", label: "서버명", width: 100, align: "center"},
-                {key: "hostName", label: "호스트명", width: 100, align: "center"},
+                {key: "phase", label: "Phase", width: 80, align: "center"},
+                {key: "system", label: "System", width: 70, align: "center"},
+                {key: "serverName", label: "Server Name", width: 100, align: "center"},
+                {key: "hostName", label: "Host Name", width: 100, align: "center"},
                 {key: "path", label: "URL", width: 100, align: "center"},
-                {key: "message", label: "에러 메시지", width: 400, align: "left"},
+                {key: "message", label: "Message", width: 400, align: "left"},
                 {
-                    key: "errorDatetime", label: "발생시간", width: 140, align: "center", formatter: function () {
+                    key: "errorDatetime", label: "Time", width: 140, align: "center", formatter: function () {
                     return ax5.util.date(new Date(this.value || ""), {"return": 'yyyy/MM/dd hh:mm:ss'});
                 }
                 }
@@ -205,7 +205,7 @@ fnObj.gridView01 = axboot.viewExtend(axboot.gridView, {
 fnObj.formView01 = axboot.viewExtend(axboot.formView, {
     getDefaultData: function () {
         return {
-            trace: "에러목록을 선택하세요."
+            trace: ""
         };
     },
     initView: function () {

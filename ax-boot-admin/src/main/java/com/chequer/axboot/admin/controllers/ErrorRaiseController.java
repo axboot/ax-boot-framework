@@ -21,7 +21,7 @@ public class ErrorRaiseController extends BaseController {
     public ApiResponse raiseError(@RequestParam(required = false) String raise) throws Exception {
 
         if (StringUtils.isNotEmpty(raise)) {
-            throw new Exception("API 예외 발생!!");
+            throw new Exception("API Error!!");
         }
 
         return ok();
