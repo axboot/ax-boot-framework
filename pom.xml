@@ -15,7 +15,7 @@
     <parent>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
-        <version>1.4.2.RELEASE</version>
+        <version>1.4.3.RELEASE</version>
     </parent>
 
     <ciManagement>
@@ -132,7 +132,7 @@
 
         <h2.version>1.4.192</h2.version>
 
-        <lombok.version>1.16.8</lombok.version>
+        <lombok.version>1.16.12</lombok.version>
 
         <modelmapper.version>0.7.5</modelmapper.version>
         <mustache.complier.version>0.9.3</mustache.complier.version>
