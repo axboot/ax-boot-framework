@@ -7,6 +7,7 @@ import com.chequer.axboot.core.code.ApiStatus;
 import com.chequer.axboot.core.utils.*;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.core.AuthenticationException;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.web.authentication.www.BasicAuthenticationEntryPoint;
 
 import javax.servlet.ServletException;
@@ -24,7 +25,9 @@ public class AXBootAuthenticationEntryPoint extends BasicAuthenticationEntryPoin
         ApiResponse apiResponse;
 
         if (authException instanceof BadCredentialsException) {
-            apiResponse = ApiResponse.error(ApiStatus.SYSTEM_ERROR, "계정정보를 확인하세요");
+            apiResponse = ApiResponse.error(ApiStatus.SYSTEM_ERROR, "비밀번호가 일치하지 않습니다.");
+        } else if (authException instanceof UsernameNotFoundException) {
+            apiResponse = ApiResponse.error(ApiStatus.SYSTEM_ERROR, "존재하지 않는 사용자입니다.");
         } else {
             apiResponse = ApiResponse.redirect(ContextUtil.getPagePath(AXBootSecurityConfig.LOGIN_PAGE));
         }
