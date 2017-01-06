@@ -28,12 +28,15 @@ public class TemplateUtils {
     public static String getServletBasePath() {
         String servletBasePath = HttpUtils.getCurrentRequest().getServletContext().getRealPath("/");
 
-        if (servletBasePath.contains("/target")) {
-            servletBasePath = servletBasePath.substring(0, servletBasePath.indexOf("/target"));
+        String targetPath = File.separator + "target";
+        String srcPath = File.separator + "src";
+
+        if (servletBasePath.contains(targetPath)) {
+            servletBasePath = servletBasePath.substring(0, servletBasePath.indexOf(targetPath));
         }
 
-        if (servletBasePath.contains("/src")) {
-            servletBasePath = servletBasePath.substring(0, servletBasePath.indexOf("/src"));
+        if (servletBasePath.contains(srcPath)) {
+            servletBasePath = servletBasePath.substring(0, servletBasePath.indexOf(srcPath));
         }
 
         return servletBasePath;
