@@ -11,9 +11,9 @@ import java.io.IOException;
 @Service
 public interface ExcelService<T> {
 
-    void excelForm(HttpServletRequest request, HttpServletResponse response) throws IOException;
+    void excelForm(HttpServletRequest request, HttpServletResponse response) throws Exception;
 
-    void excelDownload(RequestParams<T> requestParams, HttpServletRequest request, HttpServletResponse response) throws IOException;
+    void excelDownload(RequestParams<T> requestParams, HttpServletRequest request, HttpServletResponse response) throws Exception;
 
-    void excelUpload(RequestParams<T> requestParams, MultipartFile file, HttpServletRequest request, HttpServletResponse response);
+    void excelUpload(RequestParams<T> requestParams, MultipartFile file, HttpServletRequest request, HttpServletResponse response) throws Exception;
 }
