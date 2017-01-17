@@ -145,7 +145,7 @@ public class TemplateBuilder {
             table.getColumns().stream().filter(field -> !field.skip()).forEach(column -> {
                 HibernateField hibernateField = column.hibernateField();
 
-                if (ArrayUtils.isEmpty(hibernateField.getEntityClassImportList())) {
+                if (ArrayUtils.isNotEmpty(hibernateField.getEntityClassImportList())) {
                     for (String importPackage : hibernateField.getEntityClassImportList()) {
                         String importPackageText = String.format("import %s", importPackage);
                         if (!importList.contains(importPackageText)) {
