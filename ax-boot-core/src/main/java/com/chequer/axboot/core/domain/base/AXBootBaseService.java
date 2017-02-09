@@ -231,11 +231,11 @@ public abstract class AXBootBaseService<T, ID extends Serializable> extends AXBo
         return StringUtils.isEmpty(value);
     }
 
-    public boolean isEmpty(List<?> list) {
+    public boolean isEmpty(Collection<?> list) {
         return list == null || list.size() == 0;
     }
 
-    public boolean isNotEmpty(List<?> list) {
+    public boolean isNotEmpty(Collection<?> list) {
         return !isEmpty(list);
     }
 
