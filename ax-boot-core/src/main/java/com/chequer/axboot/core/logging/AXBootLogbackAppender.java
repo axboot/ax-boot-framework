@@ -55,7 +55,7 @@ public class AXBootLogbackAppender extends UnsynchronizedAppenderBase<ILoggingEv
     @Override
     protected void append(ILoggingEvent loggingEvent) {
         if (loggingEvent.getLevel().isGreaterOrEqual(axBootLoggingConfig.getLevel())) {
-            AXBootErrorLog errorLog = getErrorLog(loggingEvent);
+            AXBootErrorLog errorLog = errorLogService.build(loggingEvent);
 
             if (axBootLoggingConfig.getDatabase().isEnabled()) {
                 if (axBootLoggingConfig.getSlack().isEnabled()) {
@@ -169,45 +169,4 @@ public class AXBootLogbackAppender extends UnsynchronizedAppenderBase<ILoggingEv
         errorLogService.save(errorLog);
     }
 
-    public AXBootErrorLog getErrorLog(ILoggingEvent loggingEvent) {
-        AXBootErrorLog errorLog = new AXBootErrorLog();
-        errorLog.setPhase(PhaseUtils.phase());
-        errorLog.setSystem(axBootContextConfig.getApplication().getName());
-        errorLog.setLoggerName(loggingEvent.getLoggerName());
-        errorLog.setServerName(axBootContextConfig.getServerName());
-        errorLog.setHostName(getHostName());
-        errorLog.setPath(MDCUtil.get(MDCUtil.REQUEST_URI_MDC));
-        errorLog.setMessage(loggingEvent.getFormattedMessage());
-        errorLog.setHeaderMap(MDCUtil.get(MDCUtil.HEADER_MAP_MDC));
-        errorLog.setParameterMap(MDCUtil.get(MDCUtil.PARAMETER_BODY_MDC));
-        errorLog.setUserInfo(MDCUtil.get(MDCUtil.USER_INFO_MDC));
-
-        if (loggingEvent.getThrowableProxy() != null) {
-            errorLog.setTrace(getStackTrace(loggingEvent.getThrowableProxy().getStackTraceElementProxyArray()));
-        }
-
-        return errorLog;
-    }
-
-    public String getHostName() {
-        try {
-            return ContextUtil.getLocalHostName();
-        } catch (Exception e) {
-            // ignored
-        }
-        return null;
-    }
-
-    public String getStackTrace(StackTraceElementProxy[] stackTraceElements) {
-        if (stackTraceElements == null || stackTraceElements.length == 0) {
-            return null;
-        }
-
-        StringBuilder sb = new StringBuilder();
-        for (StackTraceElementProxy element : stackTraceElements) {
-            sb.append(element.toString());
-            sb.append("\n");
-        }
-        return sb.toString();
-    }
 }
