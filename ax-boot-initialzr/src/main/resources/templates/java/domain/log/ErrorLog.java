@@ -4,6 +4,7 @@ package ${basePackage}.domain.log;
 import ${basePackage}.domain.SimpleJpaModel;
 import com.chequer.axboot.core.annotations.ColumnPosition;
 import com.chequer.axboot.core.annotations.Comment;
+import com.chequer.axboot.core.domain.log.AXBootErrorLog;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
@@ -24,7 +25,7 @@ import java.time.Instant;
 @ToString
 @Table(name = "ERROR_LOG_M")
 @Comment(value = "에러로그")
-public class ErrorLog extends SimpleJpaModel<Long> {
+public class ErrorLog extends SimpleJpaModel<Long> implements AXBootErrorLog {
 
     @Id
     @Column(name = "ID", precision = 20)

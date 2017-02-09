@@ -9,7 +9,7 @@
     "postinstall": "node node_modules/bower/bin/bower install && gulp plugin-js"
   },
   "devDependencies": {
-    "node-sass": "^3.11.3",
+    "node-sass": "*",
     "markdown-it": "^8.1.0",
     "strip-indent": "^2.0.0",
     "fs-finder": "^1.8.1",

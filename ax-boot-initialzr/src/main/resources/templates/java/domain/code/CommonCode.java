@@ -3,6 +3,7 @@ package ${basePackage}.domain.code;
 import ${basePackage}.domain.BaseJpaModel;
 import com.chequer.axboot.core.annotations.ColumnPosition;
 import com.chequer.axboot.core.code.AXBootTypes;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
 import org.hibernate.annotations.DynamicInsert;
@@ -20,6 +21,7 @@ import javax.validation.constraints.Size;
 @Entity
 @Table(name = "COMMON_CODE_M")
 @IdClass(CommonCodeId.class)
+@EqualsAndHashCode
 public class CommonCode extends BaseJpaModel<CommonCodeId> {
 
     @Id
@@ -94,5 +96,17 @@ public class CommonCode extends BaseJpaModel<CommonCodeId> {
         commonCode.setName(name);
         commonCode.setSort(sort);
         return commonCode;
+    }
+
+    @Override public boolean equals(Object obj) {
+
+        boolean result = false;
+
+        if (obj instanceof CommonCode) {
+            CommonCode commonCode = (CommonCode) obj;
+            return this.getId().equals(commonCode.getId()) ? true : false;
+        }
+
+        return result;
     }
 }
