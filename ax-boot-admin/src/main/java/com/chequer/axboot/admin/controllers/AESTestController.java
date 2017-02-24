@@ -1,14 +1,14 @@
 package com.chequer.axboot.admin.controllers;
 
 import com.chequer.axboot.core.controllers.BaseController;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.apache.commons.io.IOUtils;
+import org.springframework.web.bind.annotation.*;
 
 import javax.crypto.BadPaddingException;
 import javax.crypto.IllegalBlockSizeException;
 import javax.crypto.NoSuchPaddingException;
+import javax.servlet.http.HttpServletRequest;
+import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.security.InvalidAlgorithmParameterException;
 import java.security.InvalidKeyException;
@@ -25,13 +25,13 @@ public class AESTestController extends BaseController {
     }
 
     @RequestMapping(value = "/api/v1/aes/enc", method = RequestMethod.POST)
-    public String enc(@RequestParam String data) throws NoSuchPaddingException, InvalidAlgorithmParameterException, UnsupportedEncodingException, IllegalBlockSizeException, BadPaddingException, NoSuchAlgorithmException, InvalidKeyException {
-        return aes256Util.aesEncode(data);
+    public String enc(HttpServletRequest request) throws NoSuchPaddingException, InvalidAlgorithmParameterException, IOException, IllegalBlockSizeException, BadPaddingException, NoSuchAlgorithmException, InvalidKeyException {
+        return aes256Util.aesEncode(IOUtils.toString(request.getInputStream(), "UTF-8"));
     }
 
     @RequestMapping(value = "/api/v1/aes/dec", method = RequestMethod.POST)
-    public String dec(@RequestParam String data) throws NoSuchPaddingException, InvalidAlgorithmParameterException, UnsupportedEncodingException, IllegalBlockSizeException, BadPaddingException, NoSuchAlgorithmException, InvalidKeyException {
-        return aes256Util.aesDecode(data);
+    public String dec(HttpServletRequest request) throws NoSuchPaddingException, InvalidAlgorithmParameterException, IOException, IllegalBlockSizeException, BadPaddingException, NoSuchAlgorithmException, InvalidKeyException {
+        return aes256Util.aesDecode(IOUtils.toString(request.getInputStream(), "UTF-8"));
     }
 
     public static void main(String[] args) throws UnsupportedEncodingException, NoSuchPaddingException, InvalidAlgorithmParameterException, NoSuchAlgorithmException, IllegalBlockSizeException, BadPaddingException, InvalidKeyException {
