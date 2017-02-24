@@ -23,12 +23,7 @@ public class AES256Util {
     public AES256Util(String key) throws UnsupportedEncodingException {
         this.iv = key.substring(0, 16);
  
-        byte[] keyBytes = new byte[32];
-        byte[] b = key.getBytes("UTF-8");
-        int len = b.length;
-        if(len > keyBytes.length)
-            len = keyBytes.length;
-        System.arraycopy(b, 0, keyBytes, 0, len);
+        byte[] keyBytes = key.getBytes("UTF-8");
         SecretKeySpec keySpec = new SecretKeySpec(keyBytes, "AES");
  
         this.keySpec = keySpec;
@@ -39,7 +34,7 @@ public class AES256Util {
                                                      NoSuchPaddingException, InvalidKeyException, InvalidAlgorithmParameterException, 
                                                      IllegalBlockSizeException, BadPaddingException{
         Cipher c = Cipher.getInstance("AES/CBC/PKCS5Padding");
-        c.init(Cipher.ENCRYPT_MODE, keySpec, new IvParameterSpec(iv.getBytes()));
+        c.init(Cipher.ENCRYPT_MODE, keySpec, new IvParameterSpec(iv.getBytes("UTF-8")));
  
         byte[] encrypted = c.doFinal(str.getBytes("UTF-8"));
         String enStr = new String(Base64.encodeBase64(encrypted));
