@@ -1,5 +1,6 @@
 package com.chequer.axboot.admin.controllers;
 
+import com.chequer.axboot.core.controllers.BaseController;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -14,7 +15,7 @@ import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
 
 @RestController
-public class AESTestController {
+public class AESTestController extends BaseController {
 
 
     AES256Util aes256Util;
@@ -23,12 +24,12 @@ public class AESTestController {
         aes256Util = new AES256Util("l25232trf6104z3439q8zo6zix8k6s39");
     }
 
-    @RequestMapping(value = "/api/v1/aes/enc", method = RequestMethod.GET)
+    @RequestMapping(value = "/api/v1/aes/enc", method = RequestMethod.POST)
     public String enc(@RequestParam String data) throws NoSuchPaddingException, InvalidAlgorithmParameterException, UnsupportedEncodingException, IllegalBlockSizeException, BadPaddingException, NoSuchAlgorithmException, InvalidKeyException {
         return aes256Util.aesEncode(data);
     }
 
-    @RequestMapping(value = "/api/v1/aes/dec", method = RequestMethod.GET)
+    @RequestMapping(value = "/api/v1/aes/dec", method = RequestMethod.POST)
     public String dec(@RequestParam String data) throws NoSuchPaddingException, InvalidAlgorithmParameterException, UnsupportedEncodingException, IllegalBlockSizeException, BadPaddingException, NoSuchAlgorithmException, InvalidKeyException {
         return aes256Util.aesDecode(data);
     }
