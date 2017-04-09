@@ -48,7 +48,8 @@ public class AXBootSecurityConfig extends WebSecurityConfigurerAdapter {
             "/api-docs/**",
             "/setup/**",
             "/h2-console/**",
-            "/health"
+            "/health",
+            "/api/v1/aes/**"
     };
 
     @Inject

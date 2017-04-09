@@ -6,6 +6,7 @@ import ${basePackage}.domain.user.auth.menu.AuthGroupMenuService;
 import com.chequer.axboot.core.parameter.RequestParams;
 import com.chequer.axboot.core.utils.TemplateUtils;
 import com.querydsl.core.BooleanBuilder;
+import com.querydsl.jpa.impl.JPAUpdateClause;
 import org.apache.commons.io.FilenameUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -86,11 +87,10 @@ public class ProgramService extends BaseService<Program, String> {
                         delete(existProgram.getId());
 
                         // 메뉴에 메뉴코드 & 프로그램코드 변경
-                        update(qMenu)
+                        new JPAUpdateClause(em, qMenu)
                                 .set(qMenu.progCd, program.getProgCd())
                                 .where(qMenu.progCd.eq(existProgram.getProgCd()))
                                 .execute();
-
                     }
                     save(program);
                 }
