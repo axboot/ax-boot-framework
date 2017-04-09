@@ -35,6 +35,7 @@
         border-radius: $ax5calendar-control-border-radius;
         font-size: $ax5calendar-control-font-size;
         margin-bottom: 5px;
+        padding: $ax5calendar-control-padding;
 
         .date-move-left, .date-move-right {
             display: block;
@@ -45,6 +46,7 @@
             font-size: ceil($ax5calendar-control-font-size * 1.2);
             cursor: pointer;
             text-decoration: none;
+            padding: $ax5calendar-control-padding;
             i, span {
                 line-height: inherit;
             }

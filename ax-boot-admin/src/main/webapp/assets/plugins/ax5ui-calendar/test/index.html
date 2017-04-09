@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <link rel="stylesheet" type="text/css" href="../dist/ax5calendar.css"/>
+    <link rel="stylesheet" type="text/css" href="bower_components/bootstrap/dist/css/bootstrap.min.css"/>
+    <link rel="stylesheet" type="text/css" href="../../ax5ui-mask/dist/ax5mask.css"/>
+    <link rel="stylesheet" href="bower_components/font-awesome/css/font-awesome.min.css">
+
+    <script src="bower_components/jquery/dist/jquery.min.js"></script>
+    <script src="../../ax5core/dist/ax5core.js"></script>
+    <script src="../../ax5ui-mask/dist/ax5mask.min.js"></script>
+    <script src="../dist/ax5calendar.min.js"></script>
+</head>
+<body style="padding: 50px;">
+
+<div id="calendar-target" style="width:250px;"></div>
+
+<!--
+<button class="btn btn-default" data-calendar-move="prev">이전</button>
+<button class="btn btn-default" data-calendar-move="next">다음</button>
+-->
+
+<script>
+    var
+            today = new Date(),
+            _c_date = ax5.util.date;
+
+    $(document.body).ready(function () {
+        ax5.info.months = ["1월","2월","3월","4월","5월","6월","7월","8월","9월","10월","11월"];
+        ax5.info.weekNames = [
+            {label: "일"},
+            {label: "월"},
+            {label: "화"},
+            {label: "수"},
+            {label: "목"},
+            {label: "금"},
+            {label: "토"}
+        ];
+
+        window.myCalendar = new ax5.ui.calendar({
+            control: {
+                left: '≪',
+                yearTmpl: '%s',
+                monthTmpl: '%s',
+                right: '≫',
+                yearFirst: true
+            },
+
+            dimensions: {
+                itemPadding: 1,
+                height: 200
+            },
+
+            /*
+             lang: {
+             year: "%s",
+             month: ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'],
+             day: "%s"
+             },
+             */
+
+            target: document.getElementById("calendar-target"),
+            displayDate: (new Date()),
+            startOfWeek: 1,
+            mode: "year",
+            selectMode: "year",
+
+            // selectable: {range:[{from: '2016-02-01', to: '2016-02-20'}]},
+            /*
+            marker: (function () {
+                var marker = {};
+                marker[_c_date(today, {'return': 'yyyy-MM-dd', 'add': {d: -1}})] = true;
+                marker[_c_date(today, {'return': 'yyyy-MM-dd', 'add': {d: 0}})] = true;
+                marker[_c_date(today, {'return': 'yyyy-MM-dd', 'add': {d: 1}})] = true;
+
+                console.log(marker);
+
+                return marker;
+            })(),
+            */
+            /*
+             marker: {
+             '2016-04-07': {theme: 'holiday', label: '설날'},
+             '2016-04-08': {theme: 'holiday', label: '설날'},
+             '2016-04-09': {theme: 'holiday', label: '설날'},
+             '2016-04-10': {theme: 'holiday', label: '대체휴일'}
+             },
+             */
+            onClick: function () {
+                console.log(myCalendar.getSelection());
+            },
+            onStateChanged: function () {
+                console.log(this);
+            }
+            , multipleSelect: 2
+        });
+
+        /// todo : 공휴일 표시에 대한 대안 필요.
+        myCalendar.setSelection(['2016-04-11', '2016-04-12']);
+        myCalendar.setPeriod({
+            range: [
+                {from: '2016-07-05', to: '2016-07-09', fromLabel: '시작', toLabel: '종료'},
+                {from: '2016-07-11', to: '2016-07-15', fromLabel: '시작', toLabel: '종료'}
+            ]
+        });
+
+        /*
+         myCalendar.setMarker({
+         '2016-04-07': true,
+         '2016-04-08': true,
+         '2016-04-09': true,
+         '2016-04-10': true
+         });
+         */
+    });
+</script>
+
+</body>
+</html>

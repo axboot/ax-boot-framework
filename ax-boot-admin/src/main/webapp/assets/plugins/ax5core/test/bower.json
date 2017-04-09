@@ -1,0 +1,10 @@
+{
+  "name": "ax5ui-dialog-tester",
+  "dependencies": {
+    "jquery": "^1.11.0"
+  },
+  "devDependencies": {
+    "lodash": "^4.16.1",
+    "should": "^11.1.0"
+  }
+}

@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <link rel="stylesheet" type="text/css" href="../dist/ax5modal.css"/>
+    <link rel="stylesheet" type="text/css" href="bower_components/bootstrap/dist/css/bootstrap.min.css"/>
+    <link rel="stylesheet" type="text/css" href="bower_components/ax5ui-mask/dist/ax5mask.css"/>
+    <link rel="stylesheet" href="bower_components/font-awesome/css/font-awesome.min.css">
+
+    <script src="bower_components/jquery/dist/jquery.min.js"></script>
+    <script src="bower_components/ax5core/dist/ax5core.js"></script>
+    <script src="bower_components/ax5ui-mask/dist/ax5mask.min.js"></script>
+    <script src="../dist/ax5modal.js"></script>
+</head>
+<body style="padding: 50px;">
+
+<div style="position: fixed;left:0;top:0;">
+    <button class="btn btn-danger" data-btn-action="iframe-modal-open">iframe Modal open</button>
+    <button class="btn btn-danger" data-btn-action="iframe-modal-close">iframe Modal close</button>
+
+    <button class="btn btn-danger" data-btn-action="modal-open">Modal open(fixed)</button>
+    <button class="btn btn-danger" data-btn-action="modal-close">Modal close(fixed)</button>
+
+    <button class="btn btn-danger" data-btn-action="abs-modal-open">Modal open(abs)</button>
+    <button class="btn btn-danger" data-btn-action="abs-modal-close">Modal close(abs)</button>
+
+    <button class="btn btn-danger" data-btn-action="modal-close-open">Modal close & open</button>
+</div>
+<div style="height: 2000px;"></div>
+
+<script>
+    // todo : move handle 구현, minimize 구현
+    // 1. title 속성 추가 하자
+    var modal = new ax5.ui.modal({
+        //absolute: true,
+        zIndex: 5000,
+        iframeLoadingMsg: '<i class="fa fa-spinner fa-5x fa-spin" aria-hidden="true"></i>',
+        header: {
+            title: "MODAL TITLE",
+            btns: {
+                minimize: {
+                    label: '<i class="fa fa-minus-circle" aria-hidden="true"></i>', onClick: function () {
+                        modal.minimize();
+                    }
+                },
+                restore: {
+                    label: '<i class="fa fa-plus-circle" aria-hidden="true"></i>', onClick: function () {
+                        modal.restore();
+                    }
+                },
+                close: {
+                    label: '<i class="fa fa-times-circle" aria-hidden="true"></i>', onClick: function () {
+                        modal.close();
+                    }
+                }
+            }
+        }
+    });
+    modal.onStateChanged = function () {
+        console.log(this);
+    };
+    modal.onResize = function () {
+        console.log(this);
+    };
+
+    function modalCallBack() {
+        modal.close();
+    }
+
+    $(document.body).ready(function () {
+
+        $('[data-btn-action]').click(function () {
+            var act = this.getAttribute("data-btn-action");
+            switch (act) {
+                case "iframe-modal-open":
+                    modal.open({
+                        width: 800,
+                        height: 600,
+                        fullScreen: function () {
+                            return ($(window).width() < 600);
+                        },
+                        iframe: {
+                            method: "get",
+                            url: "modal-content.html",
+                            param: "callback=modalCallback"
+                        }
+                    });
+                    break;
+                case "iframe-modal-close":
+                    modal.close();
+                    break;
+                case "modal-open":
+                    modal.open({
+                        position: {
+                            left: "center",
+                            top: "middle",
+                            margin: 10
+                        },
+                        width: 800,
+                        height: 600,
+                        disableDrag: false,
+                        fullScreen: function () {
+                            return ($(window).width() < 600);
+                        }
+                    }, function () {
+                        this.$.body.append('<h1>div contents</h1>');
+                    });
+                    break;
+                case "modal-close":
+                    modal.close();
+                    break;
+                case "abs-modal-open":
+                    modal.open({
+                        position: {
+                            left: "center",
+                            top: "middle",
+                            margin: 10
+                        },
+                        absolute: true,
+                        width: 800,
+                        height: 600,
+                        disableDrag: false,
+                        disableResize: true,
+                        fullScreen: function () {
+                            return ($(window).width() < 600);
+                        }
+                    }, function () {
+                        this.$.body.append('<h1>div contents</h1>');
+                    });
+                    break;
+                case "abs-modal-close":
+                    modal.close();
+                    break;
+                case "set-modal-full":
+                    modal.setModalConfig({fullScreen: true});
+                    break;
+                case "modal-close-open":
+                    modal.close();
+                    modal.open({
+                        position: {
+                            left: "center",
+                            top: "middle",
+                            margin: 10
+                        },
+                        width: 800,
+                        height: 600,
+                        disableDrag: false,
+                        fullScreen: function () {
+                            return ($(window).width() < 600);
+                        }
+                    }, function () {
+                        this.$.body.append('<h1>div contents</h1>');
+                    });
+                    break;
+            }
+        });
+    });
+</script>
+
+</body>
+</html>

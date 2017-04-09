@@ -1,8 +1,8 @@
 // ax5.ui.grid.header
 (function () {
 
-    var GRID = ax5.ui.grid;
-    var U = ax5.util;
+    let GRID = ax5.ui.grid,
+        U = ax5.util;
 
     var columnResizerEvent = {
         "on": function (_columnResizer, _colIndex) {
@@ -13,9 +13,8 @@
             self.xvar.columnResizerIndex = _colIndex;
             var resizeRange = {
                 min: -self.colGroup[_colIndex]._width + 2,
-                max: (self.colGroup[_colIndex + 1]) ? self.colGroup[_colIndex + 1]._width : self.$["container"]["root"].width() - 2,
+                max: self.$["container"]["root"].width() - self.colGroup[_colIndex]._width,
             };
-            //console.log(resizeRange);
 
             jQuery(document.body)
                 .bind(GRID.util.ENM["mousemove"] + ".ax5grid-" + this.instanceId, function (e) {
@@ -78,19 +77,19 @@
         var self = this;
 
         this.$["container"]["header"].on("click", '[data-ax5grid-column-attr]', function (e) {
-            var key = this.getAttribute("data-ax5grid-column-key");
-            var colIndex = this.getAttribute("data-ax5grid-column-colindex");
-            var rowIndex = this.getAttribute("data-ax5grid-column-rowindex");
-            var col = self.colGroup[colIndex];
+            let key = this.getAttribute("data-ax5grid-column-key"),
+                colIndex = this.getAttribute("data-ax5grid-column-colindex"),
+                rowIndex = this.getAttribute("data-ax5grid-column-rowindex"),
+                col = self.colGroup[colIndex];
 
-            if(key === "__checkbox_header__"){
+            if (key === "__checkbox_header__") {
                 var selected = this.getAttribute("data-ax5grid-selected");
-                    selected = (U.isNothing(selected)) ? true : (selected === "true") ? false: true;
+                selected = (U.isNothing(selected)) ? true : (selected === "true") ? false : true;
 
                 $(this).attr("data-ax5grid-selected", selected);
                 self.selectAll({selected: selected});
             }
-            else{
+            else {
                 if (key && col) {
                     if ((col.sortable === true || self.config.sortable === true) && col.sortable !== false) {
                         if (!col.sortFixed) toggleSort.call(self, col.key);
@@ -116,8 +115,8 @@
     };
 
     var resetFrozenColumn = function () {
-        var cfg = this.config;
-        var dividedHeaderObj = GRID.util.divideTableByFrozenColumnIndex(this.headerTable, this.config.frozenColumnIndex);
+        let cfg = this.config,
+            dividedHeaderObj = GRID.util.divideTableByFrozenColumnIndex(this.headerTable, this.config.frozenColumnIndex);
         this.asideHeaderData = (function (dataTable) {
             var colGroup = [];
             var data = {rows: []};
@@ -162,41 +161,41 @@
     };
 
     var getFieldValue = function (_col) {
-        var cfg = this.config;
-        var colGroup = this.colGroup;
-        var _key = _col.key;
-        var tagsToReplace = {
-            '<': '&lt;',
-            '>': '&gt;'
-        };
+        let cfg = this.config,
+            colGroup = this.colGroup,
+            _key = _col.key,
+            tagsToReplace = {
+                '<': '&lt;',
+                '>': '&gt;'
+            };
 
         if (_key === "__checkbox_header__") {
-            return '<div class="checkBox"></div>';
-
+            return `<div class="checkBox" style="max-height: ${_col.width - 10}px;min-height: ${_col.width - 10}px;"></div>`;
         } else {
             return (_col.label || "&nbsp;");
         }
     };
 
     var repaint = function (_reset) {
-        var cfg = this.config;
-        var colGroup = this.colGroup;
+        let cfg = this.config,
+            colGroup = this.colGroup;
+
         if (_reset) {
             resetFrozenColumn.call(this);
             this.xvar.paintStartRowIndex = undefined;
         }
-        var asideHeaderData = this.asideHeaderData;
-        var leftHeaderData = this.leftHeaderData;
-        var headerData = this.headerData;
-        var headerAlign = cfg.header.align;
+        let asideHeaderData = this.asideHeaderData,
+            leftHeaderData = this.leftHeaderData,
+            headerData = this.headerData,
+            headerAlign = cfg.header.align;
 
         // this.asideColGroup : asideHeaderData에서 처리 함.
         this.leftHeaderColGroup = colGroup.slice(0, this.config.frozenColumnIndex);
         this.headerColGroup = colGroup.slice(this.config.frozenColumnIndex);
 
         var repaintHeader = function (_elTarget, _colGroup, _bodyRow) {
-            var tableWidth = 0;
-            var SS = [];
+            let tableWidth = 0,
+                SS = [];
             SS.push('<table border="0" cellpadding="0" cellspacing="0">');
             SS.push('<colgroup>');
             for (var cgi = 0, cgl = _colGroup.length; cgi < cgl; cgi++) {
@@ -276,9 +275,10 @@
 
             /// append column-resizer
             (function () {
-                var resizerHeight = cfg.header.columnHeight * _bodyRow.rows.length - cfg.header.columnBorderWidth;
-                var resizerLeft = 0;
-                var AS = [];
+                let resizerHeight = cfg.header.columnHeight * _bodyRow.rows.length - cfg.header.columnBorderWidth,
+                    resizerLeft = 0,
+                    AS = [];
+
                 for (var cgi = 0, cgl = _colGroup.length; cgi < cgl; cgi++) {
                     var col = _colGroup[cgi];
                     if (!U.isNothing(col.colIndex)) {
@@ -313,9 +313,9 @@
     };
 
     var toggleSort = function (_key) {
-        var sortOrder = "";
-        var sortInfo = {};
-        var seq = 0;
+        let sortOrder = "",
+            sortInfo = {},
+            seq = 0;
 
         for (var k in this.sortInfo) {
             if (this.sortInfo[k].fixed) {
@@ -367,34 +367,33 @@
         return this;
     };
 
-    var select = function(_options){
+    var select = function (_options) {
         GRID.data.select.call(this, dindex, _options && _options.selected);
         GRID.body.updateRowState.call(this, ["selected"], dindex);
     };
 
     var getExcelString = function () {
-        var cfg = this.config;
-        var colGroup = this.colGroup;
-        var headerData = this.headerData;
-
-        var getHeader = function (_colGroup, _bodyRow) {
-            var SS = [];
-            //SS.push('<table border="1">');
-            for (var tri = 0, trl = _bodyRow.rows.length; tri < trl; tri++) {
-                SS.push('<tr>');
-                for (var ci = 0, cl = _bodyRow.rows[tri].cols.length; ci < cl; ci++) {
-                    var col = _bodyRow.rows[tri].cols[ci];
-                    SS.push('<td ',
-                        'colspan="' + col.colspan + '" ',
-                        'rowspan="' + col.rowspan + '" ',
-                        '>', getFieldValue.call(this, col), '</td>');
+        let cfg = this.config,
+            colGroup = this.colGroup,
+            headerData = this.headerTable,
+            getHeader = function (_colGroup, _bodyRow) {
+                var SS = [];
+                //SS.push('<table border="1">');
+                for (var tri = 0, trl = _bodyRow.rows.length; tri < trl; tri++) {
+                    SS.push('<tr>');
+                    for (var ci = 0, cl = _bodyRow.rows[tri].cols.length; ci < cl; ci++) {
+                        var col = _bodyRow.rows[tri].cols[ci];
+                        SS.push('<td ',
+                            'colspan="' + col.colspan + '" ',
+                            'rowspan="' + col.rowspan + '" ',
+                            '>', getFieldValue.call(this, col), '</td>');
+                    }
+                    SS.push('</tr>');
                 }
-                SS.push('</tr>');
-            }
-            //SS.push('</table>');
+                //SS.push('</table>');
 
-            return SS.join('');
-        };
+                return SS.join('');
+            };
 
         return getHeader.call(this, colGroup, headerData);
     };

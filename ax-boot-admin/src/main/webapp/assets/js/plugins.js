@@ -14664,10 +14664,10 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
     // root of function
 
     var root = this,
-        win = this;
-    var doc = win ? win.document : null,
-        docElem = win ? win.document.documentElement : null;
-    var reIsJson = /^(["'](\\.|[^"\\\n\r])*?["']|[,:{}\[\]0-9.\-+Eaeflnr-u \n\r\t])+?$/,
+        win = this,
+        doc = win ? win.document : null,
+        docElem = win ? win.document.documentElement : null,
+        reIsJson = /^(["'](\\.|[^"\\\n\r])*?["']|[,:{}\[\]0-9.\-+Eaeflnr-u \n\r\t])+?$/,
         reMs = /^-ms-/,
         reSnakeCase = /[\-_]([\da-z])/gi,
         reCamelCase = /([A-Z])/g,
@@ -14682,9 +14682,9 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
 
     /** @namespace {Object} ax5 */
     ax5 = {},
-        info,
-        U,
-        dom;
+        info = void 0,
+        U = void 0,
+        dom = void 0;
 
     /**
      * guid
@@ -14705,11 +14705,13 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
      * @namespace ax5.info
      */
     ax5.info = info = function () {
+        var _arguments = arguments;
+
         /**
          * ax5 version
          * @member {String} ax5.info.version
          */
-        var version = "${VERSION}";
+        var version = "1.4.8";
 
         /**
          * ax5 library path
@@ -14728,7 +14730,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
          * ```
          */
         var onerror = function onerror() {
-            console.error(U.toArray(arguments).join(":"));
+            console.error(U.toArray(_arguments).join(":"));
         };
 
         /**
@@ -14905,6 +14907,8 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
          */
         var supportTouch = win ? 'ontouchstart' in win || navigator.maxTouchPoints > 0 || navigator.msMaxTouchPoints > 0 : false;
 
+        var supportFileApi = win ? win.FileReader && win.File && win.FileList && win.Blob : false;
+
         return {
             errorMsg: errorMsg,
             version: version,
@@ -14915,6 +14919,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
             browser: browser,
             isBrowser: isBrowser,
             supportTouch: supportTouch,
+            supportFileApi: supportFileApi,
             wheelEnm: wheelEnm,
             urlUtil: urlUtil,
             getError: getError
@@ -14946,7 +14951,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
          */
         function each(O, _fn) {
             if (isNothing(O)) return [];
-            var key,
+            var key = void 0,
                 i = 0,
                 l = O.length,
                 isObj = l === undefined || typeof O === "function";
@@ -14993,11 +14998,11 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
          */
         function map(O, _fn) {
             if (isNothing(O)) return [];
-            var key,
+            var key = void 0,
                 i = 0,
                 l = O.length,
                 results = [],
-                fnResult;
+                fnResult = void 0;
             if (isObject(O)) {
                 for (key in O) {
                     if (typeof O[key] != "undefined") {
@@ -15051,11 +15056,8 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
          */
         function search(O, _fn) {
             if (isNothing(O)) return -1;
-            var key,
-                i = 0,
-                l = O.length;
             if (isObject(O)) {
-                for (key in O) {
+                for (var key in O) {
                     if (typeof O[key] != "undefined" && isFunction(_fn) && _fn.call(O[key], key, O[key])) {
                         return key;
                         break;
@@ -15065,7 +15067,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
                     }
                 }
             } else {
-                for (; i < l;) {
+                for (var i = 0, l = O.length; i < l; i++) {
                     if (typeof O[i] != "undefined" && isFunction(_fn) && _fn.call(O[i], i, O[i])) {
                         return i;
                         break;
@@ -15073,7 +15075,6 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
                         return i;
                         break;
                     }
-                    i++;
                 }
             }
             return -1;
@@ -15107,7 +15108,9 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
          * ```
          */
         function sum(O, defaultValue, _fn) {
-            var i, l, tokenValue;
+            var i = void 0,
+                l = void 0,
+                tokenValue = void 0;
             if (isFunction(defaultValue) && typeof _fn === "undefined") {
                 _fn = defaultValue;
                 defaultValue = 0;
@@ -15158,7 +15161,9 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
          * ```
          */
         function avg(O, defaultValue, _fn) {
-            var i, l, tokenValue;
+            var i = void 0,
+                l = void 0,
+                tokenValue = void 0;
             if (isFunction(defaultValue) && typeof _fn === "undefined") {
                 _fn = defaultValue;
                 defaultValue = 0;
@@ -15980,8 +15985,9 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
         function localDate(yy, mm, dd, hh, mi, ss) {
             var utcD, localD;
             localD = new Date();
-            if (typeof hh === "undefined") hh = 23;
-            if (typeof mi === "undefined") mi = 59;
+            if (mm < 0) mm = 0;
+            if (typeof hh === "undefined") hh = 12;
+            if (typeof mi === "undefined") mi = 0;
             utcD = new Date(Date.UTC(yy, mm, dd || 1, hh, mi, ss || 0));
 
             if (mm == 0 && dd == 1 && utcD.getUTCHours() + utcD.getTimezoneOffset() / 60 < 0) {
@@ -16006,9 +16012,18 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
          * ```
          */
         function date(d, cond) {
-            var yy, mm, dd, hh, mi, aDateTime, aTimes, aTime, aDate, utcD, localD, va;
-            var ISO_8601 = /^\d{4}(-\d\d(-\d\d(T\d\d:\d\d(:\d\d)?(\.\d+)?(([+-]\d\d:\d\d)|Z)?)?)?)?$/i;
-            var ISO_8601_FULL = /^\d{4}-\d\d-\d\dT\d\d:\d\d:\d\d(\.\d+)?(([+-]\d\d:\d\d)|Z)?$/i;
+            var yy = void 0,
+                mm = void 0,
+                dd = void 0,
+                hh = void 0,
+                mi = void 0,
+                aDateTime = void 0,
+                aTimes = void 0,
+                aTime = void 0,
+                aDate = void 0,
+                va = void 0,
+                ISO_8601 = /^\d{4}(-\d\d(-\d\d(T\d\d:\d\d(:\d\d)?(\.\d+)?(([+-]\d\d:\d\d)|Z)?)?)?)?$/i,
+                ISO_8601_FULL = /^\d{4}-\d\d-\d\dT\d\d:\d\d:\d\d(\.\d+)?(([+-]\d\d:\d\d)|Z)?$/i;
 
             if (isString(d)) {
                 if (d.length == 0) {
@@ -16043,17 +16058,15 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
                     d = new Date();
                 }
             }
-
-            if (typeof cond === "undefined") {
+            if (typeof cond === "undefined" || typeof d === "undefined") {
                 return d;
             } else {
-
                 if ("add" in cond) {
                     d = function (_d, opts) {
-                        var yy,
-                            mm,
-                            dd,
-                            mxdd,
+                        var yy = void 0,
+                            mm = void 0,
+                            dd = void 0,
+                            mxdd = void 0,
                             DyMilli = 1000 * 60 * 60 * 24;
 
                         if (typeof opts["d"] !== "undefined") {
@@ -16073,12 +16086,11 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
                         return _d;
                     }(new Date(d), cond["add"]);
                 }
-
                 if ("set" in cond) {
                     d = function (_d, opts) {
-                        var yy,
-                            mm,
-                            dd,
+                        var yy = void 0,
+                            mm = void 0,
+                            dd = void 0,
                             processor = {
                             "firstDayOfMonth": function firstDayOfMonth(date) {
                                 yy = date.getFullYear();
@@ -16100,17 +16112,31 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
                         }
                     }(new Date(d), cond["set"]);
                 }
-
                 if ("return" in cond) {
                     return function () {
+
                         var fStr = cond["return"],
-                            nY,
-                            nM,
-                            nD,
-                            nH,
-                            nMM,
-                            nS,
-                            nDW;
+                            nY = void 0,
+                            nM = void 0,
+                            nD = void 0,
+                            nH = void 0,
+                            nMM = void 0,
+                            nS = void 0,
+                            nDW = void 0,
+                            yre = void 0,
+                            regY = void 0,
+                            mre = void 0,
+                            regM = void 0,
+                            dre = void 0,
+                            regD = void 0,
+                            hre = void 0,
+                            regH = void 0,
+                            mire = void 0,
+                            regMI = void 0,
+                            sre = void 0,
+                            regS = void 0,
+                            dwre = void 0,
+                            regDW = void 0;
 
                         nY = d.getUTCFullYear();
                         nM = setDigit(d.getMonth() + 1, 2);
@@ -16120,27 +16146,27 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
                         nS = setDigit(d.getSeconds(), 2);
                         nDW = d.getDay();
 
-                        var yre = /[^y]*(yyyy)[^y]*/gi;
+                        yre = /[^y]*(yyyy)[^y]*/gi;
                         yre.exec(fStr);
-                        var regY = RegExp.$1;
-                        var mre = /[^m]*(MM)[^m]*/g;
+                        regY = RegExp.$1;
+                        mre = /[^m]*(MM)[^m]*/g;
                         mre.exec(fStr);
-                        var regM = RegExp.$1;
-                        var dre = /[^d]*(dd)[^d]*/gi;
+                        regM = RegExp.$1;
+                        dre = /[^d]*(dd)[^d]*/gi;
                         dre.exec(fStr);
-                        var regD = RegExp.$1;
-                        var hre = /[^h]*(hh)[^h]*/gi;
+                        regD = RegExp.$1;
+                        hre = /[^h]*(hh)[^h]*/gi;
                         hre.exec(fStr);
-                        var regH = RegExp.$1;
-                        var mire = /[^m]*(mm)[^i]*/g;
+                        regH = RegExp.$1;
+                        mire = /[^m]*(mm)[^i]*/g;
                         mire.exec(fStr);
-                        var regMI = RegExp.$1;
-                        var sre = /[^s]*(ss)[^s]*/gi;
+                        regMI = RegExp.$1;
+                        sre = /[^s]*(ss)[^s]*/gi;
                         sre.exec(fStr);
-                        var regS = RegExp.$1;
-                        var dwre = /[^d]*(dw)[^w]*/gi;
+                        regS = RegExp.$1;
+                        dwre = /[^d]*(dw)[^w]*/gi;
                         dwre.exec(fStr);
-                        var regDW = RegExp.$1;
+                        regDW = RegExp.$1;
 
                         if (regY === "yyyy") {
                             fStr = fStr.replace(regY, right(nY, regY.length));
@@ -16811,6 +16837,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
                     return snakeCase(this.value);
                 };
             }
+
             return new ax5string(_string);
         }
 
@@ -17957,8 +17984,11 @@ ax5.ui = function () {
         if (isArray(value)) {
             for (var j = 0, valueLength = value.length; j < valueLength; ++j) {
                 if (value[j]) {
-                    value[j]['@i'] = j;
-                    value[j]['@first'] = j === 0;
+                    if (_typeof(value[j]) === 'object') {
+                        value[j]['@i'] = j;
+                        value[j]['@first'] = j === 0;
+                    }
+
                     buffer += this.renderTokens(token[4], context.push(value[j]), partials, originalTemplate);
                 }
             }
@@ -18071,11 +18101,11 @@ ax5.ui = function () {
 
     var UI = ax5.ui;
     var U = ax5.util;
-    var DIALOG;
+    var DIALOG = void 0;
 
     UI.addClass({
         className: "dialog",
-        version: "1.3.44"
+        version: "1.4.8"
     }, function () {
         /**
          * @class ax5dialog
@@ -18108,7 +18138,7 @@ ax5.ui = function () {
          */
         var ax5dialog = function ax5dialog() {
             var self = this,
-                cfg;
+                cfg = void 0;
 
             this.instanceId = ax5.getGuid();
             this.config = {
@@ -18121,9 +18151,11 @@ ax5.ui = function () {
                 lang: {
                     "ok": "ok", "cancel": "cancel"
                 },
-                animateTime: 150
+                animateTime: 150,
+                autoCloseTime: 0
             };
             this.activeDialog = null;
+            this.autoCloseTimer = null;
             cfg = this.config;
 
             var onStateChanged = function onStateChanged(opts, that) {
@@ -18135,15 +18167,15 @@ ax5.ui = function () {
 
                 that = null;
                 return true;
-            },
-
+            };
             /**
-             * @method ax5dialog.getContent
+             * @private ax5dialog.getContent
              * @param {String} dialogId
              * @param {Object} opts
              * @returns dialogDisplay
              */
-            getContent = function getContent(dialogId, opts) {
+            var getContent = function getContent(dialogId, opts) {
+
                 var data = {
                     dialogId: dialogId,
                     title: opts.title || cfg.title || "",
@@ -18152,7 +18184,14 @@ ax5.ui = function () {
                     btns: opts.btns,
                     '_crlf': function _crlf() {
                         return this.replace(/\n/g, "<br/>");
-                    }
+                    },
+                    additionalContent: function (additionalContent) {
+                        if (U.isFunction(additionalContent)) {
+                            return additionalContent.call(opts);
+                        } else {
+                            return additionalContent;
+                        }
+                    }(opts.additionalContent)
                 };
 
                 try {
@@ -18160,16 +18199,15 @@ ax5.ui = function () {
                 } finally {
                     data = null;
                 }
-            },
-
+            };
             /**
-             * @method ax5dialog.open
+             * @private ax5dialog.open
              * @param {Object} opts
              * @param callback
              */
-            open = function open(opts, callback) {
+            var open = function open(opts, callback) {
                 var pos = {},
-                    box;
+                    box = void 0;
 
                 opts.id = opts.id || cfg.id;
 
@@ -18222,16 +18260,23 @@ ax5.ui = function () {
                     state: "open"
                 });
 
+                if (opts.autoCloseTime) {
+                    this.autoCloseTimer = setTimeout(function () {
+                        self.close();
+                    }, opts.autoCloseTime);
+                }
+
                 pos = null;
                 box = null;
-            },
-                align = function align(e) {
+            };
+            var align = function align(e) {
                 if (!this.activeDialog) return this;
                 var opts = self.dialogConfig,
                     box = {
                     width: opts.width,
                     height: opts.height
                 };
+
                 //- position 정렬
                 if (typeof opts.position === "undefined" || opts.position === "center") {
                     box.top = window.innerHeight / 2 - box.height / 2;
@@ -18249,9 +18294,11 @@ ax5.ui = function () {
                 box = null;
 
                 return this;
-            },
-                btnOnClick = function btnOnClick(e, opts, callback, target, k) {
-                var that;
+            };
+            var btnOnClick = function btnOnClick(e, opts, callback, target, k) {
+                var that = void 0,
+                    emptyKey = null;
+
                 if (e.srcElement) e.target = e.srcElement;
 
                 target = U.findParentNode(e.target, function (target) {
@@ -18270,7 +18317,6 @@ ax5.ui = function () {
                         btnTarget: target
                     };
                     if (opts.dialogType === "prompt") {
-                        var emptyKey = null;
                         for (var oi in opts.input) {
                             that[oi] = this.activeDialog.find('[data-dialog-prompt=' + oi + ']').val();
                             if (that[oi] == "" || that[oi] == null) {
@@ -18304,9 +18350,9 @@ ax5.ui = function () {
                 callback = null;
                 target = null;
                 k = null;
-            },
-                onKeyup = function onKeyup(e, opts, callback, target, k) {
-                var that,
+            };
+            var onKeyup = function onKeyup(e, opts, callback, target, k) {
+                var that = void 0,
                     emptyKey = null;
 
                 if (e.keyCode == ax5.info.eventKeys.ESC) {
@@ -18350,15 +18396,37 @@ ax5.ui = function () {
              * Preferences of dialog UI
              * @method ax5dialog.setConfig
              * @param {Object} config - 클래스 속성값
+             * @param {String} [config.theme="default"]
+             * @param {Number} [config.width=300]
+             * @param {String} [config.title=""]
              * @param {Number} [config.zIndex]
+             * @param {Function} [config.onStateChanged] - `onStateChanged` function can be defined in setConfig method or new ax5.ui.dialog initialization method. However, you can us to define an
+             * event function after initialization, if necessary
+             * @param {Object} [config.lang]
+             * @param {String} [config.lang.ok="ok"]
+             * @param {String} [config.lang.cancel="cancel"]
+             * @param {Number} [config.animateTime=150]
+             * @param {Number} [config.autoCloseTime=0] - 0보다 크면 autoCloseTime 프레임후에 dialog auto close
              * @returns {ax5dialog}
              * @example
              * ```
+             * var dialog = new ax5.ui.dialog();
+             * dialog.setConfig({
+             *      title: "app dialog title",
+             *      zIndex: 5000,
+             *      onStateChanged: function () {
+             *          if (this.state === "open") {
+             *              mask.open();
+             *          }
+             *          else if (this.state === "close") {
+             *              mask.close();
+             *          }
+             *      }
+             * });
              * ```
              */
             //== class body start
             this.init = function () {
-
                 this.onStateChanged = cfg.onStateChanged;
                 // this.onLoad = cfg.onLoad;
             };
@@ -18366,7 +18434,18 @@ ax5.ui = function () {
             /**
              * open the dialog of alert type
              * @method ax5dialog.alert
-             * @param {Object|String} [{theme, title, msg, btns}|msg] - dialog 속성을 json으로 정의하거나 msg만 전달
+             * @param {Object|String} config - dialog 속성을 json으로 정의하거나 msg만 전달
+             * @param {String} [config.theme="default"]
+             * @param {Number} [config.width=300]
+             * @param {String} [config.title=""]
+             * @param {Number} [config.zIndex]
+             * @param {Function} [config.onStateChanged]
+             * @param {Object} [config.lang]
+             * @param {String} [config.lang.ok="ok"]
+             * @param {String} [config.lang.cancel="cancel"]
+             * @param {Number} [config.animateTime=150]
+             * @param {Number} [config.autoCloseTime=0] - 0보다 크면 autoCloseTime 프레임후에 dialog auto close
+             * @param {Function|String} [config.additionalContent]
              * @param {Function} [callback] - 사용자 확인 이벤트시 호출될 callback 함수
              * @returns {ax5dialog}
              * @example
@@ -18418,14 +18497,28 @@ ax5.ui = function () {
             /**
              * open the dialog of confirm type
              * @method ax5dialog.confirm
-             * @param {Object|String} [{theme, title, msg, btns}|msg] - dialog 속성을 json으로 정의하거나 msg만 전달
+             * @param {Object|String} config - dialog 속성을 json으로 정의하거나 msg만 전달
+             * @param {String} [config.theme="default"]
+             * @param {Number} [config.width=300]
+             * @param {String} [config.title=""]
+             * @param {Number} [config.zIndex]
+             * @param {Function} [config.onStateChanged]
+             * @param {Object} [config.lang]
+             * @param {String} [config.lang.ok="ok"]
+             * @param {String} [config.lang.cancel="cancel"]
+             * @param {Number} [config.animateTime=150]
+             * @param {Number} [config.autoCloseTime=0] - 0보다 크면 autoCloseTime 프레임후에 dialog auto close
+             * @param {Function|String} [config.additionalContent]
              * @param {Function} [callback] - 사용자 확인 이벤트시 호출될 callback 함수
              * @returns {ax5dialog}
              * @example
              * ```
              * myDialog.confirm({
-             *  title: 'app title',
-             *  msg: 'confirm'
+             *      title: 'app title',
+             *      msg: 'confirm',
+             *      additionalContent: function () {
+             *          return "<div style='border:1px solid #ccc;border-radius: 5px;background: #eee;padding: 10px;'>추가정보</div>";
+             *      }
              * }, function(){});
              * ```
              */
@@ -18471,7 +18564,18 @@ ax5.ui = function () {
             /**
              * open the dialog of prompt type
              * @method ax5dialog.prompt
-             * @param {Object|String} [{theme, title, msg, btns, input}|msg] - dialog 속성을 json으로 정의하거나 msg만 전달
+             * @param {Object|String} config - dialog 속성을 json으로 정의하거나 msg만 전달
+             * @param {String} [config.theme="default"]
+             * @param {Number} [config.width=300]
+             * @param {String} [config.title=""]
+             * @param {Number} [config.zIndex]
+             * @param {Function} [config.onStateChanged]
+             * @param {Object} [config.lang]
+             * @param {String} [config.lang.ok="ok"]
+             * @param {String} [config.lang.cancel="cancel"]
+             * @param {Number} [config.animateTime=150]
+             * @param {Number} [config.autoCloseTime=0] - 0보다 크면 autoCloseTime 프레임후에 dialog auto close
+             * @param {Function|String} [config.additionalContent]
              * @param {Function} [callback] - 사용자 확인 이벤트시 호출될 callback 함수
              * @returns {ax5dialog}
              * @example
@@ -18535,8 +18639,12 @@ ax5.ui = function () {
              * ```
              */
             this.close = function (_option) {
-                var opts, that;
+                var opts = void 0,
+                    that = void 0;
+
                 if (this.activeDialog) {
+                    if (this.autoCloseTimer) clearTimeout(this.autoCloseTimer);
+
                     opts = self.dialogConfig;
                     this.activeDialog.addClass("destroy");
                     jQuery(window).unbind("keydown.ax5dialog");
@@ -18584,6 +18692,7 @@ ax5.ui = function () {
         };
         return ax5dialog;
     }());
+
     DIALOG = ax5.ui.dialog;
 })();
 
@@ -18593,7 +18702,7 @@ ax5.ui = function () {
     var DIALOG = ax5.ui.dialog;
 
     var dialogDisplay = function dialogDisplay(columnKeys) {
-        return " \n        <div id=\"{{dialogId}}\" data-ax5-ui=\"dialog\" class=\"ax5-ui-dialog {{theme}}\">\n            <div class=\"ax-dialog-header\">\n                {{{title}}}\n            </div>\n            <div class=\"ax-dialog-body\">\n                <div class=\"ax-dialog-msg\">{{{msg}}}</div>\n                \n                {{#input}}\n                <div class=\"ax-dialog-prompt\">\n                    {{#@each}}\n                    <div class=\"form-group\">\n                    {{#@value.label}}\n                    <label>{{#_crlf}}{{{.}}}{{/_crlf}}</label>\n                    {{/@value.label}}\n                    <input type=\"{{@value.type}}\" placeholder=\"{{@value.placeholder}}\" class=\"form-control {{@value.theme}}\" data-dialog-prompt=\"{{@key}}\" style=\"width:100%;\" value=\"{{@value.value}}\" />\n                    {{#@value.help}}\n                    <p class=\"help-block\">{{#_crlf}}{{.}}{{/_crlf}}</p>\n                    {{/@value.help}}\n                    </div>\n                    {{/@each}}\n                </div>\n                {{/input}}\n                \n                <div class=\"ax-dialog-buttons\">\n                    <div class=\"ax-button-wrap\">\n                    {{#btns}}\n                        {{#@each}}\n                        <button type=\"button\" data-dialog-btn=\"{{@key}}\" class=\"btn btn-{{@value.theme}}\">{{@value.label}}</button>\n                        {{/@each}}\n                    {{/btns}}\n                    </div>\n                </div>\n            </div>\n        </div>  \n        ";
+        return " \n        <div id=\"{{dialogId}}\" data-dialog-els=\"root\" class=\"ax5-ui-dialog {{theme}}\">\n            <div class=\"ax-dialog-header\" data-dialog-els=\"header\">\n                {{{title}}}\n            </div>\n            <div class=\"ax-dialog-body\" data-dialog-els=\"body\">\n                <div class=\"ax-dialog-msg\">{{{msg}}}</div>\n                \n                {{#input}}\n                <div class=\"ax-dialog-prompt\">\n                    {{#@each}}\n                    <div class=\"form-group\">\n                    {{#@value.label}}\n                    <label>{{#_crlf}}{{{.}}}{{/_crlf}}</label>\n                    {{/@value.label}}\n                    <input type=\"{{@value.type}}\" placeholder=\"{{@value.placeholder}}\" class=\"form-control {{@value.theme}}\" data-dialog-prompt=\"{{@key}}\" style=\"width:100%;\" value=\"{{@value.value}}\" />\n                    {{#@value.help}}\n                    <p class=\"help-block\">{{#_crlf}}{{.}}{{/_crlf}}</p>\n                    {{/@value.help}}\n                    </div>\n                    {{/@each}}\n                </div>\n                {{/input}}\n                \n                <div class=\"ax-dialog-buttons\" data-dialog-els=\"buttons\">\n                    <div class=\"ax-button-wrap\">\n                    {{#btns}}\n                        {{#@each}}\n                        <button type=\"button\" data-dialog-btn=\"{{@key}}\" class=\"btn btn-{{@value.theme}}\">{{@value.label}}</button>\n                        {{/@each}}\n                    {{/btns}}\n                    </div>\n                </div>\n                \n                {{#additionalContent}}\n                <div data-dialog-els=\"additional-content\">{{{.}}}</div>\n                {{/additionalContent}}\n            </div>\n        </div>  \n        ";
     };
 
     DIALOG.tmpl = {
@@ -18614,7 +18723,7 @@ ax5.ui = function () {
 
     UI.addClass({
         className: "mask",
-        version: "1.3.44"
+        version: "1.4.8"
     }, function () {
         /**
          * @class ax5mask
@@ -18653,7 +18762,8 @@ ax5.ui = function () {
             this.instanceId = ax5.getGuid();
             this.config = {
                 theme: '',
-                target: jQuery(document.body).get(0)
+                target: jQuery(document.body).get(0),
+                animateTime: 250
             };
             this.maskContent = '';
             this.status = "off";
@@ -18851,31 +18961,65 @@ ax5.ui = function () {
              * ```
              */
             this.close = function (_delay) {
+                var _this = this;
+
                 if (this.$mask) {
-                    var _close = function _close() {
-                        this.status = "off";
-                        this.$mask.remove();
-                        this.$target.removeClass("ax-masking");
+                    (function () {
+                        var _close = function _close() {
+                            this.status = "off";
+                            this.$mask.remove();
+                            this.$target.removeClass("ax-masking");
 
-                        onStateChanged.call(this, null, {
-                            self: this,
-                            state: "close"
-                        });
+                            onStateChanged.call(this, null, {
+                                self: this,
+                                state: "close"
+                            });
 
-                        jQuery(window).unbind("resize.ax5mask-" + this.instanceId);
-                    };
+                            jQuery(window).unbind("resize.ax5mask-" + this.instanceId);
+                        };
 
-                    if (_delay) {
-                        setTimeout(function () {
-                            _close.call(this);
-                        }.bind(this), _delay);
-                    } else {
-                        _close.call(this);
-                    }
+                        if (_delay) {
+                            setTimeout(function () {
+                                _close.call(this);
+                            }.bind(_this), _delay);
+                        } else {
+                            _close.call(_this);
+                        }
+                    })();
                 }
                 return this;
             };
-            //== class body end
+
+            /**
+             * @method ax5mask.fadeOut
+             * @returns {ax5mask}
+             */
+            this.fadeOut = function () {
+                var _this2 = this;
+
+                if (this.$mask) {
+                    (function () {
+                        var _close = function _close() {
+                            this.status = "off";
+                            this.$mask.remove();
+                            this.$target.removeClass("ax-masking");
+
+                            onStateChanged.call(this, null, {
+                                self: this,
+                                state: "close"
+                            });
+
+                            jQuery(window).unbind("resize.ax5mask-" + this.instanceId);
+                        };
+
+                        _this2.$mask.addClass("fade-out");
+                        setTimeout(function () {
+                            _close.call(this);
+                        }.bind(_this2), cfg.animateTime);
+                    })();
+                }
+                return this;
+            };
 
             /**
              * @method ax5mask.align
@@ -18945,7 +19089,7 @@ ax5.ui = function () {
 
     UI.addClass({
         className: "toast",
-        version: "1.3.44"
+        version: "1.4.8"
     }, function () {
         /**
          * @class ax5toast
@@ -19309,55 +19453,16 @@ ax5.ui = function () {
 
     UI.addClass({
         className: "modal",
-        version: "1.3.44"
+        version: "1.4.8"
     }, function () {
         /**
          * @class ax5modal
          * @alias ax5.ui.modal
          * @author tom@axisj.com
-         * @example
-         * ```js
-         * var modal = new ax5.ui.modal({
-         *     iframeLoadingMsg: '<i class="fa fa-spinner fa-5x fa-spin" aria-hidden="true"></i>',
-         *     header: {
-         *         title: "MODAL TITLE",
-         *         btns: {
-         *             minimize: {
-         *                 label: '<i class="fa fa-minus-circle" aria-hidden="true"></i>', onClick: function () {
-         *                     modal.minimize();
-         *                 }
-         *             },
-         *             maximize: {
-         *                 label: '<i class="fa fa-plus-circle" aria-hidden="true"></i>', onClick: function () {
-         *                     modal.maximize();
-         *                 }
-         *             },
-         *             close: {
-         *                 label: '<i class="fa fa-times-circle" aria-hidden="true"></i>', onClick: function () {
-         *                     modal.close();
-         *                 }
-         *             }
-         *         }
-         *     }
-         * });
-         *
-         * modal.open({
-         *     width: 800,
-         *     height: 600,
-         *     fullScreen: function(){
-         *         return ($(window).width() < 600);
-         *     },
-         *     iframe: {
-         *         method: "get",
-         *         url: "http://chequer-app:2017/html/login.html",
-         *         param: "callback=modalCallback"
-         *     }
-         * });
-         * ```
          */
         var ax5modal = function ax5modal() {
             var self = this,
-                cfg,
+                cfg = void 0,
                 ENM = {
                 "mousedown": ax5.info.supportTouch ? "touchstart" : "mousedown",
                 "mousemove": ax5.info.supportTouch ? "touchmove" : "mousemove",
@@ -19388,14 +19493,32 @@ ax5.ui = function () {
                 width: 300,
                 height: 400,
                 closeToEsc: true,
-                animateTime: 250
+                disableDrag: false,
+                disableResize: false,
+                animateTime: 250,
+                iframe: false
             };
             this.activeModal = null;
+            this.watingModal = false;
             this.$ = {}; // UI inside of the jQuery object store
 
             cfg = this.config; // extended config copy cfg
 
             var onStateChanged = function onStateChanged(opts, that) {
+                var eventProcessor = {
+                    "resize": function resize(that) {
+                        if (opts && opts.onResize) {
+                            opts.onResize.call(that, that);
+                        } else if (this.onResize) {
+                            this.onResize.call(that, that);
+                        }
+                    },
+                    "move": function move() {}
+                };
+                if (that.state in eventProcessor) {
+                    eventProcessor[that.state].call(this, that);
+                }
+
                 if (opts && opts.onStateChanged) {
                     opts.onStateChanged.call(that, that);
                 } else if (this.onStateChanged) {
@@ -19411,7 +19534,8 @@ ax5.ui = function () {
                     fullScreen: opts.fullScreen ? "fullscreen" : "",
                     styles: "",
                     iframe: opts.iframe,
-                    iframeLoadingMsg: opts.iframeLoadingMsg
+                    iframeLoadingMsg: opts.iframeLoadingMsg,
+                    disableResize: opts.disableResize
                 };
 
                 if (opts.zIndex) {
@@ -19428,14 +19552,13 @@ ax5.ui = function () {
                 return MODAL.tmpl.get.call(this, "content", data, {});
             },
                 open = function open(opts, callback) {
-                var that;
+                var that = void 0;
                 jQuery(document.body).append(getContent.call(this, opts.id, opts));
 
                 this.activeModal = jQuery('#' + opts.id);
-
                 // 파트수집
                 this.$ = {
-                    "root": this.activeModal.find('[data-modal-els="root"]'),
+                    "root": this.activeModal,
                     "header": this.activeModal.find('[data-modal-els="header"]'),
                     "body": this.activeModal.find('[data-modal-els="body"]')
                 };
@@ -19445,6 +19568,8 @@ ax5.ui = function () {
                     this.$["iframe"] = this.activeModal.find('[data-modal-els="iframe"]');
                     this.$["iframe-form"] = this.activeModal.find('[data-modal-els="iframe-form"]');
                     this.$["iframe-loading"] = this.activeModal.find('[data-modal-els="iframe-loading"]');
+                } else {
+                    this.$["body-frame"] = this.activeModal.find('[data-modal-els="body-frame"]');
                 }
 
                 //- position 정렬
@@ -19481,8 +19606,11 @@ ax5.ui = function () {
                     this.$["iframe-form"].submit();
                 }
 
-                if (callback) callback.call(that);
-                onStateChanged.call(this, opts, that);
+                if (callback) callback.call(that, that);
+
+                if (!this.watingModal) {
+                    onStateChanged.call(this, opts, that);
+                }
 
                 // bind key event
                 if (opts.closeToEsc) {
@@ -19494,11 +19622,11 @@ ax5.ui = function () {
                     this.align(null, e || window.event);
                 }.bind(this));
 
-                this.activeModal.find("[data-modal-header-btn]").on(cfg.clickEventName, function (e) {
+                this.activeModal.on(cfg.clickEventName, "[data-modal-header-btn]", function (e) {
                     btnOnClick.call(this, e || window.event, opts);
                 }.bind(this));
 
-                this.$.header.bind(ENM["mousedown"], function (e) {
+                this.$.header.off(ENM["mousedown"]).off("dragstart").on(ENM["mousedown"], function (e) {
                     if (opts.isFullScreen) return false;
 
                     /// 이벤트 필터링 추가 : 버튼엘리먼트로 부터 발생된 이벤트이면 moveModal 시작하지 않도록 필터링
@@ -19508,17 +19636,26 @@ ax5.ui = function () {
                         }
                     });
 
-                    if (!isButton) {
+                    if (!isButton && opts.disableDrag != true) {
                         self.mousePosition = getMousePosition(e);
                         moveModal.on.call(self);
                     }
-                }).bind("dragstart", function (e) {
-                    U.stopEvent(e);
+                }).on("dragstart", function (e) {
+                    U.stopEvent(e.originalEvent);
+                    return false;
+                });
+
+                this.activeModal.off(ENM["mousedown"]).off("dragstart").on(ENM["mousedown"], "[data-ax5modal-resizer]", function (e) {
+                    if (opts.disableDrag || opts.isFullScreen) return false;
+                    self.mousePosition = getMousePosition(e);
+                    resizeModal.on.call(self, this.getAttribute("data-ax5modal-resizer"));
+                }).on("dragstart", function (e) {
+                    U.stopEvent(e.originalEvent);
                     return false;
                 });
             },
                 btnOnClick = function btnOnClick(e, opts, callback, target, k) {
-                var that;
+                var that = void 0;
                 if (e.srcElement) e.target = e.srcElement;
 
                 target = U.findParentNode(e.target, function (target) {
@@ -19572,23 +19709,20 @@ ax5.ui = function () {
             },
                 moveModal = {
                 "on": function on() {
-                    var modalZIndex = this.activeModal.css("z-index");
-                    var modalOffset = this.activeModal.position();
-                    var modalBox = {
+                    var modalZIndex = this.activeModal.css("z-index"),
+                        modalOffset = this.activeModal.position(),
+                        modalBox = {
                         width: this.activeModal.outerWidth(), height: this.activeModal.outerHeight()
-                    };
-                    var windowBox = {
+                    },
+                        windowBox = {
                         width: jQuery(window).width(),
-                        height: jQuery(window).height()
-                    };
-                    var getResizerPosition = function getResizerPosition(e) {
+                        height: jQuery(window).height(),
+                        scrollLeft: self.modalConfig.absolute ? 0 : jQuery(document).scrollLeft(),
+                        scrollTop: self.modalConfig.absolute ? 0 : jQuery(document).scrollTop()
+                    },
+                        getResizerPosition = function getResizerPosition(e) {
                         self.__dx = e.clientX - self.mousePosition.clientX;
                         self.__dy = e.clientY - self.mousePosition.clientY;
-
-                        var minX = 0;
-                        var maxX = windowBox.width - modalBox.width;
-                        var minY = 0;
-                        var maxY = windowBox.height - modalBox.height;
 
                         if (minX > modalOffset.left + self.__dx) {
                             self.__dx = -modalOffset.left;
@@ -19603,34 +19737,39 @@ ax5.ui = function () {
                         }
 
                         return {
-                            left: modalOffset.left + self.__dx + $(document).scrollLeft(),
-                            top: modalOffset.top + self.__dy + $(document).scrollTop()
+                            left: modalOffset.left + self.__dx + windowBox.scrollLeft,
+                            top: modalOffset.top + self.__dy + windowBox.scrollTop
                         };
                     };
+
+                    var minX = 0,
+                        maxX = windowBox.width - modalBox.width,
+                        minY = 0,
+                        maxY = windowBox.height - modalBox.height;
 
                     self.__dx = 0; // 변화량 X
                     self.__dy = 0; // 변화량 Y
 
-                    jQuery(document.body).bind(ENM["mousemove"] + ".ax5modal-" + cfg.id, function (e) {
-                        if (!self.resizer) {
-                            // self.resizerBg : body 가 window보다 작을 때 문제 해결을 위한 DIV
-                            self.resizerBg = jQuery('<div class="ax5modal-resizer-background" ondragstart="return false;"></div>');
-                            self.resizer = jQuery('<div class="ax5modal-resizer" ondragstart="return false;"></div>');
-                            self.resizerBg.css({ zIndex: modalZIndex });
-                            self.resizer.css({
-                                left: modalOffset.left,
-                                top: modalOffset.top,
-                                width: modalBox.width,
-                                height: modalBox.height,
-                                zIndex: modalZIndex + 1
-                            });
-                            jQuery(document.body).append(self.resizerBg).append(self.resizer);
-                            self.activeModal.addClass("draged");
-                        }
+                    // self.resizerBg : body 가 window보다 작을 때 문제 해결을 위한 DIV
+                    self.resizerBg = jQuery('<div class="ax5modal-resizer-background" ondragstart="return false;"></div>');
+                    self.resizer = jQuery('<div class="ax5modal-resizer" ondragstart="return false;"></div>');
+                    self.resizerBg.css({ zIndex: modalZIndex });
+                    self.resizer.css({
+                        left: modalOffset.left + windowBox.scrollLeft,
+                        top: modalOffset.top + windowBox.scrollTop,
+                        width: modalBox.width,
+                        height: modalBox.height,
+                        zIndex: modalZIndex + 1
+                    });
+
+                    jQuery(document.body).append(self.resizerBg).append(self.resizer);
+                    self.activeModal.addClass("draged");
+
+                    jQuery(document.body).on(ENM["mousemove"] + ".ax5modal-move-" + this.instanceId, function (e) {
                         self.resizer.css(getResizerPosition(e));
-                    }).bind(ENM["mouseup"] + ".ax5layout-" + this.instanceId, function (e) {
+                    }).on(ENM["mouseup"] + ".ax5modal-move-" + this.instanceId, function (e) {
                         moveModal.off.call(self);
-                    }).bind("mouseleave.ax5layout-" + this.instanceId, function (e) {
+                    }).on("mouseleave.ax5modal-move-" + this.instanceId, function (e) {
                         moveModal.off.call(self);
                     });
 
@@ -19638,26 +19777,447 @@ ax5.ui = function () {
                 },
                 "off": function off() {
                     var setModalPosition = function setModalPosition() {
-                        //console.log(this.activeModal.offset(), this.__dx);
-                        var box = this.activeModal.offset();
-                        box.left += this.__dx - $(document).scrollLeft();
-                        box.top += this.__dy - $(document).scrollTop();
+                        var box = this.resizer.offset();
+                        if (!this.modalConfig.absolute) {
+                            box.left -= jQuery(document).scrollLeft();
+                            box.top -= jQuery(document).scrollTop();
+                        }
                         this.activeModal.css(box);
+                        this.modalConfig.left = box.left;
+                        this.modalConfig.top = box.top;
+
+                        box = null;
                     };
 
-                    if (this.resizer) {
-                        this.activeModal.removeClass("draged");
-                        this.resizer.remove();
-                        this.resizer = null;
-                        this.resizerBg.remove();
-                        this.resizerBg = null;
-                        setModalPosition.call(this);
-                        //this.align();
-                    }
+                    this.activeModal.removeClass("draged");
+                    setModalPosition.call(this);
 
-                    jQuery(document.body).unbind(ENM["mousemove"] + ".ax5modal-" + cfg.id).unbind(ENM["mouseup"] + ".ax5modal-" + cfg.id).unbind("mouseleave.ax5modal-" + cfg.id);
+                    this.resizer.remove();
+                    this.resizer = null;
+                    this.resizerBg.remove();
+                    this.resizerBg = null;
+                    //this.align();
+
+                    jQuery(document.body).off(ENM["mousemove"] + ".ax5modal-move-" + this.instanceId).off(ENM["mouseup"] + ".ax5modal-move-" + this.instanceId).off("mouseleave.ax5modal-move-" + this.instanceId);
 
                     jQuery(document.body).removeAttr('unselectable').css('user-select', 'auto').off('selectstart');
+
+                    onStateChanged.call(this, self.modalConfig, {
+                        self: this,
+                        state: "move"
+                    });
+                }
+            },
+                resizeModal = {
+                "on": function on(resizerType) {
+                    var modalZIndex = this.activeModal.css("z-index"),
+                        modalOffset = this.activeModal.position(),
+                        modalBox = {
+                        width: this.activeModal.outerWidth(), height: this.activeModal.outerHeight()
+                    },
+                        windowBox = {
+                        width: jQuery(window).width(),
+                        height: jQuery(window).height(),
+                        scrollLeft: this.modalConfig.absolute ? 0 : jQuery(document).scrollLeft(),
+                        scrollTop: this.modalConfig.absolute ? 0 : jQuery(document).scrollTop()
+                    },
+                        resizerProcessor = {
+                        "top": function top(e) {
+
+                            if (minHeight > modalBox.height - self.__dy) {
+                                self.__dy = modalBox.height - minHeight;
+                            }
+
+                            if (e.shiftKey) {
+
+                                if (minHeight > modalBox.height - self.__dy * 2) {
+                                    self.__dy = (modalBox.height - minHeight) / 2;
+                                }
+
+                                return {
+                                    left: modalOffset.left,
+                                    top: modalOffset.top + self.__dy,
+                                    width: modalBox.width,
+                                    height: modalBox.height - self.__dy * 2
+                                };
+                            } else if (e.altKey) {
+
+                                if (minHeight > modalBox.height - self.__dy * 2) {
+                                    self.__dy = (modalBox.height - minHeight) / 2;
+                                }
+
+                                return {
+                                    left: modalOffset.left + self.__dy,
+                                    top: modalOffset.top + self.__dy,
+                                    width: modalBox.width - self.__dy * 2,
+                                    height: modalBox.height - self.__dy * 2
+                                };
+                            } else {
+                                return {
+                                    left: modalOffset.left,
+                                    top: modalOffset.top + self.__dy,
+                                    width: modalBox.width,
+                                    height: modalBox.height - self.__dy
+                                };
+                            }
+                        },
+                        "bottom": function bottom(e) {
+
+                            if (minHeight > modalBox.height + self.__dy) {
+                                self.__dy = -modalBox.height + minHeight;
+                            }
+
+                            if (e.shiftKey) {
+
+                                if (minHeight > modalBox.height + self.__dy * 2) {
+                                    self.__dy = (-modalBox.height + minHeight) / 2;
+                                }
+
+                                return {
+                                    left: modalOffset.left,
+                                    top: modalOffset.top - self.__dy,
+                                    width: modalBox.width,
+                                    height: modalBox.height + self.__dy * 2
+                                };
+                            } else if (e.altKey) {
+
+                                if (minHeight > modalBox.height + self.__dy * 2) {
+                                    self.__dy = (-modalBox.height + minHeight) / 2;
+                                }
+
+                                return {
+                                    left: modalOffset.left - self.__dy,
+                                    top: modalOffset.top - self.__dy,
+                                    width: modalBox.width + self.__dy * 2,
+                                    height: modalBox.height + self.__dy * 2
+                                };
+                            } else {
+                                return {
+                                    left: modalOffset.left,
+                                    top: modalOffset.top,
+                                    width: modalBox.width,
+                                    height: modalBox.height + self.__dy
+                                };
+                            }
+                        },
+                        "left": function left(e) {
+
+                            if (minWidth > modalBox.width - self.__dx) {
+                                self.__dx = modalBox.width - minWidth;
+                            }
+
+                            if (e.shiftKey) {
+
+                                if (minWidth > modalBox.width - self.__dx * 2) {
+                                    self.__dx = (modalBox.width - minWidth) / 2;
+                                }
+
+                                return {
+                                    left: modalOffset.left + self.__dx,
+                                    top: modalOffset.top,
+                                    width: modalBox.width - self.__dx * 2,
+                                    height: modalBox.height
+                                };
+                            } else if (e.altKey) {
+
+                                if (minWidth > modalBox.width - self.__dx * 2) {
+                                    self.__dx = (modalBox.width - minWidth) / 2;
+                                }
+
+                                return {
+                                    left: modalOffset.left + self.__dx,
+                                    top: modalOffset.top + self.__dx,
+                                    width: modalBox.width - self.__dx * 2,
+                                    height: modalBox.height - self.__dx * 2
+                                };
+                            } else {
+                                return {
+                                    left: modalOffset.left + self.__dx,
+                                    top: modalOffset.top,
+                                    width: modalBox.width - self.__dx,
+                                    height: modalBox.height
+                                };
+                            }
+                        },
+                        "right": function right(e) {
+
+                            if (minWidth > modalBox.width + self.__dx) {
+                                self.__dx = -modalBox.width + minWidth;
+                            }
+
+                            if (e.shiftKey) {
+
+                                if (minWidth > modalBox.width + self.__dx * 2) {
+                                    self.__dx = (-modalBox.width + minWidth) / 2;
+                                }
+
+                                return {
+                                    left: modalOffset.left - self.__dx,
+                                    top: modalOffset.top,
+                                    width: modalBox.width + self.__dx * 2,
+                                    height: modalBox.height
+                                };
+                            } else if (e.altKey) {
+
+                                if (minWidth > modalBox.width + self.__dx * 2) {
+                                    self.__dx = (-modalBox.width + minWidth) / 2;
+                                }
+
+                                return {
+                                    left: modalOffset.left - self.__dx,
+                                    top: modalOffset.top - self.__dx,
+                                    width: modalBox.width + self.__dx * 2,
+                                    height: modalBox.height + self.__dx * 2
+                                };
+                            } else {
+                                return {
+                                    left: modalOffset.left,
+                                    top: modalOffset.top,
+                                    width: modalBox.width + self.__dx,
+                                    height: modalBox.height
+                                };
+                            }
+                        },
+                        "top-left": function topLeft(e) {
+
+                            if (minWidth > modalBox.width - self.__dx) {
+                                self.__dx = modalBox.width - minWidth;
+                            }
+
+                            if (minHeight > modalBox.height - self.__dy) {
+                                self.__dy = modalBox.height - minHeight;
+                            }
+
+                            if (e.shiftKey || e.altKey) {
+
+                                if (minHeight > modalBox.height - self.__dy * 2) {
+                                    self.__dy = (modalBox.height - minHeight) / 2;
+                                }
+                                if (minWidth > modalBox.width - self.__dx * 2) {
+                                    self.__dx = (modalBox.width - minWidth) / 2;
+                                }
+
+                                return {
+                                    left: modalOffset.left + self.__dx,
+                                    top: modalOffset.top + self.__dy,
+                                    width: modalBox.width - self.__dx * 2,
+                                    height: modalBox.height - self.__dy * 2
+                                };
+                            } else {
+
+                                if (minHeight > modalBox.height - self.__dy * 2) {
+                                    self.__dy = (modalBox.height - minHeight) / 2;
+                                }
+                                if (minWidth > modalBox.width - self.__dx * 2) {
+                                    self.__dx = (modalBox.width - minWidth) / 2;
+                                }
+
+                                return {
+                                    left: modalOffset.left + self.__dx,
+                                    top: modalOffset.top + self.__dy,
+                                    width: modalBox.width - self.__dx,
+                                    height: modalBox.height - self.__dy
+                                };
+                            }
+                        },
+                        "top-right": function topRight(e) {
+
+                            if (minWidth > modalBox.width + self.__dx) {
+                                self.__dx = -modalBox.width + minWidth;
+                            }
+
+                            if (minHeight > modalBox.height - self.__dy) {
+                                self.__dy = modalBox.height - minHeight;
+                            }
+
+                            if (e.shiftKey || e.altKey) {
+
+                                if (minHeight > modalBox.height - self.__dy * 2) {
+                                    self.__dy = (modalBox.height - minHeight) / 2;
+                                }
+                                if (minWidth > modalBox.width + self.__dx * 2) {
+                                    self.__dx = (-modalBox.width + minWidth) / 2;
+                                }
+
+                                return {
+                                    left: modalOffset.left - self.__dx,
+                                    top: modalOffset.top + self.__dy,
+                                    width: modalBox.width + self.__dx * 2,
+                                    height: modalBox.height - self.__dy * 2
+                                };
+                            } else {
+                                return {
+                                    left: modalOffset.left,
+                                    top: modalOffset.top + self.__dy,
+                                    width: modalBox.width + self.__dx,
+                                    height: modalBox.height - self.__dy
+                                };
+                            }
+                        },
+                        "bottom-left": function bottomLeft(e) {
+
+                            if (minWidth > modalBox.width - self.__dx) {
+                                self.__dx = modalBox.width - minWidth;
+                            }
+
+                            if (minHeight > modalBox.height + self.__dy) {
+                                self.__dy = -modalBox.height + minHeight;
+                            }
+
+                            if (e.shiftKey || e.altKey) {
+                                if (minWidth > modalBox.width - self.__dx * 2) {
+                                    self.__dx = (modalBox.width - minWidth) / 2;
+                                }
+                                if (minHeight > modalBox.height + self.__dy * 2) {
+                                    self.__dy = (-modalBox.height + minHeight) / 2;
+                                }
+                                return {
+                                    left: modalOffset.left + self.__dx,
+                                    top: modalOffset.top - self.__dy,
+                                    width: modalBox.width - self.__dx * 2,
+                                    height: modalBox.height + self.__dy * 2
+                                };
+                            } else {
+                                return {
+                                    left: modalOffset.left + self.__dx,
+                                    top: modalOffset.top,
+                                    width: modalBox.width - self.__dx,
+                                    height: modalBox.height + self.__dy
+                                };
+                            }
+                        },
+                        "bottom-right": function bottomRight(e) {
+
+                            if (minWidth > modalBox.width + self.__dx) {
+                                self.__dx = -modalBox.width + minWidth;
+                            }
+
+                            if (minHeight > modalBox.height + self.__dy) {
+                                self.__dy = -modalBox.height + minHeight;
+                            }
+
+                            if (e.shiftKey || e.altKey) {
+                                if (minWidth > modalBox.width + self.__dx * 2) {
+                                    self.__dx = (-modalBox.width + minWidth) / 2;
+                                }
+                                if (minHeight > modalBox.height + self.__dy * 2) {
+                                    self.__dy = (-modalBox.height + minHeight) / 2;
+                                }
+                                return {
+                                    left: modalOffset.left - self.__dx,
+                                    top: modalOffset.top - self.__dy,
+                                    width: modalBox.width + self.__dx * 2,
+                                    height: modalBox.height + self.__dy * 2
+                                };
+                            } else {
+                                return {
+                                    left: modalOffset.left,
+                                    top: modalOffset.top,
+                                    width: modalBox.width + self.__dx,
+                                    height: modalBox.height + self.__dy
+                                };
+                            }
+                        }
+                    },
+                        getResizerPosition = function getResizerPosition(e) {
+                        self.__dx = e.clientX - self.mousePosition.clientX;
+                        self.__dy = e.clientY - self.mousePosition.clientY;
+
+                        return resizerProcessor[resizerType](e);
+                    };
+
+                    if (!this.modalConfig.absolute) {
+                        modalOffset.left += windowBox.scrollLeft;
+                        modalOffset.top += windowBox.scrollTop;
+                    }
+
+                    var minWidth = 100,
+                        minHeight = 100;
+
+                    var cursorType = {
+                        "top": "row-resize",
+                        "bottom": "row-resize",
+                        "left": "col-resize",
+                        "right": "col-resize",
+                        "top-left": "nwse-resize",
+                        "top-right": "nesw-resize",
+                        "bottom-left": "nesw-resize",
+                        "bottom-right": "nwse-resize"
+                    };
+
+                    self.__dx = 0; // 변화량 X
+                    self.__dy = 0; // 변화량 Y
+
+                    // self.resizerBg : body 가 window보다 작을 때 문제 해결을 위한 DIV
+                    self.resizerBg = jQuery('<div class="ax5modal-resizer-background" ondragstart="return false;"></div>');
+                    self.resizer = jQuery('<div class="ax5modal-resizer" ondragstart="return false;"></div>');
+                    self.resizerBg.css({
+                        zIndex: modalZIndex,
+                        cursor: cursorType[resizerType]
+                    });
+                    self.resizer.css({
+                        left: modalOffset.left,
+                        top: modalOffset.top,
+                        width: modalBox.width,
+                        height: modalBox.height,
+                        zIndex: modalZIndex + 1,
+                        cursor: cursorType[resizerType]
+                    });
+                    jQuery(document.body).append(self.resizerBg).append(self.resizer);
+                    self.activeModal.addClass("draged");
+
+                    jQuery(document.body).bind(ENM["mousemove"] + ".ax5modal-resize-" + this.instanceId, function (e) {
+                        self.resizer.css(getResizerPosition(e));
+                    }).bind(ENM["mouseup"] + ".ax5modal-resize-" + this.instanceId, function (e) {
+                        resizeModal.off.call(self);
+                    }).bind("mouseleave.ax5modal-resize-" + this.instanceId, function (e) {
+                        resizeModal.off.call(self);
+                    });
+
+                    jQuery(document.body).attr('unselectable', 'on').css('user-select', 'none').bind('selectstart', false);
+                },
+                "off": function off() {
+                    var setModalPosition = function setModalPosition() {
+                        var box = this.resizer.offset();
+                        jQuery.extend(box, {
+                            width: this.resizer.width(),
+                            height: this.resizer.height()
+                        });
+                        if (!this.modalConfig.absolute) {
+                            box.left -= jQuery(document).scrollLeft();
+                            box.top -= jQuery(document).scrollTop();
+                        }
+                        this.activeModal.css(box);
+
+                        this.modalConfig.left = box.left;
+                        this.modalConfig.top = box.top;
+                        this.modalConfig.width = box.width;
+                        this.modalConfig.height = box.height;
+                        this.$["body"].css({ height: box.height - this.modalConfig.headerHeight });
+                        if (this.modalConfig.iframe) {
+                            this.$["iframe-wrap"].css({ height: box.height - this.modalConfig.headerHeight });
+                            this.$["iframe"].css({ height: box.height - this.modalConfig.headerHeight });
+                        }
+
+                        box = null;
+                    };
+
+                    this.activeModal.removeClass("draged");
+                    setModalPosition.call(this);
+
+                    this.resizer.remove();
+                    this.resizer = null;
+                    this.resizerBg.remove();
+                    this.resizerBg = null;
+
+                    onStateChanged.call(this, self.modalConfig, {
+                        self: this,
+                        state: "resize"
+                    });
+
+                    jQuery(document.body).unbind(ENM["mousemove"] + ".ax5modal-resize-" + this.instanceId).unbind(ENM["mouseup"] + ".ax5modal-resize-" + this.instanceId).unbind("mouseleave.ax5modal-resize-" + this.instanceId);
+
+                    jQuery(document.body).removeAttr('unselectable').css('user-select', 'auto').unbind('selectstart');
                 }
             };
 
@@ -19668,15 +20228,72 @@ ax5.ui = function () {
              * @method ax5modal.setConfig
              * @param {Object} config - 클래스 속성값
              * @param {Number} [config.zIndex]
+             * @param {Object} [config.position]
+             * @param {String} [config.position.left="center"]
+             * @param {String} [config.position.top="middle"]
+             * @param {Number} [config.position.margin=10]
+             * @param {String} [config.minimizePosition="bottom-right"]
+             * @param {Number} [config.width=300]
+             * @param {Number} [config.height=400]
+             * @param {Boolean} [config.closeToEsc=true]
              * @param {Boolean} [config.absolute=false]
+             * @param {Boolean} [config.disableDrag=false]
+             * @param {Boolean} [config.disableResize=false]
+             * @param {Number} [config.animateTime=250]
+             * @param {Function} [config.fullScreen]
+             * @param {Function} [config.onStateChanged] - `onStateChanged` function can be defined in setConfig method or new ax5.ui.modal initialization method. However, you can us to define an event function after initialization, if necessary
+             * @param {Function} [config.onResize]
              * @returns {ax5modal}
              * @example
-             * ```
+             * ```js
+             * var modal = new ax5.ui.modal({
+             *     iframeLoadingMsg: '<i class="fa fa-spinner fa-5x fa-spin" aria-hidden="true"></i>',
+             *     header: {
+             *         title: "MODAL TITLE",
+             *         btns: {
+             *             minimize: {
+             *                 label: '<i class="fa fa-minus-circle" aria-hidden="true"></i>', onClick: function () {
+             *                     modal.minimize();
+             *                 }
+             *             },
+             *             maximize: {
+             *                 label: '<i class="fa fa-plus-circle" aria-hidden="true"></i>', onClick: function () {
+             *                     modal.maximize();
+             *                 }
+             *             },
+             *             close: {
+             *                 label: '<i class="fa fa-times-circle" aria-hidden="true"></i>', onClick: function () {
+             *                     modal.close();
+             *                 }
+             *             }
+             *         }
+             *     }
+             * });
+             *
+             * modal.open({
+             *     width: 800,
+             *     height: 600,
+             *     fullScreen: function(){
+             *         return ($(window).width() < 600);
+             *     },
+             *     iframe: {
+             *         method: "get",
+             *         url: "http://chequer-app:2017/html/login.html",
+             *         param: "callback=modalCallback"
+             *     },
+             *     onStateChanged: function(){
+             *          console.log(this);
+             *     },
+             *     onResize: function(){
+             *          console.log(this);
+             *     }
+             * });
              * ```
              */
             //== class body start
             this.init = function () {
                 this.onStateChanged = cfg.onStateChanged;
+                this.onResize = cfg.onResize;
             };
 
             /**
@@ -19685,13 +20302,28 @@ ax5.ui = function () {
              * @returns {ax5modal}
              * @example
              * ```
-             * my_modal.open();
+             * modal.open();
+             * modal.open({
+             *  width: 500,
+             *  height: 500
+             * });
+             * moaal.open({}, function(){
+             *  console.log(this);
+             * });
              * ```
              */
-            this.open = function (opts, callback) {
+            this.open = function (opts, callback, tryCount) {
+                if (typeof tryCount === "undefined") tryCount = 0;
                 if (!this.activeModal) {
                     opts = self.modalConfig = jQuery.extend(true, {}, cfg, opts);
                     open.call(this, opts, callback);
+                    this.watingModal = false;
+                } else if (tryCount < 3) {
+                    // 3번까지 재 시도
+                    this.watingModal = true;
+                    setTimeout(function () {
+                        this.open(opts, callback, tryCount + 1);
+                    }.bind(this), cfg.animateTime);
                 }
                 return this;
             };
@@ -19738,10 +20370,13 @@ ax5.ui = function () {
                             this.activeModal.remove();
                             this.activeModal = null;
                         }
-                        onStateChanged.call(this, opts, {
-                            self: this,
-                            state: "close"
-                        });
+                        // 모달 오픈 대기중이면 닫기 상태 전달 안함.
+                        if (!this.watingModal) {
+                            onStateChanged.call(this, opts, {
+                                self: this,
+                                state: "close"
+                            });
+                        }
                     }.bind(this), cfg.animateTime);
                 }
 
@@ -19780,10 +20415,10 @@ ax5.ui = function () {
             }();
 
             /**
-             * @method ax5modal.maximize
+             * @method ax5modal.restore
              * @returns {ax5modal}
              */
-            this.maximize = function () {
+            this.restore = function () {
                 var opts = self.modalConfig;
                 if (this.minimized) {
                     this.minimized = false;
@@ -19839,6 +20474,11 @@ ax5.ui = function () {
              * @param position
              * @param e
              * @returns {ax5modal}
+             * @example
+             * ```js
+             * modal.align({left:"center", top:"middle"});
+             * modal.align({left:"left", top:"top", margin: 20});
+             * ```
              */
             this.align = function () {
 
@@ -19905,10 +20545,11 @@ ax5.ui = function () {
 
                     this.activeModal.css(box);
 
+                    this.$["body"].css({ height: box.height - opts.headerHeight });
                     if (opts.iframe) {
                         this.$["iframe-wrap"].css({ height: box.height - opts.headerHeight });
                         this.$["iframe"].css({ height: box.height - opts.headerHeight });
-                    }
+                    } else {}
                     return this;
                 };
             }();
@@ -19935,7 +20576,7 @@ ax5.ui = function () {
     var MODAL = ax5.ui.modal;
 
     var content = function content() {
-        return " \n        <div id=\"{{modalId}}\" data-modal-els=\"root\" class=\"ax5modal {{theme}} {{fullscreen}}\" style=\"{{styles}}\">\n            {{#header}}\n            <div class=\"ax-modal-header\" data-modal-els=\"header\">\n                {{{title}}}\n                {{#btns}}\n                    <div class=\"ax-modal-header-addon\">\n                    {{#@each}}\n                    <button tabindex=\"-1\" data-modal-header-btn=\"{{@key}}\" class=\"{{@value.theme}}\">{{{@value.label}}}</button>\n                    {{/@each}}\n                    </div>\n                {{/btns}}\n            </div>\n            {{/header}}\n            <div class=\"ax-modal-body\" data-modal-els=\"body\">\n            {{#iframe}}\n            \n                <div data-modal-els=\"iframe-wrap\" style=\"-webkit-overflow-scrolling: touch; overflow: auto;position: relative;\">\n                    <table data-modal-els=\"iframe-loading\" style=\"width:100%;height:100%;\"><tr><td style=\"text-align: center;vertical-align: middle\">{{{iframeLoadingMsg}}}</td></tr></table>\n                    <iframe name=\"{{modalId}}-frame\" src=\"\" width=\"100%\" height=\"100%\" frameborder=\"0\" data-modal-els=\"iframe\" style=\"position: absolute;left:0;top:0;\"></iframe>\n                </div>\n                <form name=\"{{modalId}}-form\" data-modal-els=\"iframe-form\">\n                <input type=\"hidden\" name=\"modalId\" value=\"{{modalId}}\" />\n                {{#param}}\n                {{#@each}}\n                <input type=\"hidden\" name=\"{{@key}}\" value=\"{{@value}}\" />\n                {{/@each}}\n                {{/param}}\n                </form>\n            {{/iframe}}\n            </div>\n            <div class=\"ax-modal-body-mask\"></div>\n        </div>\n        ";
+        return " \n        <div id=\"{{modalId}}\" data-modal-els=\"root\" class=\"ax5modal {{theme}} {{fullscreen}}\" style=\"{{styles}}\">\n            {{#header}}\n            <div class=\"ax-modal-header\" data-modal-els=\"header\">\n                {{{title}}}\n                {{#btns}}\n                    <div class=\"ax-modal-header-addon\">\n                    {{#@each}}\n                    <button tabindex=\"-1\" data-modal-header-btn=\"{{@key}}\" class=\"{{@value.theme}}\">{{{@value.label}}}</button>\n                    {{/@each}}\n                    </div>\n                {{/btns}}\n            </div>\n            {{/header}}\n            <div class=\"ax-modal-body\" data-modal-els=\"body\">\n            {{#iframe}}\n                <div data-modal-els=\"iframe-wrap\" style=\"-webkit-overflow-scrolling: touch; overflow: auto;position: relative;\">\n                    <table data-modal-els=\"iframe-loading\" style=\"width:100%;height:100%;\"><tr><td style=\"text-align: center;vertical-align: middle\">{{{iframeLoadingMsg}}}</td></tr></table>\n                    <iframe name=\"{{modalId}}-frame\" src=\"\" width=\"100%\" height=\"100%\" frameborder=\"0\" data-modal-els=\"iframe\" style=\"position: absolute;left:0;top:0;\"></iframe>\n                </div>\n                <form name=\"{{modalId}}-form\" data-modal-els=\"iframe-form\">\n                <input type=\"hidden\" name=\"modalId\" value=\"{{modalId}}\" />\n                {{#param}}\n                {{#@each}}\n                <input type=\"hidden\" name=\"{{@key}}\" value=\"{{@value}}\" />\n                {{/@each}}\n                {{/param}}\n                </form>\n            {{/iframe}}\n            {{^iframe}}\n                <div data-modal-els=\"body-frame\" style=\"position: absolute;left:0;top:0;width:100%;height:100%;\"></div>\n            {{/iframe}}\n            </div>\n            {{^disableResize}}\n            <div data-ax5modal-resizer=\"top\"></div>\n            <div data-ax5modal-resizer=\"right\"></div>\n            <div data-ax5modal-resizer=\"bottom\"></div>\n            <div data-ax5modal-resizer=\"left\"></div>\n            <div data-ax5modal-resizer=\"top-left\"></div>\n            <div data-ax5modal-resizer=\"top-right\"></div>\n            <div data-ax5modal-resizer=\"bottom-left\"></div>\n            <div data-ax5modal-resizer=\"bottom-right\"></div>\n            {{/disableResize}}\n        </div>\n        ";
     };
 
     MODAL.tmpl = {
@@ -19957,7 +20598,7 @@ ax5.ui = function () {
 
     UI.addClass({
         className: "calendar",
-        version: "1.3.44"
+        version: "1.4.8"
     }, function () {
 
         /**
@@ -21021,7 +21662,7 @@ ax5.ui = function () {
 
     UI.addClass({
         className: "picker",
-        version: "1.3.44"
+        version: "1.4.8"
     }, function () {
         /**
          * @class ax5picker
@@ -21054,7 +21695,7 @@ ax5.ui = function () {
          */
         var ax5picker = function ax5picker() {
             var self = this,
-                cfg;
+                cfg = void 0;
 
             this.instanceId = ax5.getGuid();
             this.config = {
@@ -21304,12 +21945,13 @@ ax5.ui = function () {
 
                     this.activePicker.css(positionCSS);
                 };
-
                 var item = this.queue[this.activePickerQueueIndex];
 
-                this.activePicker.css({ top: -999 });
+                if (append) {
+                    this.activePicker.css({ top: -999 });
+                    jQuery(document.body).append(this.activePicker);
+                }
 
-                if (append) jQuery(document.body).append(this.activePicker);
                 setTimeout(function () {
                     _alignPicker.call(this, item);
                 }.bind(this));
@@ -21327,7 +21969,6 @@ ax5.ui = function () {
                     }
                 });
                 if (!target) {
-                    //console.log("i'm not picker");
                     this.close();
                     return this;
                 }
@@ -21448,7 +22089,7 @@ ax5.ui = function () {
              */
             this.bind = function (item) {
                 var pickerConfig = {},
-                    queIdx;
+                    queIdx = void 0;
 
                 item = jQuery.extend(true, pickerConfig, cfg, item);
 
@@ -21527,6 +22168,7 @@ ax5.ui = function () {
 
                             return _val;
                         } else if (_inputIndex == 1) {
+
                             if (values.length > 1) {
                                 // 값 검증
                                 diffDay = ax5.util.dday(values[1], { today: values[0] });
@@ -21547,9 +22189,10 @@ ax5.ui = function () {
                 };
 
                 return function (boundID, inputIndex, val) {
-                    var queIdx = U.isNumber(boundID) ? boundID : getQueIdx.call(this, boundID);
-                    var item = this.queue[queIdx];
-                    var _input;
+
+                    var queIdx = U.isNumber(boundID) ? boundID : getQueIdx.call(this, boundID),
+                        item = this.queue[queIdx],
+                        _input = void 0;
 
                     if (item) {
 
@@ -21615,17 +22258,17 @@ ax5.ui = function () {
                         return true;
                     },
                     'date': function date(queIdx) {
-                        var item = this.queue[queIdx];
-                        var html = [];
+                        var item = this.queue[queIdx],
+                            html = [],
+                            calendarConfig = jQuery.extend({}, cfg.calendar, { displayDate: new Date() }),
+                            input = item.$target.get(0).tagName.toUpperCase() == "INPUT" ? item.$target : item.$target.find('input[type]');
+
                         for (var i = 0; i < item.inputLength; i++) {
                             html.push('<div ' + 'style="width:' + U.cssNumber(item.content.width) + ';float:left;" ' + 'class="ax-picker-content-box" ' + 'data-calendar-target="' + i + '"></div>');
                             if (i < item.inputLength - 1) html.push('<div style="width:' + item.content.margin + 'px;float:left;height: 5px;"></div>');
                         }
                         html.push('<div style="clear:both;"></div>');
                         item.pickerContent.html(html.join(''));
-
-                        var calendarConfig = jQuery.extend({}, cfg.calendar, { displayDate: new Date() });
-                        var input = item.$target.get(0).tagName.toUpperCase() == "INPUT" ? item.$target : item.$target.find('input[type]');
 
                         // calendar bind
                         item.pickerCalendar = [];
@@ -21634,14 +22277,27 @@ ax5.ui = function () {
                             // calendarConfig extend ~
                             var idx = this.getAttribute("data-calendar-target"),
                                 dValue = input.get(idx).value,
-                                d = ax5.util.date(dValue);
+                                d = ax5.util.date(dValue),
+                                dateConvert = {
+                                "year": function year(_d) {
+                                    return ax5.util.date(_d, { "return": "yyyy" });
+                                },
+                                "month": function month(_d) {
+                                    return ax5.util.date(_d, { "return": "yyyy-MM" });
+                                },
+                                "day": function day(_d) {
+                                    return _d;
+                                }
+                            };
 
                             calendarConfig.displayDate = d;
+
                             if (dValue) calendarConfig.selection = [d];
+
                             calendarConfig = jQuery.extend(true, calendarConfig, item.content.config || {});
                             calendarConfig.target = this;
                             calendarConfig.onClick = function () {
-                                self.setContentValue(item.id, idx, this.date);
+                                self.setContentValue(item.id, idx, dateConvert[calendarConfig.selectMode || "day"](this.date));
                             };
 
                             item.pickerCalendar.push({
@@ -21652,8 +22308,8 @@ ax5.ui = function () {
                         });
                     },
                     'secure-num': function secureNum(queIdx) {
-                        var item = this.queue[queIdx];
-                        var html = [];
+                        var item = this.queue[queIdx],
+                            html = [];
                         for (var i = 0; i < item.inputLength; i++) {
                             html.push('<div ' + 'style="width:' + U.cssNumber(item.content.width) + ';float:left;" ' + 'class="ax-picker-content-box" ' + 'data-secure-num-target="' + i + '"></div>');
                             if (i < item.inputLength - 1) html.push('<div style="width:' + item.content.margin + 'px;float:left;height: 5px;"></div>');
@@ -21758,17 +22414,18 @@ ax5.ui = function () {
 
                         // secure-num bind
                         item.pickerContent.find('[data-keyboard-target]').each(function () {
-                            var idx = this.getAttribute("data-keyboard-target");
-                            var $this = $(this);
-                            var isShiftKey = false;
-                            var toggleShift = function toggleShift() {
+                            var idx = this.getAttribute("data-keyboard-target"),
+                                $this = $(this),
+                                isShiftKey = false,
+                                toggleShift = function toggleShift() {
                                 isShiftKey = !isShiftKey;
                                 $this.html(getKeyBoard(isShiftKey));
                             };
+
                             $this.html(getKeyBoard(isShiftKey)).on("mousedown", '[data-keyboard-value]', function () {
-                                var act = this.getAttribute("data-keyboard-value");
-                                var _input = item.$target.get(0).tagName.toUpperCase() == "INPUT" ? item.$target : jQuery(item.$target.find('input[type]').get(idx));
-                                var val = _input.val();
+                                var act = this.getAttribute("data-keyboard-value"),
+                                    _input = item.$target.get(0).tagName.toUpperCase() == "INPUT" ? item.$target : jQuery(item.$target.find('input[type]').get(idx)),
+                                    val = _input.val();
 
                                 switch (act) {
                                     case "back":
@@ -21799,8 +22456,8 @@ ax5.ui = function () {
                         });
                     },
                     'numpad': function numpad(queIdx) {
-                        var item = this.queue[queIdx];
-                        var html = [];
+                        var item = this.queue[queIdx],
+                            html = [];
                         for (var i = 0; i < item.inputLength; i++) {
                             html.push('<div ' + 'style="width:' + U.cssNumber(item.content.width) + ';float:left;" ' + 'class="ax-picker-content-box" ' + 'data-numpad-target="' + i + '"></div>');
                             if (i < item.inputLength - 1) html.push('<div style="width:' + item.content.margin + 'px;float:left;height: 5px;"></div>');
@@ -21811,12 +22468,15 @@ ax5.ui = function () {
                         // secure-num bind
                         item.pickerContent.find('[data-numpad-target]').each(function () {
                             var idx = this.getAttribute("data-numpad-target"),
-                                po = [];
-
-                            var keyArray = item.content.config.keyArray || [{ value: "7" }, { value: "8" }, { value: "9" }, { label: "BS", fn: "back" }, { value: "4" }, { value: "5" }, { value: "6" }, { label: "CLS", fn: "clear" }, { value: "1" }, { value: "2" }, { value: "3" }, { value: "" }, { value: "." }, { value: "0" }, { value: "" }, { label: "OK", fn: "enter" }];
+                                po = [],
+                                keyArray = item.content.config.keyArray || [{ value: "7" }, { value: "8" }, { value: "9" }, { label: "BS", fn: "back" }, { value: "4" }, { value: "5" }, { value: "6" }, { label: "CLS", fn: "clear" }, { value: "1" }, { value: "2" }, { value: "3" }, { value: "" }, { value: "." }, { value: "0" }, { value: "" }, { label: "OK", fn: "enter" }];
 
                             keyArray.forEach(function (n) {
-                                var keyValue, keyLabel, btnWrapStyle, btnTheme, btnStyle;
+                                var keyValue = void 0,
+                                    keyLabel = void 0,
+                                    btnWrapStyle = void 0,
+                                    btnTheme = void 0,
+                                    btnStyle = void 0;
 
                                 if (n.fn) {
                                     keyValue = n.fn;
@@ -21839,10 +22499,10 @@ ax5.ui = function () {
                             po.push('<div style="clear:both;"></div>');
 
                             $(this).html(po.join('')).on("mousedown", '[data-numpad-value]', function () {
-                                var act = this.getAttribute("data-numpad-value");
-                                var _input = item.$target.get(0).tagName.toUpperCase() == "INPUT" ? item.$target : jQuery(item.$target.find('input[type]').get(idx));
-                                var val = _input.val();
-                                var state = "";
+                                var act = this.getAttribute("data-numpad-value"),
+                                    _input = item.$target.get(0).tagName.toUpperCase() == "INPUT" ? item.$target : jQuery(item.$target.find('input[type]').get(idx)),
+                                    val = _input.val(),
+                                    state = "";
 
                                 switch (act) {
                                     case "back":
@@ -21878,8 +22538,8 @@ ax5.ui = function () {
                 };
 
                 return function (boundID, tryCount) {
-                    var queIdx = U.isNumber(boundID) ? boundID : getQueIdx.call(this, boundID);
-                    var item = this.queue[queIdx];
+                    var queIdx = U.isNumber(boundID) ? boundID : getQueIdx.call(this, boundID),
+                        item = this.queue[queIdx];
 
                     /**
                      다른 피커가 있는 경우와 다른 피커를 닫고 다시 오픈 명령이 내려진 경우에 대한 예외 처리 구문
@@ -22041,7 +22701,7 @@ jQuery.fn.ax5picker = function () {
     var U = ax5.util;
 
     var pickerTmpl = function pickerTmpl() {
-        return "\n<div class=\"ax5-ui-picker {{theme}}\" id=\"{{id}}\" data-picker-els=\"root\">\n    {{#title}}\n        <div class=\"ax-picker-heading\">{{title}}</div>\n    {{/title}}\n    <div class=\"ax-picker-body\">\n        <div class=\"ax-picker-content\" data-picker-els=\"content\" style=\"width:{{contentWidth}}px;\"></div>\n        {{#btns}}\n            <div class=\"ax-picker-buttons\">\n            {{#btns}}\n                {{#@each}}\n                <button data-picker-btn=\"{{@key}}\" class=\"btn btn-default {{@value.theme}}\">{{@value.label}}</button>\n                {{/@each}}\n            {{/btns}}\n            </div>\n        {{/btns}}\n    </div>\n    <div class=\"ax-picker-arrow\"></div>\n</div>\n";
+        return "\n<div class=\"ax5-ui-picker {{theme}}\" id=\"{{id}}\" data-picker-els=\"root\" {{#zIndex}}style=\"z-index:{{zIndex}};\"{{/zIndex}}>\n    {{#title}}\n        <div class=\"ax-picker-heading\">{{title}}</div>\n    {{/title}}\n    <div class=\"ax-picker-body\">\n        <div class=\"ax-picker-content\" data-picker-els=\"content\" style=\"width:{{contentWidth}}px;\"></div>\n        {{#btns}}\n            <div class=\"ax-picker-buttons\">\n            {{#btns}}\n                {{#@each}}\n                <button data-picker-btn=\"{{@key}}\" class=\"btn btn-default {{@value.theme}}\">{{@value.label}}</button>\n                {{/@each}}\n            {{/btns}}\n            </div>\n        {{/btns}}\n    </div>\n    <div class=\"ax-picker-arrow\"></div>\n</div>\n";
     };
 
     PICKER.tmpl = {
@@ -22062,7 +22722,7 @@ jQuery.fn.ax5picker = function () {
 
     UI.addClass({
         className: "formatter",
-        version: "1.3.44"
+        version: "1.4.8"
     }, function () {
         var TODAY = new Date();
         var setSelectionRange = function setSelectionRange(input, pos) {
@@ -22389,6 +23049,8 @@ jQuery.fn.ax5formatter = function () {
 
     var FORMATTER = ax5.ui.formatter;
     var U = ax5.util;
+    var TODAY = new Date();
+
     var ctrlKeys = {
         "18": "KEY_ALT",
         "8": "KEY_BACKSPACE",
@@ -22465,7 +23127,9 @@ jQuery.fn.ax5formatter = function () {
     var pattern_number = {
         getEnterableKeyCodes: function getEnterableKeyCodes(_opts) {
             var enterableKeyCodes = {
-                '190': '.'
+                '190': '.',
+                '110': '.'
+
             };
             return jQuery.extend(enterableKeyCodes, FORMATTER.formatter.ctrlKeys, FORMATTER.formatter.numKeys);
         },
@@ -22473,6 +23137,8 @@ jQuery.fn.ax5formatter = function () {
             val = val.replace(/[^0-9^\.^\-]/g, "");
             var arrNumber = val.split('.'),
                 returnValue;
+
+            arrNumber[0] += ".";
 
             if (arrNumber.length > 1) {
                 if (U.isNumber(_opts.maxRound)) {
@@ -22502,6 +23168,10 @@ jQuery.fn.ax5formatter = function () {
 
             if (_opts.patternArgument == "time") {
                 regExpPattern = /^([0-9]{4})\-?([0-9]{1,2})?\-?([0-9]{1,2})? ?([0-9]{1,2})?:?([0-9]{1,2})?:?([0-9]{1,2})?.*$/;
+            } else if (_opts.patternArgument == "year") {
+                regExpPattern = /^([0-9]{0,4})?.*$/;
+            } else if (_opts.patternArgument == "month") {
+                regExpPattern = /^([0-9]{4})\-?([0-9]{1,2})?.*$/;
             }
 
             var matchedPattern = val.match(regExpPattern),
@@ -22539,26 +23209,48 @@ jQuery.fn.ax5formatter = function () {
             };
 
             returnValue = val.replace(regExpPattern, function (a, b) {
-                var nval = [inspectValue(arguments[1], "Y", eType)];
-                if (arguments[2] || eType) nval.push('-' + inspectValue(arguments[2], "M", eType));
-                if (arguments[3] || eType) nval.push('-' + inspectValue(arguments[3], "D", eType, arguments));
-                if (_opts.patternArgument == "time") {
+                var nval = [];
+
+                if (_opts.patternArgument == "year") {
+                    nval.push(inspectValue(arguments[1], "Y", eType));
+                } else if (_opts.patternArgument == "month") {
+                    nval.push(inspectValue(arguments[1], "Y", eType));
+                    if (arguments[2] || eType) nval.push('-' + inspectValue(arguments[2], "M", eType));
+                } else if (_opts.patternArgument == "time") {
+                    nval.push(inspectValue(arguments[1], "Y", eType));
+                    if (arguments[2] || eType) nval.push('-' + inspectValue(arguments[2], "M", eType));
+                    if (arguments[3] || eType) nval.push('-' + inspectValue(arguments[3], "D", eType, arguments));
                     if (arguments[4] || eType) nval.push(' ' + inspectValue(arguments[4], "h", eType));
                     if (arguments[5] || eType) nval.push(':' + inspectValue(arguments[5], "m", eType));
                     if (arguments[6] || eType) nval.push(':' + inspectValue(arguments[6], "s", eType));
+                } else {
+                    nval.push(inspectValue(arguments[1], "Y", eType));
+                    if (arguments[2] || eType) nval.push('-' + inspectValue(arguments[2], "M", eType));
+                    if (arguments[3] || eType) nval.push('-' + inspectValue(arguments[3], "D", eType, arguments));
                 }
                 return nval.join('');
             });
 
             if (eType == 'blur' && !matchedPattern) {
                 returnValue = function () {
-                    var nval = [inspectValue(returnValue, "Y", eType)];
-                    nval.push('-' + inspectValue(0, "M", eType));
-                    nval.push('-' + inspectValue(0, "D", eType, arguments));
-                    if (_opts.patternArgument == "time") {
+                    var nval = [];
+
+                    if (_opts.patternArgument == "year") {
+                        nval.push(inspectValue(0, "Y", eType));
+                    } else if (_opts.patternArgument == "month") {
+                        nval.push(inspectValue(0, "Y", eType));
+                        nval.push('-' + inspectValue(0, "M", eType));
+                    } else if (_opts.patternArgument == "time") {
+                        nval.push(inspectValue(0, "Y", eType));
+                        nval.push('-' + inspectValue(0, "M", eType));
+                        nval.push('-' + inspectValue(0, "D", eType, arguments));
                         nval.push(' ' + inspectValue(0, "h", eType));
                         nval.push(':' + inspectValue(0, "m", eType));
                         nval.push(':' + inspectValue(0, "s", eType));
+                    } else {
+                        nval.push(inspectValue(0, "Y", eType));
+                        nval.push('-' + inspectValue(0, "M", eType));
+                        nval.push('-' + inspectValue(0, "D", eType, arguments));
                     }
                     return nval.join('');
                 }();
@@ -22700,7 +23392,7 @@ jQuery.fn.ax5formatter = function () {
 
     UI.addClass({
         className: "menu",
-        version: "1.3.44"
+        version: "1.4.8"
     }, function () {
         /**
          * @class ax5.ui.menu
@@ -22827,7 +23519,7 @@ jQuery.fn.ax5formatter = function () {
          */
         var ax5menu = function ax5menu() {
             var self = this,
-                cfg;
+                cfg = void 0;
 
             this.instanceId = ax5.getGuid();
             this.config = {
@@ -22894,8 +23586,8 @@ jQuery.fn.ax5formatter = function () {
             },
                 popup = function popup(opt, items, depth, path) {
                 var data = opt,
-                    activeMenu,
-                    removed;
+                    activeMenu = void 0,
+                    removed = void 0;
 
                 data.theme = opt.theme || cfg.theme;
                 data.cfg = {
@@ -22944,12 +23636,12 @@ jQuery.fn.ax5formatter = function () {
                     var depth = this.getAttribute("data-menu-item-depth"),
                         index = this.getAttribute("data-menu-item-index"),
                         path = this.getAttribute("data-menu-item-path"),
-                        $this,
-                        offset,
-                        scrollTop,
-                        childOpt,
-                        _items,
-                        _activeMenu;
+                        $this = void 0,
+                        offset = void 0,
+                        scrollTop = void 0,
+                        childOpt = void 0,
+                        _items = void 0,
+                        _activeMenu = void 0;
 
                     if (depth != null && typeof depth != "undefined") {
                         _items = self.queue[depth].data[cfg.columnKeys.items][index][cfg.columnKeys.items];
@@ -23002,7 +23694,7 @@ jQuery.fn.ax5formatter = function () {
                     var depth = this.getAttribute("data-menu-item-depth"),
                         index = this.getAttribute("data-menu-item-index"),
                         path = this.getAttribute("data-menu-item-path"),
-                        _items;
+                        _items = void 0;
 
                     _items = self.queue[depth].data[cfg.columnKeys.items][index][cfg.columnKeys.items];
                     if (_items && _items.length > 0) {} else {
@@ -23054,7 +23746,7 @@ jQuery.fn.ax5formatter = function () {
                 if (target) {
                     item = function (path) {
                         if (!path) return false;
-                        var item;
+                        var item = void 0;
                         try {
                             item = Function("", "return this.config.items[" + path.substring(5).replace(/\./g, '].' + cfg.columnKeys.items + '[') + "];").call(self);
                         } catch (e) {
@@ -23115,7 +23807,6 @@ jQuery.fn.ax5formatter = function () {
                 return this;
             },
                 align = function align(activeMenu, data) {
-                //console.log(data['@parent']);
                 var $window = jQuery(window),
                     $document = jQuery(document),
                     wh = cfg.position == "fixed" ? $window.height() : $document.height(),
@@ -23195,6 +23886,9 @@ jQuery.fn.ax5formatter = function () {
                             theme: cfg.theme
                         };
 
+                        e.left -= 5;
+                        e.top -= 5;
+
                         if (cfg.offset) {
                             if (cfg.offset.left) e.left += cfg.offset.left;
                             if (cfg.offset.top) e.top += cfg.offset.top;
@@ -23230,8 +23924,8 @@ jQuery.fn.ax5formatter = function () {
                             //opt = null;
                         }
                     }
-                };
-                var updateTheme = function updateTheme(theme) {
+                },
+                    updateTheme = function updateTheme(theme) {
                     if (theme) cfg.theme = theme;
                 };
 
@@ -23241,13 +23935,15 @@ jQuery.fn.ax5formatter = function () {
                     opt = getOption[typeof e.clientX == "undefined" ? "object" : "event"].call(this, e, opt);
                     updateTheme(opt.theme);
 
-                    var items = [].concat(cfg.items);
+                    var items = [].concat(cfg.items),
+                        _filteringItem = void 0;
+
                     if (opt.filter) {
-                        var filteringItem = function filteringItem(_items) {
+                        _filteringItem = function filteringItem(_items) {
                             var arr = [];
                             _items.forEach(function (n) {
                                 if (n.items && n.items.length > 0) {
-                                    n.items = filteringItem(n.items);
+                                    n.items = _filteringItem(n.items);
                                 }
                                 if (opt.filter.call(n)) {
                                     arr.push(n);
@@ -23255,16 +23951,19 @@ jQuery.fn.ax5formatter = function () {
                             });
                             return arr;
                         };
-                        items = filteringItem(items);
+                        items = _filteringItem(items);
                     }
 
                     if (items.length) {
                         popup.call(this, opt, items, 0); // 0 is seq of queue
-                        appEventAttach.call(this, true); // 이벤트 연결
+
+                        if (this.popupEventAttachTimer) clearTimeout(this.popupEventAttachTimer);
+                        this.popupEventAttachTimer = setTimeout(function () {
+                            appEventAttach.call(this, true); // 이벤트 연결
+                        }.bind(this), 500);
                     }
 
                     e = null;
-                    //opt = null;
                     return this;
                 };
             }();
@@ -23523,46 +24222,22 @@ jQuery.fn.ax5formatter = function () {
 // ax5.ui.select
 (function () {
 
-    var UI = ax5.ui;
-    var U = ax5.util;
-    var SELECT;
+    var UI = ax5.ui,
+        U = ax5.util,
+        SELECT = void 0;
 
     UI.addClass({
         className: "select",
-        version: "1.3.44"
+        version: "1.4.8"
     }, function () {
         /**
          * @class ax5select
          * @classdesc
          * @author tom@axisj.com
-         * @example
-         * ```js
-         * var options = [];
-         * for (var i = 0; i < 20; i++) {
-         *     options.push({value: i, text: "optionText" + i});
-         * }
-          * var mySelect = new ax5.ui.select({
-         *     theme: "danger"
-         * });
-          * mySelect.bind({
-         *     theme: "primary",
-         *     target: $('[data-ax5select="select1"]'),
-         *     options: options,
-         *     onChange: function () {
-         *         console.log(this);
-         *     },
-         *     onClose: function () {
-         *         console.log(this);
-         *     },
-         *     onStateChanged: function () {
-         *         console.log(this);
-         *     }
-         * });
-         * ```
          */
         var ax5select = function ax5select() {
             var self = this,
-                cfg;
+                cfg = void 0;
 
             this.instanceId = ax5.getGuid();
             this.config = {
@@ -23591,8 +24266,8 @@ jQuery.fn.ax5formatter = function () {
 
             cfg = this.config;
 
-            var $window = jQuery(window);
-            var ctrlKeys = {
+            var $window = jQuery(window),
+                ctrlKeys = {
                 "18": "KEY_ALT",
                 "8": "KEY_BACKSPACE",
                 "17": "KEY_CONTROL",
@@ -23644,7 +24319,7 @@ jQuery.fn.ax5formatter = function () {
             },
                 alignSelectDisplay = function alignSelectDisplay() {
                 var i = this.queue.length,
-                    w;
+                    w = void 0;
                 while (i--) {
                     if (this.queue[i].$display) {
                         w = Math.max(this.queue[i].$select.outerWidth(), U.number(this.queue[i].minWidth));
@@ -23671,7 +24346,7 @@ jQuery.fn.ax5formatter = function () {
                     positionMargin = 0,
                     dim = {},
                     pickerDim = {},
-                    pickerDirection;
+                    pickerDirection = void 0;
 
                 if (append) jQuery(document.body).append(this.activeSelectOptionGroup);
 
@@ -23743,7 +24418,7 @@ jQuery.fn.ax5formatter = function () {
                     clickEl = "display";
 
                 target = U.findParentNode(e.target, function (target) {
-                    if (target.getAttribute("data-option-value")) {
+                    if (target.getAttribute("data-option-value") || target.getAttribute("data-option-value") == "") {
                         clickEl = "optionItem";
                         return true;
                     } else if (item.$target.get(0) == target) {
@@ -23793,8 +24468,8 @@ jQuery.fn.ax5formatter = function () {
                 }
             },
                 getLabel = function getLabel(queIdx) {
-                var item = this.queue[queIdx];
-                var labels = [];
+                var item = this.queue[queIdx],
+                    labels = [];
 
                 if (U.isArray(item.selected) && item.selected.length > 0) {
                     item.selected.forEach(function (n) {
@@ -23831,7 +24506,7 @@ jQuery.fn.ax5formatter = function () {
                 var options = [],
                     i = -1,
                     l = this.queue[queIdx].indexedOptions.length - 1,
-                    n;
+                    n = void 0;
                 if (searchWord) {
                     while (l - i++) {
                         n = this.queue[queIdx].indexedOptions[i];
@@ -23865,7 +24540,11 @@ jQuery.fn.ax5formatter = function () {
                 }
             },
                 focusMove = function focusMove(queIdx, direction, findex) {
-                var _focusIndex, _prevFocusIndex, focusOptionEl, optionGroupScrollContainer;
+                var _focusIndex = void 0,
+                    _prevFocusIndex = void 0,
+                    focusOptionEl = void 0,
+                    optionGroupScrollContainer = void 0;
+
                 if (this.activeSelectOptionGroup && this.queue[queIdx].options && this.queue[queIdx].options.length > 0) {
 
                     if (typeof findex !== "undefined") {
@@ -23953,9 +24632,14 @@ jQuery.fn.ax5formatter = function () {
                     }
                 };
                 return function (queIdx) {
-                    var item = this.queue[queIdx];
-                    var data = {};
+                    var item = this.queue[queIdx],
+                        data = {};
+
+                    // find selected
                     item.selected = [];
+                    item.options.forEach(function (n) {
+                        if (n[cfg.columnKeys.optionSelected]) item.selected.push(jQuery.extend({}, n));
+                    });
 
                     if (!item.$display) {
                         /// 템플릿에 전달할 오브젝트 선언
@@ -24026,11 +24710,12 @@ jQuery.fn.ax5formatter = function () {
                 };
 
                 return function (queIdx, options) {
-                    var item = this.queue[queIdx];
-                    var po,
-                        elementOptions,
-                        newOptions,
+                    var item = this.queue[queIdx],
+                        po = void 0,
+                        elementOptions = void 0,
+                        newOptions = void 0,
                         focusIndex = 0;
+
                     setSelected.call(this, queIdx, false); // item.selected 초기화
 
                     if (options) {
@@ -24041,7 +24726,7 @@ jQuery.fn.ax5formatter = function () {
                         po = [];
                         item.options.forEach(function (O, OIndex) {
                             if (O.optgroup) {
-                                // todo
+
                                 O['@gindex'] = OIndex;
                                 O.options.forEach(function (OO, OOIndex) {
                                     OO['@index'] = OOIndex;
@@ -24070,7 +24755,6 @@ jQuery.fn.ax5formatter = function () {
                                 focusIndex++;
                             }
                         });
-
                         item.optionItemLength = focusIndex;
                         item.$select.html(po.join(''));
                     } else {
@@ -24131,7 +24815,28 @@ jQuery.fn.ax5formatter = function () {
              * @param {Object} config - 클래스 속성값
              * @returns {ax5select}
              * @example
-             * ```
+             * ```js
+             * var options = [];
+             * for (var i = 0; i < 20; i++) {
+            *     options.push({value: i, text: "optionText" + i});
+            * }
+              * var mySelect = new ax5.ui.select({
+            *     theme: "danger"
+            * });
+              * mySelect.bind({
+            *     theme: "primary",
+            *     target: $('[data-ax5select="select1"]'),
+            *     options: options,
+            *     onChange: function () {
+            *         console.log(this);
+            *     },
+            *     onClose: function () {
+            *         console.log(this);
+            *     },
+            *     onStateChanged: function () {
+            *         console.log(this);
+            *     }
+            * });
              * ```
              */
             this.init = function () {
@@ -24153,10 +24858,33 @@ jQuery.fn.ax5formatter = function () {
              * @param {Element} item.target
              * @param {Object[]} item.options
              * @returns {ax5select}
+             * @example
+             * ```js
+             * var mySelect = new ax5.ui.select();
+             * mySelect.bind({
+             *  columnKeys: {
+             *      optionValue: "value",
+             *      optionText: "text"
+             *  },
+             *  target: $('[data-ax5select="select1"]'),
+             *  options: [
+             *      {value: "", text: ""}
+             *  ],
+             *  onChange: function(){
+             *
+             *  },
+             *  onClose: function(){
+             *
+             *  },
+             *  onStateChanged: function(){
+             *
+             *  }
+             * });
+             * ```
              */
             this.bind = function (item) {
                 var selectConfig = {},
-                    queIdx;
+                    queIdx = void 0;
 
                 item = jQuery.extend(true, selectConfig, cfg, item);
 
@@ -24261,11 +24989,11 @@ jQuery.fn.ax5formatter = function () {
                     /**
                      * open select from the outside
                      */
-                    var queIdx = U.isNumber(boundID) ? boundID : getQueIdx.call(this, boundID);
-                    var item = this.queue[queIdx];
-                    var data = {},
-                        focusTop,
-                        selectedOptionEl;
+                    var queIdx = U.isNumber(boundID) ? boundID : getQueIdx.call(this, boundID),
+                        item = this.queue[queIdx],
+                        data = {},
+                        focusTop = void 0,
+                        selectedOptionEl = void 0;
 
                     if (item.$display.attr("disabled")) return this;
 
@@ -24374,6 +25102,20 @@ jQuery.fn.ax5formatter = function () {
             };
 
             /**
+             * @method ax5select.setOptions
+             * @param boundID
+             * @param options
+             * @returns {ax5select}
+             */
+            this.setOptions = function (boundID, options) {
+                var queIdx = getQueIdx.call(this, boundID);
+                this.queue[queIdx].selected = [];
+                this.queue[queIdx].options = options;
+                bindSelectTarget.call(this, queIdx);
+                return this;
+            };
+
+            /**
              * @method ax5select.val
              * @param {(String|Number|Element)} boundID
              * @param {(String|Object|Array)} [value]
@@ -24389,8 +25131,8 @@ jQuery.fn.ax5formatter = function () {
                     } else {
                         return selected;
                     }
-                };
-                var clearSelected = function clearSelected(queIdx) {
+                },
+                    clearSelected = function clearSelected(queIdx) {
                     this.queue[queIdx].options.forEach(function (n) {
                         if (n.optgroup) {
                             n.options.forEach(function (nn) {
@@ -24400,9 +25142,8 @@ jQuery.fn.ax5formatter = function () {
                             n.selected = false;
                         }
                     });
-                };
-
-                var processor = {
+                },
+                    processor = {
                     'index': function index(queIdx, value, selected) {
                         // 클래스 내부에서 호출된 형태, 그런 이유로 옵션그룹에 대한 상태를 변경 하고 있다.
                         var item = this.queue[queIdx];
@@ -24446,8 +25187,8 @@ jQuery.fn.ax5formatter = function () {
                         });
                     },
                     'value': function value(queIdx, _value, selected) {
-                        var item = this.queue[queIdx];
-                        var optionIndex = U.search(item.options, function () {
+                        var item = this.queue[queIdx],
+                            optionIndex = U.search(item.options, function () {
                             return this[item.columnKeys.optionValue] == _value;
                         });
                         if (optionIndex > -1) {
@@ -24461,8 +25202,8 @@ jQuery.fn.ax5formatter = function () {
                         syncLabel.call(this, queIdx);
                     },
                     'text': function text(queIdx, value, selected) {
-                        var item = this.queue[queIdx];
-                        var optionIndex = U.search(item.options, function () {
+                        var item = this.queue[queIdx],
+                            optionIndex = U.search(item.options, function () {
                             return this[item.columnKeys.optionText] == value;
                         });
                         if (optionIndex > -1) {
@@ -24488,12 +25229,9 @@ jQuery.fn.ax5formatter = function () {
 
                 return function (boundID, value, selected, internal) {
                     var queIdx = U.isNumber(boundID) ? boundID : getQueIdx.call(this, boundID);
-                    if (queIdx === -1) {
-                        console.log(ax5.info.getError("ax5select", "402", "val"));
-                        return;
+                    if (!this.queue[queIdx]) {
+                        return this;
                     }
-
-                    // setValue 이면 현재 선택값 초기화
                     if (typeof value !== "undefined" && !this.queue[queIdx].multiple) {
                         clearSelected.call(this, queIdx);
                     }
@@ -24638,6 +25376,9 @@ jQuery.fn.ax5select = function () {
                 case "disable":
                     return ax5.ui.select_instance.disable(this);
                     break;
+                case "setOptions":
+                    return ax5.ui.select_instance.setOptions(this, arguments[1]);
+                    break;
                 default:
                     return this;
             }
@@ -24672,7 +25413,7 @@ jQuery.fn.ax5select = function () {
         return "\n<select tabindex=\"-1\" class=\"form-control {{formSize}}\" name=\"{{name}}\" {{#multiple}}multiple=\"multiple\"{{/multiple}}></select>\n";
     };
     var optionsTmpl = function optionsTmpl(columnKeys) {
-        return "\n{{#waitOptions}}\n    <div class=\"ax-select-option-item\">\n            <div class=\"ax-select-option-item-holder\">\n                <span class=\"ax-select-option-item-cell ax-select-option-item-label\">\n                    {{{lang.loading}}}\n                </span>\n            </div>\n        </div>\n{{/waitOptions}}\n{{^waitOptions}}\n    {{#options}}\n        {{#optgroup}}\n            <div class=\"ax-select-option-group\">\n                <div class=\"ax-select-option-item-holder\">\n                    <span class=\"ax-select-option-group-label\">\n                        {{{.}}}\n                    </span>\n                </div>\n                {{#options}}\n                <div class=\"ax-select-option-item\" data-option-focus-index=\"{{@findex}}\" data-option-group-index=\"{{@gindex}}\" data-option-index=\"{{@index}}\" \n                data-option-value=\"{{" + columnKeys.optionValue + "}}\" \n                {{#" + columnKeys.optionSelected + "}}data-option-selected=\"true\"{{/" + columnKeys.optionSelected + "}}>\n                    <div class=\"ax-select-option-item-holder\">\n                        {{#multiple}}\n                        <span class=\"ax-select-option-item-cell ax-select-option-item-checkbox\">\n                            <span class=\"item-checkbox-wrap useCheckBox\" data-option-checkbox-index=\"{{@i}}\"></span>\n                        </span>\n                        {{/multiple}}\n                        <span class=\"ax-select-option-item-cell ax-select-option-item-label\">{{" + columnKeys.optionText + "}}</span>\n                    </div>\n                </div>\n                {{/options}}\n            </div>                            \n        {{/optgroup}}\n        {{^optgroup}}\n        <div class=\"ax-select-option-item\" data-option-focus-index=\"{{@findex}}\" data-option-index=\"{{@index}}\" data-option-value=\"{{" + columnKeys.optionValue + "}}\" {{#" + columnKeys.optionSelected + "}}data-option-selected=\"true\"{{/" + columnKeys.optionSelected + "}}>\n            <div class=\"ax-select-option-item-holder\">\n                {{#multiple}}\n                <span class=\"ax-select-option-item-cell ax-select-option-item-checkbox\">\n                    <span class=\"item-checkbox-wrap useCheckBox\" data-option-checkbox-index=\"{{@i}}\"></span>\n                </span>\n                {{/multiple}}\n                <span class=\"ax-select-option-item-cell ax-select-option-item-label\">{{" + columnKeys.optionText + "}}</span>\n            </div>\n        </div>\n        {{/optgroup}}\n    {{/options}}\n    {{^options}}\n        <div class=\"ax-select-option-item\">\n            <div class=\"ax-select-option-item-holder\">\n                <span class=\"ax-select-option-item-cell ax-select-option-item-label\">\n                    {{{lang.noOptions}}}\n                </span>\n            </div>\n        </div>\n    {{/options}}\n{{/waitOptions}}\n";
+        return "\n{{#waitOptions}}\n    <div class=\"ax-select-option-item\">\n            <div class=\"ax-select-option-item-holder\">\n                <span class=\"ax-select-option-item-cell ax-select-option-item-label\">\n                    {{{lang.loading}}}\n                </span>\n            </div>\n        </div>\n{{/waitOptions}}\n{{^waitOptions}}\n    {{#options}}\n        {{#optgroup}}\n            <div class=\"ax-select-option-group\">\n                <div class=\"ax-select-option-item-holder\">\n                    <span class=\"ax-select-option-group-label\">\n                        {{{.}}}\n                    </span>\n                </div>\n                {{#options}}\n                <div class=\"ax-select-option-item\" data-option-focus-index=\"{{@findex}}\" data-option-group-index=\"{{@gindex}}\" data-option-index=\"{{@index}}\" \n                data-option-value=\"{{" + columnKeys.optionValue + "}}\" \n                {{#" + columnKeys.optionSelected + "}}data-option-selected=\"true\"{{/" + columnKeys.optionSelected + "}}>\n                    <div class=\"ax-select-option-item-holder\">\n                        {{#multiple}}\n                        <span class=\"ax-select-option-item-cell ax-select-option-item-checkbox\">\n                            <span class=\"item-checkbox-wrap useCheckBox\" data-option-checkbox-index=\"{{@i}}\"></span>\n                        </span>\n                        {{/multiple}}\n                        <span class=\"ax-select-option-item-cell ax-select-option-item-label\">{{{" + columnKeys.optionText + "}}}</span>\n                    </div>\n                </div>\n                {{/options}}\n            </div>                            \n        {{/optgroup}}\n        {{^optgroup}}\n        <div class=\"ax-select-option-item\" data-option-focus-index=\"{{@findex}}\" data-option-index=\"{{@index}}\" data-option-value=\"{{" + columnKeys.optionValue + "}}\" {{#" + columnKeys.optionSelected + "}}data-option-selected=\"true\"{{/" + columnKeys.optionSelected + "}}>\n            <div class=\"ax-select-option-item-holder\">\n                {{#multiple}}\n                <span class=\"ax-select-option-item-cell ax-select-option-item-checkbox\">\n                    <span class=\"item-checkbox-wrap useCheckBox\" data-option-checkbox-index=\"{{@i}}\"></span>\n                </span>\n                {{/multiple}}\n                <span class=\"ax-select-option-item-cell ax-select-option-item-label\">{{{" + columnKeys.optionText + "}}}</span>\n            </div>\n        </div>\n        {{/optgroup}}\n    {{/options}}\n    {{^options}}\n        <div class=\"ax-select-option-item\">\n            <div class=\"ax-select-option-item-holder\">\n                <span class=\"ax-select-option-item-cell ax-select-option-item-label\">\n                    {{{lang.noOptions}}}\n                </span>\n            </div>\n        </div>\n    {{/options}}\n{{/waitOptions}}\n";
     };
 
     SELECT.tmpl = {
@@ -24699,13 +25440,13 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
 // ax5.ui.grid
 (function () {
 
-    var UI = ax5.ui;
-    var U = ax5.util;
-    var GRID;
+    var UI = ax5.ui,
+        U = ax5.util,
+        GRID = void 0;
 
     UI.addClass({
         className: "grid",
-        version: "${VERSION}"
+        version: "1.4.8"
     }, function () {
         /**
          * @class ax5grid
@@ -24718,12 +25459,27 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
          */
         var ax5grid = function ax5grid() {
             var self = this,
-                cfg;
+                cfg = void 0,
+                ctrlKeys = {
+                "33": "KEY_PAGEUP",
+                "34": "KEY_PAGEDOWN",
+                "35": "KEY_END",
+                "36": "KEY_HOME",
+                "37": "KEY_LEFT",
+                "38": "KEY_UP",
+                "39": "KEY_RIGHT",
+                "40": "KEY_DOWN"
+            };
 
             this.instanceId = ax5.getGuid();
             this.config = {
                 theme: 'default',
                 animateTime: 250,
+                debounceTime: 250,
+                appendDebouncer: null,
+                appendDebounceTimes: 0,
+                appendProgressIcon: '...',
+                appendProgress: false,
 
                 // 틀고정 속성
                 frozenColumnIndex: 0,
@@ -24731,7 +25487,8 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
                 showLineNumber: false,
                 showRowSelector: false,
                 multipleSelect: true,
-
+                virtualScrollY: true,
+                virtualScrollX: true,
                 height: 0,
                 columnMinWidth: 100,
                 lineNumberColumnWidth: 30,
@@ -24740,6 +25497,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
                 remoteSort: false,
 
                 header: {
+                    display: true,
                     align: false,
                     columnHeight: 26,
                     columnPadding: 3,
@@ -24750,7 +25508,8 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
                     columnHeight: 26,
                     columnPadding: 3,
                     columnBorderWidth: 1,
-                    grouping: false
+                    grouping: false,
+                    mergeCells: false
                 },
                 rightSum: false,
                 footSum: false,
@@ -24769,6 +25528,30 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
                     modified: '__modified__',
                     deleted: '__deleted__',
                     disableSelection: '__disable_selection__'
+                },
+                tree: {
+                    use: false,
+                    hashDigit: 8,
+                    indentWidth: 10,
+                    arrowWidth: 15,
+                    iconWidth: 18,
+                    icons: {
+                        openedArrow: '▾',
+                        collapsedArrow: '▸',
+                        groupIcon: '⊚',
+                        collapsedGroupIcon: '⊚',
+                        itemIcon: '⊙'
+                    },
+                    columnKeys: {
+                        parentKey: "pid",
+                        selfKey: "id",
+                        collapse: "collapse",
+                        hidden: "hidden",
+                        parentHash: "__hp__",
+                        selfHash: "__hs__",
+                        children: "__children__",
+                        depth: "__depth__"
+                    }
                 }
             };
             this.xvar = {
@@ -24784,6 +25567,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
             this.bodyGrouping = {};
 
             this.list = []; // 그리드의 데이터
+            this.proxyList = null; // 그리드 데이터의 대리자
             this.page = {}; // 그리드의 페이지 정보
             this.selectedDataIndexs = [];
             this.deletedList = [];
@@ -24792,6 +25576,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
             this.selectedColumn = {}; // 그리드 바디의 선택된 셀 정보
             this.isInlineEditing = false;
             this.inlineEditing = {};
+            this.listIndexMap = {}; // tree데이터 사용시 데이터 인덱싱 맵
 
             // header
             this.headerTable = {};
@@ -24810,6 +25595,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
             this.leftBodyGroupingData = {};
             this.bodyGroupingData = {};
             this.rightBodyGroupingData = {};
+            this.bodyGroupingMap = {};
 
             // footSum
             this.footSumTable = {}; // footSum의 출력레이아웃
@@ -24826,8 +25612,8 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
                     this.onStateChanged.call(_that, _that);
                 }
                 return true;
-            },
-                initGrid = function initGrid() {
+            };
+            var initGrid = function initGrid() {
                 // 그리드 템플릿에 전달하고자 하는 데이터를 정리합시다.
 
                 var data = {
@@ -24892,11 +25678,11 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
                     }
                 };
 
-                this.$["container"]["root"].css({ height: this.config.height });
+                this.$["container"]["root"].css({ height: this.config.height || this.config._height });
 
                 return this;
-            },
-                initColumns = function initColumns(_columns) {
+            };
+            var initColumns = function initColumns(_columns) {
                 this.columns = U.deepCopy(_columns);
                 this.headerTable = GRID.util.makeHeaderTable.call(this, this.columns);
                 this.xvar.frozenColumnIndex = cfg.frozenColumnIndex > this.columns.length ? this.columns.length : cfg.frozenColumnIndex;
@@ -24920,8 +25706,8 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
                 }
 
                 return this;
-            },
-                onResetColumns = function onResetColumns() {
+            };
+            var onResetColumns = function onResetColumns() {
                 initColumns.call(this, this.config.columns);
                 resetColGroupWidth.call(this);
                 if (this.config.footSum) {
@@ -24933,20 +25719,21 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
                 GRID.header.repaint.call(this, true);
                 GRID.body.repaint.call(this, true);
                 GRID.scroller.resize.call(this);
-            },
-                resetColGroupWidth = function resetColGroupWidth() {
+            };
+            var resetColGroupWidth = function resetColGroupWidth() {
                 /// !! 그리드 target의 크기가 변경되면 이 함수를 호출하려 this.colGroup의 _width 값을 재 계산 하여야 함. [tom]
                 var CT_WIDTH = this.$["container"]["root"].width() - function () {
                     var width = 0;
                     if (cfg.showLineNumber) width += cfg.lineNumberColumnWidth;
                     if (cfg.showRowSelector) width += cfg.rowSelectorColumnWidth;
                     return width;
-                }();
-                var totalWidth = 0;
-                var computedWidth;
-                var autoWidthColgroupIndexs = [];
-                var colGroup = this.colGroup;
-                var i, l;
+                }(),
+                    totalWidth = 0,
+                    computedWidth = void 0,
+                    autoWidthColgroupIndexs = [],
+                    colGroup = this.colGroup,
+                    i = void 0,
+                    l = void 0;
 
                 for (i = 0, l = colGroup.length; i < l; i++) {
                     if (U.isNumber(colGroup[i].width)) {
@@ -24963,19 +25750,18 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
                         colGroup[autoWidthColgroupIndexs[i]]._width = computedWidth;
                     }
                 }
-            },
-                initFootSum = function initFootSum(_footSum) {
+            };
+            var initFootSum = function initFootSum(_footSum) {
                 if (U.isArray(_footSum)) {
                     this.footSumTable = GRID.util.makeFootSumTable.call(this, this.footSumColumns = _footSum);
                 } else {
                     this.footSumColumns = [];
                     this.footSumTable = {};
                 }
-            },
-                initBodyGroup = function initBodyGroup(_grouping) {
+            };
+            var initBodyGroup = function initBodyGroup(_grouping) {
                 var grouping = jQuery.extend({}, _grouping);
                 if ("by" in grouping && "columns" in grouping) {
-
                     this.bodyGrouping = {
                         by: grouping.by,
                         columns: grouping.columns
@@ -25001,45 +25787,48 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
                 } else {
                     cfg.body.grouping = false;
                 }
-            },
-                alignGrid = function alignGrid(_isFirst) {
-                // isFirst : 그리드 정렬 메소드가 처음 호출 되었는지 판단 하는 아규먼트
-                var CT_WIDTH = this.$["container"]["root"].width();
-                var CT_HEIGHT = this.$["container"]["root"].height();
-                var CT_INNER_WIDTH = CT_WIDTH;
-                var CT_INNER_HEIGHT = CT_HEIGHT;
+            };
+            var alignGrid = function alignGrid(_isFirst) {
+                // 대상이 크기가 컬럼의 최소 크기 보다 작업 금지
+                if (Math.min(this.$target.innerWidth(), this.$target.innerHeight()) < 5) {
+                    return false;
+                }
 
-                var asidePanelWidth = cfg.asidePanelWidth = function () {
+                if (!this.config.height) {
+                    this.$["container"]["root"].css({ height: this.config._height = this.$target.height() });
+                }
+
+                var CT_WIDTH = this.$["container"]["root"].width(),
+                    CT_HEIGHT = this.$["container"]["root"].height(),
+                    CT_INNER_WIDTH = CT_WIDTH,
+                    CT_INNER_HEIGHT = CT_HEIGHT,
+                    asidePanelWidth = cfg.asidePanelWidth = function () {
                     var width = 0;
-
                     if (cfg.showLineNumber) width += cfg.lineNumberColumnWidth;
                     if (cfg.showRowSelector) width += cfg.rowSelectorColumnWidth;
                     return width;
-                }();
-
-                var frozenPanelWidth = cfg.frozenPanelWidth = function (colGroup, endIndex) {
+                }(),
+                    frozenPanelWidth = cfg.frozenPanelWidth = function (colGroup, endIndex) {
                     var width = 0;
                     for (var i = 0, l = endIndex; i < l; i++) {
                         width += colGroup[i]._width;
                     }
                     return width;
-                }(this.colGroup, cfg.frozenColumnIndex);
+                }(this.colGroup, cfg.frozenColumnIndex),
+                    verticalScrollerWidth = void 0,
+                    horizontalScrollerHeight = void 0,
+                    bodyHeight = void 0;
 
-                var rightPanelWidth = 0; // todo : 우측 함계컬럼 넘비 계산
-
-                var frozenRowHeight = function (bodyTrHeight) {
+                // todo : 우측 함계컬럼 너비 계산
+                var rightPanelWidth = 0,
+                    frozenRowHeight = function (bodyTrHeight) {
                     return cfg.frozenRowIndex * bodyTrHeight;
-                }(this.xvar.bodyTrHeight);
-
-                var footSumHeight = function (bodyTrHeight) {
+                }(this.xvar.bodyTrHeight),
+                    footSumHeight = function (bodyTrHeight) {
                     return this.footSumColumns.length * bodyTrHeight;
-                }.call(this, this.xvar.bodyTrHeight);
-
-                var headerHeight = this.headerTable.rows.length * cfg.header.columnHeight;
-                var pageHeight = cfg.page.display ? cfg.page.height : 0;
-
-                // 데이터의 길이가 body보다 높을때. 수직 스크롤러 활성화
-                var verticalScrollerWidth, horizontalScrollerHeight;
+                }.call(this, this.xvar.bodyTrHeight),
+                    headerHeight = cfg.header.display ? this.headerTable.rows.length * cfg.header.columnHeight : 0,
+                    pageHeight = cfg.page.display ? cfg.page.height : 0;
 
                 (function () {
                     verticalScrollerWidth = CT_HEIGHT - headerHeight - pageHeight - footSumHeight < this.list.length * this.xvar.bodyTrHeight ? this.config.scroller.size : 0;
@@ -25065,11 +25854,11 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
                 // 수직 스크롤러의 높이 결정.
                 CT_INNER_HEIGHT = CT_HEIGHT - pageHeight - horizontalScrollerHeight;
 
-                var bodyHeight = CT_INNER_HEIGHT - headerHeight;
+                bodyHeight = CT_INNER_HEIGHT - headerHeight;
 
                 var panelDisplayProcess = function panelDisplayProcess(panel, vPosition, hPosition, containerType) {
-                    var css = {};
-                    var isHide = false;
+                    var css = {},
+                        isHide = false;
 
                     switch (hPosition) {
                         case "aside":
@@ -25130,7 +25919,6 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
                                 }
                                 break;
                             default:
-
                                 css["top"] = frozenRowHeight;
                                 css["height"] = bodyHeight - frozenRowHeight - footSumHeight;
 
@@ -25152,12 +25940,12 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
                         return this;
                     }
 
-                    panel.css(css);
+                    panel.show().css(css);
                     return this;
                 };
                 var scrollerDisplayProcess = function scrollerDisplayProcess(panel, scrollerWidth, scrollerHeight, containerType) {
-                    var css = {};
-                    var isHide = false;
+                    var css = {},
+                        isHide = false;
 
                     switch (containerType) {
                         case "vertical":
@@ -25228,8 +26016,16 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
                 scrollerDisplayProcess.call(this, this.$["scroller"]["corner"], verticalScrollerWidth, horizontalScrollerHeight, "corner");
 
                 panelDisplayProcess.call(this, this.$["container"]["page"], "", "", "page");
-            },
-                sortColumns = function sortColumns(_sortInfo) {
+
+                // 각 패널의 사이즈 결정
+                /// 다른 패널의 사이즈 정보가 필요한 경우 여기서 정의해주고 사용함.
+                this.xvar.bodyHeight = this.$.panel["body"].height();
+                this.xvar.bodyWidth = this.$.panel["body"].width();
+                // scrollContentWidth 는 grid-header repaint에서 결정합니다. 까먹지 맙시다. > this.xvar.scrollContentWidth
+
+                return true;
+            };
+            var sortColumns = function sortColumns(_sortInfo) {
                 GRID.header.repaint.call(this);
 
                 if (U.isFunction(this.config.remoteSort)) {
@@ -25255,7 +26051,6 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
                     GRID.scroller.resize.call(this);
                 }
             };
-
             /// private end
 
             /**
@@ -25274,12 +26069,17 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
              * @param {Boolean} [_config.sortable=false]
              * @param {Boolean} [_config.multiSort=false]
              * @param {Function} [_config.remoteSort=false]
+             * @param {Boolean} [_config.virtualScrollY=true] - 세로축 가상스크롤 처리여부
+             * @param {Boolean} [_config.virtualScrollX=true] - 가로축 가상스크롤 처리여부
              * @param {Object} [_config.header]
              * @param {String} [_config.header.align]
              * @param {Number} [_config.header.columnHeight=25]
              * @param {Number} [_config.header.columnPadding=3]
              * @param {Number} [_config.header.columnBorderWidth=1]
              * @param {Object} [_config.body]
+             * @param {Function} [_config.onClick]
+             * @param {Function} [_config.onDBLClick]
+             * @param {String|Array} [_config.body.mergeCells=false] -
              * @param {String} [_config.body.align]
              * @param {Number} [_config.body.columnHeight=25]
              * @param {Number} [_config.body.columnPadding=3]
@@ -25310,6 +26110,29 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
              * @param {String} _config.columns[].editor.type - text,number,money,date
              * @param {Object} _config.columns[].editor.config
              * @param {Array} _config.columns[].editor.updateWith
+             * @param {Function} _config.columns[].editor.disabled - disable editor
+             * @param {Boolean} [_config.columns[].multiLine=false]
+             * @param {Object} [_config.tree]
+             * @param {Boolean} [_config.tree.use=false] - Whether tree-type data is used
+             * @param {Number} [_config.tree.hashDigit=8]
+             * @param {Number} [_config.tree.indentWidth=10]
+             * @param {Number} [_config.tree.arrowWidth=15]
+             * @param {Number} [_config.tree.iconWidth=18]
+             * @param {Object} [_config.tree.icons]
+             * @param {String} [_config.tree.icons.openedArrow='▾']
+             * @param {String} [_config.tree.icons.collapsedArrow='▸']
+             * @param {String} [_config.tree.icons.groupIcon='⊚']
+             * @param {String} [_config.tree.icons.collapsedGroupIcon='⊚']
+             * @param {String} [_config.tree.icons.itemIcon='⊙']
+             * @param {Object} [_config.tree.columnKeys]
+             * @param {String} [_config.tree.columnKeys.parentKey="pid"]
+             * @param {String} [_config.tree.columnKeys.selfKey="id"]
+             * @param {String} [_config.tree.columnKeys.collapse="collapse"]
+             * @param {String} [_config.tree.columnKeys.hidden="hidden"]
+             * @param {String} [_config.tree.columnKeys.parentHash="__hp__"]
+             * @param {String} [_config.tree.columnKeys.selfHash="__hs__"]
+             * @param {String} [_config.tree.columnKeys.children="__children__"]
+             * @param {String} [_config.tree.columnKeys.depth="__depth__"]
              * @returns {ax5grid}
              * @example
              * ```js
@@ -25367,12 +26190,29 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
              *         return this;
              *     },
              *     setData: function (_pageNo) {
-             *
              *         firstGrid.setData(sampleData);
-             *
              *         return this;
              *     }
              * };
+             *
+             * // onClick, onDBLClick, onDataChanged
+             * firstGrid.setConfig({
+             *      target: $('[data-ax5grid="first-grid"]'),
+             *      columns: [...],
+             *      body: {
+             *          onClick: function(){
+             *              console.log(this);
+             *          },
+             *          onDBLClick: function(){
+             *              console.log(this);
+             *              // If the column does not have an editor attribute, an event is raised.
+             *          },
+             *          onDataChanged: function(){
+             *              console.log(this);
+             *              // If change Data
+             *          }
+             *      }
+             * });
              * ```
              */
             this.init = function (_config) {
@@ -25401,7 +26241,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
                 var grid = this.config = cfg;
 
                 if (!this.config.height) {
-                    this.config.height = this.$target.height();
+                    this.config._height = this.$target.height();
                 }
 
                 if (!this.id) this.id = this.$target.data("data-ax5grid-id");
@@ -25409,6 +26249,14 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
                     //this.id = 'ax5grid-' + ax5.getGuid();
                     this.id = 'ax5grid-' + this.instanceId;
                     this.$target.data("data-ax5grid-id", grid.id);
+                }
+
+                GRID.data.init.call(this);
+
+                if (this.config.tree.use) {
+                    // 트리라면
+                    this.sortInfo = {};
+                    this.sortInfo[this.config.tree.columnKeys.selfHash] = { orderBy: "asc", seq: 0, fixed: true };
                 }
 
                 ///========
@@ -25443,13 +26291,14 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
                 GRID.scroller.resize.call(this);
 
                 jQuery(window).bind("resize.ax5grid-" + this.id, function () {
-                    alignGrid.call(this);
-                    GRID.scroller.resize.call(this);
-                }.bind(this));
+                    alignGrid.call(self);
+                    GRID.scroller.resize.call(self);
+                    GRID.body.repaint.call(self); // window resize시 repaint 함수 호출
+                });
 
                 jQuery(document.body).on("click.ax5grid-" + this.id, function (e) {
-                    var isPickerClick = false;
-                    var target = U.findParentNode(e.target, function (_target) {
+                    var isPickerClick = false,
+                        target = U.findParentNode(e.target, function (_target) {
                         if (isPickerClick = _target.getAttribute("data-ax5grid-inline-edit-picker")) {
                             return true;
                         }
@@ -25464,16 +26313,6 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
                     }
                 }.bind(this));
 
-                var ctrlKeys = {
-                    "33": "KEY_PAGEUP",
-                    "34": "KEY_PAGEDOWN",
-                    "35": "KEY_END",
-                    "36": "KEY_HOME",
-                    "37": "KEY_LEFT",
-                    "38": "KEY_UP",
-                    "39": "KEY_RIGHT",
-                    "40": "KEY_DOWN"
-                };
                 jQuery(window).on("keydown.ax5grid-" + this.instanceId, function (e) {
                     if (self.focused) {
                         if (self.isInlineEditing) {
@@ -25499,7 +26338,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
                                 }
                             } else {
                                 if (ctrlKeys[e.which]) {
-                                    self.keyDown(ctrlKeys[e.which], e.originalEvent);
+                                    self.keyDown(ctrlKeys[e.which], e.originalEvent); // 키다운 이벤트 호출
                                     U.stopEvent(e);
                                 } else if (e.which == ax5.info.eventKeys.ESC) {
                                     if (self.focused) {
@@ -25535,8 +26374,10 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
              * @returns {ax5grid}
              */
             this.align = function () {
-                alignGrid.call(this);
-                GRID.scroller.resize.call(this);
+                if (alignGrid.call(this)) {
+                    GRID.body.repaint.call(this);
+                    GRID.scroller.resize.call(this);
+                }
                 return this;
             };
 
@@ -25590,7 +26431,8 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
                         }
                         if (activeEditLength == 0) {
                             GRID.body.inlineEdit.keydown.call(this, "RETURN");
-                        }
+                            U.stopEvent(_e);
+                        } else {}
                     },
                     "TAB": function TAB(_e) {
 
@@ -25619,13 +26461,15 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
              * @returns {Boolean} copysuccess
              */
             this.copySelect = function () {
-                var copysuccess;
-                var $clipBoard = this.$["form"]["clipboard"];
-                var copyTextArray = [];
-                var copyText = "";
+                var copysuccess = void 0,
+                    $clipBoard = this.$["form"]["clipboard"],
+                    copyTextArray = [],
+                    copyText = "",
+                    _rowIndex = void 0,
+                    _colIndex = void 0,
+                    _dindex = void 0,
+                    _di = 0;
 
-                var _rowIndex, _colIndex, _dindex;
-                var _di = 0;
                 for (var c in this.selectedColumn) {
                     var _column = this.selectedColumn[c];
 
@@ -25695,12 +26539,16 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
              * ```
              */
             this.setData = function (_data) {
+                var isFirstPaint = typeof this.xvar.paintStartRowIndex === "undefined";
+
                 GRID.data.set.call(this, _data);
                 alignGrid.call(this);
                 GRID.body.repaint.call(this);
-                GRID.scroller.resize.call(this);
+                if (!isFirstPaint) GRID.scroller.resize.call(this);
                 GRID.page.navigationUpdate.call(this);
-                GRID.body.scrollTo.call(this, { top: 0 });
+                if (!isFirstPaint) GRID.body.scrollTo.call(this, { top: 0 });
+
+                isFirstPaint = null;
                 return this;
             };
 
@@ -25763,6 +26611,25 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
             };
 
             /**
+             * @method ax5grid.appendToList
+             * @param _list
+             * @returns {ax5grid}
+             * @example
+             * ```js
+             * ax5Grid.appendToList([{},{},{}]);
+             * ax5Grid.appendToList([{},{},{}]);
+             * ```
+             */
+            this.appendToList = function (_list) {
+                GRID.data.append.call(this, _list, function () {
+                    alignGrid.call(this);
+                    GRID.body.repaint.call(this);
+                    GRID.scroller.resize.call(this);
+                }.bind(this));
+                return this;
+            };
+
+            /**
              * @method ax5grid.removeRow
              * @param {Number|String} [_dindex=last]
              * @returns {ax5grid}
@@ -25791,6 +26658,8 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
              */
             this.updateRow = function (_row, _dindex) {
                 GRID.data.update.call(this, _row, _dindex);
+                // todo : mergeCells 옵션에 따라 예외처리
+
                 GRID.body.repaintRow.call(this, _dindex);
                 return this;
             };
@@ -25814,6 +26683,41 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
                 // 삭제시엔 포커스 ?
                 // GRID.body.moveFocus.call(this, (this.config.body.grouping) ? "START" : "END");
                 GRID.scroller.resize.call(this);
+                return this;
+            };
+
+            /**
+             * @method ax5grid.setValue
+             * @param _dindex
+             * @param _key
+             * @param _value
+             * @returns {ax5grid}
+             * @example
+             * ```js
+             * ax5Grid.setValue(0, "price", 100);
+             * ```
+             */
+            this.setValue = function (_dindex, _key, _value) {
+                // getPanelname;
+                if (GRID.data.setValue.call(this, _dindex, _key, _value)) {
+                    var repaintCell = function repaintCell(_panelName, _rows, __dindex, __key, __value) {
+                        for (var r = 0, rl = _rows.length; r < rl; r++) {
+                            for (var c = 0, cl = _rows[r].cols.length; c < cl; c++) {
+                                if (_rows[r].cols[c].key == __key) {
+                                    if (this.xvar.frozenRowIndex > __dindex) {
+                                        GRID.body.repaintCell.call(this, "top-" + _panelName, __dindex, r, c, __value);
+                                    } else {
+                                        GRID.body.repaintCell.call(this, _panelName + "-scroll", __dindex, r, c, __value);
+                                    }
+                                }
+                            }
+                        }
+                    };
+
+                    repaintCell.call(this, "left-body", this.leftBodyRowData.rows, _dindex, _key, _value);
+                    repaintCell.call(this, "body", this.bodyRowData.rows, _dindex, _key, _value);
+                }
+
                 return this;
             };
 
@@ -25970,11 +26874,12 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
              * firstGrid.select(0);
              * firstGrid.select(0, {selected: true});
              * firstGrid.select(0, {selected: false});
+             * firstGrid.select(0, {selectedClear: true});
              * ```
              */
             this.select = function (_selectObject, _options) {
                 if (U.isNumber(_selectObject)) {
-                    var dindex = _selectObject;
+                    var _dindex2 = _selectObject;
 
                     if (!this.config.multipleSelect) {
                         this.clearSelect();
@@ -25984,8 +26889,8 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
                         }
                     }
 
-                    GRID.data.select.call(this, dindex, _options && _options.selected);
-                    GRID.body.updateRowState.call(this, ["selected"], dindex);
+                    GRID.data.select.call(this, _dindex2, _options && _options.selected);
+                    GRID.body.updateRowState.call(this, ["selected"], _dindex2);
                 }
                 return this;
             };
@@ -26055,6 +26960,82 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
                 return this;
             };
 
+            /**
+             * @method ax5grid.focus
+             * @param {String|Number} _pos - UP, DOWN, LEFT, RIGHT, HOME, END
+             * @returns {ax5grid}
+             * @example
+             * ```js
+             * firstGrid.focus("UP");
+             * firstGrid.focus("DOWN");
+             * firstGrid.focus("HOME");
+             * firstGrid.focus("END");
+             * ```
+             */
+            this.focus = function (_pos) {
+                var _this = this;
+
+                if (GRID.body.moveFocus.call(this, _pos)) {
+                    var focusedColumn = void 0;
+                    for (var c in this.focusedColumn) {
+                        focusedColumn = jQuery.extend({}, this.focusedColumn[c], true);
+                        break;
+                    }
+                    if (focusedColumn) {
+                        this.select(focusedColumn.dindex, { selectedClear: true });
+                    }
+                } else {
+                    if (typeof this.selectedDataIndexs[0] === "undefined") {
+                        this.select(0);
+                    } else {
+                        (function () {
+                            var selectedIndex = _this.selectedDataIndexs[0];
+                            var processor = {
+                                "UP": function UP() {
+                                    if (selectedIndex > 0) {
+                                        this.select(selectedIndex - 1, { selectedClear: true });
+                                        GRID.body.moveFocus.call(this, selectedIndex - 1);
+                                    }
+                                },
+                                "DOWN": function DOWN() {
+                                    if (selectedIndex < this.list.length - 1) {
+                                        this.select(selectedIndex + 1, { selectedClear: true });
+                                        GRID.body.moveFocus.call(this, selectedIndex + 1);
+                                    }
+                                },
+                                "HOME": function HOME() {
+                                    this.select(0, { selectedClear: true });
+                                    GRID.body.moveFocus.call(this, 0);
+                                },
+                                "END": function END() {
+                                    this.select(this.list.length - 1, { selectedClear: true });
+                                    GRID.body.moveFocus.call(this, this.list.length - 1);
+                                }
+                            };
+
+                            if (_pos in processor) {
+                                processor[_pos].call(_this);
+                            }
+                        })();
+                    }
+                }
+                return this;
+            };
+
+            /**
+             * @method ax5grid.destroy
+             * @returns {null}
+             */
+            this.destroy = function () {
+                var instanceId = this.instanceId;
+                this.$target.empty();
+                this.list = [];
+                UI.grid_instance = ax5.util.filter(UI.grid_instance, function () {
+                    return this.instanceId != instanceId;
+                });
+                return null;
+            };
+
             // 클래스 생성자
             this.main = function () {
                 UI.grid_instance = UI.grid_instance || [];
@@ -26071,25 +27052,22 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
     GRID = ax5.ui.grid;
 })();
 
-// todo : excel export
-// todo : merge cells
-// todo : filter
 // todo : body menu
+// todo : filter
 // todo : column reorder
 // todo : editor 필수값 속성 지정
-
-
 // ax5.ui.grid.body
 (function () {
 
-    var GRID = ax5.ui.grid;
-    var U = ax5.util;
+    var GRID = ax5.ui.grid,
+        U = ax5.util;
 
     var columnSelect = {
         focusClear: function focusClear() {
-            var self = this;
+            var self = this,
+                _column = void 0;
             for (var c in self.focusedColumn) {
-                var _column = self.focusedColumn[c];
+                _column = self.focusedColumn[c];
                 if (_column) {
                     self.$.panel[_column.panelName].find('[data-ax5grid-tr-data-index="' + _column.dindex + '"]').find('[data-ax5grid-column-rowindex="' + _column.rowIndex + '"][data-ax5grid-column-colindex="' + _column.colIndex + '"]').removeAttr('data-ax5grid-column-focused');
                 }
@@ -26097,9 +27075,10 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
             self.focusedColumn = {};
         },
         clear: function clear() {
-            var self = this;
+            var self = this,
+                _column = void 0;
             for (var c in self.selectedColumn) {
-                var _column = self.selectedColumn[c];
+                _column = self.selectedColumn[c];
                 if (_column) {
                     self.$.panel[_column.panelName].find('[data-ax5grid-tr-data-index="' + _column.dindex + '"]').find('[data-ax5grid-column-rowindex="' + _column.rowIndex + '"][data-ax5grid-column-colindex="' + _column.colIndex + '"]').removeAttr('data-ax5grid-column-selected');
                 }
@@ -26251,14 +27230,15 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
     };
 
     var updateRowState = function updateRowState(_states, _dindex, _data) {
-        var self = this;
-        var cfg = this.config;
-
-        var processor = {
+        var self = this,
+            cfg = this.config,
+            processor = {
             "selected": function selected(_dindex) {
-                var i = this.$.livePanelKeys.length;
-                while (i--) {
-                    this.$.panel[this.$.livePanelKeys[i]].find('[data-ax5grid-tr-data-index="' + _dindex + '"]').attr("data-ax5grid-selected", this.list[_dindex][cfg.columnKeys.selected]);
+                if (this.list[_dindex]) {
+                    var i = this.$.livePanelKeys.length;
+                    while (i--) {
+                        this.$.panel[this.$.livePanelKeys[i]].find('[data-ax5grid-tr-data-index="' + _dindex + '"]').attr("data-ax5grid-selected", this.list[_dindex][cfg.columnKeys.selected]);
+                    }
                 }
             },
             "selectedClear": function selectedClear() {
@@ -26289,6 +27269,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
                 this.$.panel[panelName].find('[data-ax5grid-tr-data-index="' + _dindex + '"]').find('[data-ax5grid-column-rowIndex="' + rowIndex + '"][data-ax5grid-column-colIndex="' + colIndex + '"]').find('[data-ax5grid-editor="checkbox"]').attr("data-ax5grid-checked", '' + _data.checked);
             }
         };
+
         _states.forEach(function (_state) {
             if (!processor[_state]) throw 'invaild state name';
             processor[_state].call(self, _dindex, _data);
@@ -26296,14 +27277,14 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
     };
 
     var updateRowStateAll = function updateRowStateAll(_states, _data) {
-        var self = this;
-        var cfg = this.config;
-
-        var processor = {
+        var self = this,
+            cfg = this.config,
+            processor = {
             "selected": function selected(_dindex) {
                 GRID.body.repaint.call(this, true);
             }
         };
+
         _states.forEach(function (_state) {
             if (!processor[_state]) throw 'invaild state name';
             processor[_state].call(self, _data);
@@ -26314,11 +27295,18 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
         var self = this;
 
         this.$["container"]["body"].on("click", '[data-ax5grid-column-attr]', function (e) {
-            var panelName, attr, row, col, dindex, rowIndex, colIndex, disableSelection;
-            var targetClick = {
+            var panelName = void 0,
+                attr = void 0,
+                row = void 0,
+                col = void 0,
+                dindex = void 0,
+                rowIndex = void 0,
+                colIndex = void 0,
+                disableSelection = void 0,
+                targetClick = {
                 "default": function _default(_column) {
-                    var column = self.bodyRowMap[_column.rowIndex + "_" + _column.colIndex];
-                    var that = {
+                    var column = self.bodyRowMap[_column.rowIndex + "_" + _column.colIndex],
+                        that = {
                         self: self,
                         page: self.page,
                         list: self.list,
@@ -26332,9 +27320,10 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
 
                     if (column.editor && column.editor.type == "checkbox") {
                         // todo : GRID.inlineEditor에서 처리 할수 있도록 구문 변경 필요.
-                        var value = GRID.data.getValue.call(self, _column.dindex, column.key);
+                        var value = GRID.data.getValue.call(self, _column.dindex, column.key),
+                            checked = void 0,
+                            newValue = void 0;
 
-                        var checked, newValue;
                         if (column.editor.config && column.editor.config.trueValue) {
                             if (checked = !(value == column.editor.config.trueValue)) {
                                 newValue = column.editor.config.trueValue;
@@ -26363,7 +27352,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
                     }
 
                     if (!self.config.multipleSelect && self.selectedDataIndexs[0] !== _column.dindex) {
-                        GRID.body.updateRowState.call(self, ["selectedClear"]);
+                        updateRowState.call(self, ["selectedClear"]);
                         GRID.data.clearSelect.call(self);
                     }
 
@@ -26372,7 +27361,11 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
                     });
                     updateRowState.call(self, ["selected"], _column.dindex);
                 },
-                "lineNumber": function lineNumber(_column) {}
+                "lineNumber": function lineNumber(_column) {},
+                "tree-control": function treeControl(_column, _el) {
+                    //console.log(_column);
+                    toggleCollapse.call(self, _column.dindex);
+                }
             };
 
             panelName = this.getAttribute("data-ax5grid-panel-name");
@@ -26392,30 +27385,55 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
                     dindex: dindex,
                     rowIndex: rowIndex,
                     colIndex: colIndex
-                });
+                }, this);
             }
         });
         this.$["container"]["body"].on("dblclick", '[data-ax5grid-column-attr]', function (e) {
-            var panelName, attr, row, col, dindex, rowIndex, colIndex;
-            var targetClick = {
+            var panelName = void 0,
+                attr = void 0,
+                row = void 0,
+                col = void 0,
+                dindex = void 0,
+                rowIndex = void 0,
+                colIndex = void 0,
+                targetDBLClick = {
                 "default": function _default(_column) {
-
-                    if (this.isInlineEditing) {
-                        for (var columnKey in this.inlineEditing) {
+                    if (self.isInlineEditing) {
+                        for (var columnKey in self.inlineEditing) {
                             if (columnKey == _column.dindex + "_" + _column.colIndex + "_" + _column.rowIndex) {
                                 return this;
                             }
                         }
                     }
 
-                    var column = self.bodyRowMap[_column.rowIndex + "_" + _column.colIndex];
-                    var value = "";
+                    var column = self.bodyRowMap[_column.rowIndex + "_" + _column.colIndex],
+                        value = "";
                     if (column) {
                         if (!self.list[dindex].__isGrouping) {
                             value = GRID.data.getValue.call(self, dindex, column.key);
                         }
                     }
-                    GRID.body.inlineEdit.active.call(self, self.focusedColumn, e, value);
+
+                    var editor = self.colGroup[_column.colIndex].editor;
+                    if (U.isObject(editor)) {
+                        GRID.body.inlineEdit.active.call(self, self.focusedColumn, e, value);
+                    } else {
+                        // 더블클릭 실행
+                        if (self.config.body.onDBLClick) {
+                            var that = {
+                                self: self,
+                                page: self.page,
+                                list: self.list,
+                                item: self.list[_column.dindex],
+                                dindex: _column.dindex,
+                                rowIndex: _column.rowIndex,
+                                colIndex: _column.colIndex,
+                                column: column,
+                                value: self.list[_column.dindex][column.key]
+                            };
+                            self.config.body.onDBLClick.call(that);
+                        }
+                    }
                 },
                 "rowSelector": function rowSelector(_column) {},
                 "lineNumber": function lineNumber(_column) {}
@@ -26429,8 +27447,8 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
             colIndex = Number(this.getAttribute("data-ax5grid-column-colIndex"));
             dindex = Number(this.getAttribute("data-ax5grid-data-index"));
 
-            if (attr in targetClick) {
-                targetClick[attr]({
+            if (attr in targetDBLClick) {
+                targetDBLClick[attr]({
                     panelName: panelName,
                     attr: attr,
                     row: row,
@@ -26441,17 +27459,9 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
                 });
             }
         });
-        this.$["container"]["body"].on("mouseover", "tr", function () {
-            return;
-            var dindex = this.getAttribute("data-ax5grid-tr-data-index");
-            var i = self.$.livePanelKeys.length;
-            while (i--) {
-                if (typeof self.xvar.dataHoveredIndex !== "undefined") self.$.panel[self.$.livePanelKeys[i]].find('[data-ax5grid-tr-data-index="' + self.xvar.dataHoveredIndex + '"]').removeClass("hover");
-                self.$.panel[self.$.livePanelKeys[i]].find('[data-ax5grid-tr-data-index="' + dindex + '"]').addClass("hover");
-            }
-            self.xvar.dataHoveredIndex = dindex;
-        });
+
         this.$["container"]["body"].on("mousedown", '[data-ax5grid-column-attr="default"]', function (e) {
+            if (self.xvar.touchmoved) return false;
             if (this.getAttribute("data-ax5grid-column-rowIndex")) {
                 columnSelector.on.call(self, {
                     panelName: this.getAttribute("data-ax5grid-panel-name"),
@@ -26470,8 +27480,9 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
     };
 
     var resetFrozenColumn = function resetFrozenColumn() {
-        var cfg = this.config;
-        var dividedBodyRowObj = GRID.util.divideTableByFrozenColumnIndex(this.bodyRowTable, this.xvar.frozenColumnIndex);
+        var cfg = this.config,
+            dividedBodyRowObj = GRID.util.divideTableByFrozenColumnIndex(this.bodyRowTable, this.xvar.frozenColumnIndex);
+
         this.asideBodyRowData = function (dataTable) {
             var data = { rows: [] };
             for (var i = 0, l = dataTable.rows.length; i < l; i++) {
@@ -26551,6 +27562,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
             }.call(this, this.bodyGroupingTable);
             this.leftBodyGroupingData = dividedBodyGroupingObj.leftData;
             this.bodyGroupingData = dividedBodyGroupingObj.rightData;
+            this.bodyGroupingMap = GRID.util.makeBodyRowMap.call(this, this.bodyGroupingTable);
         }
 
         this.leftFootSumData = {};
@@ -26562,9 +27574,9 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
         }
     };
 
-    var getFieldValue = function getFieldValue(_list, _item, _index, _col, _value) {
-        var _key = _col.key;
-        var tagsToReplace = {
+    var getFieldValue = function getFieldValue(_list, _item, _index, _col, _value, _returnPlainText) {
+        var _key = _col.key,
+            tagsToReplace = {
             '<': '&lt;',
             '>': '&gt;'
         };
@@ -26572,7 +27584,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
         if (_key === "__d-index__") {
             return typeof _item["__index"] !== "undefined" ? _item["__index"] + 1 : "";
         } else if (_key === "__d-checkbox__") {
-            return '<div class="checkBox"></div>';
+            return "<div class=\"checkBox\" style=\"max-height: " + (_col.width - 10) + "px;min-height: " + (_col.width - 10) + "px;\"></div>";
         } else {
             if (_col.editor && function (_editor) {
                 if (_editor.type in GRID.inlineEditor) {
@@ -26580,8 +27592,9 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
                 }
                 return false;
             }(_col.editor)) {
+                // editor가 inline타입이라면
 
-                _value = _value || GRID.data.getValue.call(this, _index, _key);
+                _value = _value || GRID.data.getValue.call(this, typeof _item.__origin_index__ === "undefined" ? _index : _item.__origin_index__, _key);
 
                 if (U.isFunction(_col.editor.disabled)) {
                     if (_col.editor.disabled.call({
@@ -26596,41 +27609,72 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
                 }
 
                 // print editor
-                return GRID.inlineEditor[_col.editor.type].getHtml(this, _col.editor, _value);
+                return _returnPlainText ? _value : GRID.inlineEditor[_col.editor.type].getHtml(this, _col.editor, _value);
             }
-            if (_col.formatter) {
-                var that = {
-                    key: _key,
-                    value: _value || GRID.data.getValue.call(this, _index, _key),
-                    dindex: _index,
-                    item: _item,
-                    list: _list
-                };
-                if (U.isFunction(_col.formatter)) {
-                    return _col.formatter.call(that);
-                } else {
-                    return GRID.formatter[_col.formatter].call(that);
-                }
-            } else {
-                var returnValue = "";
 
-                if (typeof _value !== "undefined") {
-                    returnValue = _value;
-                } else {
-                    _value = GRID.data.getValue.call(this, _index, _key);
-                    if (_value !== null && typeof _value !== "undefined") returnValue = _value;
-                }
+            var valueProcessor = {
+                "formatter": function formatter() {
+                    var that = {
+                        key: _key,
+                        value: _value || GRID.data.getValue.call(this, typeof _item.__origin_index__ === "undefined" ? _index : _item.__origin_index__, _key),
+                        dindex: _index,
+                        item: _item,
+                        list: _list
+                    };
+                    if (U.isFunction(_col.formatter)) {
+                        return _col.formatter.call(that);
+                    } else {
+                        return GRID.formatter[_col.formatter].call(that);
+                    }
+                },
+                "default": function _default() {
+                    var returnValue = "";
 
-                return typeof returnValue === "number" ? returnValue : returnValue.replace(/[<>]/g, function (tag) {
-                    return tagsToReplace[tag] || tag;
-                });
+                    if (typeof _value !== "undefined") {
+                        returnValue = _value;
+                    } else {
+                        _value = GRID.data.getValue.call(this, typeof _item.__origin_index__ === "undefined" ? _index : _item.__origin_index__, _key);
+                        if (_value !== null && typeof _value !== "undefined") returnValue = _value;
+                    }
+
+                    // 키값이 Boolean일때 오류 발생하여 수정.
+                    return typeof returnValue !== "string" ? returnValue : returnValue.replace(/[<>]/g, function (tag) {
+                        return tagsToReplace[tag] || tag;
+                    });
+                },
+                "treeControl": function treeControl(__value) {
+                    var cfg = this.config,
+                        keys = this.config.tree.columnKeys,
+                        indentNodeHtml = '';
+
+                    if (_item[keys.children].length) {
+                        indentNodeHtml += '<a ' + 'data-ax5grid-data-index="' + _index + '" ' + 'data-ax5grid-column-attr="tree-control" ' + 'data-ax5grid-tnode-arrow="" ' + 'style="width: ' + cfg.tree.arrowWidth + 'px;padding-left:' + _item[keys.depth] * cfg.tree.indentWidth + 'px;"' + '>';
+                        indentNodeHtml += _item[keys.collapse] ? cfg.tree.icons.collapsedArrow : cfg.tree.icons.openedArrow;
+                        indentNodeHtml += '</a>';
+                    } else {
+                        indentNodeHtml += '<span ' + 'data-ax5grid-tnode-arrow="" ' + 'style="width: ' + cfg.tree.arrowWidth + 'px;padding-left:' + _item[keys.depth] * cfg.tree.indentWidth + 'px;"' + '>&nbsp;</span>';
+                    }
+
+                    indentNodeHtml += '<span ' + 'data-ax5grid-tnode-item="' + (_item[keys.children].length ? 'group' : 'item') + '" ' + 'style="width: ' + cfg.tree.iconWidth + 'px;"' + '>';
+                    indentNodeHtml += _item[keys.children].length ? _item[keys.collapse] ? cfg.tree.icons.collapsedGroupIcon : cfg.tree.icons.groupIcon : cfg.tree.icons.itemIcon;
+                    indentNodeHtml += '</span>';
+
+                    return indentNodeHtml + __value;
+                }
+            };
+
+            var returnValue = _col.formatter ? valueProcessor.formatter.call(this) : valueProcessor.default.call(this);
+            if (_col.treeControl) {
+                returnValue = valueProcessor.treeControl.call(this, returnValue);
             }
+
+            return returnValue;
         }
     };
 
     var getGroupingValue = function getGroupingValue(_item, _index, _col) {
-        var value,
-            that,
+        var value = void 0,
+            that = void 0,
             _key = _col.key,
             _label = _col.label;
 
@@ -26693,8 +27737,9 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
                 var that = {
                     key: _key,
                     list: _list
-                };
-                var value;
+                },
+                    value = void 0;
+
                 if (U.isFunction(_col.collector)) {
                     value = _col.collector.call(that);
                 } else {
@@ -26718,29 +27763,105 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
     };
 
     var repaint = function repaint(_reset) {
-        var cfg = this.config;
-        var list = this.list;
+        // debugger;
+        var cfg = this.config,
+            list = this.proxyList ? this.proxyList : this.list;
+
+        /// repaint reset 타입이면 고정컬럼을 재조정
         if (_reset) {
             resetFrozenColumn.call(this);
+            // 틀고정 이 변경되면 출력 시작 인덱스 값을 초기화
             this.xvar.paintStartRowIndex = undefined;
+            this.xvar.paintStartColumnIndex = undefined;
         }
-        var paintStartRowIndex = Math.floor(Math.abs(this.$.panel["body-scroll"].position().top) / this.xvar.bodyTrHeight) + this.xvar.frozenRowIndex;
-        if (this.xvar.dataRowCount === list.length && this.xvar.paintStartRowIndex === paintStartRowIndex) return this; // 스크롤 포지션 변경 여부에 따라 프로세스 진행여부 결정
-        var isFirstPaint = typeof this.xvar.paintStartRowIndex === "undefined";
-        var asideBodyRowData = this.asideBodyRowData;
-        var leftBodyRowData = this.leftBodyRowData;
-        var bodyRowData = this.bodyRowData;
-        var leftFootSumData = this.leftFootSumData;
-        var footSumData = this.footSumData;
-        var asideBodyGroupingData = this.asideBodyGroupingData;
-        var leftBodyGroupingData = this.leftBodyGroupingData;
-        var bodyGroupingData = this.bodyGroupingData;
-        var bodyAlign = cfg.body.align;
-        var paintRowCount = Math.ceil(this.$.panel["body"].height() / this.xvar.bodyTrHeight) + 1;
+
+        /// 출력시작 인덱스
+        var paintStartRowIndex = !this.config.virtualScrollY ? 0 : Math.floor(-this.$.panel["body-scroll"].position().top / this.xvar.bodyTrHeight) + this.xvar.frozenRowIndex;
+        if (isNaN(paintStartRowIndex)) return this;
+
+        var paintStartColumnIndex = 0,
+            paintEndColumnIndex = 0,
+            nopaintLeftColumnsWidth = null,
+            nopaintRightColumnsWidth = null;
+
+        var bodyScrollLeft = -this.$.panel["body-scroll"].position().left;
+
+        if (this.config.virtualScrollX) {
+            // 페인트 시작컬럼위치와 종료컬럼위치 구하기
+            for (var ci = this.xvar.frozenColumnIndex; ci < this.colGroup.length; ci++) {
+                // bodyScrollLeft
+                this.colGroup[ci]._sx = ci == this.xvar.frozenColumnIndex ? 0 : this.colGroup[ci - 1]._ex;
+                this.colGroup[ci]._ex = this.colGroup[ci]._sx + this.colGroup[ci]._width;
+
+                if (this.colGroup[ci]._sx <= bodyScrollLeft && this.colGroup[ci]._ex >= bodyScrollLeft) {
+                    paintStartColumnIndex = ci;
+                }
+                if (this.colGroup[ci]._sx <= bodyScrollLeft + this.xvar.bodyWidth && this.colGroup[ci]._ex >= bodyScrollLeft + this.xvar.bodyWidth) {
+                    paintEndColumnIndex = ci;
+
+                    if (nopaintLeftColumnsWidth === null) nopaintLeftColumnsWidth = this.colGroup[paintStartColumnIndex]._sx;
+                    if (nopaintRightColumnsWidth === null) nopaintRightColumnsWidth = this.xvar.scrollContentWidth - this.colGroup[ci]._ex;
+                }
+            }
+
+            if (nopaintLeftColumnsWidth === null) nopaintLeftColumnsWidth = 0;
+            if (nopaintRightColumnsWidth === null) nopaintRightColumnsWidth = 0;
+            this.$.panel["top-body-scroll"].css({ "padding-left": nopaintLeftColumnsWidth, "padding-right": nopaintRightColumnsWidth });
+            this.$.panel["body-scroll"].css({ "padding-left": nopaintLeftColumnsWidth, "padding-right": nopaintRightColumnsWidth });
+            this.$.panel["bottom-body-scroll"].css({ "padding-left": nopaintLeftColumnsWidth, "padding-right": nopaintRightColumnsWidth });
+        }
+
+        var isFirstPaint = typeof this.xvar.paintStartRowIndex === "undefined",
+            headerColGroup = this.headerColGroup,
+            asideBodyRowData = this.asideBodyRowData,
+            leftBodyRowData = this.leftBodyRowData,
+            bodyRowData = this.bodyRowData,
+            leftFootSumData = this.leftFootSumData,
+            footSumData = this.footSumData,
+            asideBodyGroupingData = this.asideBodyGroupingData,
+            leftBodyGroupingData = this.leftBodyGroupingData,
+            bodyGroupingData = this.bodyGroupingData,
+            bodyAlign = cfg.body.align,
+            paintRowCount = !this.config.virtualScrollY ? list.length : Math.ceil(this.xvar.bodyHeight / this.xvar.bodyTrHeight) + 1;
+
+        if (this.xvar.dataRowCount === list.length && this.xvar.paintStartRowIndex === paintStartRowIndex && this.xvar.paintRowCount === paintRowCount && this.xvar.paintStartColumnIndex === paintStartColumnIndex && this.xvar.paintEndColumnIndex === paintEndColumnIndex) return this; // 스크롤 포지션 변경 여부에 따라 프로세스 진행여부 결정
+
+
+        // bodyRowData 수정 : 페인트 컬럼 포지션이 달라지므로
+        if (nopaintLeftColumnsWidth || nopaintRightColumnsWidth) {
+            headerColGroup = [].concat(headerColGroup).splice(paintStartColumnIndex - this.xvar.frozenColumnIndex, paintEndColumnIndex - paintStartColumnIndex + 1 + this.xvar.frozenColumnIndex);
+            bodyRowData = GRID.util.getTableByStartEndColumnIndex(bodyRowData, paintStartColumnIndex, paintEndColumnIndex);
+
+            if (cfg.body.grouping) {
+                bodyGroupingData = GRID.util.getTableByStartEndColumnIndex(bodyGroupingData, paintStartColumnIndex, paintEndColumnIndex);
+            }
+            if (cfg.footSum) {
+                footSumData = GRID.util.getTableByStartEndColumnIndex(footSumData, paintStartColumnIndex, paintEndColumnIndex);
+            }
+            if (this.xvar.paintStartColumnIndex !== paintStartColumnIndex || this.xvar.paintEndColumnIndex !== paintEndColumnIndex) {
+                this.needToPaintSum = true;
+            }
+        }
+
+        if (!this.config.virtualScrollX && document.addEventListener && ax5.info.supportTouch) {
+            paintRowCount = paintRowCount * 2;
+        }
+
+        /// 스크롤 컨텐츠의 높이 : 그리드 스크롤의 실제 크기와는 관계 없이 데이터 갯수에 따라 스크롤 컨텐츠 높이값 구해서 저장해두기.
         this.xvar.scrollContentHeight = this.xvar.bodyTrHeight * (this.list.length - this.xvar.frozenRowIndex);
+        /// 사용된 패널들의 키 모음
         this.$.livePanelKeys = [];
 
-        // body-scroll 의 포지션에 의존적이므로..
+        // 그리드 바디 영역 페인트 함수
+        /**
+         * @param _elTargetKey
+         * @param _colGroup
+         * @param _bodyRow
+         * @param _groupRow
+         * @param _list
+         * @param [_scrollConfig]
+         * @returns {boolean}
+         */
         var repaintBody = function repaintBody(_elTargetKey, _colGroup, _bodyRow, _groupRow, _list, _scrollConfig) {
             var _elTarget = this.$.panel[_elTargetKey];
 
@@ -26749,13 +27870,19 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
                 return false;
             }
 
-            var SS = [];
-            var cgi, cgl;
-            var di, dl;
-            var tri, trl;
-            var ci, cl;
-            var col, cellHeight, colAlign;
-            var isScrolled = function () {
+            var SS = [],
+                cgi = void 0,
+                cgl = void 0,
+                di = void 0,
+                dl = void 0,
+                tri = void 0,
+                trl = void 0,
+                ci = void 0,
+                cl = void 0,
+                col = void 0,
+                cellHeight = void 0,
+                colAlign = void 0,
+                isScrolled = function () {
                 // 스크롤값이 변경되거나 처음 호출되었습니까?
                 if (typeof _scrollConfig === "undefined" || typeof _scrollConfig['paintStartRowIndex'] === "undefined") {
                     _scrollConfig = {
@@ -26768,6 +27895,11 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
                 }
             }();
 
+            if (isScrolled) {
+                SS.push('<div style="font-size:0;line-height:0;height: ' + (_scrollConfig.paintStartRowIndex - this.xvar.frozenRowIndex) * _scrollConfig.bodyTrHeight + 'px;"></div>');
+            }
+
+            // 가로 가상 스크롤 적용하지 않는 경우
             SS.push('<table border="0" cellpadding="0" cellspacing="0">');
             SS.push('<colgroup>');
             for (cgi = 0, cgl = _colGroup.length; cgi < cgl; cgi++) {
@@ -26777,84 +27909,96 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
             SS.push('</colgroup>');
 
             for (di = _scrollConfig.paintStartRowIndex, dl = function () {
-                var len;
+                var len = void 0;
                 len = _list.length;
                 if (_scrollConfig.paintRowCount + _scrollConfig.paintStartRowIndex < len) {
                     len = _scrollConfig.paintRowCount + _scrollConfig.paintStartRowIndex;
                 }
                 return len;
             }(); di < dl; di++) {
-
-                var isGroupingRow = false;
-                var rowTable;
-
-                if (_groupRow && "__isGrouping" in _list[di]) {
-                    rowTable = _groupRow;
-                    isGroupingRow = true;
-                } else {
-                    rowTable = _bodyRow;
-                }
-
-                for (tri = 0, trl = rowTable.rows.length; tri < trl; tri++) {
-
-                    SS.push('<tr class="tr-' + di % 4 + '"', isGroupingRow ? ' data-ax5grid-grouping-tr="true"' : '', ' data-ax5grid-tr-data-index="' + di + '"', ' data-ax5grid-selected="' + (_list[di][cfg.columnKeys.selected] || "false") + '"', ' data-ax5grid-disable-selection="' + (_list[di][cfg.columnKeys.disableSelection] || "false") + '"', '>');
-                    for (ci = 0, cl = rowTable.rows[tri].cols.length; ci < cl; ci++) {
-                        col = rowTable.rows[tri].cols[ci];
-                        cellHeight = cfg.body.columnHeight * col.rowspan - cfg.body.columnBorderWidth;
-                        colAlign = col.align || bodyAlign;
-
-                        SS.push('<td ', 'data-ax5grid-panel-name="' + _elTargetKey + '" ', 'data-ax5grid-data-index="' + di + '" ', 'data-ax5grid-column-row="' + tri + '" ', 'data-ax5grid-column-col="' + ci + '" ', 'data-ax5grid-column-rowIndex="' + col.rowIndex + '" ', 'data-ax5grid-column-colIndex="' + col.colIndex + '" ', 'data-ax5grid-column-attr="' + (col.columnAttr || "default") + '" ', function (_focusedColumn, _selectedColumn) {
-                            var attrs = "";
-                            if (_focusedColumn) {
-                                attrs += 'data-ax5grid-column-focused="true" ';
-                            }
-                            if (_selectedColumn) {
-                                attrs += 'data-ax5grid-column-selected="true" ';
-                            }
-                            return attrs;
-                        }(this.focusedColumn[di + "_" + col.colIndex + "_" + col.rowIndex], this.selectedColumn[di + "_" + col.colIndex + "_" + col.rowIndex]), 'colspan="' + col.colspan + '" ', 'rowspan="' + col.rowspan + '" ', 'class="' + function (_col) {
-                            var tdCSS_class = "";
-                            if (_col.styleClass) {
-                                if (U.isFunction(_col.styleClass)) {
-                                    tdCSS_class += _col.styleClass.call({
-                                        column: _col,
-                                        key: _col.key,
-                                        item: _list[di],
-                                        index: di
-                                    }) + " ";
-                                } else {
-                                    tdCSS_class += _col.styleClass + " ";
-                                }
-                            }
-                            if (cfg.body.columnBorderWidth) tdCSS_class += "hasBorder ";
-                            if (ci == cl - 1) tdCSS_class += "isLastColumn ";
-                            return tdCSS_class;
-                        }.call(this, col) + '" ', 'style="height: ' + cellHeight + 'px;min-height: 1px;">');
-
-                        SS.push(function (_cellHeight) {
-                            var lineHeight = cfg.body.columnHeight - cfg.body.columnPadding * 2 - cfg.body.columnBorderWidth;
-                            if (!col.multiLine) {
-                                _cellHeight = cfg.body.columnHeight - cfg.body.columnBorderWidth;
-                            }
-
-                            return '<span data-ax5grid-cellHolder="' + (col.multiLine ? 'multiLine' : '') + '" ' + (colAlign ? 'data-ax5grid-text-align="' + colAlign + '"' : '') + '" style="height:' + _cellHeight + 'px;line-height: ' + lineHeight + 'px;">';
-                        }(cellHeight), isGroupingRow ? getGroupingValue.call(this, _list[di], di, col) : getFieldValue.call(this, _list, _list[di], di, col), '</span>');
-                        SS.push('</td>');
+                if (_list[di]) {
+                    var isGroupingRow = false,
+                        rowTable = void 0,
+                        odi = typeof _list[di].__origin_index__ !== "undefined" ? _list[di].__origin_index__ : di;
+                    if (_groupRow && "__isGrouping" in _list[di]) {
+                        rowTable = _groupRow;
+                        isGroupingRow = true;
+                    } else {
+                        rowTable = _bodyRow;
                     }
-                    SS.push('<td ', 'data-ax5grid-column-row="null" ', 'data-ax5grid-column-col="null" ', 'data-ax5grid-data-index="' + di + '" ', 'data-ax5grid-column-attr="' + "default" + '" ', 'style="height: ' + cfg.body.columnHeight + 'px;min-height: 1px;" ', '></td>');
-                    SS.push('</tr>');
+
+                    for (tri = 0, trl = rowTable.rows.length; tri < trl; tri++) {
+
+                        SS.push('<tr class="tr-' + di % 4 + '"', isGroupingRow ? ' data-ax5grid-grouping-tr="true"' : '', ' data-ax5grid-tr-data-index="' + di + '"', ' data-ax5grid-selected="' + (_list[di][cfg.columnKeys.selected] || "false") + '"', ' data-ax5grid-disable-selection="' + (_list[di][cfg.columnKeys.disableSelection] || "false") + '"', '>');
+                        for (ci = 0, cl = rowTable.rows[tri].cols.length; ci < cl; ci++) {
+                            col = rowTable.rows[tri].cols[ci];
+                            cellHeight = cfg.body.columnHeight * col.rowspan - cfg.body.columnBorderWidth;
+                            colAlign = col.align || bodyAlign;
+
+                            SS.push('<td ', 'data-ax5grid-panel-name="' + _elTargetKey + '" ', 'data-ax5grid-data-index="' + di + '" ', 'data-ax5grid-column-row="' + tri + '" ', 'data-ax5grid-column-col="' + ci + '" ', 'data-ax5grid-column-rowIndex="' + col.rowIndex + '" ', 'data-ax5grid-column-colIndex="' + col.colIndex + '" ', 'data-ax5grid-column-attr="' + (col.columnAttr || "default") + '" ', function (_focusedColumn, _selectedColumn) {
+                                var attrs = "";
+                                if (_focusedColumn) {
+                                    attrs += 'data-ax5grid-column-focused="true" ';
+                                }
+                                if (_selectedColumn) {
+                                    attrs += 'data-ax5grid-column-selected="true" ';
+                                }
+                                return attrs;
+                            }(this.focusedColumn[di + "_" + col.colIndex + "_" + col.rowIndex], this.selectedColumn[di + "_" + col.colIndex + "_" + col.rowIndex]), 'colspan="' + col.colspan + '" ', 'rowspan="' + col.rowspan + '" ', 'class="' + function (_col) {
+                                var tdCSS_class = "";
+                                if (_col.styleClass) {
+                                    if (U.isFunction(_col.styleClass)) {
+                                        tdCSS_class += _col.styleClass.call({
+                                            column: _col,
+                                            key: _col.key,
+                                            item: _list[di],
+                                            index: di
+                                        }) + " ";
+                                    } else {
+                                        tdCSS_class += _col.styleClass + " ";
+                                    }
+                                }
+                                if (cfg.body.columnBorderWidth) tdCSS_class += "hasBorder ";
+                                if (ci == cl - 1) tdCSS_class += "isLastColumn ";
+                                return tdCSS_class;
+                            }.call(this, col) + '" ', 'style="height: ' + cellHeight + 'px;min-height: 1px;">');
+
+                            SS.push(function (_cellHeight) {
+                                var lineHeight = cfg.body.columnHeight - cfg.body.columnPadding * 2 - cfg.body.columnBorderWidth;
+                                if (!col.multiLine) {
+                                    _cellHeight = cfg.body.columnHeight - cfg.body.columnBorderWidth;
+                                }
+
+                                return '<span data-ax5grid-cellHolder="' + (col.multiLine ? 'multiLine' : '') + '" ' + (colAlign ? 'data-ax5grid-text-align="' + colAlign + '"' : '') + '" style="height:' + _cellHeight + 'px;line-height: ' + lineHeight + 'px;">';
+                            }(cellHeight), isGroupingRow ? getGroupingValue.call(this, _list[di], di, col) : getFieldValue.call(this, _list, _list[di], di, col), '</span>');
+
+                            SS.push('</td>');
+                        }
+                        SS.push('<td ', 'data-ax5grid-column-row="null" ', 'data-ax5grid-column-col="null" ', 'data-ax5grid-data-index="' + odi + '" ', 'data-ax5grid-column-attr="' + "default" + '" ', 'style="height: ' + cfg.body.columnHeight + 'px;min-height: 1px;" ', '></td>');
+                        SS.push('</tr>');
+                    }
                 }
             }
             SS.push('</table>');
 
-            if (isScrolled) {
-                _elTarget.css({ paddingTop: (_scrollConfig.paintStartRowIndex - this.xvar.frozenRowIndex) * _scrollConfig.bodyTrHeight });
+            if (isScrolled && _list.length) {
+                SS.push('<div style="font-size:0;line-height:0;height: ' + (_list.length - di) * _scrollConfig.bodyTrHeight + 'px;"></div>');
             }
+
             _elTarget.empty().get(0).innerHTML = SS.join('');
 
             this.$.livePanelKeys.push(_elTargetKey); // 사용중인 패널키를 모아둠. (뷰의 상태 변경시 사용하려고)
             return true;
         };
+
+        /**
+         * @param _elTargetKey
+         * @param _colGroup
+         * @param _bodyRow
+         * @param _list
+         * @param [_scrollConfig]
+         * @returns {boolean}
+         */
         var repaintSum = function repaintSum(_elTargetKey, _colGroup, _bodyRow, _list, _scrollConfig) {
             var _elTarget = this.$.panel[_elTargetKey];
 
@@ -26863,11 +28007,16 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
                 return false;
             }
 
-            var SS = [];
-            var cgi, cgl;
-            var tri, trl;
-            var ci, cl;
-            var col, cellHeight, colAlign;
+            var SS = [],
+                cgi = void 0,
+                cgl = void 0,
+                tri = void 0,
+                trl = void 0,
+                ci = void 0,
+                cl = void 0,
+                col = void 0,
+                cellHeight = void 0,
+                colAlign = void 0;
 
             SS.push('<table border="0" cellpadding="0" cellspacing="0">');
             SS.push('<colgroup>');
@@ -26932,10 +28081,133 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
             this.$.livePanelKeys.push(_elTargetKey); // 사용중인 패널키를 모아둠. (뷰의 상태 변경시 사용하려고)
             return true;
         };
+
+        /**
+         * @param _elTargetKey
+         * @param _colGroup
+         * @param _bodyRow
+         * @param _list
+         * @param [_scrollConfig]
+         * @returns {boolean}
+         */
+        var mergeCellsBody = function mergeCellsBody(_elTargetKey, _colGroup, _bodyRow, _list, _scrollConfig) {
+            var tblRowMaps = [];
+            var _elTarget = this.$.panel[_elTargetKey];
+            var token = {},
+                hasMergeTd = void 0;
+            //console.log(_elTarget);
+
+            // 테이블의 td들을 수잡하여 저장해두고 스크립트로 반복하여 정리.
+            var tableTrs = _elTarget.find("tr");
+            for (var ri = 0, rl = tableTrs.length; ri < rl; ri++) {
+                var tableTrTds = void 0,
+                    trMaps = void 0;
+
+                if (!tableTrs[ri].getAttribute("data-ax5grid-grouping-tr")) {
+                    tableTrTds = tableTrs[ri].childNodes;
+                    trMaps = [];
+                    for (var _ci = 0, cl = tableTrTds.length; _ci < cl; _ci++) {
+                        var tdObj = {
+                            "$": jQuery(tableTrTds[_ci])
+                        };
+
+                        if (tdObj["$"].attr("data-ax5grid-column-col") != "null") {
+                            tdObj.dindex = tdObj["$"].attr("data-ax5grid-data-index");
+                            tdObj.tri = tdObj["$"].attr("data-ax5grid-column-row");
+                            tdObj.ci = tdObj["$"].attr("data-ax5grid-column-col");
+                            tdObj.rowIndex = tdObj["$"].attr("data-ax5grid-column-rowIndex");
+                            tdObj.colIndex = tdObj["$"].attr("data-ax5grid-column-colIndex");
+                            tdObj.rowspan = tdObj["$"].attr("rowspan");
+                            tdObj.text = tdObj["$"].text();
+                            trMaps.push(tdObj);
+                        }
+
+                        tdObj = null;
+                    }
+                    tblRowMaps.push(trMaps);
+                }
+            }
+
+            // 두줄이상 일 때 의미가 있으니.
+            if (tblRowMaps.length > 1) {
+                hasMergeTd = false;
+
+                var _loop = function _loop(_ri, _rl) {
+                    var prevTokenColIndexs = [];
+
+                    var _loop2 = function _loop2(_ci3, _cl2) {
+                        // 적용 하려는 컬럼에 editor 속성이 없다면 머지 대상입니다.
+                        if (!_colGroup[_ci3].editor && function () {
+                            if (U.isArray(cfg.body.mergeCells)) {
+                                return ax5.util.search(cfg.body.mergeCells, _colGroup[_ci3].key) > -1;
+                            } else {
+                                return true;
+                            }
+                        }()) {
+
+                            // 앞줄과 값이 같다면.
+                            if (token[_ci3] && function () {
+                                if (prevTokenColIndexs.length > 0) {
+                                    var hasFalse = true;
+                                    prevTokenColIndexs.forEach(function (ti) {
+                                        if (tblRowMaps[_ri - 1][ti].text != tblRowMaps[_ri][ti].text) {
+                                            hasFalse = false;
+                                        }
+                                    });
+                                    return hasFalse;
+                                } else {
+                                    return true;
+                                }
+                            }() && token[_ci3].text == tblRowMaps[_ri][_ci3].text) {
+                                tblRowMaps[_ri][_ci3].rowspan = 0;
+                                tblRowMaps[token[_ci3].ri][_ci3].rowspan++;
+                                hasMergeTd = true;
+                            } else {
+                                token[_ci3] = {
+                                    ri: _ri,
+                                    ci: _ci3,
+                                    text: tblRowMaps[_ri][_ci3].text
+                                };
+                            }
+
+                            prevTokenColIndexs.push(_ci3);
+                        }
+                    };
+
+                    for (var _ci3 = 0, _cl2 = tblRowMaps[_ri].length; _ci3 < _cl2; _ci3++) {
+                        _loop2(_ci3, _cl2);
+                    }
+                };
+
+                for (var _ri = 0, _rl = tblRowMaps.length; _ri < _rl; _ri++) {
+                    _loop(_ri, _rl);
+                }
+
+                // rowspan을 다 구했으면 적용합니다.
+                if (hasMergeTd) {
+                    for (var _ri2 = 0, _rl2 = tblRowMaps.length; _ri2 < _rl2; _ri2++) {
+                        for (var _ci2 = 0, _cl = tblRowMaps[_ri2].length; _ci2 < _cl; _ci2++) {
+                            if (tblRowMaps[_ri2][_ci2].rowspan == 0) {
+                                tblRowMaps[_ri2][_ci2]["$"].remove();
+                            } else if (tblRowMaps[_ri2][_ci2].rowspan > 1) {
+                                tblRowMaps[_ri2][_ci2]["$"].attr("rowspan", tblRowMaps[_ri2][_ci2].rowspan).addClass("merged");
+                            }
+                        }
+                    }
+                }
+            }
+        };
+
         var scrollConfig = {
             paintStartRowIndex: paintStartRowIndex,
             paintRowCount: paintRowCount,
-            bodyTrHeight: this.xvar.bodyTrHeight
+            paintStartColumnIndex: paintStartColumnIndex,
+            paintEndColumnIndex: paintEndColumnIndex,
+            nopaintLeftColumnsWidth: nopaintLeftColumnsWidth,
+            nopaintRightColumnsWidth: nopaintRightColumnsWidth,
+            bodyTrHeight: this.xvar.bodyTrHeight,
+            virtualScrollX: this.config.virtualScrollX,
+            virtualScrollY: this.config.virtualScrollY
         };
 
         // aside
@@ -26957,7 +28229,10 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
         if (this.xvar.frozenColumnIndex > 0) {
             if (this.xvar.frozenRowIndex > 0) {
                 // 상단 행고정
-                repaintBody.call(this, "top-left-body", this.leftHeaderColGroup, leftBodyRowData, leftBodyGroupingData, list.slice(0, this.xvar.frozenRowIndex));
+                repaintBody.call(this, "top-left-body", this.leftHeaderColGroup, leftBodyRowData, leftBodyGroupingData, list.slice(0, this.xvar.frozenRowIndex), jQuery.extend({}, scrollConfig, {
+                    paintStartRowIndex: 0,
+                    paintRowCount: this.xvar.frozenRowIndex
+                }));
             }
 
             repaintBody.call(this, "left-body-scroll", this.leftHeaderColGroup, leftBodyRowData, leftBodyGroupingData, list, scrollConfig);
@@ -26971,48 +28246,74 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
         // body
         if (this.xvar.frozenRowIndex > 0) {
             // 상단 행고정
-            repaintBody.call(this, "top-body-scroll", this.headerColGroup, bodyRowData, bodyGroupingData, list.slice(0, this.xvar.frozenRowIndex));
+            repaintBody.call(this, "top-body-scroll", headerColGroup, bodyRowData, bodyGroupingData, list.slice(0, this.xvar.frozenRowIndex), jQuery.extend({}, scrollConfig, {
+                paintStartRowIndex: 0,
+                paintRowCount: this.xvar.frozenRowIndex
+            }));
         }
+        repaintBody.call(this, "body-scroll", headerColGroup, bodyRowData, bodyGroupingData, list, scrollConfig);
 
-        repaintBody.call(this, "body-scroll", this.headerColGroup, bodyRowData, bodyGroupingData, list, scrollConfig);
-
+        // 바닥 요약
         if (cfg.footSum && this.needToPaintSum) {
-            // 바닥 요약
-            repaintSum.call(this, "bottom-body-scroll", this.headerColGroup, footSumData, list, scrollConfig);
+            repaintSum.call(this, "bottom-body-scroll", headerColGroup, footSumData, list, scrollConfig);
         }
-
-        //todo : repaintBody 에서 footSum 데이터 예외처리
-
         // right
-        if (cfg.rightSum) {
-            // todo : right 표현 정리
+        if (cfg.rightSum) {}
+        // todo : right 표현 정리
+
+
+        /// mergeCells
+        if (cfg.body.mergeCells && this.list.length) {
+            // left
+            if (this.xvar.frozenColumnIndex > 0) {
+                if (this.xvar.frozenRowIndex > 0) {
+                    // 상단 행고정
+                    // console.log(this.leftHeaderColGroup, leftBodyRowData);
+                    mergeCellsBody.call(this, "top-left-body", this.leftHeaderColGroup, leftBodyRowData, list.slice(0, this.xvar.frozenRowIndex));
+                }
+                mergeCellsBody.call(this, "left-body-scroll", this.leftHeaderColGroup, leftBodyRowData, list, scrollConfig);
+            }
+
+            // body
+            if (this.xvar.frozenRowIndex > 0) {
+                // 상단 행고정
+                mergeCellsBody.call(this, "top-body-scroll", this.headerColGroup, bodyRowData, list.slice(0, this.xvar.frozenRowIndex));
+            }
+            mergeCellsBody.call(this, "body-scroll", this.headerColGroup, bodyRowData, list, scrollConfig);
         }
 
         this.xvar.paintStartRowIndex = paintStartRowIndex;
         this.xvar.paintRowCount = paintRowCount;
+        this.xvar.paintStartColumnIndex = paintStartColumnIndex;
+        this.xvar.paintEndColumnIndex = paintEndColumnIndex;
+        this.xvar.nopaintLeftColumnsWidth = nopaintLeftColumnsWidth;
+        this.xvar.nopaintRightColumnsWidth = nopaintRightColumnsWidth;
         this.xvar.dataRowCount = list.length;
         this.needToPaintSum = false;
+
         GRID.page.statusUpdate.call(this);
     };
 
     var repaintCell = function repaintCell(_panelName, _dindex, _rowIndex, _colIndex, _newValue) {
-        var self = this;
-        var cfg = this.config;
-        var list = this.list;
+        var self = this,
+            cfg = this.config,
+            list = this.list;
 
-        var updateCell = this.$["panel"][_panelName].find('[data-ax5grid-tr-data-index="' + _dindex + '"]').find('[data-ax5grid-column-rowindex="' + _rowIndex + '"][data-ax5grid-column-colindex="' + _colIndex + '"]').find('[data-ax5grid-cellholder]');
-        var colGroup = this.colGroup;
-        var col = colGroup[_colIndex];
+        var updateCell = this.$["panel"][_panelName].find('[data-ax5grid-tr-data-index="' + _dindex + '"]').find('[data-ax5grid-column-rowindex="' + _rowIndex + '"][data-ax5grid-column-colindex="' + _colIndex + '"]').find('[data-ax5grid-cellholder]'),
+            colGroup = this.colGroup,
+            col = colGroup[_colIndex];
+
         updateCell.html(getFieldValue.call(this, list, list[_dindex], _dindex, col));
 
         if (col.editor && col.editor.updateWith) {
             col.editor.updateWith.forEach(function (updateColumnKey) {
                 colGroup.forEach(function (col) {
                     if (col.key == updateColumnKey) {
-                        var rowIndex = col.rowIndex;
-                        var colIndex = col.colIndex;
-                        var panelName = GRID.util.findPanelByColumnIndex.call(self, _dindex, colIndex, rowIndex).panelName;
-                        var updateWithCell = self.$["panel"][panelName].find('[data-ax5grid-tr-data-index="' + _dindex + '"]').find('[data-ax5grid-column-rowindex="' + rowIndex + '"][data-ax5grid-column-colindex="' + colIndex + '"]').find('[data-ax5grid-cellholder]');
+                        var rowIndex = col.rowIndex,
+                            colIndex = col.colIndex,
+                            panelName = GRID.util.findPanelByColumnIndex.call(self, _dindex, colIndex, rowIndex).panelName,
+                            updateWithCell = self.$["panel"][panelName].find('[data-ax5grid-tr-data-index="' + _dindex + '"]').find('[data-ax5grid-column-rowindex="' + rowIndex + '"][data-ax5grid-column-colindex="' + colIndex + '"]').find('[data-ax5grid-cellholder]');
+
                         updateWithCell.html(getFieldValue.call(self, list, list[_dindex], _dindex, col));
                     }
                 });
@@ -27021,28 +28322,42 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
 
         /// ~~~~~~
 
-        var paintStartRowIndex = Math.floor(Math.abs(this.$.panel["body-scroll"].position().top) / this.xvar.bodyTrHeight) + this.xvar.frozenRowIndex;
-        var leftFootSumData = this.leftFootSumData;
-        var footSumData = this.footSumData;
-        var asideBodyGroupingData = this.asideBodyGroupingData;
-        var leftBodyGroupingData = this.leftBodyGroupingData;
-        var bodyGroupingData = this.bodyGroupingData;
-        var bodyAlign = cfg.body.align;
-        var paintRowCount = Math.ceil(this.$.panel["body"].height() / this.xvar.bodyTrHeight) + 1;
-        var scrollConfig = {
+        var paintStartRowIndex = Math.floor(Math.abs(this.$.panel["body-scroll"].position().top) / this.xvar.bodyTrHeight) + this.xvar.frozenRowIndex,
+            headerColGroup = this.headerColGroup,
+            leftFootSumData = this.leftFootSumData,
+            footSumData = this.footSumData,
+            leftBodyGroupingData = this.leftBodyGroupingData,
+            bodyGroupingData = this.bodyGroupingData,
+            bodyAlign = cfg.body.align,
+            paintRowCount = Math.ceil(this.$.panel["body"].height() / this.xvar.bodyTrHeight) + 1,
+            scrollConfig = {
             paintStartRowIndex: paintStartRowIndex,
             paintRowCount: paintRowCount,
             bodyTrHeight: this.xvar.bodyTrHeight
         };
 
-        var repaintSum = function repaintSum(_elTargetKey, _colGroup, _bodyRow, _list, _scrollConfig) {
-            var _elTarget = this.$.panel[_elTargetKey];
+        if (this.xvar.nopaintLeftColumnsWidth || this.xvar.nopaintRightColumnsWidth) {
+            headerColGroup = [].concat(headerColGroup).splice(this.xvar.paintStartColumnIndex, this.xvar.paintEndColumnIndex - this.xvar.paintStartColumnIndex + 1);
+            if (cfg.body.grouping) {
+                bodyGroupingData = GRID.util.getTableByStartEndColumnIndex(bodyGroupingData, this.xvar.paintStartColumnIndex, this.xvar.paintEndColumnIndex);
+            }
+            if (cfg.footSum) {
+                footSumData = GRID.util.getTableByStartEndColumnIndex(footSumData, this.xvar.paintStartColumnIndex, this.xvar.paintEndColumnIndex);
+            }
+        }
 
-            var SS = [];
-            var cgi, cgl;
-            var tri, trl;
-            var ci, cl;
-            var col, cellHeight, colAlign;
+        var repaintSum = function repaintSum(_elTargetKey, _colGroup, _bodyRow, _list, _scrollConfig) {
+            var _elTarget = this.$.panel[_elTargetKey],
+                SS = [],
+                cgi = void 0,
+                cgl = void 0,
+                tri = void 0,
+                trl = void 0,
+                ci = void 0,
+                cl = void 0,
+                col = void 0,
+                cellHeight = void 0,
+                colAlign = void 0;
 
             SS.push('<table border="0" cellpadding="0" cellspacing="0">');
             SS.push('<colgroup>');
@@ -27107,22 +28422,27 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
             return true;
         };
         var replaceGroupTr = function replaceGroupTr(_elTargetKey, _colGroup, _groupRow, _list, _scrollConfig) {
-            var _elTarget = this.$.panel[_elTargetKey];
-            var SS = [];
-            var cgi, cgl;
-            var di, dl;
-            var tri, trl;
-            var ci, cl;
-            var col, cellHeight, colAlign;
+            var _elTarget = this.$.panel[_elTargetKey],
+                SS = [],
+                di = void 0,
+                dl = void 0,
+                tri = void 0,
+                trl = void 0,
+                ci = void 0,
+                cl = void 0,
+                col = void 0,
+                cellHeight = void 0,
+                colAlign = void 0;
+
             for (di = _scrollConfig.paintStartRowIndex, dl = function () {
-                var len;
+                var len = void 0;
                 len = _list.length;
                 if (_scrollConfig.paintRowCount + _scrollConfig.paintStartRowIndex < len) {
                     len = _scrollConfig.paintRowCount + _scrollConfig.paintStartRowIndex;
                 }
                 return len;
             }(); di < dl; di++) {
-                if (_groupRow && "__isGrouping" in _list[di]) {
+                if (_list[di] && _groupRow && "__isGrouping" in _list[di]) {
                     var rowTable = _groupRow;
                     SS = [];
                     for (tri = 0, trl = rowTable.rows.length; tri < trl; tri++) {
@@ -27183,64 +28503,76 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
             if (this.xvar.frozenColumnIndex > 0) {
                 if (this.xvar.frozenRowIndex > 0) {
                     // 상단 행고정
-                    replaceGroupTr.call(this, "top-left-body", this.leftHeaderColGroup, leftBodyGroupingData, list.slice(0, this.xvar.frozenRowIndex));
+                    replaceGroupTr.call(this, "top-left-body", headerColGroup, leftBodyGroupingData, list.slice(0, this.xvar.frozenRowIndex), {
+                        paintStartRowIndex: 0,
+                        paintRowCount: this.xvar.frozenRowIndex,
+                        bodyTrHeight: this.xvar.bodyTrHeight
+                    });
                 }
-                replaceGroupTr.call(this, "left-body-scroll", this.leftHeaderColGroup, leftBodyGroupingData, list, scrollConfig);
+                replaceGroupTr.call(this, "left-body-scroll", headerColGroup, leftBodyGroupingData, list, scrollConfig);
             }
 
             // body
             if (this.xvar.frozenRowIndex > 0) {
                 // 상단 행고정
-                replaceGroupTr.call(this, "top-body-scroll", this.headerColGroup, bodyGroupingData, list.slice(0, this.xvar.frozenRowIndex));
+                replaceGroupTr.call(this, "top-body-scroll", headerColGroup, bodyGroupingData, list.slice(0, this.xvar.frozenRowIndex), {
+                    paintStartRowIndex: 0,
+                    paintRowCount: this.xvar.frozenRowIndex,
+                    bodyTrHeight: this.xvar.bodyTrHeight
+                });
             }
 
-            replaceGroupTr.call(this, "body-scroll", this.headerColGroup, bodyGroupingData, list, scrollConfig);
+            replaceGroupTr.call(this, "body-scroll", headerColGroup, bodyGroupingData, list, scrollConfig);
         }
 
         if (this.xvar.frozenColumnIndex > 0) {
             if (cfg.footSum && this.needToPaintSum) {
                 // 바닥 요약
-                repaintSum.call(this, "bottom-left-body", this.leftHeaderColGroup, leftFootSumData, list);
+                repaintSum.call(this, "bottom-left-body", headerColGroup, leftFootSumData, list);
             }
         }
 
         if (cfg.footSum && this.needToPaintSum) {
             // 바닥 요약
-            repaintSum.call(this, "bottom-body-scroll", this.headerColGroup, footSumData, list, scrollConfig);
+            repaintSum.call(this, "bottom-body-scroll", headerColGroup, footSumData, list, scrollConfig);
         }
     };
 
     var repaintRow = function repaintRow(_dindex) {
-        var self = this;
-        var cfg = this.config;
-        var list = this.list;
+        var self = this,
+            cfg = this.config,
+            list = this.list;
         /// ~~~~~~
 
-        var paintStartRowIndex = Math.floor(Math.abs(this.$.panel["body-scroll"].position().top) / this.xvar.bodyTrHeight) + this.xvar.frozenRowIndex;
-        var asideBodyRowData = this.asideBodyRowData;
-        var leftBodyRowData = this.leftBodyRowData;
-        var bodyRowData = this.bodyRowData;
-        var leftFootSumData = this.leftFootSumData;
-        var footSumData = this.footSumData;
-        var asideBodyGroupingData = this.asideBodyGroupingData;
-        var leftBodyGroupingData = this.leftBodyGroupingData;
-        var bodyGroupingData = this.bodyGroupingData;
-        var bodyAlign = cfg.body.align;
-        var paintRowCount = Math.ceil(this.$.panel["body"].height() / this.xvar.bodyTrHeight) + 1;
-        var scrollConfig = {
+        var paintStartRowIndex = Math.floor(Math.abs(this.$.panel["body-scroll"].position().top) / this.xvar.bodyTrHeight) + this.xvar.frozenRowIndex,
+            asideBodyRowData = this.asideBodyRowData,
+            leftBodyRowData = this.leftBodyRowData,
+            bodyRowData = this.bodyRowData,
+            leftFootSumData = this.leftFootSumData,
+            footSumData = this.footSumData,
+            asideBodyGroupingData = this.asideBodyGroupingData,
+            leftBodyGroupingData = this.leftBodyGroupingData,
+            bodyGroupingData = this.bodyGroupingData,
+            bodyAlign = cfg.body.align,
+            paintRowCount = Math.ceil(this.$.panel["body"].height() / this.xvar.bodyTrHeight) + 1,
+            scrollConfig = {
             paintStartRowIndex: paintStartRowIndex,
             paintRowCount: paintRowCount,
             bodyTrHeight: this.xvar.bodyTrHeight
         };
 
         var repaintSum = function repaintSum(_elTargetKey, _colGroup, _bodyRow, _list) {
-            var _elTarget = this.$.panel[_elTargetKey];
-
-            var SS = [];
-            var cgi, cgl;
-            var tri, trl;
-            var ci, cl;
-            var col, cellHeight, colAlign;
+            var _elTarget = this.$.panel[_elTargetKey],
+                SS = [],
+                cgi = void 0,
+                cgl = void 0,
+                tri = void 0,
+                trl = void 0,
+                ci = void 0,
+                cl = void 0,
+                col = void 0,
+                cellHeight = void 0,
+                colAlign = void 0;
 
             SS.push('<table border="0" cellpadding="0" cellspacing="0">');
             SS.push('<colgroup>');
@@ -27305,22 +28637,34 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
             return true;
         };
         var replaceGroupTr = function replaceGroupTr(_elTargetKey, _colGroup, _groupRow, _list, _scrollConfig) {
-            var _elTarget = this.$.panel[_elTargetKey];
-            var SS = [];
-            var cgi, cgl;
-            var di, dl;
-            var tri, trl;
-            var ci, cl;
-            var col, cellHeight, colAlign;
+            var _elTarget = this.$.panel[_elTargetKey],
+                SS = [],
+                di = void 0,
+                dl = void 0,
+                tri = void 0,
+                trl = void 0,
+                ci = void 0,
+                cl = void 0,
+                col = void 0,
+                cellHeight = void 0,
+                colAlign = void 0;
+
+            if (typeof _scrollConfig === "undefined" || typeof _scrollConfig['paintStartRowIndex'] === "undefined") {
+                _scrollConfig = {
+                    paintStartRowIndex: 0,
+                    paintRowCount: _list.length
+                };
+            }
+
             for (di = _scrollConfig.paintStartRowIndex, dl = function () {
-                var len;
+                var len = void 0;
                 len = _list.length;
                 if (_scrollConfig.paintRowCount + _scrollConfig.paintStartRowIndex < len) {
                     len = _scrollConfig.paintRowCount + _scrollConfig.paintStartRowIndex;
                 }
                 return len;
             }(); di < dl; di++) {
-                if (_groupRow && "__isGrouping" in _list[di]) {
+                if (_list[di] && _groupRow && "__isGrouping" in _list[di]) {
                     var rowTable = _groupRow;
                     SS = [];
                     for (tri = 0, trl = rowTable.rows.length; tri < trl; tri++) {
@@ -27375,14 +28719,17 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
             }
         };
         var replaceTr = function replaceTr(_elTargetKey, _colGroup, _bodyRow, _list, di) {
-            var _elTarget = this.$.panel[_elTargetKey];
-            var SS = [];
-            var cgi, cgl;
-            var di, dl;
-            var tri, trl;
-            var ci, cl;
-            var col, cellHeight, colAlign;
-            var rowTable = _bodyRow;
+            var _elTarget = this.$.panel[_elTargetKey],
+                SS = [],
+                tri = void 0,
+                trl = void 0,
+                ci = void 0,
+                cl = void 0,
+                col = void 0,
+                cellHeight = void 0,
+                colAlign = void 0,
+                rowTable = _bodyRow;
+
             for (tri = 0, trl = rowTable.rows.length; tri < trl; tri++) {
                 for (ci = 0, cl = rowTable.rows[tri].cols.length; ci < cl; ci++) {
                     col = rowTable.rows[tri].cols[ci];
@@ -27430,45 +28777,48 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
                 SS.push('<td ', 'data-ax5grid-column-row="null" ', 'data-ax5grid-column-col="null" ', 'data-ax5grid-data-index="' + di + '" ', 'data-ax5grid-column-attr="' + "default" + '" ', 'style="height: ' + cfg.body.columnHeight + 'px;min-height: 1px;" ', '></td>');
             }
 
-            //_elTarget.find('tr[data-ax5grid-tr-data-index="' + di + '"]').html(SS.join(''));
+            console.log('tr[data-ax5grid-tr-data-index="' + di + '"]');
+
             _elTarget.find('tr[data-ax5grid-tr-data-index="' + di + '"]').empty().get(0).innerHTML = SS.join('');
         };
 
         // left
         if (this.xvar.frozenColumnIndex > 0) {
-            if (this.xvar.frozenRowIndex > 0) {
+            if (this.xvar.frozenRowIndex > _dindex) {
                 // 상단 행고정
-                replaceTr.call(this, "top-left-body", this.leftHeaderColGroup, leftBodyRowData, list, _dindex);
+                replaceTr.call(this, "top-left-body", this.leftHeaderColGroup, leftBodyRowData, list.slice(0, this.xvar.frozenRowIndex), _dindex);
+            } else {
+                replaceTr.call(this, "left-body-scroll", this.leftHeaderColGroup, leftBodyRowData, list, _dindex);
             }
-            replaceTr.call(this, "left-body-scroll", this.leftHeaderColGroup, leftBodyRowData, list, _dindex);
         }
 
         // body
-        if (this.xvar.frozenRowIndex > 0) {
+        if (this.xvar.frozenRowIndex > _dindex) {
             // 상단 행고정
-            replaceTr.call(this, "top-body-scroll", this.headerColGroup, bodyRowData, list, _dindex);
+            replaceTr.call(this, "top-body-scroll", this.headerColGroup, bodyRowData, list.slice(0, this.xvar.frozenRowIndex), _dindex);
+        } else {
+            replaceTr.call(this, "body-scroll", this.headerColGroup, bodyRowData, list, _dindex);
         }
-
-        replaceTr.call(this, "body-scroll", this.headerColGroup, bodyRowData, list, _dindex);
 
         // body.grouping tr 다시 그리기..
         if (cfg.body.grouping) {
             // left
             if (this.xvar.frozenColumnIndex > 0) {
-                if (this.xvar.frozenRowIndex > 0) {
+                if (this.xvar.frozenRowIndex > _dindex) {
                     // 상단 행고정
                     replaceGroupTr.call(this, "top-left-body", this.leftHeaderColGroup, leftBodyGroupingData, list.slice(0, this.xvar.frozenRowIndex));
+                } else {
+                    replaceGroupTr.call(this, "left-body-scroll", this.leftHeaderColGroup, leftBodyGroupingData, list, scrollConfig);
                 }
-                replaceGroupTr.call(this, "left-body-scroll", this.leftHeaderColGroup, leftBodyGroupingData, list, scrollConfig);
             }
 
             // body
-            if (this.xvar.frozenRowIndex > 0) {
+            if (this.xvar.frozenRowIndex > _dindex) {
                 // 상단 행고정
                 replaceGroupTr.call(this, "top-body-scroll", this.headerColGroup, bodyGroupingData, list.slice(0, this.xvar.frozenRowIndex));
+            } else {
+                replaceGroupTr.call(this, "body-scroll", this.headerColGroup, bodyGroupingData, list, scrollConfig);
             }
-
-            replaceGroupTr.call(this, "body-scroll", this.headerColGroup, bodyGroupingData, list, scrollConfig);
         }
 
         if (this.xvar.frozenColumnIndex > 0) {
@@ -27485,7 +28835,6 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
     };
 
     var scrollTo = function scrollTo(css, noRepaint) {
-        var cfg = this.config;
 
         if (this.isInlineEditing) {
             for (var key in this.inlineEditing) {
@@ -27495,7 +28844,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
             }
         }
 
-        if (cfg.asidePanelWidth > 0 && "top" in css) {
+        if (this.config.asidePanelWidth > 0 && "top" in css) {
             this.$.panel["aside-body-scroll"].css({ top: css.top });
         }
         if (this.xvar.frozenColumnIndex > 0 && "top" in css) {
@@ -27507,11 +28856,13 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
 
         this.$.panel["body-scroll"].css(css);
 
-        if (cfg.footSum && "left" in css) {
+        if (this.config.footSum && "left" in css) {
             this.$.panel["bottom-body-scroll"].css({ left: css.left });
         }
 
-        if (!noRepaint && "top" in css) {
+        if (this.config.virtualScrollY && !noRepaint && "top" in css) {
+            repaint.call(this);
+        } else if (this.config.virtualScrollX && !noRepaint && "left" in css) {
             repaint.call(this);
         }
     };
@@ -27527,10 +28878,11 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
     var moveFocus = function moveFocus(_position) {
         var focus = {
             "UD": function UD(_dy) {
-                var moveResult = true;
-                var focusedColumn;
-                var originalColumn;
-                var while_i;
+                var moveResult = true,
+                    focusedColumn = void 0,
+                    originalColumn = void 0,
+                    while_i = void 0,
+                    nPanelInfo = void 0;
 
                 for (var c in this.focusedColumn) {
                     focusedColumn = jQuery.extend({}, this.focusedColumn[c], true);
@@ -27583,10 +28935,28 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
                     while_i++;
                 }
 
-                var nPanelInfo = GRID.util.findPanelByColumnIndex.call(this, focusedColumn.dindex, focusedColumn.colIndex);
+                nPanelInfo = GRID.util.findPanelByColumnIndex.call(this, focusedColumn.dindex, focusedColumn.colIndex);
+
+                // if mergeCells
+                if (this.config.body.mergeCells && this.list.length) {
+                    while (!this.$.panel[nPanelInfo.panelName].find('[data-ax5grid-tr-data-index="' + focusedColumn.dindex + '"]').find('[data-ax5grid-column-rowindex="' + focusedColumn.rowIndex + '"][data-ax5grid-column-colindex="' + focusedColumn.colIndex + '"]').get(0)) {
+
+                        if (_dy > 0) {
+                            focusedColumn.dindex++;
+                        } else {
+                            focusedColumn.dindex--;
+                        }
+
+                        if (focusedColumn.dindex < 0 || focusedColumn.dindex > this.list.length - 1) {
+                            break;
+                        }
+                    }
+                    nPanelInfo = GRID.util.findPanelByColumnIndex.call(this, focusedColumn.dindex, focusedColumn.colIndex);
+                }
+
                 focusedColumn.panelName = nPanelInfo.panelName;
 
-                // 포커스 컬럼의 위치에 따라 스크롤 처리.
+                // 포커스 컬럼의 위치에 따라 스크롤 처리.ㅊㅇ
                 (function () {
                     if (focusedColumn.dindex + 1 > this.xvar.frozenRowIndex) {
                         if (focusedColumn.dindex <= this.xvar.paintStartRowIndex) {
@@ -27605,12 +28975,13 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
                 return moveResult;
             },
             "LR": function LR(_dx) {
-                var moveResult = true;
-                var focusedColumn;
-                var originalColumn;
-                var while_i = 0;
-                var isScrollPanel = false;
-                var containerPanelName = "";
+                var moveResult = true,
+                    focusedColumn = void 0,
+                    originalColumn = void 0,
+                    while_i = 0,
+                    isScrollPanel = false,
+                    containerPanelName = "",
+                    nPanelInfo = void 0;
 
                 for (var c in this.focusedColumn) {
                     focusedColumn = jQuery.extend({}, this.focusedColumn[c], true);
@@ -27630,7 +29001,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
                         moveResult = false;
                     }
                 } else {
-                    focusedColumn.colIndex = focusedColumn.colIndex + (originalColumn.colspan - 1) + _dx;
+                    focusedColumn.colIndex = focusedColumn.colIndex + _dx;
                     if (focusedColumn.colIndex > this.colGroup.length - 1) {
                         focusedColumn.colIndex = this.colGroup.length - 1;
                         moveResult = false;
@@ -27640,20 +29011,91 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
                 if (typeof this.bodyRowMap[focusedColumn.rowIndex + "_" + focusedColumn.colIndex] === "undefined") {
                     focusedColumn.rowIndex = 0;
                 }
-                while_i = 0;
-                while (typeof this.bodyRowMap[focusedColumn.rowIndex + "_" + focusedColumn.colIndex] === "undefined") {
-                    focusedColumn.colIndex--;
-                    if (focusedColumn.rowIndex <= 0 && focusedColumn.colIndex <= 0) {
-                        // find fail
-                        moveResult = false;
-                        break;
+
+                if (this.list[focusedColumn.dindex] && this.list[focusedColumn.dindex].__isGrouping) {
+                    if (_dx < 0) {
+                        while (typeof this.bodyGroupingMap[focusedColumn.rowIndex + "_" + focusedColumn.colIndex] === "undefined") {
+                            focusedColumn.colIndex--;
+                            if (focusedColumn.colIndex <= 0) {
+                                // find fail
+                                moveResult = false;
+                                break;
+                            }
+                        }
+                    } else {
+                        while (typeof this.bodyGroupingMap[focusedColumn.rowIndex + "_" + focusedColumn.colIndex] === "undefined") {
+                            focusedColumn.colIndex++;
+                            if (focusedColumn.colIndex >= this.colGroup.length) {
+                                // find fail
+                                moveResult = false;
+                                break;
+                            }
+                        }
                     }
-                    while_i++;
+                } else {
+                    if (_dx < 0) {
+                        while (typeof this.bodyRowMap[focusedColumn.rowIndex + "_" + focusedColumn.colIndex] === "undefined") {
+                            focusedColumn.colIndex--;
+                            if (focusedColumn.colIndex <= 0) {
+                                // find fail
+                                moveResult = false;
+                                break;
+                            }
+                        }
+                    } else {
+                        while (typeof this.bodyRowMap[focusedColumn.rowIndex + "_" + focusedColumn.colIndex] === "undefined") {
+                            focusedColumn.colIndex++;
+                            if (focusedColumn.colIndex >= this.colGroup.length) {
+                                // find fail
+                                moveResult = false;
+                                break;
+                            }
+                        }
+                    }
                 }
 
-                var nPanelInfo = GRID.util.findPanelByColumnIndex.call(this, focusedColumn.dindex, focusedColumn.colIndex);
+                nPanelInfo = GRID.util.findPanelByColumnIndex.call(this, focusedColumn.dindex, focusedColumn.colIndex);
+
+                // if mergeCells
+                if (this.config.body.mergeCells && this.list.length && focusedColumn.dindex > 1) {
+                    while (!this.$.panel[nPanelInfo.panelName].find('[data-ax5grid-tr-data-index="' + focusedColumn.dindex + '"]').find('[data-ax5grid-column-rowindex="' + focusedColumn.rowIndex + '"][data-ax5grid-column-colindex="' + focusedColumn.colIndex + '"]').get(0)) {
+
+                        focusedColumn.dindex--;
+
+                        if (focusedColumn.dindex < 0 || focusedColumn.dindex > this.list.length - 1) {
+                            break;
+                        }
+                    }
+                    nPanelInfo = GRID.util.findPanelByColumnIndex.call(this, focusedColumn.dindex, focusedColumn.colIndex);
+                }
 
                 focusedColumn.panelName = nPanelInfo.panelName;
+
+                // 포커스 컬럼의 위치에 따라 스크롤 처리
+                var isScrollTo = function () {
+                    if (!this.config.virtualScrollX) return false;
+                    var scrollLeft = 0;
+                    if (focusedColumn.colIndex + 1 > this.xvar.frozenColumnIndex) {
+                        if (focusedColumn.colIndex <= this.xvar.paintStartColumnIndex && this.colGroup[focusedColumn.colIndex]) {
+                            scrollLeft = -this.colGroup[Number(focusedColumn.colIndex)]._sx;
+                            scrollTo.call(this, { left: scrollLeft });
+                            GRID.header.scrollTo.call(this, { left: scrollLeft });
+                            GRID.scroller.resize.call(this);
+                            return true;
+                        } else if (focusedColumn.colIndex >= this.xvar.paintEndColumnIndex && this.colGroup[Number(focusedColumn.colIndex)]) {
+                            if (this.colGroup[Number(focusedColumn.colIndex)]._ex > this.xvar.bodyWidth) {
+                                scrollLeft = this.colGroup[Number(focusedColumn.colIndex)]._ex - this.xvar.bodyWidth;
+                                scrollTo.call(this, { left: -scrollLeft });
+                                GRID.header.scrollTo.call(this, { left: -scrollLeft });
+                                GRID.scroller.resize.call(this);
+                            }
+                            return true;
+                        }
+                    }
+                    scrollLeft = null;
+                    return false;
+                }.call(this);
+
                 containerPanelName = nPanelInfo.containerPanelName;
                 isScrollPanel = nPanelInfo.isScrollPanel;
 
@@ -27661,8 +29103,9 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
 
                 var $column = this.$.panel[focusedColumn.panelName].find('[data-ax5grid-tr-data-index="' + focusedColumn.dindex + '"]').find('[data-ax5grid-column-rowindex="' + focusedColumn.rowIndex + '"][data-ax5grid-column-colindex="' + focusedColumn.colIndex + '"]').attr('data-ax5grid-column-focused', "true");
 
-                if ($column && isScrollPanel) {
+                if (!isScrollTo && $column && isScrollPanel) {
                     // 스크롤 패널 이라면~
+                    // todo : 컬럼이동할 때에도 scrollTo 체크
                     var newLeft = function () {
                         if ($column.position().left + $column.outerWidth() > Math.abs(this.$.panel[focusedColumn.panelName].position().left) + this.$.panel[containerPanelName].width()) {
                             return $column.position().left + $column.outerWidth() - this.$.panel[containerPanelName].width();
@@ -27672,8 +29115,6 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
                             return;
                         }
                     }.call(this);
-
-                    //console.log(newLeft);
 
                     if (typeof newLeft !== "undefined") {
                         GRID.header.scrollTo.call(this, { left: -newLeft });
@@ -27685,10 +29126,10 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
                 return moveResult;
             },
             "INDEX": function INDEX(_dindex) {
-                var moveResult = true;
-                var focusedColumn;
-                var originalColumn;
-                var while_i;
+                var moveResult = true,
+                    focusedColumn = void 0,
+                    originalColumn = void 0,
+                    while_i = void 0;
 
                 for (var c in this.focusedColumn) {
                     focusedColumn = jQuery.extend({}, this.focusedColumn[c], true);
@@ -27783,9 +29224,16 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
 
     var inlineEdit = {
         active: function active(_focusedColumn, _e, _initValue) {
-            var self = this;
-            var dindex, colIndex, rowIndex, panelName, colspan;
-            var col, editor;
+            var _this2 = this;
+
+            var self = this,
+                dindex,
+                colIndex,
+                rowIndex,
+                panelName,
+                colspan,
+                col,
+                editor;
 
             // this.inlineEditing = {};
             for (var key in _focusedColumn) {
@@ -27856,38 +29304,43 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
                 this.isInlineEditing = true;
             }
             if (this.isInlineEditing) {
+                var _ret4 = function () {
 
-                var originalValue = GRID.data.getValue.call(self, dindex, col.key);
-                var initValue = function (__value, __editor) {
-                    if (U.isNothing(__value)) {
-                        __value = U.isNothing(originalValue) ? "" : originalValue;
-                    }
+                    var originalValue = GRID.data.getValue.call(self, dindex, col.key),
+                        initValue = function (__value, __editor) {
+                        if (U.isNothing(__value)) {
+                            __value = U.isNothing(originalValue) ? "" : originalValue;
+                        }
 
-                    if (__editor.type == "money") {
-                        return U.number(__value, { "money": true });
-                    } else {
-                        return __value;
-                    }
-                }.call(this, _initValue, editor);
+                        if (__editor.type == "money") {
+                            return U.number(__value, { "money": true });
+                        } else {
+                            return __value;
+                        }
+                    }.call(_this2, _initValue, editor);
 
-                this.inlineEditing[key].$inlineEditorCell = this.$["panel"][panelName].find('[data-ax5grid-tr-data-index="' + dindex + '"]').find('[data-ax5grid-column-rowindex="' + rowIndex + '"][data-ax5grid-column-colindex="' + colIndex + '"]').find('[data-ax5grid-cellholder]');
+                    _this2.inlineEditing[key].$inlineEditorCell = _this2.$["panel"][panelName].find('[data-ax5grid-tr-data-index="' + dindex + '"]').find('[data-ax5grid-column-rowindex="' + rowIndex + '"][data-ax5grid-column-colindex="' + colIndex + '"]').find('[data-ax5grid-cellholder]');
 
-                this.inlineEditing[key].$inlineEditor = GRID.inlineEditor[editor.type].init(this, key, editor, this.inlineEditing[key].$inlineEditorCell, initValue);
+                    _this2.inlineEditing[key].$inlineEditor = GRID.inlineEditor[editor.type].init(_this2, key, editor, _this2.inlineEditing[key].$inlineEditorCell, initValue);
 
-                return true;
+                    return {
+                        v: true
+                    };
+                }();
+
+                if ((typeof _ret4 === "undefined" ? "undefined" : _typeof(_ret4)) === "object") return _ret4.v;
             }
         },
         deActive: function deActive(_msg, _key, _value) {
             // console.log(this.inlineEditing.column.dindex, this.inlineEditing.$inlineEditor.val());
             if (!this.inlineEditing[_key]) return this;
 
-            var panelName = this.inlineEditing[_key].panelName;
-            var dindex = this.inlineEditing[_key].column.dindex;
-            var rowIndex = this.inlineEditing[_key].column.rowIndex;
-            var colIndex = this.inlineEditing[_key].column.colIndex;
-
-            var column = this.bodyRowMap[this.inlineEditing[_key].column.rowIndex + "_" + this.inlineEditing[_key].column.colIndex];
-            var editorValue = function ($inlineEditor) {
+            var panelName = this.inlineEditing[_key].panelName,
+                dindex = this.inlineEditing[_key].column.dindex,
+                rowIndex = this.inlineEditing[_key].column.rowIndex,
+                colIndex = this.inlineEditing[_key].column.colIndex,
+                column = this.bodyRowMap[this.inlineEditing[_key].column.rowIndex + "_" + this.inlineEditing[_key].column.colIndex],
+                editorValue = function ($inlineEditor) {
                 if (typeof _value === "undefined") {
                     if ($inlineEditor.get(0).tagName == "SELECT" || $inlineEditor.get(0).tagName == "INPUT" || $inlineEditor.get(0).tagName == "TEXTAREA") {
                         return $inlineEditor.val();
@@ -27898,9 +29351,8 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
                 } else {
                     return _value;
                 }
-            }(this.inlineEditing[_key].$inlineEditor);
-
-            var newValue = function (__value, __editor) {
+            }(this.inlineEditing[_key].$inlineEditor),
+                newValue = function (__value, __editor) {
                 if (__editor.type == "money") {
                     return U.number(__value);
                 } else {
@@ -27959,25 +29411,26 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
                     } else {
 
                         for (var k in this.focusedColumn) {
-                            var _column = this.focusedColumn[k];
-                            var column = this.bodyRowMap[_column.rowIndex + "_" + _column.colIndex];
-                            var dindex = _column.dindex;
-                            var value = "";
+                            var _column = this.focusedColumn[k],
+                                column = this.bodyRowMap[_column.rowIndex + "_" + _column.colIndex],
+                                _dindex3 = _column.dindex,
+                                value = "",
+                                col = this.colGroup[_column.colIndex];
+                            ;
+
                             if (column) {
-                                if (!this.list[dindex].__isGrouping) {
-                                    value = GRID.data.getValue.call(this, dindex, column.key);
+                                if (!this.list[_dindex3].__isGrouping) {
+                                    value = GRID.data.getValue.call(this, _dindex3, column.key);
                                 }
                             }
 
-                            var col = this.colGroup[_column.colIndex];
-
-                            if (GRID.inlineEditor[col.editor.type].editMode === "inline") {
+                            if (col.editor && GRID.inlineEditor[col.editor.type].editMode === "inline") {
                                 if (_options && _options.moveFocus) {} else {
                                     if (column.editor && column.editor.type == "checkbox") {
+                                        value = GRID.data.getValue.call(this, _dindex3, column.key);
 
-                                        value = GRID.data.getValue.call(this, dindex, column.key);
-
-                                        var checked, newValue;
+                                        var checked = void 0,
+                                            newValue = void 0;
                                         if (column.editor.config && column.editor.config.trueValue) {
                                             if (checked = !(value == column.editor.config.trueValue)) {
                                                 newValue = column.editor.config.trueValue;
@@ -27989,7 +29442,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
                                         }
 
                                         GRID.data.setValue.call(this, _column.dindex, column.key, newValue);
-                                        updateRowState.call(this, ["cellChecked"], dindex, {
+                                        updateRowState.call(this, ["cellChecked"], _dindex3, {
                                             key: column.key, rowIndex: _column.rowIndex, colIndex: _column.colIndex,
                                             editorConfig: column.editor.config, checked: checked
                                         });
@@ -28010,24 +29463,27 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
     };
 
     var getExcelString = function getExcelString() {
-        var cfg = this.config;
-        var list = this.list;
-        var bodyRowData = this.bodyRowData;
-        var footSumData = this.footSumData;
-        var bodyGroupingData = this.bodyGroupingData;
+        var cfg = this.config,
+            list = this.list,
+            bodyRowData = this.bodyRowTable,
+            footSumData = this.footSumTable,
+            bodyGroupingData = this.bodyGroupingTable;
 
         // body-scroll 의 포지션에 의존적이므로..
         var getBody = function getBody(_colGroup, _bodyRow, _groupRow, _list) {
-            var SS = [];
-            var di, dl;
-            var tri, trl;
-            var ci, cl;
-            var col;
+            var SS = [],
+                di = void 0,
+                dl = void 0,
+                tri = void 0,
+                trl = void 0,
+                ci = void 0,
+                cl = void 0,
+                col = void 0;
 
             //SS.push('<table border="1">');
             for (di = 0, dl = _list.length; di < dl; di++) {
-                var isGroupingRow = false;
-                var rowTable;
+                var isGroupingRow = false,
+                    rowTable = void 0;
 
                 if (_groupRow && "__isGrouping" in _list[di]) {
                     rowTable = _groupRow;
@@ -28037,34 +29493,35 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
                 }
 
                 for (tri = 0, trl = rowTable.rows.length; tri < trl; tri++) {
-                    SS.push('<tr>');
+                    SS.push('\n<tr>');
                     for (ci = 0, cl = rowTable.rows[tri].cols.length; ci < cl; ci++) {
                         col = rowTable.rows[tri].cols[ci];
 
-                        SS.push('<td ', 'colspan="' + col.colspan + '" ', 'rowspan="' + col.rowspan + '" ', '>', isGroupingRow ? getGroupingValue.call(this, _list[di], di, col) : getFieldValue.call(this, _list, _list[di], di, col), '</td>');
+                        SS.push('<td ', 'colspan="' + col.colspan + '" ', 'rowspan="' + col.rowspan + '" ', '>', isGroupingRow ? getGroupingValue.call(this, _list[di], di, col) : getFieldValue.call(this, _list, _list[di], di, col, undefined, "text"), '&nbsp;</td>');
                     }
-                    SS.push('</tr>');
+                    SS.push('\n</tr>');
                 }
             }
             //SS.push('</table>');
             return SS.join('');
         };
         var getSum = function getSum(_colGroup, _bodyRow, _list) {
-            var SS = [];
-            var tri, trl;
-            var ci, cl;
-            var col;
+            var SS = [],
+                tri = void 0,
+                trl = void 0,
+                ci = void 0,
+                cl = void 0,
+                col = void 0;
 
             //SS.push('<table border="1">');
             for (tri = 0, trl = _bodyRow.rows.length; tri < trl; tri++) {
-                SS.push('<tr>');
+                SS.push('\n<tr>');
                 for (ci = 0, cl = _bodyRow.rows[tri].cols.length; ci < cl; ci++) {
                     col = _bodyRow.rows[tri].cols[ci];
                     SS.push('<td ', 'colspan="' + col.colspan + '" ', 'rowspan="' + col.rowspan + '" ', '>', getSumFieldValue.call(this, _list, col), '</td>');
                 }
-                SS.push('</tr>');
+                SS.push('\n</tr>');
             }
-
             //SS.push('</table>');
 
             return SS.join('');
@@ -28085,6 +29542,13 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
         return po.join('');
     };
 
+    var toggleCollapse = function toggleCollapse(_dindex, _collapse) {
+        if (GRID.data.toggleCollapse.call(this, _dindex, _collapse)) {
+            this.proxyList = GRID.data.getProxyList.call(this, this.list);
+            repaint.call(this);
+        }
+    };
+
     GRID.body = {
         init: init,
         repaint: repaint,
@@ -28096,18 +29560,19 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
         blur: blur,
         moveFocus: moveFocus,
         inlineEdit: inlineEdit,
-        getExcelString: getExcelString
+        getExcelString: getExcelString,
+        toggleCollapse: toggleCollapse
     };
 })();
-
 // ax5.ui.grid.collector
 (function () {
 
-    var GRID = ax5.ui.grid;
-    var U = ax5.util;
+    var GRID = ax5.ui.grid,
+        U = ax5.util;
+
     var sum = function sum() {
-        var value = 0;
-        var i = this.list.length;
+        var value = 0,
+            i = this.list.length;
         while (i--) {
             if (!("__groupingList" in this.list[i])) {
                 value += U.number(this.list[i][this.key]);
@@ -28116,8 +29581,8 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
         return value;
     };
     var avg = function avg() {
-        var value = 0;
-        var i = this.list.length,
+        var value = 0,
+            i = this.list.length,
             listLength = 0;
         while (i--) {
             if (!("__groupingList" in this.list[i])) {
@@ -28136,15 +29601,15 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
 // ax5.ui.grid.layout
 (function () {
 
-    var GRID = ax5.ui.grid;
-    var U = ax5.util;
+    var GRID = ax5.ui.grid,
+        U = ax5.util;
 
     var init = function init() {};
 
     var clearGroupingData = function clearGroupingData(_list) {
         var i = 0,
-            l = _list.length;
-        var returnList = [];
+            l = _list.length,
+            returnList = [];
         for (; i < l; i++) {
             if (_list[i] && !_list[i]["__isGrouping"]) {
                 if (_list[i][this.config.columnKeys.selected]) {
@@ -28158,11 +29623,14 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
 
     var initData = function initData(_list) {
         this.selectedDataIndexs = [];
+        this.deletedList = [];
+
         var i = 0,
-            l = _list.length;
-        var returnList = [];
-        var appendIndex = 0;
-        var dataRealRowCount;
+            l = _list.length,
+            returnList = [],
+            appendIndex = 0,
+            dataRealRowCount = 0,
+            lineNumber = 0;
 
         if (this.config.body.grouping) {
             var groupingKeys = U.map(this.bodyGrouping.by, function () {
@@ -28175,9 +29643,9 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
             });
             var gi = 0,
                 gl = groupingKeys.length,
-                compareString,
+                compareString = void 0,
                 appendRow = [],
-                ari;
+                ari = void 0;
             for (; i < l + 1; i++) {
                 gi = 0;
                 if (_list[i] && _list[i][this.config.columnKeys.deleted]) {
@@ -28211,23 +29679,26 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
                         if (_list[i][this.config.columnKeys.selected]) {
                             this.selectedDataIndexs.push(i);
                         }
-                        dataRealRowCount = _list[i]["__index"] = i;
+                        _list[i]["__index"] = lineNumber;
+                        dataRealRowCount++;
                         returnList.push(_list[i]);
                         appendIndex++;
+                        lineNumber++;
                     }
                 }
             }
         } else {
             for (; i < l; i++) {
-                if (_list[i] && _list[i][this.config.columnKeys.deleted]) {
-                    this.deletedList.push(_list[i]);
-                } else if (_list[i]) {
-
-                    if (_list[i][this.config.columnKeys.selected]) {
+                if (_list[i]) {
+                    if (_list[i][this.config.columnKeys.deleted]) {
+                        this.deletedList.push(_list[i]);
+                    } else if (_list[i][this.config.columnKeys.selected]) {
                         this.selectedDataIndexs.push(i);
                     }
                     // __index변수를 추가하여 lineNumber 에 출력합니다. (body getFieldValue 에서 출력함)
-                    dataRealRowCount = _list[i]["__index"] = i;
+                    _list[i]["__index"] = lineNumber;
+                    dataRealRowCount++;
+                    lineNumber++;
                     returnList.push(_list[i]);
                 }
             }
@@ -28235,20 +29706,134 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
 
         // 원본 데이터의 갯수
         // grouping은 제외하고 수집됨.
-        this.xvar.dataRealRowCount = dataRealRowCount + 1;
+        this.xvar.dataRealRowCount = dataRealRowCount;
+        return returnList;
+    };
+
+    var arrangeData4tree = function arrangeData4tree(_list) {
+        this.selectedDataIndexs = [];
+        this.deletedList = [];
+        var i = 0,
+            seq = 0,
+            appendIndex = 0,
+            dataRealRowCount = 0,
+            lineNumber = 0;
+
+        var li = _list.length;
+        var keys = this.config.tree.columnKeys;
+        var hashDigit = this.config.tree.hashDigit;
+        var listIndexMap = {};
+
+        while (li--) {
+            delete _list[li][keys.parentHash];
+            delete _list[li][keys.selfHash];
+            //delete _list[li][keys.childrenLength];
+        }
+
+        /// 루트 아이템 수집
+        i = 0;
+        seq = 0;
+        li = _list.length;
+        for (; i < li; i++) {
+            if (_list[i]) {
+                listIndexMap[_list[i][keys.selfKey]] = i; // 인덱싱
+
+                if (U.isNothing(_list[i][keys.parentKey]) || _list[i][keys.parentKey] === "top") {
+                    // 최상위 아이템인 경우
+                    _list[i][keys.parentKey] = "top";
+                    _list[i][keys.children] = [];
+                    _list[i][keys.parentHash] = U.setDigit("0", hashDigit);
+                    _list[i][keys.selfHash] = U.setDigit("0", hashDigit) + "." + U.setDigit(seq, hashDigit);
+                    _list[i][keys.depth] = 0;
+                    _list[i][keys.hidden] = false;
+
+                    seq++;
+                }
+            }
+        }
+
+        /// 자식 아이템 수집
+        i = 0;
+        lineNumber = 0;
+        for (; i < li; i++) {
+            var _parent = void 0,
+                _parentHash = void 0;
+            if (_list[i] && _list[i][keys.parentKey] !== "top" && typeof _list[i][keys.parentHash] === "undefined") {
+
+                if (_parent = _list[listIndexMap[_list[i][keys.parentKey]]]) {
+                    _parentHash = _parent[keys.selfHash];
+                    _list[i][keys.children] = [];
+                    _list[i][keys.parentHash] = _parentHash;
+                    _list[i][keys.selfHash] = _parentHash + "." + U.setDigit(_parent[keys.children].length, hashDigit);
+                    _list[i][keys.depth] = _parent[keys.depth] + 1;
+                    if (_parent[keys.collapse] || _parent[keys.hidden]) _list[i][keys.hidden] = true;
+                    _parent[keys.children].push(_list[i][keys.selfKey]);
+                } else {
+                    _list[i][keys.parentKey] = "top";
+                    _list[i][keys.children] = [];
+                    _list[i][keys.parentHash] = U.setDigit("0", hashDigit);
+                    _list[i][keys.selfHash] = U.setDigit("0", hashDigit) + "." + U.setDigit(seq, hashDigit);
+                    _list[i][keys.hidden] = false;
+
+                    seq++;
+                }
+            }
+
+            if (_list[i]) {
+                if (_list[i][this.config.columnKeys.deleted]) {
+                    this.deletedList.push(_list[i]);
+                    _list[i][keys.hidden] = true;
+                } else if (_list[i][this.config.columnKeys.selected]) {
+                    this.selectedDataIndexs.push(i);
+                }
+
+                _list[i]["__index"] = lineNumber;
+                dataRealRowCount++;
+                lineNumber++;
+            }
+        }
+
+        this.listIndexMap = listIndexMap;
+        this.xvar.dataRealRowCount = dataRealRowCount;
+
+        return _list;
+    };
+
+    var getProxyList = function getProxyList(_list) {
+        var i = 0,
+            l = _list.length,
+            returnList = [];
+        for (; i < l; i++) {
+
+            if (_list[i] && !_list[i][this.config.tree.columnKeys.hidden]) {
+                _list[i].__origin_index__ = i;
+                returnList.push(_list[i]);
+            }
+        }
         return returnList;
     };
 
     var set = function set(data) {
-        var self = this;
-
         if (U.isArray(data)) {
+
             this.page = null;
-            this.list = initData.call(this, !this.config.remoteSort && Object.keys(this.sortInfo).length ? sort.call(this, this.sortInfo, data) : data);
+            if (this.config.tree.use) {
+                this.list = arrangeData4tree.call(this, data);
+                this.proxyList = getProxyList.call(this, sort.call(this, this.sortInfo, this.list));
+            } else {
+                this.proxyList = null;
+                this.list = initData.call(this, !this.config.remoteSort && Object.keys(this.sortInfo).length ? sort.call(this, this.sortInfo, data) : data);
+            }
             this.deletedList = [];
         } else if ("page" in data) {
+
             this.page = jQuery.extend({}, data.page);
-            this.list = initData.call(this, !this.config.remoteSort && Object.keys(this.sortInfo).length ? sort.call(this, this.sortInfo, data.list) : data.list);
+            if (this.config.tree.use) {
+                this.list = arrangeData4tree.call(this, data.list);
+                this.proxyList = getProxyList.call(this, sort.call(this, this.sortInfo, this.list));
+            } else {
+                this.list = initData.call(this, !this.config.remoteSort && Object.keys(this.sortInfo).length ? sort.call(this, this.sortInfo, data.list) : data.list);
+            }
             this.deletedList = [];
         }
 
@@ -28308,25 +29893,34 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
             }
         };
 
-        if (typeof _dindex === "undefined") _dindex = "last";
-        if (_dindex in processor) {
-            _row[this.config.columnKeys.modified] = true;
-            processor[_dindex].call(this, _row);
+        if (this.config.tree.use) {
+            var _list2 = this.list.concat([].concat(_row));
+
+            this.list = arrangeData4tree.call(this, _list2);
+            this.proxyList = getProxyList.call(this, sort.call(this, this.sortInfo, this.list));
         } else {
-            if (!U.isNumber(_dindex)) {
-                throw 'invalid argument _dindex';
+            if (typeof _dindex === "undefined") _dindex = "last";
+            if (_dindex in processor) {
+                _row[this.config.columnKeys.modified] = true;
+                processor[_dindex].call(this, _row);
+            } else {
+                if (!U.isNumber(_dindex)) {
+                    throw 'invalid argument _dindex';
+                }
+                //
+                list = list.splice(_dindex, [].concat(_row));
             }
-            //
-            list = list.splice(_dindex, [].concat(_row));
-        }
 
-        if (this.config.body.grouping) {
-            list = initData.call(this, sort.call(this, this.sortInfo, list));
-        } else if (_options && _options.sort && Object.keys(this.sortInfo).length) {
-            list = sort.call(this, this.sortInfo, list);
-        }
+            if (this.config.body.grouping) {
+                list = initData.call(this, sort.call(this, this.sortInfo, list));
+            } else if (_options && _options.sort && Object.keys(this.sortInfo).length) {
+                list = initData.call(this, sort.call(this, this.sortInfo, list));
+            } else {
+                list = initData.call(this, list);
+            }
 
-        this.list = list;
+            this.list = list;
+        }
 
         this.needToPaintSum = true;
         this.xvar.frozenRowIndex = this.config.frozenRowIndex > this.list.length ? this.list.length : this.config.frozenRowIndex;
@@ -28343,11 +29937,34 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
         var list = this.config.body.grouping ? clearGroupingData.call(this, this.list) : this.list;
         var processor = {
             "first": function first() {
-                list.splice(_dindex, 1);
+                if (this.config.tree.use) {
+                    processor.tree.call(this, 0);
+                } else {
+                    list.splice(0, 1);
+                }
             },
             "last": function last() {
-                var lastIndex = list.length - 1;
-                list.splice(lastIndex, 1);
+                if (this.config.tree.use) {
+                    processor.tree.call(this, list.length - 1);
+                } else {
+                    list.splice(list.length - 1, 1);
+                }
+            },
+            "index": function index(_dindex) {
+                if (this.config.tree.use) {
+                    processor.tree.call(this, _dindex);
+                } else {
+                    list.splice(_dindex, 1);
+                }
+            },
+            "tree": function tree(_dindex) {
+                var treeKeys = this.config.tree.columnKeys,
+                    selfHash = list[_dindex][this.config.tree.columnKeys.selfHash];
+                list = U.filter(list, function () {
+                    return this[treeKeys.selfHash].substr(0, selfHash.length) != selfHash;
+                });
+                treeKeys = null;
+                selfHash = null;
             }
         };
 
@@ -28358,17 +29975,22 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
             if (!U.isNumber(_dindex)) {
                 throw 'invalid argument _dindex';
             }
-            //
-            list.splice(_dindex, 1);
+            processor["index"].call(this, _dindex);
         }
 
-        if (this.config.body.grouping) {
-            list = initData.call(this, sort.call(this, this.sortInfo, list));
-        } else if (Object.keys(this.sortInfo).length) {
-            list = sort.call(this, this.sortInfo, list);
+        if (this.config.tree.use) {
+            this.list = arrangeData4tree.call(this, list);
+            this.proxyList = getProxyList.call(this, sort.call(this, this.sortInfo, this.list));
+        } else {
+            if (this.config.body.grouping) {
+                list = initData.call(this, sort.call(this, this.sortInfo, list));
+            } else if (Object.keys(this.sortInfo).length) {
+                list = initData.call(this, sort.call(this, this.sortInfo, list));
+            } else {
+                list = initData.call(this, list);
+            }
+            this.list = list;
         }
-
-        this.list = list;
 
         this.needToPaintSum = true;
         this.xvar.frozenRowIndex = this.config.frozenRowIndex > this.list.length ? this.list.length : this.config.frozenRowIndex;
@@ -28383,25 +30005,78 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
      */
     var deleteRow = function deleteRow(_dindex) {
         var list = this.config.body.grouping ? clearGroupingData.call(this, this.list) : this.list;
-
         var processor = {
             "first": function first() {
-                list[0][this.config.columnKeys.deleted] = true;
+                if (this.config.tree.use) {
+                    processor.tree.call(this, 0);
+                } else {
+                    list[0][this.config.columnKeys.deleted] = true;
+                }
             },
             "last": function last() {
-                list[list.length - 1][this.config.columnKeys.deleted] = true;
+                if (this.config.tree.use) {
+                    processor.tree.call(this, list.length - 1);
+                } else {
+                    list[list.length - 1][this.config.columnKeys.deleted] = true;
+                }
             },
             "selected": function selected() {
-                var i = list.length;
-                while (i--) {
-                    if (list[i][this.config.columnKeys.selected]) {
-                        list[i][this.config.columnKeys.deleted] = true;
+                if (this.config.tree.use) {
+                    processor.tree.call(this, "selected");
+                } else {
+                    var i = list.length;
+                    while (i--) {
+                        if (list[i][this.config.columnKeys.selected]) {
+                            list[i][this.config.columnKeys.deleted] = true;
+                        }
                     }
+                    i = null;
                 }
+            },
+            "tree": function tree(_dindex) {
+                var keys = this.config.columnKeys,
+                    treeKeys = this.config.tree.columnKeys;
+
+                if (_dindex === "selected") {
+
+                    var i = list.length;
+                    while (i--) {
+                        if (list[i][this.config.columnKeys.selected]) {
+                            list[i][this.config.columnKeys.deleted] = true;
+
+                            var selfHash = list[i][treeKeys.selfHash];
+                            var ii = list.length;
+
+                            while (ii--) {
+                                if (list[ii][treeKeys.selfHash].substr(0, selfHash.length) === selfHash) {
+                                    list[ii][keys.deleted] = true;
+                                }
+                            }
+
+                            selfHash = null;
+                            ii = null;
+                        }
+                    }
+                    i = null;
+                } else {
+                    var _selfHash = list[_dindex][treeKeys.selfHash];
+                    var _i = list.length;
+                    while (_i--) {
+                        if (list[_i][treeKeys.selfHash].substr(0, _selfHash.length) !== _selfHash) {
+                            list[_i][keys.deleted] = true;
+                        }
+                    }
+                    _selfHash = null;
+                    _i = null;
+                }
+
+                keys = null;
+                treeKeys = null;
             }
         };
 
         if (typeof _dindex === "undefined") _dindex = "last";
+
         if (_dindex in processor) {
             processor[_dindex].call(this, _dindex);
         } else {
@@ -28411,15 +30086,20 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
             list[_dindex][this.config.columnKeys.deleted] = true;
         }
 
-        if (this.config.body.grouping) {
-            list = initData.call(this, sort.call(this, this.sortInfo, list));
-        } else if (Object.keys(this.sortInfo).length) {
-            list = initData.call(this, sort.call(this, this.sortInfo, list));
+        if (this.config.tree.use) {
+            this.list = arrangeData4tree.call(this, list);
+            this.proxyList = getProxyList.call(this, sort.call(this, this.sortInfo, this.list));
         } else {
-            list = initData.call(this, list);
-        }
+            if (this.config.body.grouping) {
+                list = initData.call(this, sort.call(this, this.sortInfo, list));
+            } else if (Object.keys(this.sortInfo).length) {
+                list = initData.call(this, sort.call(this, this.sortInfo, list));
+            } else {
+                list = initData.call(this, list);
+            }
 
-        this.list = list;
+            this.list = list;
+        }
 
         this.needToPaintSum = true;
         this.xvar.frozenRowIndex = this.config.frozenRowIndex > this.list.length ? this.list.length : this.config.frozenRowIndex;
@@ -28472,12 +30152,14 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
     };
 
     var getValue = function getValue(_dindex, _key, _value) {
+        var list = this.list;
+
         if (/[\.\[\]]/.test(_key)) {
             try {
-                _value = Function("", "return this" + GRID.util.getRealPathForDataItem(_key) + ";").call(this.list[_dindex]);
+                _value = Function("", "return this" + GRID.util.getRealPathForDataItem(_key) + ";").call(list[_dindex]);
             } catch (e) {}
         } else {
-            _value = this.list[_dindex][_key];
+            _value = list[_dindex][_key];
         }
         return _value;
     };
@@ -28489,6 +30171,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
     var select = function select(_dindex, _selected, _options) {
         var cfg = this.config;
 
+        if (!this.list[_dindex]) return false;
         if (this.list[_dindex].__isGrouping) return false;
         if (this.list[_dindex][cfg.columnKeys.disableSelection]) return false;
 
@@ -28517,9 +30200,9 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
     };
 
     var selectAll = function selectAll(_selected, _options) {
-        var cfg = this.config;
+        var cfg = this.config,
+            dindex = this.list.length;
 
-        var dindex = this.list.length;
         if (typeof _selected === "undefined") {
             while (dindex--) {
                 if (this.list[dindex].__isGrouping) continue;
@@ -28561,9 +30244,9 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
     };
 
     var sort = function sort(_sortInfo, _list) {
-        var self = this;
-        var list = _list || this.list;
-        var sortInfoArray = [];
+        var self = this,
+            list = _list || this.list,
+            sortInfoArray = [];
         var getKeyValue = function getKeyValue(_item, _key, _value) {
             if (/[\.\[\]]/.test(_key)) {
                 try {
@@ -28584,8 +30267,8 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
 
         var i = 0,
             l = sortInfoArray.length,
-            _a_val,
-            _b_val;
+            _a_val = void 0,
+            _b_val = void 0;
 
         list.sort(function (_a, _b) {
             for (i = 0; i < l; i++) {
@@ -28614,11 +30297,100 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
         }
     };
 
+    var append = function append(_list, _callback) {
+        var self = this;
+
+        if (this.config.tree.use) {
+            var list = this.list.concat([].concat(_list));
+
+            this.list = arrangeData4tree.call(this, list);
+            this.proxyList = getProxyList.call(this, sort.call(this, this.sortInfo, this.list));
+            list = null;
+        } else {
+            this.list = this.list.concat([].concat(_list));
+        }
+
+        this.appendProgress = true;
+        GRID.page.statusUpdate.call(this);
+
+        if (this.appendDebouncer) {
+            if (self.appendDebounceTimes < this.config.debounceTime / 10) {
+                clearTimeout(this.appendDebouncer);
+                self.appendDebounceTimes++;
+            } else {
+                self.appendDebounceTimes = 0;
+                appendIdle.call(self);
+                _callback();
+                return false;
+            }
+        }
+
+        this.appendDebouncer = setTimeout(function () {
+            self.appendDebounceTimes = 0;
+            appendIdle.call(self);
+            _callback();
+        }, this.config.debounceTime);
+
+        // todo : append bounce animation
+    };
+
+    var appendIdle = function appendIdle() {
+        this.appendProgress = false;
+        if (this.config.body.grouping) {
+            this.list = initData.call(this, sort.call(this, this.sortInfo, this.list));
+        } else {
+            this.list = initData.call(this, this.list);
+        }
+
+        this.needToPaintSum = true;
+        this.xvar.frozenRowIndex = this.config.frozenRowIndex > this.list.length ? this.list.length : this.config.frozenRowIndex;
+        this.xvar.paintStartRowIndex = undefined; // 스크롤 포지션 저장변수 초기화
+        GRID.page.navigationUpdate.call(this);
+    };
+
+    var toggleCollapse = function toggleCollapse(_dindex, _collapse) {
+        var keys = this.config.tree.columnKeys,
+            selfHash = void 0,
+            originIndex = void 0;
+
+        if (typeof _dindex === "undefined") return false;
+        originIndex = this.proxyList[_dindex].__origin_index__;
+
+        if (this.list[originIndex][keys.children]) {
+            this.proxyList = []; // 리셋 프록시
+            if (typeof _collapse == "undefined") {
+                _collapse = !(this.list[originIndex][keys.collapse] || false);
+            }
+
+            this.list[originIndex][keys.collapse] = _collapse;
+            selfHash = this.list[originIndex][keys.selfHash];
+
+            var i = this.list.length;
+            while (i--) {
+                if (this.list[i]) {
+                    // console.log(this.list[i][keys.parentHash].substr(0, selfHash.length), selfHash);
+                    if (this.list[i][keys.parentHash].substr(0, selfHash.length) === selfHash) {
+                        this.list[i][keys.hidden] = _collapse;
+                    }
+
+                    if (!this.list[i][keys.hidden]) {
+                        this.proxyList.push(this.list[i]);
+                    }
+                }
+            }
+
+            return true;
+        } else {
+            return false;
+        }
+    };
+
     GRID.data = {
         init: init,
         set: set,
         get: get,
         getList: getList,
+        getProxyList: getProxyList,
         setValue: setValue,
         getValue: getValue,
         clearSelect: clearSelect,
@@ -28630,7 +30402,9 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
         update: update,
         sort: sort,
         initData: initData,
-        clearGroupingData: clearGroupingData
+        clearGroupingData: clearGroupingData,
+        append: append,
+        toggleCollapse: toggleCollapse
     };
 })();
 /*
@@ -28642,21 +30416,22 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
 // ax5.ui.grid.excel
 (function () {
 
-    var GRID = ax5.ui.grid;
-    var U = ax5.util;
+    var GRID = ax5.ui.grid,
+        U = ax5.util;
 
     var base64 = function base64(s) {
         return window.btoa(unescape(encodeURIComponent(s)));
-    };
-    var uri = "data:application/vnd.ms-excel;base64,";
-
-    var getExcelTmpl = function getExcelTmpl() {
+    },
+        uri = "data:application/vnd.ms-excel;base64,",
+        getExcelTmpl = function getExcelTmpl() {
         return "\uFEFF\n{{#tables}}{{{body}}}{{/tables}}\n";
     };
 
     var tableToExcel = function tableToExcel(table, fileName) {
-        var link, a, output;
-        var tables = [].concat(table);
+        var link = void 0,
+            a = void 0,
+            output = void 0,
+            tables = [].concat(table);
 
         output = ax5.mustache.render(getExcelTmpl(), {
             worksheet: function () {
@@ -28675,27 +30450,33 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
             }()
         });
 
-        var isChrome = navigator.userAgent.indexOf("Chrome") > -1;
-        var isSafari = !isChrome && navigator.userAgent.indexOf("Safari") > -1;
+        var isChrome = navigator.userAgent.indexOf("Chrome") > -1,
+            isSafari = !isChrome && navigator.userAgent.indexOf("Safari") > -1,
+            isIE = /*@cc_on!@*/false || !!document.documentMode; // this works with IE10 and IE11 both :)
 
-        var isIE = /*@cc_on!@*/false || !!document.documentMode; // this works with IE10 and IE11 both :)
+        var blob1 = void 0,
+            blankWindow = void 0,
+            $iframe = void 0,
+            iframe = void 0,
+            anchor = void 0;
+
         if (navigator.msSaveOrOpenBlob) {
-            var blob1 = new Blob([output], { type: "text/html" });
+            blob1 = new Blob([output], { type: "text/html" });
             window.navigator.msSaveOrOpenBlob(blob1, fileName);
         } else if (isSafari) {
             // 사파리는 지원이 안되므로 그냥 테이블을 클립보드에 복사처리
             //tables
-            var blankWindow = window.open('about:blank', this.id + '-excel-export', 'width=600,height=400');
+            blankWindow = window.open('about:blank', this.id + '-excel-export', 'width=600,height=400');
             blankWindow.document.write(output);
             blankWindow = null;
         } else {
             if (isIE && typeof Blob === "undefined") {
-
                 //otherwise use the iframe and save
                 //requires a blank iframe on page called txtArea1
-                var $iframe = jQuery('<iframe id="' + this.id + '-excel-export" style="display:none"></iframe>');
+                $iframe = jQuery('<iframe id="' + this.id + '-excel-export" style="display:none"></iframe>');
                 jQuery(document.body).append($iframe);
-                var iframe = window[this.id + '-excel-export'];
+
+                iframe = window[this.id + '-excel-export'];
                 iframe.document.open("text/html", "replace");
                 iframe.document.write(output);
                 iframe.document.close();
@@ -28704,7 +30485,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
                 $iframe.remove();
             } else {
                 // Attempt to use an alternative method
-                var anchor = document.body.appendChild(document.createElement("a"));
+                anchor = document.body.appendChild(document.createElement("a"));
 
                 // If the [download] attribute is supported, try to use it
                 if ("download" in anchor) {
@@ -28727,8 +30508,9 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
 // ax5.ui.grid.formatter
 (function () {
 
-    var GRID = ax5.ui.grid;
-    var U = ax5.util;
+    var GRID = ax5.ui.grid,
+        U = ax5.util;
+
     var money = function money() {
         return U.number(this.value, { "money": true });
     };
@@ -28740,8 +30522,8 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
 // ax5.ui.grid.header
 (function () {
 
-    var GRID = ax5.ui.grid;
-    var U = ax5.util;
+    var GRID = ax5.ui.grid,
+        U = ax5.util;
 
     var columnResizerEvent = {
         "on": function on(_columnResizer, _colIndex) {
@@ -28752,9 +30534,8 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
             self.xvar.columnResizerIndex = _colIndex;
             var resizeRange = {
                 min: -self.colGroup[_colIndex]._width + 2,
-                max: self.colGroup[_colIndex + 1] ? self.colGroup[_colIndex + 1]._width : self.$["container"]["root"].width() - 2
+                max: self.$["container"]["root"].width() - self.colGroup[_colIndex]._width
             };
-            //console.log(resizeRange);
 
             jQuery(document.body).bind(GRID.util.ENM["mousemove"] + ".ax5grid-" + this.instanceId, function (e) {
                 var mouseObj = GRID.util.getMousePosition(e);
@@ -28802,10 +30583,10 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
         var self = this;
 
         this.$["container"]["header"].on("click", '[data-ax5grid-column-attr]', function (e) {
-            var key = this.getAttribute("data-ax5grid-column-key");
-            var colIndex = this.getAttribute("data-ax5grid-column-colindex");
-            var rowIndex = this.getAttribute("data-ax5grid-column-rowindex");
-            var col = self.colGroup[colIndex];
+            var key = this.getAttribute("data-ax5grid-column-key"),
+                colIndex = this.getAttribute("data-ax5grid-column-colindex"),
+                rowIndex = this.getAttribute("data-ax5grid-column-rowindex"),
+                col = self.colGroup[colIndex];
 
             if (key === "__checkbox_header__") {
                 var selected = this.getAttribute("data-ax5grid-selected");
@@ -28837,8 +30618,8 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
     };
 
     var resetFrozenColumn = function resetFrozenColumn() {
-        var cfg = this.config;
-        var dividedHeaderObj = GRID.util.divideTableByFrozenColumnIndex(this.headerTable, this.config.frozenColumnIndex);
+        var cfg = this.config,
+            dividedHeaderObj = GRID.util.divideTableByFrozenColumnIndex(this.headerTable, this.config.frozenColumnIndex);
         this.asideHeaderData = function (dataTable) {
             var colGroup = [];
             var data = { rows: [] };
@@ -28884,40 +30665,41 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
     };
 
     var getFieldValue = function getFieldValue(_col) {
-        var cfg = this.config;
-        var colGroup = this.colGroup;
-        var _key = _col.key;
-        var tagsToReplace = {
+        var cfg = this.config,
+            colGroup = this.colGroup,
+            _key = _col.key,
+            tagsToReplace = {
             '<': '&lt;',
             '>': '&gt;'
         };
 
         if (_key === "__checkbox_header__") {
-            return '<div class="checkBox"></div>';
+            return "<div class=\"checkBox\" style=\"max-height: " + (_col.width - 10) + "px;min-height: " + (_col.width - 10) + "px;\"></div>";
         } else {
             return _col.label || "&nbsp;";
         }
     };
 
     var repaint = function repaint(_reset) {
-        var cfg = this.config;
-        var colGroup = this.colGroup;
+        var cfg = this.config,
+            colGroup = this.colGroup;
+
         if (_reset) {
             resetFrozenColumn.call(this);
             this.xvar.paintStartRowIndex = undefined;
         }
-        var asideHeaderData = this.asideHeaderData;
-        var leftHeaderData = this.leftHeaderData;
-        var headerData = this.headerData;
-        var headerAlign = cfg.header.align;
+        var asideHeaderData = this.asideHeaderData,
+            leftHeaderData = this.leftHeaderData,
+            headerData = this.headerData,
+            headerAlign = cfg.header.align;
 
         // this.asideColGroup : asideHeaderData에서 처리 함.
         this.leftHeaderColGroup = colGroup.slice(0, this.config.frozenColumnIndex);
         this.headerColGroup = colGroup.slice(this.config.frozenColumnIndex);
 
         var repaintHeader = function repaintHeader(_elTarget, _colGroup, _bodyRow) {
-            var tableWidth = 0;
-            var SS = [];
+            var tableWidth = 0,
+                SS = [];
             SS.push('<table border="0" cellpadding="0" cellspacing="0">');
             SS.push('<colgroup>');
             for (var cgi = 0, cgl = _colGroup.length; cgi < cgl; cgi++) {
@@ -28981,9 +30763,10 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
 
             /// append column-resizer
             (function () {
-                var resizerHeight = cfg.header.columnHeight * _bodyRow.rows.length - cfg.header.columnBorderWidth;
-                var resizerLeft = 0;
-                var AS = [];
+                var resizerHeight = cfg.header.columnHeight * _bodyRow.rows.length - cfg.header.columnBorderWidth,
+                    resizerLeft = 0,
+                    AS = [];
+
                 for (var cgi = 0, cgl = _colGroup.length; cgi < cgl; cgi++) {
                     var col = _colGroup[cgi];
                     if (!U.isNothing(col.colIndex)) {
@@ -29015,9 +30798,9 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
     };
 
     var toggleSort = function toggleSort(_key) {
-        var sortOrder = "";
-        var sortInfo = {};
-        var seq = 0;
+        var sortOrder = "",
+            sortInfo = {},
+            seq = 0;
 
         for (var k in this.sortInfo) {
             if (this.sortInfo[k].fixed) {
@@ -29073,11 +30856,10 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
     };
 
     var getExcelString = function getExcelString() {
-        var cfg = this.config;
-        var colGroup = this.colGroup;
-        var headerData = this.headerData;
-
-        var getHeader = function getHeader(_colGroup, _bodyRow) {
+        var cfg = this.config,
+            colGroup = this.colGroup,
+            headerData = this.headerTable,
+            getHeader = function getHeader(_colGroup, _bodyRow) {
             var SS = [];
             //SS.push('<table border="1">');
             for (var tri = 0, trl = _bodyRow.rows.length; tri < trl; tri++) {
@@ -29300,8 +31082,8 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
 // ax5.ui.grid.page
 (function () {
 
-    var GRID = ax5.ui.grid;
-    var U = ax5.util;
+    var GRID = ax5.ui.grid,
+        U = ax5.util;
 
     var onclickPageMove = function onclickPageMove(_act) {
         var callback = function callback(_pageNo) {
@@ -29408,7 +31190,8 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
             fromRowIndex: U.number(fromRowIndex + 1, { "money": true }),
             toRowIndex: U.number(toRowIndex, { "money": true }),
             totalElements: U.number(totalElements, { "money": true }),
-            dataRowCount: totalElements !== this.xvar.dataRealRowCount ? U.number(this.xvar.dataRealRowCount, { "money": true }) : false
+            dataRowCount: totalElements !== this.xvar.dataRealRowCount ? U.number(this.xvar.dataRealRowCount, { "money": true }) : false,
+            progress: this.appendProgress ? this.config.appendProgressIcon : ""
         }));
     };
 
@@ -29658,9 +31441,10 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
                 return false;
             }
 
-            var newLeft, newTop;
-            var _top_is_end = false;
-            var _left_is_end = false;
+            var newLeft = void 0,
+                newTop = void 0,
+                _top_is_end = false,
+                _left_is_end = false;
 
             newLeft = _body_scroll_position.left - delta.x;
             newTop = _body_scroll_position.top - delta.y;
@@ -29704,8 +31488,9 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
                 _content_height = self.xvar.scrollContentHeight,
                 _content_width = self.xvar.scrollContentWidth,
                 getContentPosition = function getContentPosition(e) {
-                var mouseObj = GRID.util.getMousePosition(e);
-                var newLeft, newTop;
+                var mouseObj = GRID.util.getMousePosition(e),
+                    newLeft = void 0,
+                    newTop = void 0;
 
                 self.xvar.__x_da = mouseObj.clientX - self.xvar.mousePosition.clientX;
                 self.xvar.__y_da = mouseObj.clientY - self.xvar.mousePosition.clientY;
@@ -29736,39 +31521,47 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
 
             this.xvar.__x_da = 0; // 이동량 변수 초기화 (계산이 잘못 될까바)
             this.xvar.__y_da = 0; // 이동량 변수 초기화 (계산이 잘못 될까바)
+            this.xvar.touchmoved = false;
 
-            jQuery(document.body).bind("touchmove" + ".ax5grid-" + this.instanceId, function (e) {
+            jQuery(document.body).on("touchmove" + ".ax5grid-" + this.instanceId, function (e) {
                 var css = getContentPosition(e);
                 GRID.header.scrollTo.call(self, { left: css.left });
                 GRID.body.scrollTo.call(self, css, "noRepaint");
                 resize.call(self);
-                U.stopEvent(e);
-            }).bind("touchend" + ".ax5grid-" + this.instanceId, function (e) {
-                var css = getContentPosition(e);
-                GRID.header.scrollTo.call(self, { left: css.left });
-                GRID.body.scrollTo.call(self, css);
-                resize.call(self);
-                U.stopEvent(e);
-                scrollContentMover.off.call(self);
+                U.stopEvent(e.originalEvent);
+                self.xvar.touchmoved = true;
+            }).on("touchend" + ".ax5grid-" + this.instanceId, function (e) {
+                if (self.xvar.touchmoved) {
+                    var css = getContentPosition(e);
+                    GRID.header.scrollTo.call(self, { left: css.left });
+                    GRID.body.scrollTo.call(self, css);
+                    resize.call(self);
+                    U.stopEvent(e.originalEvent);
+                    scrollContentMover.off.call(self);
+                }
             });
 
             jQuery(document.body).attr('unselectable', 'on').css('user-select', 'none').on('selectstart', false);
         },
         "off": function off() {
 
-            jQuery(document.body).unbind("touchmove" + ".ax5grid-" + this.instanceId).unbind("touchend" + ".ax5grid-" + this.instanceId);
+            jQuery(document.body).off("touchmove" + ".ax5grid-" + this.instanceId).off("touchend" + ".ax5grid-" + this.instanceId);
 
             jQuery(document.body).removeAttr('unselectable').css('user-select', 'auto').off('selectstart');
         }
     };
 
     var init = function init() {
-        var self = this;
-        //this.config.scroller.size
-        var margin = this.config.scroller.trackPadding;
+        var self = this,
+            margin = this.config.scroller.trackPadding;
 
-        this.$["scroller"]["vertical-bar"].css({ width: this.config.scroller.size - (margin + 1), left: margin / 2 });
-        this.$["scroller"]["horizontal-bar"].css({ height: this.config.scroller.size - (margin + 1), top: margin / 2 });
+        if (margin == 0) {
+            this.$["scroller"]["vertical-bar"].css({ width: this.config.scroller.size, left: -1 });
+            this.$["scroller"]["horizontal-bar"].css({ height: this.config.scroller.size, top: -1 });
+        } else {
+            this.$["scroller"]["vertical-bar"].css({ width: this.config.scroller.size - (margin + 1), left: margin / 2 });
+            this.$["scroller"]["horizontal-bar"].css({ height: this.config.scroller.size - (margin + 1), top: margin / 2 });
+        }
 
         this.$["scroller"]["vertical-bar"].on(GRID.util.ENM["mousedown"], function (e) {
             this.xvar.mousePosition = GRID.util.getMousePosition(e);
@@ -29799,8 +31592,9 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
         }.bind(this));
 
         this.$["container"]["body"].on('mousewheel DOMMouseScroll', function (e) {
-            var E = e.originalEvent;
-            var delta = { x: 0, y: 0 };
+            var E = e.originalEvent,
+                delta = { x: 0, y: 0 };
+
             if (E.detail) {
                 delta.y = E.detail * 10;
             } else {
@@ -29818,7 +31612,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
             }
         }.bind(this));
 
-        if (document.addEventListener && ax5.info.supportTouch) {
+        if (ax5.info.supportTouch) {
             this.$["container"]["body"].on("touchstart", '[data-ax5grid-panel]', function (e) {
                 self.xvar.mousePosition = GRID.util.getMousePosition(e);
                 scrollContentMover.on.call(self);
@@ -29852,8 +31646,6 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
             }),
             height: verticalScrollBarHeight
         });
-
-        //console.log(horizontalScrollBarWidth);
 
         this.$["scroller"]["horizontal-bar"].css({
             left: convertScrollBarPosition.horizontal.call(this, this.$.panel["body-scroll"].position().left, {
@@ -29899,7 +31691,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
     };
 
     var page_status = function page_status() {
-        return "<span>{{fromRowIndex}} - {{toRowIndex}} of {{totalElements}}{{#dataRowCount}} ({{dataRowCount}}){{/dataRowCount}}</span>";
+        return "<span>{{{progress}}} {{fromRowIndex}} - {{toRowIndex}} of {{totalElements}}{{#dataRowCount}} ({{dataRowCount}}){{/dataRowCount}}</span>";
     };
 
     GRID.tmpl = {
@@ -29924,7 +31716,6 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
      * @param _frozenColumnIndex
      * @returns {{leftHeaderData: {rows: Array}, headerData: {rows: Array}}}
      */
-
     var divideTableByFrozenColumnIndex = function divideTableByFrozenColumnIndex(_table, _frozenColumnIndex) {
         var tempTable_l = { rows: [] };
         var tempTable_r = { rows: [] };
@@ -29964,6 +31755,36 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
             leftData: tempTable_l,
             rightData: tempTable_r
         };
+    };
+
+    var getTableByStartEndColumnIndex = function getTableByStartEndColumnIndex(_table, _startColumnIndex, _endColumnIndex) {
+
+        var tempTable = { rows: [] };
+        for (var r = 0, rl = _table.rows.length; r < rl; r++) {
+            var row = _table.rows[r];
+
+            tempTable.rows[r] = { cols: [] };
+            for (var c = 0, cl = row.cols.length; c < cl; c++) {
+                var col = jQuery.extend({}, row.cols[c]),
+                    colStartIndex = col.colIndex,
+                    colEndIndex = col.colIndex + col.colspan;
+
+                if (_startColumnIndex <= colStartIndex || colEndIndex <= _endColumnIndex) {
+                    if (_startColumnIndex <= colStartIndex && colEndIndex <= _endColumnIndex) {
+                        // 변형없이 추가
+                        tempTable.rows[r].cols.push(col);
+                    } else if (_startColumnIndex > colStartIndex && colEndIndex > _startColumnIndex) {
+                        // 앞에서 걸친경우
+                        col.colspan = colEndIndex - _startColumnIndex;
+                        tempTable.rows[r].cols.push(col);
+                    } else if (colEndIndex > _endColumnIndex && colStartIndex <= _endColumnIndex) {
+                        tempTable.rows[r].cols.push(col);
+                    }
+                }
+            }
+        }
+
+        return tempTable;
     };
 
     var getMousePosition = function getMousePosition(e) {
@@ -30173,11 +31994,13 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
         };
 
         for (var r = 0, rl = _footSumColumns.length; r < rl; r++) {
-            var footSumRow = _footSumColumns[r];
+            var footSumRow = _footSumColumns[r],
+                addC = 0;
+
             table.rows[r] = { cols: [] };
-            var addC = 0;
+
             for (var c = 0, cl = footSumRow.length; c < cl; c++) {
-                if (addC > this.columns.length) break;
+                if (addC > this.colGroup.length) break;
                 var colspan = footSumRow[c].colspan || 1;
                 if (footSumRow[c].label || footSumRow[c].key) {
                     table.rows[r].cols.push({
@@ -30200,45 +32023,49 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
                     });
                 }
                 addC += colspan;
+                colspan = null;
             }
-            addC -= 1;
-            if (addC < this.columns.length + 1) {
-                for (var c = addC; c < this.columns.length + 1; c++) {
+
+            if (addC < this.colGroup.length) {
+                for (var c = addC; c < this.colGroup.length; c++) {
                     table.rows[r].cols.push({
-                        colIndex: c + 1,
+                        colIndex: c,
                         colspan: 1,
                         rowspan: 1,
                         label: "&nbsp;"
                     });
                 }
             }
+            footSumRow = null;
+            addC = null;
         }
+
         return table;
     };
 
     var makeBodyGroupingTable = function makeBodyGroupingTable(_bodyGroupingColumns) {
         var table = {
             rows: []
-        };
+        },
+            r = 0,
+            addC = 0;
 
-        var r = 0;
         table.rows[r] = { cols: [] };
-        var addC = 0;
-        for (var c = 0, cl = _bodyGroupingColumns.length; c < cl; c++) {
+        for (var _c = 0, cl = _bodyGroupingColumns.length; _c < cl; _c++) {
             if (addC > this.columns.length) break;
-            var colspan = _bodyGroupingColumns[c].colspan || 1;
-            if (_bodyGroupingColumns[c].label || _bodyGroupingColumns[c].key) {
+            var colspan = _bodyGroupingColumns[_c].colspan || 1;
+            if (_bodyGroupingColumns[_c].label || _bodyGroupingColumns[_c].key) {
                 table.rows[r].cols.push({
                     colspan: colspan,
                     rowspan: 1,
                     rowIndex: 0,
                     colIndex: addC,
                     columnAttr: "default",
-                    align: _bodyGroupingColumns[c].align,
-                    label: _bodyGroupingColumns[c].label,
-                    key: _bodyGroupingColumns[c].key,
-                    collector: _bodyGroupingColumns[c].collector,
-                    formatter: _bodyGroupingColumns[c].formatter
+                    align: _bodyGroupingColumns[_c].align,
+                    label: _bodyGroupingColumns[_c].label,
+                    key: _bodyGroupingColumns[_c].key,
+                    collector: _bodyGroupingColumns[_c].collector,
+                    formatter: _bodyGroupingColumns[_c].formatter
                 });
             } else {
                 table.rows[r].cols.push({
@@ -30256,7 +32083,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
             for (var c = addC; c < this.colGroup.length; c++) {
                 table.rows[r].cols.push({
                     rowIndex: 0,
-                    colIndex: c + 1,
+                    colIndex: c,
                     colspan: 1,
                     rowspan: 1,
                     label: "&nbsp;"
@@ -30268,9 +32095,9 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
     };
 
     var findPanelByColumnIndex = function findPanelByColumnIndex(_dindex, _colIndex, _rowIndex) {
-        var _containerPanelName;
-        var _isScrollPanel = false;
-        var _panels = [];
+        var _containerPanelName = void 0,
+            _isScrollPanel = false,
+            _panels = [];
 
         if (this.xvar.frozenRowIndex > _dindex) _panels.push("top");
         if (this.xvar.frozenColumnIndex > _colIndex) _panels.push("left");
@@ -30290,8 +32117,9 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
     };
 
     var getRealPathForDataItem = function getRealPathForDataItem(_dataPath) {
-        var path = [];
-        var _path = [].concat(_dataPath.split(/[\.\[\]]/g));
+        var path = [],
+            _path = [].concat(_dataPath.split(/[\.\[\]]/g));
+
         _path.forEach(function (n) {
             if (n !== "") path.push("[\"" + n.replace(/['\"]/g, "") + "\"]");
         });
@@ -30301,6 +32129,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
 
     GRID.util = {
         divideTableByFrozenColumnIndex: divideTableByFrozenColumnIndex,
+        getTableByStartEndColumnIndex: getTableByStartEndColumnIndex,
         getMousePosition: getMousePosition,
         ENM: ENM,
         makeHeaderTable: makeHeaderTable,
@@ -30323,7 +32152,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
 
     UI.addClass({
         className: "combobox",
-        version: "${VERSION}"
+        version: "1.4.8"
     }, function () {
         /**
          * @class ax5combobox
@@ -30348,6 +32177,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
          * });
          * ```
          */
+
         var ax5combobox = function ax5combobox() {
             var self = this,
                 cfg;
@@ -31828,7 +33658,7 @@ jQuery.fn.ax5combobox = function () {
     };
 
     var comboboxDisplay = function comboboxDisplay(columnKeys) {
-        return "\n<div class=\"form-control {{formSize}} ax5combobox-display {{theme}}\" \ndata-ax5combobox-display=\"{{id}}\" data-ax5combobox-instance=\"{{instanceId}}\">\n    <div class=\"ax5combobox-display-table\" data-els=\"display-table\">\n        <div data-ax5combobox-display=\"label-holder\"> \n            <a {{^tabIndex}}{{/tabIndex}}{{#tabIndex}}tabindex=\"{{tabIndex}}\" {{/tabIndex}}\n            data-ax5combobox-display=\"label\"\n            spellcheck=\"false\"><input type=\"text\"data-ax5combobox-display=\"input\" style=\"border:0px none;background: transparent;\" /></a>\n        </div>\n        <div data-ax5combobox-display=\"addon\"> \n            {{#multiple}}{{#reset}}\n            <span class=\"addon-icon-reset\" data-selected-clear=\"true\">{{{.}}}</span>\n            {{/reset}}{{/multiple}}\n            {{#icons}}\n            <span class=\"addon-icon-closed\">{{clesed}}</span>\n            <span class=\"addon-icon-opened\">{{opened}}</span>\n            {{/icons}}\n            {{^icons}}\n            <span class=\"addon-icon-closed\"><span class=\"addon-icon-arrow\"></span></span>\n            <span class=\"addon-icon-opened\"><span class=\"addon-icon-arrow\"></span></span>\n            {{/icons}}\n        </div>\n    </div>\n</div>\n        ";
+        return "\n<div class=\"form-control {{formSize}} ax5combobox-display {{theme}}\" \ndata-ax5combobox-display=\"{{id}}\" data-ax5combobox-instance=\"{{instanceId}}\">\n    <div class=\"ax5combobox-display-table\" data-els=\"display-table\">\n        <div data-ax5combobox-display=\"label-holder\"> \n            <a {{^tabIndex}}{{/tabIndex}}{{#tabIndex}}tabindex=\"{{tabIndex}}\" {{/tabIndex}}\n            data-ax5combobox-display=\"label\"\n            spellcheck=\"false\"><input type=\"text\"data-ax5combobox-display=\"input\" style=\"border:0 none;\" /></a>\n        </div>\n        <div data-ax5combobox-display=\"addon\"> \n            {{#multiple}}{{#reset}}\n            <span class=\"addon-icon-reset\" data-selected-clear=\"true\">{{{.}}}</span>\n            {{/reset}}{{/multiple}}\n            {{#icons}}\n            <span class=\"addon-icon-closed\">{{clesed}}</span>\n            <span class=\"addon-icon-opened\">{{opened}}</span>\n            {{/icons}}\n            {{^icons}}\n            <span class=\"addon-icon-closed\"><span class=\"addon-icon-arrow\"></span></span>\n            <span class=\"addon-icon-opened\"><span class=\"addon-icon-arrow\"></span></span>\n            {{/icons}}\n        </div>\n    </div>\n</div>\n        ";
     };
 
     var formSelect = function formSelect(columnKeys) {
@@ -31844,7 +33674,7 @@ jQuery.fn.ax5combobox = function () {
     };
 
     var label = function label(columnKeys) {
-        return "{{#selected}}<div tabindex=\"-1\" data-ax5combobox-selected-label=\"{{@i}}\" data-ax5combobox-selected-text=\"{{text}}\"><div data-ax5combobox-remove=\"true\" \ndata-ax5combobox-remove-index=\"{{@i}}\">{{{removeIcon}}}</div><span>{{text}}</span></div>{{/selected}}";
+        return "{{#selected}}<div tabindex=\"-1\" data-ax5combobox-selected-label=\"{{@i}}\" data-ax5combobox-selected-text=\"{{text}}\"><div data-ax5combobox-remove=\"true\" \ndata-ax5combobox-remove-index=\"{{@i}}\">{{{removeIcon}}}</div><span>{{" + columnKeys.optionText + "}}</span></div>{{/selected}}";
     };
 
     COMBOBOX.tmpl = {
@@ -31961,27 +33791,14 @@ jQuery.fn.ax5combobox = function () {
 
     UI.addClass({
         className: "layout",
-        version: "1.3.44"
+        version: "1.4.8"
     }, function () {
         /**
          * @class ax5layout
          * @alias ax5.ui.layout
          * @author tom@axisj.com
-         * @example
-         * ```js
-         * jQuery('[data-ax5layout="ax1"]').ax5layout({
-         *     onResize: function () {
-         *     }
-         * });
-         *
-         * jQuery('[data-ax5layout="ax1"]').ax5layout("resize", {
-         *     top: {height: 100},
-         *     bottom: 100,
-         *     left: 100,
-         *     right: 100
-         * });
-         * ```
          */
+
         var ax5layout = function ax5layout() {
             var self = this,
                 cfg,
@@ -32003,7 +33820,7 @@ jQuery.fn.ax5combobox = function () {
                 theme: 'default',
                 animateTime: 250,
                 splitter: {
-                    size: 4
+                    size: 1
                 },
                 autoResize: true
             };
@@ -32694,7 +34511,7 @@ jQuery.fn.ax5combobox = function () {
                 this.queue[queIdx].childQueIdxs.push(childQueIdx);
                 this.queue[childQueIdx].parentQueIdx = queIdx;
             };
-            /// private end
+
             /**
              * Preferences of layout UI
              * @method ax5layout.setConfig
@@ -32706,6 +34523,17 @@ jQuery.fn.ax5combobox = function () {
              * @returns {ax5layout}
              * @example
              * ```js
+             * jQuery('[data-ax5layout="ax1"]').ax5layout({
+             *     onResize: function () {
+             *     }
+             * });
+             *
+             * jQuery('[data-ax5layout="ax1"]').ax5layout("resize", {
+             *     top: {height: 100},
+             *     bottom: 100,
+             *     left: 100,
+             *     right: 100
+             * });
              * ```
              */
             this.init = function () {
@@ -32938,7 +34766,12 @@ ax5.ui.layout_instance = new ax5.ui.layout();
  * @param {String} methodName
  * @example
  * ```js
- * jQuery('[data-ax5layout="ax1"]').ax5layout();
+ * jQuery('[data-ax5layout="ax1"]').ax5layout("align");
+ * jQuery('[data-ax5layout="ax1"]').ax5layout("resize");
+ * jQuery('[data-ax5layout="ax1"]').ax5layout("reset");
+ * jQuery('[data-ax5layout="ax1"]').ax5layout("hide");
+ * jQuery('[data-ax5layout="ax1"]').ax5layout("onResize");
+ * jQuery('[data-ax5layout="ax1"]').ax5layout("tabOpen", 1);
  * ```
  */
 
@@ -32992,7 +34825,7 @@ jQuery.fn.ax5layout = function () {
 
     UI.addClass({
         className: "binder",
-        version: "1.3.44"
+        version: "1.4.8"
     }, function () {
 
         /**
@@ -33854,15 +35687,23 @@ jQuery.fn.ax5layout = function () {
                 this.view_target.find('[data-ax-path]').each(function () {
                     var dom = $(this),
                         dataPath = dom.attr("data-ax-path"),
-                        is_validate = dom.attr("data-ax-validate");
-                    if (is_validate) {
-                        var val = Function("", "return this" + get_real_path(dataPath) + ";").call(_this.model);
-                        if (typeof val === "undefined") val = "";
-                        var _val = val.toString();
+                        is_validate = dom.attr("data-ax-validate"),
+                        pattern = dom.attr("pattern");
 
-                        var is_error = false;
+                    if (is_validate) {
+                        var val, _val, is_error;
+
+                        val = Function("", "return this" + get_real_path(dataPath) + ";").call(_this.model);
+                        if (typeof val === "undefined") val = "";
+                        _val = val.toString();
+                        is_error = false;
+
                         if (is_validate == "required" && _val.trim() == "") {
                             is_error = true;
+                        } else if (is_validate == "pattern") {
+                            is_error = !new RegExp(pattern).test(_val);
+                        } else if (is_validate == "email") {
+                            is_error = !/[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}$/.test(_val);
                         } else if (!/\D.?/g.test(is_validate) && _val.trim().length < is_validate.number()) {
                             is_error = true;
                         }
@@ -33896,6 +35737,10 @@ jQuery.fn.ax5layout = function () {
                             var is_error = false;
                             if (is_validate == "required" && _val.trim() == "") {
                                 is_error = true;
+                            } else if (is_validate == "pattern") {
+                                is_error = !new RegExp(pattern).test(_val);
+                            } else if (is_validate == "email") {
+                                is_error = !/[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}$/.test(_val);
                             } else if (!/\D.?/g.test(is_validate) && _val.trim().length < is_validate.number()) {
                                 is_error = true;
                             }
@@ -33943,7 +35788,7 @@ jQuery.fn.ax5layout = function () {
 
     UI.addClass({
         className: "autocomplete",
-        version: "${VERSION}"
+        version: "1.4.8"
     }, function () {
         /**
          * @class ax5autocomplete
@@ -35327,7 +37172,7 @@ jQuery.fn.ax5autocomplete = function () {
     };
 
     var autocompleteDisplay = function autocompleteDisplay(columnKeys) {
-        return " \n<input tabindex=\"-1\" type=\"text\" data-input-dummy=\"\" style=\"display: none;\" />\n<div class=\"form-control {{formSize}} ax5autocomplete-display {{theme}}\" \ndata-ax5autocomplete-display=\"{{id}}\" data-ax5autocomplete-instance=\"{{instanceId}}\">\n    <div class=\"ax5autocomplete-display-table\" data-els=\"display-table\">\n        <div data-ax5autocomplete-display=\"label-holder\"> \n        <a {{^tabIndex}}{{/tabIndex}}{{#tabIndex}}tabindex=\"{{tabIndex}}\" {{/tabIndex}}\n        data-ax5autocomplete-display=\"label\"\n        spellcheck=\"false\"><input type=\"text\"data-ax5autocomplete-display=\"input\" style=\"border:0px none;background: transparent;\" /></a>\n        </div>\n        <div data-ax5autocomplete-display=\"addon\"> \n            {{#multiple}}{{#reset}}\n            <span class=\"addon-icon-reset\" data-selected-clear=\"true\">{{{.}}}</span>\n            {{/reset}}{{/multiple}}\n        </div>\n    </div>\n</a>\n";
+        return " \n<input tabindex=\"-1\" type=\"text\" data-input-dummy=\"\" style=\"display: none;\" />\n<div class=\"form-control {{formSize}} ax5autocomplete-display {{theme}}\" \ndata-ax5autocomplete-display=\"{{id}}\" data-ax5autocomplete-instance=\"{{instanceId}}\">\n    <div class=\"ax5autocomplete-display-table\" data-els=\"display-table\">\n        <div data-ax5autocomplete-display=\"label-holder\"> \n        <a {{^tabIndex}}{{/tabIndex}}{{#tabIndex}}tabindex=\"{{tabIndex}}\" {{/tabIndex}}\n        data-ax5autocomplete-display=\"label\"\n        spellcheck=\"false\"><input type=\"text\"data-ax5autocomplete-display=\"input\" style=\"border:0px none;\" /></a>\n        </div>\n        <div data-ax5autocomplete-display=\"addon\"> \n            {{#multiple}}{{#reset}}\n            <span class=\"addon-icon-reset\" data-selected-clear=\"true\">{{{.}}}</span>\n            {{/reset}}{{/multiple}}\n        </div>\n    </div>\n</a>\n";
     };
 
     var formSelect = function formSelect(columnKeys) {
@@ -35343,7 +37188,7 @@ jQuery.fn.ax5autocomplete = function () {
     };
 
     var label = function label(columnKeys) {
-        return "{{#selected}}<div tabindex=\"-1\" data-ax5autocomplete-selected-label=\"{{@i}}\" data-ax5autocomplete-selected-text=\"{{text}}\"><div data-ax5autocomplete-remove=\"true\" data-ax5autocomplete-remove-index=\"{{@i}}\">{{{removeIcon}}}</div><span>{{text}}</span></div>{{/selected}}";
+        return "{{#selected}}\n<div tabindex=\"-1\" data-ax5autocomplete-selected-label=\"{{@i}}\" data-ax5autocomplete-selected-text=\"{{text}}\">\n<div data-ax5autocomplete-remove=\"true\" data-ax5autocomplete-remove-index=\"{{@i}}\">{{{removeIcon}}}</div>\n<span>{{" + columnKeys.optionText + "}}</span>\n</div>{{/selected}}";
     };
 
     AUTOCOMPLETE.tmpl = {

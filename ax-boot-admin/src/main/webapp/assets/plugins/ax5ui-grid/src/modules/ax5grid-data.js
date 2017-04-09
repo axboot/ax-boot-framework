@@ -1,16 +1,15 @@
 // ax5.ui.grid.layout
 (function () {
 
-    var GRID = ax5.ui.grid;
-    var U = ax5.util;
+    let GRID = ax5.ui.grid,
+        U = ax5.util;
 
-    var init = function () {
+    const init = function () {
 
     };
 
-    var clearGroupingData = function (_list) {
-        var i = 0, l = _list.length;
-        var returnList = [];
+    const clearGroupingData = function (_list) {
+        let i = 0, l = _list.length, returnList = [];
         for (; i < l; i++) {
             if (_list[i] && !_list[i]["__isGrouping"]) {
                 if (_list[i][this.config.columnKeys.selected]) {
@@ -22,15 +21,18 @@
         return returnList;
     };
 
-    var initData = function (_list) {
+    const initData = function (_list) {
         this.selectedDataIndexs = [];
-        var i = 0, l = _list.length;
-        var returnList = [];
-        var appendIndex = 0;
-        var dataRealRowCount;
+        this.deletedList = [];
+
+        let i = 0, l = _list.length,
+            returnList = [],
+            appendIndex = 0,
+            dataRealRowCount = 0,
+            lineNumber = 0;
 
         if (this.config.body.grouping) {
-            var groupingKeys = U.map(this.bodyGrouping.by, function () {
+            let groupingKeys = U.map(this.bodyGrouping.by, function () {
                 return {
                     key: this,
                     compareString: "",
@@ -38,7 +40,7 @@
                     list: []
                 }
             });
-            var gi = 0, gl = groupingKeys.length, compareString, appendRow = [], ari;
+            let gi = 0, gl = groupingKeys.length, compareString, appendRow = [], ari;
             for (; i < l + 1; i++) {
                 gi = 0;
                 if (_list[i] && _list[i][this.config.columnKeys.deleted]) {
@@ -72,24 +74,27 @@
                         if (_list[i][this.config.columnKeys.selected]) {
                             this.selectedDataIndexs.push(i);
                         }
-                        dataRealRowCount = _list[i]["__index"] = i;
+                        _list[i]["__index"] = lineNumber;
+                        dataRealRowCount++;
                         returnList.push(_list[i]);
                         appendIndex++;
+                        lineNumber++;
                     }
                 }
             }
         }
         else {
             for (; i < l; i++) {
-                if (_list[i] && _list[i][this.config.columnKeys.deleted]) {
-                    this.deletedList.push(_list[i]);
-                } else if (_list[i]) {
-
-                    if (_list[i][this.config.columnKeys.selected]) {
+                if (_list[i]) {
+                    if (_list[i][this.config.columnKeys.deleted]) {
+                        this.deletedList.push(_list[i]);
+                    } else if (_list[i][this.config.columnKeys.selected]) {
                         this.selectedDataIndexs.push(i);
                     }
                     // __index변수를 추가하여 lineNumber 에 출력합니다. (body getFieldValue 에서 출력함)
-                    dataRealRowCount = _list[i]["__index"] = i;
+                    _list[i]["__index"] = lineNumber;
+                    dataRealRowCount++;
+                    lineNumber++;
                     returnList.push(_list[i]);
                 }
             }
@@ -97,25 +102,137 @@
 
         // 원본 데이터의 갯수
         // grouping은 제외하고 수집됨.
-        this.xvar.dataRealRowCount = dataRealRowCount + 1;
+        this.xvar.dataRealRowCount = dataRealRowCount;
         return returnList;
     };
 
-    var set = function (data) {
-        var self = this;
+    const arrangeData4tree = function (_list) {
+        this.selectedDataIndexs = [];
+        this.deletedList = [];
+        let i = 0, seq = 0,
+            appendIndex = 0,
+            dataRealRowCount = 0,
+            lineNumber = 0;
 
+        let li = _list.length;
+        let keys = this.config.tree.columnKeys;
+        let hashDigit = this.config.tree.hashDigit;
+        let listIndexMap = {};
+
+        while (li--) {
+            delete _list[li][keys.parentHash];
+            delete _list[li][keys.selfHash];
+            //delete _list[li][keys.childrenLength];
+        }
+
+        /// 루트 아이템 수집
+        i = 0;
+        seq = 0;
+        li = _list.length;
+        for (; i < li; i++) {
+            if (_list[i]) {
+                listIndexMap[_list[i][keys.selfKey]] = i; // 인덱싱
+
+                if (U.isNothing(_list[i][keys.parentKey]) || _list[i][keys.parentKey] === "top") { // 최상위 아이템인 경우
+                    _list[i][keys.parentKey] = "top";
+                    _list[i][keys.children] = [];
+                    _list[i][keys.parentHash] = U.setDigit("0", hashDigit);
+                    _list[i][keys.selfHash] = U.setDigit("0", hashDigit) + "." + U.setDigit(seq, hashDigit);
+                    _list[i][keys.depth] = 0;
+                    _list[i][keys.hidden] = false;
+
+                    seq++;
+                }
+            }
+        }
+
+        /// 자식 아이템 수집
+        i = 0;
+        lineNumber = 0;
+        for (; i < li; i++) {
+            let _parent, _parentHash;
+            if (_list[i] && _list[i][keys.parentKey] !== "top" && typeof _list[i][keys.parentHash] === "undefined") {
+
+                if (_parent = _list[listIndexMap[_list[i][keys.parentKey]]]) {
+                    _parentHash = _parent[keys.selfHash];
+                    _list[i][keys.children] = [];
+                    _list[i][keys.parentHash] = _parentHash;
+                    _list[i][keys.selfHash] = _parentHash + "." + U.setDigit(_parent[keys.children].length, hashDigit);
+                    _list[i][keys.depth] = _parent[keys.depth] + 1;
+                    if (_parent[keys.collapse] || _parent[keys.hidden]) _list[i][keys.hidden] = true;
+                    _parent[keys.children].push(_list[i][keys.selfKey]);
+                } else {
+                    _list[i][keys.parentKey] = "top";
+                    _list[i][keys.children] = [];
+                    _list[i][keys.parentHash] = U.setDigit("0", hashDigit);
+                    _list[i][keys.selfHash] = U.setDigit("0", hashDigit) + "." + U.setDigit(seq, hashDigit);
+                    _list[i][keys.hidden] = false;
+
+                    seq++;
+                }
+            }
+
+            if (_list[i]) {
+                if (_list[i][this.config.columnKeys.deleted]) {
+                    this.deletedList.push(_list[i]);
+                    _list[i][keys.hidden] = true;
+                }
+                else if (_list[i][this.config.columnKeys.selected]) {
+                    this.selectedDataIndexs.push(i);
+                }
+
+                _list[i]["__index"] = lineNumber;
+                dataRealRowCount++;
+                lineNumber++;
+            }
+        }
+
+        this.listIndexMap = listIndexMap;
+        this.xvar.dataRealRowCount = dataRealRowCount;
+
+        return _list;
+    };
+
+    const getProxyList = function (_list) {
+        let i = 0, l = _list.length, returnList = [];
+        for (; i < l; i++) {
+
+            if (_list[i] && !_list[i][this.config.tree.columnKeys.hidden]) {
+                _list[i].__origin_index__ = i;
+                returnList.push(_list[i]);
+            }
+        }
+        return returnList;
+    };
+
+    const set = function (data) {
         if (U.isArray(data)) {
+
             this.page = null;
-            this.list = initData.call(this,
-                (!this.config.remoteSort && Object.keys(this.sortInfo).length) ? sort.call(this, this.sortInfo, data) : data
-            );
+            if (this.config.tree.use) {
+                this.list = arrangeData4tree.call(this, data);
+                this.proxyList = getProxyList.call(this, sort.call(this, this.sortInfo, this.list));
+            } else {
+                this.proxyList = null;
+                this.list = initData.call(this,
+                    (!this.config.remoteSort && Object.keys(this.sortInfo).length) ? sort.call(this, this.sortInfo, data) : data
+                );
+            }
             this.deletedList = [];
+
         } else if ("page" in data) {
+
             this.page = jQuery.extend({}, data.page);
-            this.list = initData.call(this,
-                (!this.config.remoteSort && Object.keys(this.sortInfo).length) ? sort.call(this, this.sortInfo, data.list) : data.list
-            );
+            if (this.config.tree.use) {
+                this.list = arrangeData4tree.call(this, data.list);
+                this.proxyList = getProxyList.call(this, sort.call(this, this.sortInfo, this.list));
+            } else {
+                this.list = initData.call(this,
+                    (!this.config.remoteSort && Object.keys(this.sortInfo).length) ? sort.call(this, this.sortInfo, data.list) : data.list
+                );
+            }
             this.deletedList = [];
+
         }
 
         this.needToPaintSum = true;
@@ -129,16 +246,16 @@
         return this;
     };
 
-    var get = function (_type) {
+    const get = function (_type) {
         return {
             list: this.list,
             page: this.page
         };
     };
 
-    var getList = function (_type) {
-        var returnList = [];
-        var i = 0, l = this.list.length;
+    const getList = function (_type) {
+        let returnList = [];
+        let i = 0, l = this.list.length;
         switch (_type) {
             case "modified":
                 for (; i < l; i++) {
@@ -164,44 +281,58 @@
         return returnList;
     };
 
-    var add = function (_row, _dindex, _options) {
-        var list = (this.config.body.grouping) ? clearGroupingData.call(this, this.list) : this.list;
-        var processor = {
-            "first": function () {
+    const add = function (_row, _dindex, _options) {
+        let list = (this.config.body.grouping) ? clearGroupingData.call(this, this.list) : this.list;
+        let processor = {
+            "first"() {
                 list = [].concat(_row).concat(list);
             },
-            "last": function () {
+            "last"() {
                 list = list.concat([].concat(_row));
             }
         };
 
-        if (typeof _dindex === "undefined") _dindex = "last";
-        if (_dindex in processor) {
-            _row[this.config.columnKeys.modified] = true;
-            processor[_dindex].call(this, _row);
-        } else {
-            if (!U.isNumber(_dindex)) {
-                throw 'invalid argument _dindex';
+        if (this.config.tree.use) {
+            let list = this.list.concat([].concat(_row));
+
+            this.list = arrangeData4tree.call(this, list);
+            this.proxyList = getProxyList.call(this, sort.call(this, this.sortInfo, this.list));
+        }
+        else {
+            if (typeof _dindex === "undefined") _dindex = "last";
+            if (_dindex in processor) {
+                _row[this.config.columnKeys.modified] = true;
+                processor[_dindex].call(this, _row);
+            } else {
+                if (!U.isNumber(_dindex)) {
+                    throw 'invalid argument _dindex';
+                }
+                //
+                list = list.splice(_dindex, [].concat(_row));
             }
-            //
-            list = list.splice(_dindex, [].concat(_row));
-        }
 
-        if (this.config.body.grouping) {
-            list = initData.call(this,
-                sort.call(this,
-                    this.sortInfo,
-                    list
-                )
-            );
-        } else if (_options && _options.sort && Object.keys(this.sortInfo).length) {
-            list = sort.call(this,
-                this.sortInfo,
-                list
-            );
-        }
+            if (this.config.body.grouping) {
+                list = initData.call(this,
+                    sort.call(this,
+                        this.sortInfo,
+                        list
+                    )
+                );
+            }
+            else if (_options && _options.sort && Object.keys(this.sortInfo).length) {
+                list = initData.call(this,
+                    sort.call(this,
+                        this.sortInfo,
+                        list
+                    )
+                );
+            }
+            else {
+                list = initData.call(this, list);
+            }
 
-        this.list = list;
+            this.list = list;
+        }
 
         this.needToPaintSum = true;
         this.xvar.frozenRowIndex = (this.config.frozenRowIndex > this.list.length) ? this.list.length : this.config.frozenRowIndex;
@@ -214,16 +345,38 @@
      * list에서 완전 제거 하는 경우 사용.
      * ax5grid.data.remove
      */
-    var remove = function (_dindex) {
-        var list = (this.config.body.grouping) ? clearGroupingData.call(this, this.list) : this.list;
-        var processor = {
+    const remove = function (_dindex) {
+        let list = (this.config.body.grouping) ? clearGroupingData.call(this, this.list) : this.list;
+        let processor = {
             "first": function () {
-                list.splice(_dindex, 1);
+                if (this.config.tree.use) {
+                    processor.tree.call(this, 0);
+                } else {
+                    list.splice(0, 1);
+                }
             },
             "last": function () {
-                var lastIndex = list.length - 1;
-                list.splice(lastIndex, 1);
-            }
+                if (this.config.tree.use) {
+                    processor.tree.call(this, list.length - 1);
+                } else {
+                    list.splice(list.length - 1, 1);
+                }
+            },
+            "index": function (_dindex) {
+                if (this.config.tree.use) {
+                    processor.tree.call(this, _dindex);
+                } else {
+                    list.splice(_dindex, 1);
+                }
+            },
+            "tree": function (_dindex) {
+                let treeKeys = this.config.tree.columnKeys, selfHash = list[_dindex][this.config.tree.columnKeys.selfHash];
+                list = U.filter(list, function () {
+                    return this[treeKeys.selfHash].substr(0, selfHash.length) != selfHash;
+                });
+                treeKeys = null;
+                selfHash = null;
+            },
         };
 
         if (typeof _dindex === "undefined") _dindex = "last";
@@ -233,25 +386,34 @@
             if (!U.isNumber(_dindex)) {
                 throw 'invalid argument _dindex';
             }
-            //
-            list.splice(_dindex, 1);
+            processor["index"].call(this, _dindex);
         }
 
-        if (this.config.body.grouping) {
-            list = initData.call(this,
-                sort.call(this,
-                    this.sortInfo,
-                    list
-                )
-            );
-        } else if (Object.keys(this.sortInfo).length) {
-            list = sort.call(this,
-                this.sortInfo,
-                list
-            );
+        if (this.config.tree.use) {
+            this.list = arrangeData4tree.call(this, list);
+            this.proxyList = getProxyList.call(this, sort.call(this, this.sortInfo, this.list));
+        }
+        else {
+            if (this.config.body.grouping) {
+                list = initData.call(this,
+                    sort.call(this,
+                        this.sortInfo,
+                        list
+                    )
+                );
+            } else if (Object.keys(this.sortInfo).length) {
+                list = initData.call(this,
+                    sort.call(this,
+                        this.sortInfo,
+                        list
+                    )
+                );
+            } else {
+                list = initData.call(this, list);
+            }
+            this.list = list;
         }
 
-        this.list = list;
 
         this.needToPaintSum = true;
         this.xvar.frozenRowIndex = (this.config.frozenRowIndex > this.list.length) ? this.list.length : this.config.frozenRowIndex;
@@ -260,31 +422,86 @@
         return this;
     };
 
+
     /**
      * list에서 deleted 처리 repaint
      * ax5grid.data.deleteRow
      */
-    var deleteRow = function (_dindex) {
-        var list = (this.config.body.grouping) ? clearGroupingData.call(this, this.list) : this.list;
-
-        var processor = {
+    const deleteRow = function (_dindex) {
+        let list = (this.config.body.grouping) ? clearGroupingData.call(this, this.list) : this.list;
+        let processor = {
             "first": function () {
-                list[0][this.config.columnKeys.deleted] = true;
+                if (this.config.tree.use) {
+                    processor.tree.call(this, 0);
+                } else {
+                    list[0][this.config.columnKeys.deleted] = true;
+                }
             },
             "last": function () {
-                list[list.length - 1][this.config.columnKeys.deleted] = true;
+                if (this.config.tree.use) {
+                    processor.tree.call(this, list.length - 1);
+                } else {
+                    list[list.length - 1][this.config.columnKeys.deleted] = true;
+                }
             },
             "selected": function () {
-                var i = list.length;
-                while (i--) {
-                    if (list[i][this.config.columnKeys.selected]) {
-                        list[i][this.config.columnKeys.deleted] = true;
+                if (this.config.tree.use) {
+                    processor.tree.call(this, "selected");
+                } else {
+                    let i = list.length;
+                    while (i--) {
+                        if (list[i][this.config.columnKeys.selected]) {
+                            list[i][this.config.columnKeys.deleted] = true;
+                        }
                     }
+                    i = null;
                 }
-            }
+            },
+            "tree": function (_dindex) {
+                let keys = this.config.columnKeys,
+                    treeKeys = this.config.tree.columnKeys;
+
+                if (_dindex === "selected") {
+                    
+                    let i = list.length;
+                    while (i--) {
+                        if (list[i][this.config.columnKeys.selected]) {
+                            list[i][this.config.columnKeys.deleted] = true;
+
+                            let selfHash = list[i][treeKeys.selfHash];
+                            let ii = list.length;
+                            
+                            while (ii--) {
+                                if (list[ii][treeKeys.selfHash].substr(0, selfHash.length) === selfHash) {
+                                    list[ii][keys.deleted] = true;
+                                }
+                            }
+
+                            selfHash = null;
+                            ii = null;
+                        }
+                    }
+                    i = null;
+
+                } else {
+                    let selfHash = list[_dindex][treeKeys.selfHash];
+                    let i = list.length;
+                    while (i--) {
+                        if (list[i][treeKeys.selfHash].substr(0, selfHash.length) !== selfHash) {
+                            list[i][keys.deleted] = true;
+                        }
+                    }
+                    selfHash = null;
+                    i = null;
+                }
+
+                keys = null;
+                treeKeys = null;
+            },
         };
 
         if (typeof _dindex === "undefined") _dindex = "last";
+        
         if (_dindex in processor) {
             processor[_dindex].call(this, _dindex);
         } else {
@@ -294,25 +511,31 @@
             list[_dindex][this.config.columnKeys.deleted] = true;
         }
 
-        if (this.config.body.grouping) {
-            list = initData.call(this,
-                sort.call(this,
-                    this.sortInfo,
-                    list
-                )
-            );
-        } else if (Object.keys(this.sortInfo).length) {
-            list = initData.call(this,
-                sort.call(this,
-                    this.sortInfo,
-                    list
-                )
-            );
-        } else {
-            list = initData.call(this, list);
+        if (this.config.tree.use) {
+            this.list = arrangeData4tree.call(this, list);
+            this.proxyList = getProxyList.call(this, sort.call(this, this.sortInfo, this.list));
         }
+        else {
+            if (this.config.body.grouping) {
+                list = initData.call(this,
+                    sort.call(this,
+                        this.sortInfo,
+                        list
+                    )
+                );
+            } else if (Object.keys(this.sortInfo).length) {
+                list = initData.call(this,
+                    sort.call(this,
+                        this.sortInfo,
+                        list
+                    )
+                );
+            } else {
+                list = initData.call(this, list);
+            }
 
-        this.list = list;
+            this.list = list;
+        }
 
         this.needToPaintSum = true;
         this.xvar.frozenRowIndex = (this.config.frozenRowIndex > this.list.length) ? this.list.length : this.config.frozenRowIndex;
@@ -321,7 +544,7 @@
         return this;
     };
 
-    var update = function (_row, _dindex) {
+    const update = function (_row, _dindex) {
         if (!U.isNumber(_dindex)) {
             throw 'invalid argument _dindex';
         }
@@ -334,8 +557,8 @@
         }
     };
 
-    var setValue = function (_dindex, _key, _value) {
-        var originalValue = getValue.call(this, _dindex, _key);
+    const setValue = function (_dindex, _key, _value) {
+        let originalValue = getValue.call(this, _dindex, _key);
         this.needToPaintSum = true;
 
         if (originalValue !== _value) {
@@ -366,26 +589,29 @@
         return true;
     };
 
-    var getValue = function (_dindex, _key, _value) {
+    let getValue = function (_dindex, _key, _value) {
+        let list = this.list;
+
         if (/[\.\[\]]/.test(_key)) {
             try {
-                _value = (Function("", "return this" + GRID.util.getRealPathForDataItem(_key) + ";")).call(this.list[_dindex]);
+                _value = (Function("", "return this" + GRID.util.getRealPathForDataItem(_key) + ";")).call(list[_dindex]);
             } catch (e) {
 
             }
         } else {
-            _value = this.list[_dindex][_key];
+            _value = list[_dindex][_key];
         }
         return _value;
     };
 
-    var clearSelect = function () {
+    const clearSelect = function () {
         this.selectedDataIndexs = [];
     };
 
-    var select = function (_dindex, _selected, _options) {
-        var cfg = this.config;
+    const select = function (_dindex, _selected, _options) {
+        let cfg = this.config;
 
+        if (!this.list[_dindex]) return false;
         if (this.list[_dindex].__isGrouping) return false;
         if (this.list[_dindex][cfg.columnKeys.disableSelection]) return false;
 
@@ -413,10 +639,10 @@
         return this.list[_dindex][cfg.columnKeys.selected];
     };
 
-    var selectAll = function (_selected, _options) {
-        var cfg = this.config;
+    const selectAll = function (_selected, _options) {
+        let cfg = this.config,
+            dindex = this.list.length;
 
-        var dindex = this.list.length;
         if (typeof _selected === "undefined") {
             while (dindex--) {
                 if (this.list[dindex].__isGrouping) continue;
@@ -457,16 +683,13 @@
         return this.list;
     };
 
-    var sort = function (_sortInfo, _list) {
-        var self = this;
-        var list = _list || this.list;
-        var sortInfoArray = [];
-        var getKeyValue = function (_item, _key, _value) {
+    const sort = function (_sortInfo, _list) {
+        let self = this, list = _list || this.list, sortInfoArray = [];
+        let getKeyValue = function (_item, _key, _value) {
             if (/[\.\[\]]/.test(_key)) {
                 try {
                     _value = (Function("", "return this" + GRID.util.getRealPathForDataItem(_key) + ";")).call(_item);
                 } catch (e) {
-
                 }
             } else {
                 _value = _item[_key];
@@ -474,14 +697,14 @@
             return _value;
         };
 
-        for (var k in _sortInfo) {
+        for (let k in _sortInfo) {
             sortInfoArray[_sortInfo[k].seq] = {key: k, order: _sortInfo[k].orderBy};
         }
         sortInfoArray = U.filter(sortInfoArray, function () {
             return typeof this !== "undefined";
         });
 
-        var i = 0, l = sortInfoArray.length, _a_val, _b_val;
+        let i = 0, l = sortInfoArray.length, _a_val, _b_val;
 
         list.sort(function (_a, _b) {
             for (i = 0; i < l; i++) {
@@ -508,7 +731,98 @@
             GRID.page.navigationUpdate.call(this);
             return this;
         }
+    };
 
+    const append = function (_list, _callback) {
+        let self = this;
+
+        if (this.config.tree.use) {
+            let list = this.list.concat([].concat(_list));
+
+            this.list = arrangeData4tree.call(this, list);
+            this.proxyList = getProxyList.call(this, sort.call(this, this.sortInfo, this.list));
+            list = null;
+        } else {
+            this.list = this.list.concat([].concat(_list));
+        }
+
+        this.appendProgress = true;
+        GRID.page.statusUpdate.call(this);
+
+
+        if (this.appendDebouncer) {
+            if (self.appendDebounceTimes < this.config.debounceTime / 10) {
+                clearTimeout(this.appendDebouncer);
+                self.appendDebounceTimes++;
+            } else {
+                self.appendDebounceTimes = 0;
+                appendIdle.call(self);
+                _callback();
+                return false;
+            }
+        }
+
+        this.appendDebouncer = setTimeout(function () {
+            self.appendDebounceTimes = 0;
+            appendIdle.call(self);
+            _callback();
+        }, this.config.debounceTime);
+
+        // todo : append bounce animation
+    };
+
+    const appendIdle = function () {
+        this.appendProgress = false;
+        if (this.config.body.grouping) {
+            this.list = initData.call(this,
+                sort.call(this,
+                    this.sortInfo,
+                    this.list
+                )
+            );
+        } else {
+            this.list = initData.call(this, this.list);
+        }
+
+        this.needToPaintSum = true;
+        this.xvar.frozenRowIndex = (this.config.frozenRowIndex > this.list.length) ? this.list.length : this.config.frozenRowIndex;
+        this.xvar.paintStartRowIndex = undefined; // 스크롤 포지션 저장변수 초기화
+        GRID.page.navigationUpdate.call(this);
+    };
+
+    const toggleCollapse = function (_dindex, _collapse) {
+        let keys = this.config.tree.columnKeys, selfHash, originIndex;
+
+        if (typeof _dindex === "undefined") return false;
+        originIndex = this.proxyList[_dindex].__origin_index__;
+
+        if (this.list[originIndex][keys.children]) {
+            this.proxyList = []; // 리셋 프록시
+            if (typeof _collapse == "undefined") {
+                _collapse = !(this.list[originIndex][keys.collapse] || false);
+            }
+
+            this.list[originIndex][keys.collapse] = _collapse;
+            selfHash = this.list[originIndex][keys.selfHash];
+
+            let i = this.list.length;
+            while (i--) {
+                if (this.list[i]) {
+                    // console.log(this.list[i][keys.parentHash].substr(0, selfHash.length), selfHash);
+                    if (this.list[i][keys.parentHash].substr(0, selfHash.length) === selfHash) {
+                        this.list[i][keys.hidden] = _collapse;
+                    }
+
+                    if (!this.list[i][keys.hidden]) {
+                        this.proxyList.push(this.list[i]);
+                    }
+                }
+            }
+
+            return true;
+        } else {
+            return false;
+        }
     };
 
     GRID.data = {
@@ -516,6 +830,7 @@
         set: set,
         get: get,
         getList: getList,
+        getProxyList: getProxyList,
         setValue: setValue,
         getValue: getValue,
         clearSelect: clearSelect,
@@ -527,7 +842,8 @@
         update: update,
         sort: sort,
         initData: initData,
-        clearGroupingData: clearGroupingData
+        clearGroupingData: clearGroupingData,
+        append: append,
+        toggleCollapse: toggleCollapse
     };
-
 })();

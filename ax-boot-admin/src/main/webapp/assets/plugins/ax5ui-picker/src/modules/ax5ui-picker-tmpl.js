@@ -5,7 +5,7 @@
 
     var pickerTmpl = function () {
         return `
-<div class="ax5-ui-picker {{theme}}" id="{{id}}" data-picker-els="root">
+<div class="ax5-ui-picker {{theme}}" id="{{id}}" data-picker-els="root" {{#zIndex}}style="z-index:{{zIndex}};"{{/zIndex}}>
     {{#title}}
         <div class="ax-picker-heading">{{title}}</div>
     {{/title}}

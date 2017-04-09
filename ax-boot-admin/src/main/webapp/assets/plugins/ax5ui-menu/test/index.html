@@ -1,0 +1,324 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+
+    <link rel="stylesheet" type="text/css" href="bower_components/bootstrap/dist/css/bootstrap.min.css"/>
+    <link rel="stylesheet" href="bower_components/font-awesome/css/font-awesome.min.css">
+    <link rel="stylesheet" type="text/css" href="bower_components/ax5ui-toast/dist/ax5toast.css"/>
+    <link rel="stylesheet" type="text/css" href="../dist/ax5menu.css"/>
+
+    <!--script src="bower_components/jquery/dist/jquery.min.js"></script-->
+
+    <script
+            src="https://code.jquery.com/jquery-2.2.4.js"
+            integrity="sha256-iT6Q9iMJYuQiMWNd9lDyBUStIq/8PuOW33aOqmvFpqI="
+            crossorigin="anonymous"></script>
+
+    <script src="bower_components/ax5core/dist/ax5core.min.js"></script>
+    <script src="bower_components/ax5ui-toast/dist/ax5toast.min.js"></script>
+    <script src="../dist/ax5menu.js"></script>
+</head>
+<body style="padding: 10px;">
+
+
+<div id="attachedMenu-target"
+     style="width:100%;height:36px;background: #cccccc;border-bottom:1px solid #000;padding: 0px 20px;"></div>
+
+<div style="background: #eee;height: 1000px;"></div>
+
+<!--https://css-tricks.com/snippets/javascript/javascript-keycodes/-->
+<script type="text/javascript">
+    var menu, toast, attachedMenu;
+
+    var menuCallback = function (act) {
+        if (act == 'ok') {
+            console.log(menu.getCheckValue());
+        }
+        menu.close();
+    };
+
+    $(document.body).ready(function () {
+        toast = new ax5.ui.toast({
+            containerPosition: "top-right"
+        });
+        menu = new ax5.ui.menu({
+            theme: 'primary',
+            // width: 200,
+            iconWidth: 20,
+            acceleratorWidth: 100,
+            // offset: {left: 10, top: 10},
+            itemClickAndClose: false,
+            //position: "absolute",
+            icons: {
+                'arrow': '<i class="fa fa-caret-right"></i>'
+            },
+            columnKeys: {
+                label: 'name',
+                items: 'chidren'
+            },
+            items: [
+                {
+                    icon: '<i class="fa fa-archive"></i>',
+                    name: "Menu Parent 0",
+                    chidren: [
+                        {
+                            check: {
+                                type: 'checkbox',
+                                name: 'A',
+                                value: '0',
+                                checked: false
+                            },
+                            name: "Menu Z",
+                            data: {},
+                            role: "",
+                            accelerator: "CmdOrCtrl+Z"
+                        },
+                        {
+                            check: {
+                                type: 'checkbox',
+                                name: 'A',
+                                value: '1',
+                                checked: true
+                            },
+                            name: "Menu A",
+                            data: {},
+                            role: ""
+                            //accelerator: "CmdOrCtrl+A"
+                        }
+                    ],
+                    filterType: "A"
+                },
+                {
+                    divide: true,
+                    filterType: "A"
+                },
+                {
+                    icon: '<i class="fa fa-mixcloud"></i>',
+                    name: "Menu Parent 1",
+                    chidren: [
+                        {
+                            name: "Menu Z",
+                            data: {},
+                            role: "",
+                            //accelerator: "CmdOrCtrl+Z",
+                            chidren: [
+                                {
+                                    name: "Menu Z",
+                                    data: {},
+                                    role: ""
+                                    //accelerator: "CmdOrCtrl+Z"
+                                },
+                                {
+                                    name: "Menu A",
+                                    data: {},
+                                    role: ""
+                                    //accelerator: "CmdOrCtrl+A"
+                                }
+                            ]
+                        },
+                        {
+                            name: "Menu A",
+                            data: {},
+                            role: ""
+                            //accelerator: "CmdOrCtrl+A"
+                        }
+                    ],
+                    filterType: "A"
+                },
+                {
+                    check: {
+                        type: 'radio',
+                        name: 'radioName',
+                        value: '1',
+                        checked: false
+                    },
+                    icon: '<i class="fa fa-bluetooth"></i>',
+                    name: "Menu Parent 2"
+                },
+                {
+                    check: {
+                        type: 'radio',
+                        name: 'radioName',
+                        value: '2',
+                        checked: false
+                    },
+                    name: "Menu Parent 3"
+                },
+                {
+                    check: {
+                        type: 'radio',
+                        name: 'radioName',
+                        value: '3',
+                        checked: false
+                    },
+                    name: "Menu Parent 4"
+                },
+                {divide: true},
+                {
+                    html: function () {
+                        // console.log(this);
+                        return '<div style="text-align: center;">' +
+                                '<button class="btn btn-primary" data-menu-btn="OK">OK</button> ' +
+                                '<button class="btn btn-danger" data-menu-btn="CANCEL">CANCEL</button>' +
+                                '</div>';
+                    }
+                }
+            ]
+        });
+
+        menu.onStateChanged = function () {
+            console.log(this);
+            if (this.state == 'close') {
+                //console.log(this.self.getCheckValue());
+            }
+        };
+        menu.onClick = function () {
+            // console.log(this);
+            toast.push(JSON.stringify(this));
+        };
+        menu.onLoad = function () {
+            if (!this.element) return this;
+            $(this.element).find('[data-menu-btn]').click(function () {
+                var act = this.getAttribute("data-menu-btn");
+                if (act == 'OK') {
+                    console.log(menu.getCheckValue());
+                }
+                menu.close();
+            });
+        };
+
+        var menu1 = new ax5.ui.menu({
+            position: "absolute", // default position is "fixed"
+            items: [
+                {type: 1, label: "menu1"},
+                {type: 1, divide: true},
+                {
+                    label: "Tools",
+                    items: [
+                        {type: 1, label: "Ping"},
+                        {type: 1, label: "SSH"},
+                        {type: 1, label: "Telnet"},
+                        {type: 1, label: "Winbox"},
+                        {type: 1, label: "FileZilla Check SWF Hang"},
+                        {label: "FileZilla IS_FILES"},
+                        {label: "FileZilla CPU"},
+                        {label: "Live Video"},
+                        {label: "Live IPCam 1"},
+                        {label: "Live IPCam 2"},
+                        {label: "Live IPCam 3"},
+                        {label: "Live IPCam 4"},
+                        {label: "IPCam 1"},
+                        {label: "IPCam 2"},
+                        {label: "IPCam 3"},
+                        {label: "IPCam 4"},
+                        {label: "IPCam 5"},
+                        {label: "IPCam 6"}
+                    ]
+                },
+                {
+                    label: "Config",
+                    items: [
+                        {label: "ssh"},
+                        {type: 1, label: "ftp"},
+                        {type: 1, label: "winbox"}
+                    ]
+                }
+            ]
+        });
+
+        attached();
+
+        $(document.body).on("contextmenu", function (e) {
+            /*
+             menu.popup(e, {theme:"danger", filter: function(){
+             return true;
+             }});
+             */
+
+            menu1.popup(e, {filter: function () {
+                return this.type != 1;
+            }});
+
+            ax5.util.stopEvent(e.originalEvent);
+            // e || {left: 'Number', top: 'Number', direction: '', width: 'Number'}
+        });
+    });
+
+
+    function attached() {
+
+        attachedMenu = new ax5.ui.menu({
+            theme: 'danger',
+            direction: "top",
+            offset: {left: 0, top: 1},
+            position: "absolute",
+            icons: {
+                'arrow': '<i class="fa fa-caret-right"></i>'
+            },
+            onStateChanged: function () {
+                console.log(this);
+            },
+            onClick: function () {
+                console.log(this);
+            },
+            columnKeys: {
+                label: 'name',
+                items: 'chidren'
+            },
+            items: [
+                {
+                    icon: '<i class="fa fa-archive"></i>',
+                    name: "Menu Parent 0",
+                    chidren: []
+                },
+                {
+                    icon: '<i class="fa fa-mixcloud"></i>',
+                    name: "Menu Parent 1",
+                    chidren: [
+                        {
+                            name: "Menu Z",
+                            data: {},
+                            role: "",
+                            //accelerator: "CmdOrCtrl+Z",
+                            chidren: [
+                                {
+                                    name: "Menu Z",
+                                    data: {},
+                                    role: ""
+                                    //accelerator: "CmdOrCtrl+Z"
+                                },
+                                {
+                                    name: "Menu A",
+                                    data: {},
+                                    role: ""
+                                    //accelerator: "CmdOrCtrl+A"
+                                }
+                            ]
+                        },
+                        {
+                            name: "Menu A",
+                            data: {},
+                            role: ""
+                            //accelerator: "CmdOrCtrl+A"
+                        }
+                    ]
+                }
+            ]
+        });
+        /*
+         menu.onClick = function () {
+         console.log(this);
+         toast.push(JSON.stringify(this));
+         };
+         */
+
+        attachedMenu.attach($("#attachedMenu-target"));
+    }
+
+
+</script>
+
+</body>
+</html>

@@ -5,11 +5,11 @@
 
     var UI = ax5.ui;
     var U = ax5.util;
-    var DIALOG;
+    var DIALOG = void 0;
 
     UI.addClass({
         className: "dialog",
-        version: "1.3.44"
+        version: "1.4.8"
     }, function () {
         /**
          * @class ax5dialog
@@ -42,7 +42,7 @@
          */
         var ax5dialog = function ax5dialog() {
             var self = this,
-                cfg;
+                cfg = void 0;
 
             this.instanceId = ax5.getGuid();
             this.config = {
@@ -55,9 +55,11 @@
                 lang: {
                     "ok": "ok", "cancel": "cancel"
                 },
-                animateTime: 150
+                animateTime: 150,
+                autoCloseTime: 0
             };
             this.activeDialog = null;
+            this.autoCloseTimer = null;
             cfg = this.config;
 
             var onStateChanged = function onStateChanged(opts, that) {
@@ -69,15 +71,15 @@
 
                 that = null;
                 return true;
-            },
-
+            };
             /**
-             * @method ax5dialog.getContent
+             * @private ax5dialog.getContent
              * @param {String} dialogId
              * @param {Object} opts
              * @returns dialogDisplay
              */
-            getContent = function getContent(dialogId, opts) {
+            var getContent = function getContent(dialogId, opts) {
+
                 var data = {
                     dialogId: dialogId,
                     title: opts.title || cfg.title || "",
@@ -86,7 +88,14 @@
                     btns: opts.btns,
                     '_crlf': function _crlf() {
                         return this.replace(/\n/g, "<br/>");
-                    }
+                    },
+                    additionalContent: function (additionalContent) {
+                        if (U.isFunction(additionalContent)) {
+                            return additionalContent.call(opts);
+                        } else {
+                            return additionalContent;
+                        }
+                    }(opts.additionalContent)
                 };
 
                 try {
@@ -94,16 +103,15 @@
                 } finally {
                     data = null;
                 }
-            },
-
+            };
             /**
-             * @method ax5dialog.open
+             * @private ax5dialog.open
              * @param {Object} opts
              * @param callback
              */
-            open = function open(opts, callback) {
+            var open = function open(opts, callback) {
                 var pos = {},
-                    box;
+                    box = void 0;
 
                 opts.id = opts.id || cfg.id;
 
@@ -156,16 +164,23 @@
                     state: "open"
                 });
 
+                if (opts.autoCloseTime) {
+                    this.autoCloseTimer = setTimeout(function () {
+                        self.close();
+                    }, opts.autoCloseTime);
+                }
+
                 pos = null;
                 box = null;
-            },
-                align = function align(e) {
+            };
+            var align = function align(e) {
                 if (!this.activeDialog) return this;
                 var opts = self.dialogConfig,
                     box = {
                     width: opts.width,
                     height: opts.height
                 };
+
                 //- position 정렬
                 if (typeof opts.position === "undefined" || opts.position === "center") {
                     box.top = window.innerHeight / 2 - box.height / 2;
@@ -183,9 +198,11 @@
                 box = null;
 
                 return this;
-            },
-                btnOnClick = function btnOnClick(e, opts, callback, target, k) {
-                var that;
+            };
+            var btnOnClick = function btnOnClick(e, opts, callback, target, k) {
+                var that = void 0,
+                    emptyKey = null;
+
                 if (e.srcElement) e.target = e.srcElement;
 
                 target = U.findParentNode(e.target, function (target) {
@@ -204,7 +221,6 @@
                         btnTarget: target
                     };
                     if (opts.dialogType === "prompt") {
-                        var emptyKey = null;
                         for (var oi in opts.input) {
                             that[oi] = this.activeDialog.find('[data-dialog-prompt=' + oi + ']').val();
                             if (that[oi] == "" || that[oi] == null) {
@@ -238,9 +254,9 @@
                 callback = null;
                 target = null;
                 k = null;
-            },
-                onKeyup = function onKeyup(e, opts, callback, target, k) {
-                var that,
+            };
+            var onKeyup = function onKeyup(e, opts, callback, target, k) {
+                var that = void 0,
                     emptyKey = null;
 
                 if (e.keyCode == ax5.info.eventKeys.ESC) {
@@ -284,15 +300,37 @@
              * Preferences of dialog UI
              * @method ax5dialog.setConfig
              * @param {Object} config - 클래스 속성값
+             * @param {String} [config.theme="default"]
+             * @param {Number} [config.width=300]
+             * @param {String} [config.title=""]
              * @param {Number} [config.zIndex]
+             * @param {Function} [config.onStateChanged] - `onStateChanged` function can be defined in setConfig method or new ax5.ui.dialog initialization method. However, you can us to define an
+             * event function after initialization, if necessary
+             * @param {Object} [config.lang]
+             * @param {String} [config.lang.ok="ok"]
+             * @param {String} [config.lang.cancel="cancel"]
+             * @param {Number} [config.animateTime=150]
+             * @param {Number} [config.autoCloseTime=0] - 0보다 크면 autoCloseTime 프레임후에 dialog auto close
              * @returns {ax5dialog}
              * @example
              * ```
+             * var dialog = new ax5.ui.dialog();
+             * dialog.setConfig({
+             *      title: "app dialog title",
+             *      zIndex: 5000,
+             *      onStateChanged: function () {
+             *          if (this.state === "open") {
+             *              mask.open();
+             *          }
+             *          else if (this.state === "close") {
+             *              mask.close();
+             *          }
+             *      }
+             * });
              * ```
              */
             //== class body start
             this.init = function () {
-
                 this.onStateChanged = cfg.onStateChanged;
                 // this.onLoad = cfg.onLoad;
             };
@@ -300,7 +338,18 @@
             /**
              * open the dialog of alert type
              * @method ax5dialog.alert
-             * @param {Object|String} [{theme, title, msg, btns}|msg] - dialog 속성을 json으로 정의하거나 msg만 전달
+             * @param {Object|String} config - dialog 속성을 json으로 정의하거나 msg만 전달
+             * @param {String} [config.theme="default"]
+             * @param {Number} [config.width=300]
+             * @param {String} [config.title=""]
+             * @param {Number} [config.zIndex]
+             * @param {Function} [config.onStateChanged]
+             * @param {Object} [config.lang]
+             * @param {String} [config.lang.ok="ok"]
+             * @param {String} [config.lang.cancel="cancel"]
+             * @param {Number} [config.animateTime=150]
+             * @param {Number} [config.autoCloseTime=0] - 0보다 크면 autoCloseTime 프레임후에 dialog auto close
+             * @param {Function|String} [config.additionalContent]
              * @param {Function} [callback] - 사용자 확인 이벤트시 호출될 callback 함수
              * @returns {ax5dialog}
              * @example
@@ -352,14 +401,28 @@
             /**
              * open the dialog of confirm type
              * @method ax5dialog.confirm
-             * @param {Object|String} [{theme, title, msg, btns}|msg] - dialog 속성을 json으로 정의하거나 msg만 전달
+             * @param {Object|String} config - dialog 속성을 json으로 정의하거나 msg만 전달
+             * @param {String} [config.theme="default"]
+             * @param {Number} [config.width=300]
+             * @param {String} [config.title=""]
+             * @param {Number} [config.zIndex]
+             * @param {Function} [config.onStateChanged]
+             * @param {Object} [config.lang]
+             * @param {String} [config.lang.ok="ok"]
+             * @param {String} [config.lang.cancel="cancel"]
+             * @param {Number} [config.animateTime=150]
+             * @param {Number} [config.autoCloseTime=0] - 0보다 크면 autoCloseTime 프레임후에 dialog auto close
+             * @param {Function|String} [config.additionalContent]
              * @param {Function} [callback] - 사용자 확인 이벤트시 호출될 callback 함수
              * @returns {ax5dialog}
              * @example
              * ```
              * myDialog.confirm({
-             *  title: 'app title',
-             *  msg: 'confirm'
+             *      title: 'app title',
+             *      msg: 'confirm',
+             *      additionalContent: function () {
+             *          return "<div style='border:1px solid #ccc;border-radius: 5px;background: #eee;padding: 10px;'>추가정보</div>";
+             *      }
              * }, function(){});
              * ```
              */
@@ -405,7 +468,18 @@
             /**
              * open the dialog of prompt type
              * @method ax5dialog.prompt
-             * @param {Object|String} [{theme, title, msg, btns, input}|msg] - dialog 속성을 json으로 정의하거나 msg만 전달
+             * @param {Object|String} config - dialog 속성을 json으로 정의하거나 msg만 전달
+             * @param {String} [config.theme="default"]
+             * @param {Number} [config.width=300]
+             * @param {String} [config.title=""]
+             * @param {Number} [config.zIndex]
+             * @param {Function} [config.onStateChanged]
+             * @param {Object} [config.lang]
+             * @param {String} [config.lang.ok="ok"]
+             * @param {String} [config.lang.cancel="cancel"]
+             * @param {Number} [config.animateTime=150]
+             * @param {Number} [config.autoCloseTime=0] - 0보다 크면 autoCloseTime 프레임후에 dialog auto close
+             * @param {Function|String} [config.additionalContent]
              * @param {Function} [callback] - 사용자 확인 이벤트시 호출될 callback 함수
              * @returns {ax5dialog}
              * @example
@@ -469,8 +543,12 @@
              * ```
              */
             this.close = function (_option) {
-                var opts, that;
+                var opts = void 0,
+                    that = void 0;
+
                 if (this.activeDialog) {
+                    if (this.autoCloseTimer) clearTimeout(this.autoCloseTimer);
+
                     opts = self.dialogConfig;
                     this.activeDialog.addClass("destroy");
                     jQuery(window).unbind("keydown.ax5dialog");
@@ -518,6 +596,7 @@
         };
         return ax5dialog;
     }());
+
     DIALOG = ax5.ui.dialog;
 })();
 
@@ -527,7 +606,7 @@
     var DIALOG = ax5.ui.dialog;
 
     var dialogDisplay = function dialogDisplay(columnKeys) {
-        return " \n        <div id=\"{{dialogId}}\" data-ax5-ui=\"dialog\" class=\"ax5-ui-dialog {{theme}}\">\n            <div class=\"ax-dialog-header\">\n                {{{title}}}\n            </div>\n            <div class=\"ax-dialog-body\">\n                <div class=\"ax-dialog-msg\">{{{msg}}}</div>\n                \n                {{#input}}\n                <div class=\"ax-dialog-prompt\">\n                    {{#@each}}\n                    <div class=\"form-group\">\n                    {{#@value.label}}\n                    <label>{{#_crlf}}{{{.}}}{{/_crlf}}</label>\n                    {{/@value.label}}\n                    <input type=\"{{@value.type}}\" placeholder=\"{{@value.placeholder}}\" class=\"form-control {{@value.theme}}\" data-dialog-prompt=\"{{@key}}\" style=\"width:100%;\" value=\"{{@value.value}}\" />\n                    {{#@value.help}}\n                    <p class=\"help-block\">{{#_crlf}}{{.}}{{/_crlf}}</p>\n                    {{/@value.help}}\n                    </div>\n                    {{/@each}}\n                </div>\n                {{/input}}\n                \n                <div class=\"ax-dialog-buttons\">\n                    <div class=\"ax-button-wrap\">\n                    {{#btns}}\n                        {{#@each}}\n                        <button type=\"button\" data-dialog-btn=\"{{@key}}\" class=\"btn btn-{{@value.theme}}\">{{@value.label}}</button>\n                        {{/@each}}\n                    {{/btns}}\n                    </div>\n                </div>\n            </div>\n        </div>  \n        ";
+        return " \n        <div id=\"{{dialogId}}\" data-dialog-els=\"root\" class=\"ax5-ui-dialog {{theme}}\">\n            <div class=\"ax-dialog-header\" data-dialog-els=\"header\">\n                {{{title}}}\n            </div>\n            <div class=\"ax-dialog-body\" data-dialog-els=\"body\">\n                <div class=\"ax-dialog-msg\">{{{msg}}}</div>\n                \n                {{#input}}\n                <div class=\"ax-dialog-prompt\">\n                    {{#@each}}\n                    <div class=\"form-group\">\n                    {{#@value.label}}\n                    <label>{{#_crlf}}{{{.}}}{{/_crlf}}</label>\n                    {{/@value.label}}\n                    <input type=\"{{@value.type}}\" placeholder=\"{{@value.placeholder}}\" class=\"form-control {{@value.theme}}\" data-dialog-prompt=\"{{@key}}\" style=\"width:100%;\" value=\"{{@value.value}}\" />\n                    {{#@value.help}}\n                    <p class=\"help-block\">{{#_crlf}}{{.}}{{/_crlf}}</p>\n                    {{/@value.help}}\n                    </div>\n                    {{/@each}}\n                </div>\n                {{/input}}\n                \n                <div class=\"ax-dialog-buttons\" data-dialog-els=\"buttons\">\n                    <div class=\"ax-button-wrap\">\n                    {{#btns}}\n                        {{#@each}}\n                        <button type=\"button\" data-dialog-btn=\"{{@key}}\" class=\"btn btn-{{@value.theme}}\">{{@value.label}}</button>\n                        {{/@each}}\n                    {{/btns}}\n                    </div>\n                </div>\n                \n                {{#additionalContent}}\n                <div data-dialog-els=\"additional-content\">{{{.}}}</div>\n                {{/additionalContent}}\n            </div>\n        </div>  \n        ";
     };
 
     DIALOG.tmpl = {

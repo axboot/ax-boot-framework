@@ -1,0 +1,381 @@
+<!DOCTYPE html>
+<!--
+  ~ Copyright (c) 2016. tom@axisj.com
+  ~ - github.com/thomasjang
+  ~ - www.axisj.com
+  -->
+
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <link rel="stylesheet" type="text/css" href="bower_components/bootstrap/dist/css/bootstrap.min.css"/>
+    <link rel="stylesheet" type="text/css" href="plugins/prettify/github.css"/>
+
+    <script src="bower_components/jquery/dist/jquery.min.js"></script>
+    <script src="bower_components/ax5core/dist/ax5core.js"></script>
+    <script src="../dist/ax5binder.js"></script>
+
+    <script type="text/javascript" src="plugins/prettify/prettify.js"></script>
+    <script src="plugins/json-pretty.js"></script>
+</head>
+<body style="padding: 5px;">
+
+<form class="form-horizontal" id="form-target">
+    <h3>
+        Infomation
+        &nbsp;&nbsp;
+        <button type="button" class="btn btn-default" id="ax-btn-validate">Validate</button>
+    </h3>
+
+    <div class="form-group">
+        <label class="col-sm-2 control-label">Name *</label>
+        <div class="col-sm-10">
+            <input type="text" name="input-text" data-ax-path="name" title="Name" data-ax-validate="required" class="form-control"/>
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="col-sm-2 control-label">Tel</label>
+        <div class="col-sm-4">
+            <input type="text" name="input-text" data-ax-path="tel" class="form-control"  data-ax-validate="pattern" title="Tel" pattern="[0-9]{3}\-.*"/>
+        </div>
+        <label class="col-sm-2 control-label">E-mail</label>
+        <div class="col-sm-4">
+            <input type="text" name="input-text" data-ax-path="email" class="form-control" data-ax-validate="email" title="email" />
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="col-sm-2 control-label">sex</label>
+        <div class="col-sm-10">
+            <label>
+                <input type="radio" name="radio" data-ax-path="sex" value="M"/>
+                M
+            </label>
+            <label>
+                <input type="radio" name="radio" data-ax-path="sex" value="F"/>
+                F
+            </label>
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="col-sm-2 control-label">character</label>
+        <div class="col-sm-4">
+            <select name="select" data-ax-path="character" class="form-control" id="select-target-01">
+                <option vlaue="wild">wild</option>
+                <option vlaue="shiny">shiny</option>
+                <option vlaue="nice">nice</option>
+            </select>
+        </div>
+        <label class="col-sm-2 control-label">hobby</label>
+        <div class="col-sm-4">
+            <label>
+                <input type="checkbox" name="checkbox" data-ax-path="hobby" value="sport"/>
+                sport
+            </label>
+            <label>
+                <input type="checkbox" name="checkbox" data-ax-path="hobby" value="movie"/>
+                movie
+            </label>
+            <label>
+                <input type="checkbox" name="checkbox" data-ax-path="hobby" value="music"/>
+                music
+            </label>
+            <label>
+                <input type="checkbox" name="checkbox" data-ax-path="hobby" value="play"/>
+                play
+            </label>
+            <label>
+                <input type="checkbox" name="checkbox" data-ax-path="hobby" value="work"/>
+                work
+            </label>
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="col-sm-2 control-label">description</label>
+        <div class="col-sm-10">
+            <textarea name="textarea" data-ax-path="description" class="form-control"
+                      style="width:90%;height:100px;"></textarea>
+        </div>
+    </div>
+
+    <h3>Familys &nbsp;&nbsp;
+        <button type="button" class="btn btn-default" id="ax-btn-list-add">ADD</button>
+    </h3>
+
+    <table class="table table-bordered">
+        <colgroup>
+            <col width="60"/>
+            <col width="150"/>
+            <col width="100"/>
+            <col width="100"/>
+            <col width="100"/>
+            <col/>
+            <col width="100"/>
+        </colgroup>
+        <thead>
+        <tr>
+            <td></td>
+            <td>A</td>
+            <td>B</td>
+            <td>C</td>
+            <td>D</td>
+            <td>E</td>
+            <td>F</td>
+        </tr>
+        </thead>
+        <tbody data-ax-repeat="list">
+        <script type="text/html">
+            <tr>
+                <td align="center">
+
+                    {{@i}}
+
+                    {{#@first}}
+                    <button class="btn btn-default btn-sm" type="button" data-ax-repeat-click="add">+</button>
+                    {{/@first}}
+                    {{^@first}}
+                    <button class="btn btn-default btn-sm" type="button" data-ax-repeat-click="remove">-</button>
+                    {{/@first}}
+                </td>
+                <td>
+                    <input type="text" name="input-text" id="name-{{@i}}" data-ax-item-path="name" data-ax-validate="required"
+                           class="form-control W60"/>
+                </td>
+                <td>
+                    <label>
+                        <input type="radio" name="radio-{{@i}}" data-ax-item-path="sex" value="M"/>
+                        Male
+                    </label>
+                    <br/>
+                    <label>
+                        <input type="radio" name="radio-{{@i}}" data-ax-item-path="sex" value="F"/>
+                        Female
+                    </label>
+                </td>
+                <td>
+                    <label>
+                        <input type="checkbox" name="checkbox-{{@i}}" data-ax-item-path="hobby"
+                               value="sport"/>
+                        sport
+                    </label>
+                    <br/>
+                    <label>
+                        <input type="checkbox" name="checkbox-{{@i}}" data-ax-item-path="hobby"
+                               value="movie"/>
+                        movie
+                    </label>
+                    <br/>
+                    <label>
+                        <input type="checkbox" name="checkbox-{{@i}}" data-ax-item-path="hobby"
+                               value="music"/>
+                        music
+                    </label>
+                    <br/>
+                    <label>
+                        <input type="checkbox" name="checkbox-{{@i}}" data-ax-item-path="hobby"
+                               value="play"/>
+                        play
+                    </label>
+                    <br/>
+                    <label>
+                        <input type="checkbox" name="checkbox-{{@i}}" data-ax-item-path="hobby"
+                               value="work"/>
+                        work
+                    </label>
+                </td>
+                <td>
+                    <select name="select" data-ax-item-path="character" class="form-control">
+                        <option value="wild">wild</option>
+                        <option value="shiny">shiny</option>
+                        <option value="nice">nice</option>
+                    </select>
+
+
+                    <input data-ax-item-path="qty" data-update-qty="{{@i}}" class="form-control"/>
+                    <input data-ax-item-path="cost" data-update-qty="{{@i}}" class="form-control"/>
+                    <span data-ax-item-path="price"></span>
+
+                </td>
+                <td>
+                    {{#child}}
+                    {{^__DELETED__}}
+                    <input type="text" name="text" data-ax-item-path="child[{{@i}}].name" value=""
+                           class="form-control input-sm" style="display: inline-block;width: 70px;"/>
+
+                    {{#@first}}
+                    <button class="btn btn-primary btn-sm" type="button" data-ax-repeat-child="child"
+                            data-ax-repeat-child-c-index="{{@i}}" data-ax-repeat-click="add">+
+                    </button>
+                    {{/@first}}
+                    {{^@first}}
+                    <button class="btn btn-primary btn-sm" type="button" data-ax-repeat-child="child"
+                            data-ax-repeat-child-c-index="{{@i}}" data-ax-repeat-click="remove">-
+                    </button>
+                    {{/@first}}
+
+                    {{/__DELETED__}}
+                    {{/child}}
+                </td>
+                <td>
+                    <label>
+                        <input type="checkbox" data-ax-item-path="useYn" value="Y"/>
+                        Y/N
+                    </label>
+                </td>
+            </tr>
+        </script>
+        </tbody>
+    </table>
+
+    <div style="">
+        <pre class="prettyprint linenums" id="json-preview"></pre>
+    </div>
+</form>
+
+
+<script>
+    var obj = {
+        name: "Thomas Jang",
+        alias: "tom",
+        tel: "010-8881-9137",
+        email: "tom@axisj.com",
+        sex: "M",
+        hobby: ["sport"],
+        useYn: "N",
+        description: "http://www.axisj.com",
+        list: [
+            {
+                name: "thomas",
+                tel: "010-8881-9000",
+                email: "tom@axisj.com",
+                sex: "M",
+                //character: "wild",
+                //hobby: ["movie", "play"],
+                description: "",
+                child: [{name:"값1"},{name:"값2"}],
+                qty: 10,
+                cost: 100
+            },
+            {
+                name: "thomas",
+                tel: "010-8881-9000",
+                email: "tom@axisj.com",
+                sex: "M",
+                //            character: "shiny",
+                //hobby: ["movie", "play"],
+                description: "",
+                child: [{name:"값1"},{name:"값2"}],
+                qty: 20,
+                cost: 100
+            }
+        ]
+    };
+
+    var fnObj = {
+        pageStart: function () {
+            this.form.init();
+            $("#ax-btn-validate").click(function (){
+                // fnObj.form.model.set("sex", "F");
+                fnObj.form.validate();
+            });
+            $("#ax-btn-list-add").click(function () {
+                fnObj.form.add();
+            });
+
+        },
+        form: {
+            model: new ax5.ui.binder(),
+            init: function () {
+                var _this = this;
+                /**
+                 * this.model.onchange(objectPath, Function);
+                 */
+                this.model.onChange("*", function () {
+                    //console.log("onchange");
+                    if(this.el && this.el.getAttribute("data-update-qty")){
+                        var data = _this.model.get("list["+this.el.getAttribute("data-update-qty")+"]");
+                        //console.log(data);
+                        data.price = (data.qty.number() * data.cost.number()).money();
+                        data.qty = (data.qty).money();
+                        data.cost = (data.cost).money();
+                        console.log(data);
+
+                        _this.model.update("list", this.el.getAttribute("data-update-qty"), data);
+                    }
+                    _this.print_json();
+                });
+                /**
+                 * this.model.onclick(objectPath, callback);
+                 */
+                this.model.onClick("list", function () {
+                    // console.log(this);
+                    var child_key = this.jquery.attr("data-ax-repeat-child"), child_index = this.jquery.attr("data-ax-repeat-child-c-index");
+                    if (child_key) {
+                        if (this.value == "add") {
+                            _this.model.childAdd(this.repeat_path, this.item_index, child_key, {name:""});
+                        } else {
+                            _this.model.childRemove(this.repeat_path, this.item_index, child_key, child_index);
+                        }
+                    } else if (this.value == "add") {
+                        _this.add();
+                    } else {
+                        //console.log(this.repeat_path, this.item_index);
+                        _this.remove(this.repeat_path, this.item_index);
+                    }
+                });
+                /**
+                 * AXBinder.set_model(Object, jQueryObject);
+                 * Object를 타겟 아이템 아래에 반영
+                 */
+                obj.list.forEach(function(n){
+                    n.price = ax5.util.number(n.qty * n.cost, {"money":true});
+                });
+                
+                console.log(obj);
+                this.model.setModel(obj, $("#form-target"));
+                this.print_json();
+
+                $('[data-ax-path="email"]').on("change", function(){
+                    console.log("i'm changed");
+                });
+
+            },
+            add: function () {
+                this.model.add("list", {name: "name:" + this.model.model.list.length, child: [{name:""}]});
+            },
+            remove: function (repeat_path, item_index) {
+                this.model.remove(repeat_path, item_index);
+                //_this.print_json();
+            },
+            update: function (repeat_path, item_index, item) {
+                /**
+                 * repeat_item update
+                 */
+                this.model.update(repeat_path, item_index, item);
+            },
+            validate: function () {
+                var rs = this.model.validate();
+                if(rs.error){
+                    alert("validate 실패" + rs.error[0].jquery.attr("title"));
+                    console.log(rs.error);
+
+                    rs.error[0].jquery.focus();
+                    return;
+                }
+                alert("ok");
+            },
+            print_json: function () {
+                var model = this.model.get();
+                $("#json-preview").html(jsonPretty(model));
+                prettyPrint();
+            }
+        }
+    };
+
+    $(document.body).ready(function () {
+        fnObj.pageStart();
+    });
+</script>
+
+</body>
+</html>

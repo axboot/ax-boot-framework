@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<!--
+  ~ Copyright (c) 2017. tom@axisj.com
+  ~ - github.com/thomasjang
+  ~ - www.axisj.com
+  -->
+
+<html lang="en" style="height: 100%;">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, user-scalable=no">
+
+    <title>GRID</title>
+
+    <link rel="stylesheet" type="text/css" href="bower_components/bootstrap/dist/css/bootstrap.min.css"/>
+    <link rel="stylesheet" type="text/css" href="../../ax5ui-mask/dist/ax5mask.css"/>
+    <link rel="stylesheet" type="text/css" href="../../ax5ui-calendar/dist/ax5calendar.css"/>
+    <link rel="stylesheet" type="text/css" href="../../ax5ui-picker/dist/ax5picker.css"/>
+    <link rel="stylesheet" type="text/css" href="../../ax5ui-select/dist/ax5select.css"/>
+    <link rel="stylesheet" href="bower_components/font-awesome/css/font-awesome.min.css">
+    <link rel="stylesheet" type="text/css" href="../dist/ax5grid.css"/>
+
+    <script src="bower_components/jquery/dist/jquery.min.js"></script>
+    <script src="../../ax5core/dist/ax5core.js"></script>
+    <script src="../../ax5ui-formatter/dist/ax5formatter.min.js"></script>
+    <script src="../../ax5ui-calendar/dist/ax5calendar.min.js"></script>
+    <script src="../../ax5ui-picker/dist/ax5picker.min.js"></script>
+    <script src="../../ax5ui-select/dist/ax5select.js"></script>
+    <script src="../dist/ax5grid.js"></script>
+</head>
+<body style="height: 100%;">
+
+<div style="display: flex;
+position: relative;
+height: 100%;
+  flex: 1;
+  flex-direction: column;
+  overflow: visible;
+  min-width: 0;
+  min-height: 0;">
+    <div style="flex: 1;overflow: hidden;">
+
+    </div>
+    <div data-ax5grid="first-grid" data-ax5grid-config='{showLineNumber: false, showRowSelector: true}' style="flex: 1;overflow: hidden;"></div>
+</div>
+
+
+<script>
+    var firstGrid = new ax5.ui.grid();
+
+    ax5.ui.grid.formatter["myType"] = function () {
+        return "myType" + (this.value || "");
+    };
+    ax5.ui.grid.formatter["capital"] = function () {
+        return ('' + this.value).toUpperCase();
+    };
+
+    ax5.ui.grid.collector["myType"] = function () {
+        return "myType" + (this.value || "");
+    };
+
+    var sampleData = [
+        //{companyJson: {"대표자명": "----"}, a: "A", b: "A01", price: 1000, amount: 12, cost: 12000, saleDt: "2016-08-29", customer: "장기영", saleType: "A", __disable_selection__: true},
+        {companyJson: {"대표자명": "----"}, a: "A", b: "A01", price: 1000, amount: 12, cost: 12000, saleDt: "2016-08-29", customer: "장기영", saleType: "A"},
+        {companyJson: {"대표자명": "abcd"}, a: "A", b: "B01", price: 1100, amount: 11, cost: 12100, saleDt: "2016-08-28", customer: "장서우", saleType: "B"},
+        {companyJson: {"대표자명": "abcd"}, a: "A", b: "C01", price: 1200, amount: 10, cost: 12000, saleDt: "2016-08-27", customer: "이영희", saleType: "A"},
+        {companyJson: {"대표자명": "위세라"}, a: "A", b: "A01", price: 1300, amount: 8, cost: 10400, saleDt: "2016-08-25", customer: "황인서", saleType: "C"},
+        {companyJson: {"대표자명": "abcd"}, a: "A", b: "B01", price: 1400, amount: 5, cost: 7000, saleDt: "2016-08-29", customer: "황세진", saleType: "D"},
+        {companyJson: {"대표자명": "----"}, a: "A", b: "A01", price: 1000, amount: 12, cost: 12000, saleDt: "2016-08-29", customer: "장기영", saleType: "A"},
+        {companyJson: {"대표자명": "abcd"}, a: "A", b: "B01", price: 1100, amount: 11, cost: 12100, saleDt: "2016-08-28", customer: "장서우", saleType: "B"},
+        {companyJson: {"대표자명": "abcd"}, a: "A", b: "C01", price: 1200, amount: 10, cost: 12000, saleDt: "2016-08-27", customer: "이영희", saleType: "A"},
+        {companyJson: {"대표자명": "위세라"}, a: "A", b: "A01", price: 1300, amount: 8, cost: 10400, saleDt: "2016-08-25", customer: "황인서", saleType: "C"},
+        {companyJson: {"대표자명": "abcd"}, a: "A", b: "B01", price: 1400, amount: 5, cost: 7000, saleDt: "2016-08-29", customer: "황세진", saleType: "D"},
+        {companyJson: {"대표자명": "----"}, a: "A", b: "A01", price: 1000, amount: 12, cost: 12000, saleDt: "2016-08-29", customer: "장기영", saleType: "A"},
+        {companyJson: {"대표자명": "abcd"}, a: "A", b: "B01", price: 1100, amount: 11, cost: 12100, saleDt: "2016-08-28", customer: "장서우", saleType: "B"},
+        {companyJson: {"대표자명": "abcd"}, a: "A", b: "C01", price: 1200, amount: 10, cost: 12000, saleDt: "2016-08-27", customer: "이영희", saleType: "A"},
+        {companyJson: {"대표자명": "위세라"}, a: "A", b: "A01", price: 1300, amount: 8, cost: 10400, saleDt: "2016-08-25", customer: "황인서", saleType: "C"},
+        {companyJson: {"대표자명": "abcd"}, a: "A", b: "B01", price: 1400, amount: 5, cost: 7000, saleDt: "2016-08-29", customer: "황세진", saleType: "D"},
+        {companyJson: {"대표자명": "abcd"}, a: "A", b: "A01", price: 1500, amount: 2, cost: 3000, saleDt: "2016-08-26", customer: "이서연", saleType: "A"}
+    ];
+
+    var gridView = {
+        initView: function () {
+            firstGrid.setConfig({
+                target: $('[data-ax5grid="first-grid"]'),
+                sortable: true,
+                multiSort: true,
+                multipleSelect: false,
+                /*
+                 remoteSort: function () {
+                 console.log(JSON.stringify(this.sortInfo, null, '\t'));
+                 gridView.setSortData(this.sortInfo);
+                 },
+                 */
+                body: {
+                    onClick: function () {
+                        this.self.select(this.dindex);
+                    },
+                    onDataChanged: function () {
+                        /*
+                         var rowNum = this.dindex;
+                         var gridData = this.list;
+
+                         // Ajax 로직 대체
+                         setTimeout(function () {
+                         gridData[rowNum].cost = gridData[rowNum].price * gridData[rowNum].amount;
+                         firstGrid.updateRow(gridData[rowNum], rowNum);
+                         }, 1000);
+                         */
+                    }
+                },
+                columns: [
+                    {key: "b", label: "필드B", align: "center"},
+                    {key: "companyJson.대표자명", label: "대표자명", width: 100, align: "center"},
+                    {
+                        key: "saleDt", label: "판매일자", width: "*", align: "center", editor: "text", formatter: function formatter() {
+                        return ax5.util.date(this.value, {"return": 'yyyy/MM/dd'});
+                    }
+                    },
+                    {key: "customer", label: "고객명"},
+                    {key: "saleType", label: "판매타입"}
+                ]
+            });
+            firstGrid.setColumnSort({
+                b: {orderBy: "desc", seq: 0}
+            });
+            ;
+            return this;
+        },
+        setData: function (_pageNo) {
+            firstGrid.setData(sampleData);
+            return this;
+        },
+        setSortData: function (sortInfo) {
+            var sortedList = sampleData.sort(function (a, b) {
+                return a["b"] < b["b"];
+            });
+            firstGrid.setData(sortedList);
+        }
+    };
+
+    $(function () {
+
+        gridView
+            .initView()
+            .setData();
+
+        $(window).resize(function () {
+
+        });
+
+    });
+</script>
+
+</body>
+</html>

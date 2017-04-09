@@ -7,9 +7,9 @@
 // ax5.ui.grid
 (function () {
 
-    var UI = ax5.ui;
-    var U = ax5.util;
-    var GRID;
+    let UI = ax5.ui,
+        U = ax5.util,
+        GRID;
 
     UI.addClass({
         className: "grid",
@@ -24,15 +24,29 @@
          * var myGrid = new ax5.ui.grid();
          * ```
          */
-        var ax5grid = function () {
-            var
-                self = this,
-                cfg;
+        let ax5grid = function () {
+            let self = this,
+                cfg,
+                ctrlKeys = {
+                    "33": "KEY_PAGEUP",
+                    "34": "KEY_PAGEDOWN",
+                    "35": "KEY_END",
+                    "36": "KEY_HOME",
+                    "37": "KEY_LEFT",
+                    "38": "KEY_UP",
+                    "39": "KEY_RIGHT",
+                    "40": "KEY_DOWN"
+                };
 
             this.instanceId = ax5.getGuid();
             this.config = {
                 theme: 'default',
                 animateTime: 250,
+                debounceTime: 250,
+                appendDebouncer: null,
+                appendDebounceTimes: 0,
+                appendProgressIcon: '...',
+                appendProgress: false,
 
                 // 틀고정 속성
                 frozenColumnIndex: 0,
@@ -40,7 +54,8 @@
                 showLineNumber: false,
                 showRowSelector: false,
                 multipleSelect: true,
-
+                virtualScrollY: true,
+                virtualScrollX: true,
                 height: 0,
                 columnMinWidth: 100,
                 lineNumberColumnWidth: 30,
@@ -49,6 +64,7 @@
                 remoteSort: false,
 
                 header: {
+                    display: true,
                     align: false,
                     columnHeight: 26,
                     columnPadding: 3,
@@ -59,7 +75,8 @@
                     columnHeight: 26,
                     columnPadding: 3,
                     columnBorderWidth: 1,
-                    grouping: false
+                    grouping: false,
+                    mergeCells: false
                 },
                 rightSum: false,
                 footSum: false,
@@ -78,6 +95,30 @@
                     modified: '__modified__',
                     deleted: '__deleted__',
                     disableSelection: '__disable_selection__'
+                },
+                tree: {
+                    use: false,
+                    hashDigit: 8,
+                    indentWidth: 10,
+                    arrowWidth: 15,
+                    iconWidth: 18,
+                    icons: {
+                        openedArrow: '▾',
+                        collapsedArrow: '▸',
+                        groupIcon: '⊚',
+                        collapsedGroupIcon: '⊚',
+                        itemIcon: '⊙'
+                    },
+                    columnKeys: {
+                        parentKey: "pid",
+                        selfKey: "id",
+                        collapse: "collapse",
+                        hidden: "hidden",
+                        parentHash: "__hp__",
+                        selfHash: "__hs__",
+                        children: "__children__",
+                        depth: "__depth__",
+                    }
                 }
             };
             this.xvar = {
@@ -93,6 +134,7 @@
             this.bodyGrouping = {};
 
             this.list = []; // 그리드의 데이터
+            this.proxyList = null; // 그리드 데이터의 대리자
             this.page = {}; // 그리드의 페이지 정보
             this.selectedDataIndexs = [];
             this.deletedList = [];
@@ -101,6 +143,7 @@
             this.selectedColumn = {}; // 그리드 바디의 선택된 셀 정보
             this.isInlineEditing = false;
             this.inlineEditing = {};
+            this.listIndexMap = {}; // tree데이터 사용시 데이터 인덱싱 맵
 
             // header
             this.headerTable = {};
@@ -119,6 +162,7 @@
             this.leftBodyGroupingData = {};
             this.bodyGroupingData = {};
             this.rightBodyGroupingData = {};
+            this.bodyGroupingMap = {};
 
             // footSum
             this.footSumTable = {}; // footSum의 출력레이아웃
@@ -128,460 +172,464 @@
 
             cfg = this.config;
 
-            var
-                onStateChanged = function (_opts, _that) {
-                    if (_opts && _opts.onStateChanged) {
-                        _opts.onStateChanged.call(_that, _that);
-                    }
-                    else if (this.onStateChanged) {
-                        this.onStateChanged.call(_that, _that);
-                    }
-                    return true;
-                },
-                initGrid = function () {
-                    // 그리드 템플릿에 전달하고자 하는 데이터를 정리합시다.
+            const onStateChanged = function (_opts, _that) {
+                if (_opts && _opts.onStateChanged) {
+                    _opts.onStateChanged.call(_that, _that);
+                }
+                else if (this.onStateChanged) {
+                    this.onStateChanged.call(_that, _that);
+                }
+                return true;
+            };
+            const initGrid = function () {
+                // 그리드 템플릿에 전달하고자 하는 데이터를 정리합시다.
 
-                    var data = {
-                        instanceId: this.id
-                    };
+                let data = {
+                    instanceId: this.id
+                };
 
-                    this.$target.html(GRID.tmpl.get("main", data));
+                this.$target.html(GRID.tmpl.get("main", data));
 
-                    // 그리드 패널 프레임의 각 엘리먼트를 캐쉬합시다.
-                    this.$ = {
-                        "container": {
-                            "hidden": this.$target.find('[data-ax5grid-container="hidden"]'),
-                            "root": this.$target.find('[data-ax5grid-container="root"]'),
-                            "header": this.$target.find('[data-ax5grid-container="header"]'),
-                            "body": this.$target.find('[data-ax5grid-container="body"]'),
-                            "page": this.$target.find('[data-ax5grid-container="page"]'),
-                            "scroller": this.$target.find('[data-ax5grid-container="scroller"]')
-                        },
-                        "panel": {
-                            "aside-header": this.$target.find('[data-ax5grid-panel="aside-header"]'),
-                            "left-header": this.$target.find('[data-ax5grid-panel="left-header"]'),
-                            "header": this.$target.find('[data-ax5grid-panel="header"]'),
-                            "header-scroll": this.$target.find('[data-ax5grid-panel-scroll="header"]'),
-                            "right-header": this.$target.find('[data-ax5grid-panel="right-header"]'),
-                            "top-aside-body": this.$target.find('[data-ax5grid-panel="top-aside-body"]'),
-                            "top-left-body": this.$target.find('[data-ax5grid-panel="top-left-body"]'),
-                            "top-body": this.$target.find('[data-ax5grid-panel="top-body"]'),
-                            "top-body-scroll": this.$target.find('[data-ax5grid-panel-scroll="top-body"]'),
-                            "top-right-body": this.$target.find('[data-ax5grid-panel="top-right-body"]'),
-                            "aside-body": this.$target.find('[data-ax5grid-panel="aside-body"]'),
-                            "aside-body-scroll": this.$target.find('[data-ax5grid-panel-scroll="aside-body"]'),
-                            "left-body": this.$target.find('[data-ax5grid-panel="left-body"]'),
-                            "left-body-scroll": this.$target.find('[data-ax5grid-panel-scroll="left-body"]'),
-                            "body": this.$target.find('[data-ax5grid-panel="body"]'),
-                            "body-scroll": this.$target.find('[data-ax5grid-panel-scroll="body"]'),
-                            "right-body": this.$target.find('[data-ax5grid-panel="right-body"]'),
-                            "right-body-scroll": this.$target.find('[data-ax5grid-panel-scroll="right-body"]'),
-                            "bottom-aside-body": this.$target.find('[data-ax5grid-panel="bottom-aside-body"]'),
-                            "bottom-left-body": this.$target.find('[data-ax5grid-panel="bottom-left-body"]'),
-                            "bottom-body": this.$target.find('[data-ax5grid-panel="bottom-body"]'),
-                            "bottom-body-scroll": this.$target.find('[data-ax5grid-panel-scroll="bottom-body"]'),
-                            "bottom-right-body": this.$target.find('[data-ax5grid-panel="bottom-right-body"]')
-                        },
-                        "livePanelKeys": [], // 현재 사용중인 패널들 (grid-body repaint에서 수집하여 처리)
-                        "scroller": {
-                            "vertical": this.$target.find('[data-ax5grid-scroller="vertical"]'),
-                            "vertical-bar": this.$target.find('[data-ax5grid-scroller="vertical-bar"]'),
-                            "horizontal": this.$target.find('[data-ax5grid-scroller="horizontal"]'),
-                            "horizontal-bar": this.$target.find('[data-ax5grid-scroller="horizontal-bar"]'),
-                            "corner": this.$target.find('[data-ax5grid-scroller="corner"]')
-                        },
-                        "page": {
-                            "navigation": this.$target.find('[data-ax5grid-page="navigation"]'),
-                            "status": this.$target.find('[data-ax5grid-page="status"]')
-                        },
-                        "form": {
-                            "clipboard": this.$target.find('[data-ax5grid-form="clipboard"]')
-                        },
-                        "resizer": {
-                            "vertical": this.$target.find('[data-ax5grid-resizer="vertical"]'),
-                            "horizontal": this.$target.find('[data-ax5grid-resizer="horizontal"]')
-                        }
-                    };
-
-                    this.$["container"]["root"].css({height: this.config.height});
-
-                    return this;
-                },
-                initColumns = function (_columns) {
-                    this.columns = U.deepCopy(_columns);
-                    this.headerTable = GRID.util.makeHeaderTable.call(this, this.columns);
-                    this.xvar.frozenColumnIndex = (cfg.frozenColumnIndex > this.columns.length) ? this.columns.length : cfg.frozenColumnIndex;
-
-                    this.bodyRowTable = GRID.util.makeBodyRowTable.call(this, this.columns);
-                    this.bodyRowMap = GRID.util.makeBodyRowMap.call(this, this.bodyRowTable);
-                    // 바디에 표현될 한줄의 높이를 계산합니다.
-                    this.xvar.bodyTrHeight = this.bodyRowTable.rows.length * this.config.body.columnHeight;
-
-                    var colGroupMap = {};
-                    for (var r = 0, rl = this.headerTable.rows.length; r < rl; r++) {
-                        var row = this.headerTable.rows[r];
-                        for (var c = 0, cl = row.cols.length; c < cl; c++) {
-                            colGroupMap[row.cols[c].colIndex] = jQuery.extend({}, row.cols[c]);
-                        }
-                    }
-
-                    this.colGroup = [];
-                    for (var k in colGroupMap) {
-                        this.colGroup.push(colGroupMap[k]);
-                    }
-
-                    return this;
-                },
-                onResetColumns = function () {
-                    initColumns.call(this, this.config.columns);
-                    resetColGroupWidth.call(this);
-                    if (this.config.footSum) {
-                        initFootSum.call(this, this.config.footSum);
-                        this.needToPaintSum = true;
-                    }
-                    if (this.config.body.grouping) initBodyGroup.call(this, this.config.body.grouping);
-                    alignGrid.call(this, true);
-                    GRID.header.repaint.call(this, true);
-                    GRID.body.repaint.call(this, true);
-                    GRID.scroller.resize.call(this);
-                },
-                resetColGroupWidth = function () {
-                    /// !! 그리드 target의 크기가 변경되면 이 함수를 호출하려 this.colGroup의 _width 값을 재 계산 하여야 함. [tom]
-                    var CT_WIDTH = this.$["container"]["root"].width() - (function () {
-                            var width = 0;
-                            if (cfg.showLineNumber) width += cfg.lineNumberColumnWidth;
-                            if (cfg.showRowSelector) width += cfg.rowSelectorColumnWidth;
-                            return width;
-                        })();
-                    var totalWidth = 0;
-                    var computedWidth;
-                    var autoWidthColgroupIndexs = [];
-                    var colGroup = this.colGroup;
-                    var i, l;
-
-                    for (i = 0, l = colGroup.length; i < l; i++) {
-                        if (U.isNumber(colGroup[i].width)) {
-                            totalWidth += colGroup[i]._width = colGroup[i].width;
-                        } else if (colGroup[i].width === "*") {
-                            autoWidthColgroupIndexs.push(i);
-                        } else if (U.right(colGroup[i].width, 1) === "%") {
-                            totalWidth += colGroup[i]._width = CT_WIDTH * U.left(colGroup[i].width, "%") / 100;
-                        }
-                    }
-                    if (autoWidthColgroupIndexs.length > 0) {
-                        computedWidth = (CT_WIDTH - totalWidth) / autoWidthColgroupIndexs.length;
-                        for (i = 0, l = autoWidthColgroupIndexs.length; i < l; i++) {
-                            colGroup[autoWidthColgroupIndexs[i]]._width = computedWidth;
-                        }
-                    }
-                },
-                initFootSum = function (_footSum) {
-                    if (U.isArray(_footSum)) {
-                        this.footSumTable = GRID.util.makeFootSumTable.call(this, this.footSumColumns = _footSum);
-                    } else {
-                        this.footSumColumns = [];
-                        this.footSumTable = {};
-                    }
-                },
-                initBodyGroup = function (_grouping) {
-                    var grouping = jQuery.extend({}, _grouping);
-                    if ("by" in grouping && "columns" in grouping) {
-
-                        this.bodyGrouping = {
-                            by: grouping.by,
-                            columns: grouping.columns
-                        };
-                        this.bodyGroupingTable = GRID.util.makeBodyGroupingTable.call(this, this.bodyGrouping.columns);
-                        this.sortInfo = (function () {
-                            var sortInfo = {};
-                            for (var k = 0, kl = this.bodyGrouping.by.length; k < kl; k++) {
-                                sortInfo[this.bodyGrouping.by[k]] = {
-                                    orderBy: "asc",
-                                    seq: k,
-                                    fixed: true
-                                };
-                                for (var c = 0, cl = this.colGroup.length; c < cl; c++) {
-                                    if (this.colGroup[c].key === this.bodyGrouping.by[k]) {
-                                        this.colGroup[c].sort = "asc";
-                                        this.colGroup[c].sortFixed = true;
-                                    }
-                                }
-                            }
-                            return sortInfo;
-                        }).call(this);
-                    } else {
-                        cfg.body.grouping = false;
-                    }
-                },
-                alignGrid = function (_isFirst) {
-                    // isFirst : 그리드 정렬 메소드가 처음 호출 되었는지 판단 하는 아규먼트
-                    var CT_WIDTH = this.$["container"]["root"].width();
-                    var CT_HEIGHT = this.$["container"]["root"].height();
-                    var CT_INNER_WIDTH = CT_WIDTH;
-                    var CT_INNER_HEIGHT = CT_HEIGHT;
-
-                    var asidePanelWidth = cfg.asidePanelWidth = (function () {
-                        var width = 0;
-
-                        if (cfg.showLineNumber) width += cfg.lineNumberColumnWidth;
-                        if (cfg.showRowSelector) width += cfg.rowSelectorColumnWidth;
-                        return width;
-                    })();
-
-                    var frozenPanelWidth = cfg.frozenPanelWidth = (function (colGroup, endIndex) {
-                        var width = 0;
-                        for (var i = 0, l = endIndex; i < l; i++) {
-                            width += colGroup[i]._width;
-                        }
-                        return width;
-                    })(this.colGroup, cfg.frozenColumnIndex);
-
-                    var rightPanelWidth = 0; // todo : 우측 함계컬럼 넘비 계산
-
-                    var frozenRowHeight = (function (bodyTrHeight) {
-                        return cfg.frozenRowIndex * bodyTrHeight;
-                    })(this.xvar.bodyTrHeight);
-
-                    var footSumHeight = (function (bodyTrHeight) {
-                        return this.footSumColumns.length * bodyTrHeight;
-                    }).call(this, this.xvar.bodyTrHeight);
-
-                    var headerHeight = this.headerTable.rows.length * cfg.header.columnHeight;
-                    var pageHeight = (cfg.page.display) ? cfg.page.height : 0;
-
-                    // 데이터의 길이가 body보다 높을때. 수직 스크롤러 활성화
-                    var verticalScrollerWidth, horizontalScrollerHeight;
-
-                    (function () {
-                        verticalScrollerWidth = ((CT_HEIGHT - headerHeight - pageHeight - footSumHeight) < this.list.length * this.xvar.bodyTrHeight) ? this.config.scroller.size : 0;
-                        // 남은 너비가 colGroup의 너비보다 넓을때. 수평 스크롤 활성화.
-                        horizontalScrollerHeight = (function () {
-                            var totalColGroupWidth = 0;
-                            // aside 빼고 너비
-                            // 수직 스크롤이 있으면 또 빼고 비교
-                            var bodyWidth = CT_WIDTH - asidePanelWidth - verticalScrollerWidth;
-                            for (var i = 0, l = this.colGroup.length; i < l; i++) {
-                                totalColGroupWidth += this.colGroup[i]._width;
-                            }
-                            return (totalColGroupWidth > bodyWidth) ? this.config.scroller.size : 0;
-                        }).call(this);
-
-                        if (horizontalScrollerHeight > 0) {
-                            verticalScrollerWidth = ((CT_HEIGHT - headerHeight - pageHeight - footSumHeight - horizontalScrollerHeight) < this.list.length * this.xvar.bodyTrHeight) ? this.config.scroller.size : 0;
-                        }
-                    }).call(this);
-
-                    // 수평 너비 결정
-                    CT_INNER_WIDTH = CT_WIDTH - verticalScrollerWidth;
-                    // 수직 스크롤러의 높이 결정.
-                    CT_INNER_HEIGHT = CT_HEIGHT - pageHeight - horizontalScrollerHeight;
-
-                    var bodyHeight = CT_INNER_HEIGHT - headerHeight;
-
-                    var panelDisplayProcess = function (panel, vPosition, hPosition, containerType) {
-                        var css = {};
-                        var isHide = false;
-
-                        switch (hPosition) {
-                            case "aside":
-                                if (asidePanelWidth === 0) {
-                                    isHide = true;
-                                } else {
-                                    css["left"] = 0;
-                                    css["width"] = asidePanelWidth;
-                                }
-                                break;
-                            case "left":
-                                if (cfg.frozenColumnIndex === 0) {
-                                    isHide = true;
-                                } else {
-                                    css["left"] = asidePanelWidth;
-                                    css["width"] = frozenPanelWidth;
-                                }
-                                break;
-                            case "right":
-                                if (!cfg.rightSum) {
-                                    isHide = true;
-                                } else {
-
-                                }
-                                break;
-                            default:
-                                if (containerType !== "page") {
-                                    if (cfg.frozenColumnIndex === 0) {
-                                        css["left"] = asidePanelWidth;
-                                    } else {
-                                        css["left"] = frozenPanelWidth + asidePanelWidth;
-                                    }
-                                    css["width"] = CT_INNER_WIDTH - asidePanelWidth - frozenPanelWidth - rightPanelWidth;
-                                }
-                                break;
-                        }
-
-                        if (isHide) {
-                            panel.hide();
-                            // 프로세스 중지
-                            return this;
-                        }
-
-                        if (containerType === "body") {
-                            switch (vPosition) {
-                                case "top":
-                                    if (cfg.frozenRowIndex == 0) {
-                                        isHide = true;
-                                    } else {
-                                        css["top"] = 0;
-                                        css["height"] = frozenRowHeight;
-                                    }
-                                    break;
-                                case "bottom":
-                                    if (!cfg.footSum) {
-                                        isHide = true;
-                                    } else {
-                                        css["top"] = bodyHeight - footSumHeight;
-                                        css["height"] = footSumHeight; // footSum height
-                                    }
-                                    break;
-                                default:
-
-                                    css["top"] = frozenRowHeight;
-                                    css["height"] = bodyHeight - frozenRowHeight - footSumHeight;
-
-                                    break;
-                            }
-                        } else if (containerType === "header") {
-                            css["height"] = headerHeight;
-                        } else if (containerType === "page") {
-                            if (pageHeight == 0) {
-                                isHide = true;
-                            } else {
-                                css["height"] = pageHeight;
-                            }
-                        }
-
-                        if (isHide) {
-                            panel.hide();
-                            // 프로세스 중지
-                            return this;
-                        }
-
-                        panel.css(css);
-                        return this;
-                    };
-                    var scrollerDisplayProcess = function (panel, scrollerWidth, scrollerHeight, containerType) {
-                        var css = {};
-                        var isHide = false;
-
-                        switch (containerType) {
-                            case "vertical":
-                                if (scrollerWidth > 0) {
-                                    css["width"] = scrollerWidth;
-                                    css["height"] = CT_INNER_HEIGHT;
-                                    css["bottom"] = scrollerHeight + pageHeight;
-                                } else {
-                                    isHide = true;
-                                }
-                                break;
-                            case "horizontal":
-                                if (scrollerHeight > 0) {
-                                    css["width"] = CT_INNER_WIDTH;
-                                    css["height"] = scrollerHeight;
-                                    css["right"] = scrollerWidth;
-                                    css["bottom"] = pageHeight;
-                                } else {
-                                    isHide = true;
-                                }
-                                break;
-                            case "corner":
-                                if (scrollerWidth > 0 && scrollerHeight > 0) {
-                                    css["width"] = scrollerWidth;
-                                    css["height"] = scrollerHeight;
-                                    css["bottom"] = pageHeight;
-                                } else {
-                                    isHide = true;
-                                }
-                                break;
-                        }
-
-                        if (isHide) {
-                            panel.hide();
-                            // 프로세스 중지
-                            return this;
-                        }
-
-                        panel.show().css(css);
-                    };
-
-                    this.$["container"]["header"].css({height: headerHeight});
-                    this.$["container"]["body"].css({height: bodyHeight});
-
-                    // 각 패널들의 크기 표시여부를 결정합니다
-                    panelDisplayProcess.call(this, this.$["panel"]["aside-header"], "", "aside", "header");
-                    panelDisplayProcess.call(this, this.$["panel"]["left-header"], "", "left", "header");
-                    panelDisplayProcess.call(this, this.$["panel"]["header"], "", "", "header");
-                    panelDisplayProcess.call(this, this.$["panel"]["right-header"], "", "right", "header");
-
-                    panelDisplayProcess.call(this, this.$["panel"]["top-aside-body"], "top", "aside", "body");
-                    panelDisplayProcess.call(this, this.$["panel"]["top-left-body"], "top", "left", "body");
-                    panelDisplayProcess.call(this, this.$["panel"]["top-body"], "top", "", "body");
-                    panelDisplayProcess.call(this, this.$["panel"]["top-right-body"], "top", "right", "body");
-
-                    panelDisplayProcess.call(this, this.$["panel"]["aside-body"], "", "aside", "body");
-                    panelDisplayProcess.call(this, this.$["panel"]["left-body"], "", "left", "body");
-                    panelDisplayProcess.call(this, this.$["panel"]["body"], "", "", "body");
-                    panelDisplayProcess.call(this, this.$["panel"]["right-body"], "", "right", "body");
-
-                    panelDisplayProcess.call(this, this.$["panel"]["bottom-aside-body"], "bottom", "aside", "body");
-                    panelDisplayProcess.call(this, this.$["panel"]["bottom-left-body"], "bottom", "left", "body");
-                    panelDisplayProcess.call(this, this.$["panel"]["bottom-body"], "bottom", "", "body");
-                    panelDisplayProcess.call(this, this.$["panel"]["bottom-right-body"], "bottom", "right", "body");
-
-
-                    scrollerDisplayProcess.call(this, this.$["scroller"]["vertical"], verticalScrollerWidth, horizontalScrollerHeight, "vertical");
-                    scrollerDisplayProcess.call(this, this.$["scroller"]["horizontal"], verticalScrollerWidth, horizontalScrollerHeight, "horizontal");
-                    scrollerDisplayProcess.call(this, this.$["scroller"]["corner"], verticalScrollerWidth, horizontalScrollerHeight, "corner");
-
-                    panelDisplayProcess.call(this, this.$["container"]["page"], "", "", "page");
-                },
-                sortColumns = function (_sortInfo) {
-                    GRID.header.repaint.call(this);
-
-                    if (U.isFunction(this.config.remoteSort)) {
-                        var that = {sortInfo: []};
-                        for (var k in _sortInfo) {
-                            that.sortInfo.push({
-                                key: k,
-                                orderBy: _sortInfo[k].orderBy,
-                                seq: _sortInfo[k].seq
-                            });
-                        }
-                        that.sortInfo.sort(function (a, b) {
-                            return a.seq > b.seq;
-                        });
-                        this.config.remoteSort.call(that, that);
-                    } else {
-                        if (this.config.body.grouping) {
-                            this.list = GRID.data.initData.call(this,
-                                GRID.data.sort.call(this,
-                                    _sortInfo,
-                                    GRID.data.clearGroupingData.call(this,
-                                        this.list
-                                    )
-                                )
-                            );
-                        }
-                        else {
-                            this.list = GRID.data.sort.call(this, _sortInfo,
-                                GRID.data.clearGroupingData.call(this,
-                                    this.list
-                                )
-                            );
-                        }
-                        GRID.body.repaint.call(this, true);
-                        GRID.scroller.resize.call(this);
+                // 그리드 패널 프레임의 각 엘리먼트를 캐쉬합시다.
+                this.$ = {
+                    "container": {
+                        "hidden": this.$target.find('[data-ax5grid-container="hidden"]'),
+                        "root": this.$target.find('[data-ax5grid-container="root"]'),
+                        "header": this.$target.find('[data-ax5grid-container="header"]'),
+                        "body": this.$target.find('[data-ax5grid-container="body"]'),
+                        "page": this.$target.find('[data-ax5grid-container="page"]'),
+                        "scroller": this.$target.find('[data-ax5grid-container="scroller"]')
+                    },
+                    "panel": {
+                        "aside-header": this.$target.find('[data-ax5grid-panel="aside-header"]'),
+                        "left-header": this.$target.find('[data-ax5grid-panel="left-header"]'),
+                        "header": this.$target.find('[data-ax5grid-panel="header"]'),
+                        "header-scroll": this.$target.find('[data-ax5grid-panel-scroll="header"]'),
+                        "right-header": this.$target.find('[data-ax5grid-panel="right-header"]'),
+                        "top-aside-body": this.$target.find('[data-ax5grid-panel="top-aside-body"]'),
+                        "top-left-body": this.$target.find('[data-ax5grid-panel="top-left-body"]'),
+                        "top-body": this.$target.find('[data-ax5grid-panel="top-body"]'),
+                        "top-body-scroll": this.$target.find('[data-ax5grid-panel-scroll="top-body"]'),
+                        "top-right-body": this.$target.find('[data-ax5grid-panel="top-right-body"]'),
+                        "aside-body": this.$target.find('[data-ax5grid-panel="aside-body"]'),
+                        "aside-body-scroll": this.$target.find('[data-ax5grid-panel-scroll="aside-body"]'),
+                        "left-body": this.$target.find('[data-ax5grid-panel="left-body"]'),
+                        "left-body-scroll": this.$target.find('[data-ax5grid-panel-scroll="left-body"]'),
+                        "body": this.$target.find('[data-ax5grid-panel="body"]'),
+                        "body-scroll": this.$target.find('[data-ax5grid-panel-scroll="body"]'),
+                        "right-body": this.$target.find('[data-ax5grid-panel="right-body"]'),
+                        "right-body-scroll": this.$target.find('[data-ax5grid-panel-scroll="right-body"]'),
+                        "bottom-aside-body": this.$target.find('[data-ax5grid-panel="bottom-aside-body"]'),
+                        "bottom-left-body": this.$target.find('[data-ax5grid-panel="bottom-left-body"]'),
+                        "bottom-body": this.$target.find('[data-ax5grid-panel="bottom-body"]'),
+                        "bottom-body-scroll": this.$target.find('[data-ax5grid-panel-scroll="bottom-body"]'),
+                        "bottom-right-body": this.$target.find('[data-ax5grid-panel="bottom-right-body"]')
+                    },
+                    "livePanelKeys": [], // 현재 사용중인 패널들 (grid-body repaint에서 수집하여 처리)
+                    "scroller": {
+                        "vertical": this.$target.find('[data-ax5grid-scroller="vertical"]'),
+                        "vertical-bar": this.$target.find('[data-ax5grid-scroller="vertical-bar"]'),
+                        "horizontal": this.$target.find('[data-ax5grid-scroller="horizontal"]'),
+                        "horizontal-bar": this.$target.find('[data-ax5grid-scroller="horizontal-bar"]'),
+                        "corner": this.$target.find('[data-ax5grid-scroller="corner"]')
+                    },
+                    "page": {
+                        "navigation": this.$target.find('[data-ax5grid-page="navigation"]'),
+                        "status": this.$target.find('[data-ax5grid-page="status"]')
+                    },
+                    "form": {
+                        "clipboard": this.$target.find('[data-ax5grid-form="clipboard"]')
+                    },
+                    "resizer": {
+                        "vertical": this.$target.find('[data-ax5grid-resizer="vertical"]'),
+                        "horizontal": this.$target.find('[data-ax5grid-resizer="horizontal"]')
                     }
                 };
 
+                this.$["container"]["root"].css({height: this.config.height || this.config._height});
+
+                return this;
+            };
+            const initColumns = function (_columns) {
+                this.columns = U.deepCopy(_columns);
+                this.headerTable = GRID.util.makeHeaderTable.call(this, this.columns);
+                this.xvar.frozenColumnIndex = (cfg.frozenColumnIndex > this.columns.length) ? this.columns.length : cfg.frozenColumnIndex;
+
+                this.bodyRowTable = GRID.util.makeBodyRowTable.call(this, this.columns);
+                this.bodyRowMap = GRID.util.makeBodyRowMap.call(this, this.bodyRowTable);
+                // 바디에 표현될 한줄의 높이를 계산합니다.
+                this.xvar.bodyTrHeight = this.bodyRowTable.rows.length * this.config.body.columnHeight;
+
+                let colGroupMap = {};
+                for (let r = 0, rl = this.headerTable.rows.length; r < rl; r++) {
+                    let row = this.headerTable.rows[r];
+                    for (let c = 0, cl = row.cols.length; c < cl; c++) {
+                        colGroupMap[row.cols[c].colIndex] = jQuery.extend({}, row.cols[c]);
+                    }
+                }
+
+                this.colGroup = [];
+                for (var k in colGroupMap) {
+                    this.colGroup.push(colGroupMap[k]);
+                }
+
+                return this;
+            };
+            const onResetColumns = function () {
+                initColumns.call(this, this.config.columns);
+                resetColGroupWidth.call(this);
+                if (this.config.footSum) {
+                    initFootSum.call(this, this.config.footSum);
+                    this.needToPaintSum = true;
+                }
+                if (this.config.body.grouping) initBodyGroup.call(this, this.config.body.grouping);
+                alignGrid.call(this, true);
+                GRID.header.repaint.call(this, true);
+                GRID.body.repaint.call(this, true);
+                GRID.scroller.resize.call(this);
+            };
+            const resetColGroupWidth = function () {
+                /// !! 그리드 target의 크기가 변경되면 이 함수를 호출하려 this.colGroup의 _width 값을 재 계산 하여야 함. [tom]
+                let CT_WIDTH = this.$["container"]["root"].width() - (function () {
+                            let width = 0;
+                            if (cfg.showLineNumber) width += cfg.lineNumberColumnWidth;
+                            if (cfg.showRowSelector) width += cfg.rowSelectorColumnWidth;
+                            return width;
+                        })(),
+                    totalWidth = 0, computedWidth, autoWidthColgroupIndexs = [],
+                    colGroup = this.colGroup,
+                    i, l;
+
+                for (i = 0, l = colGroup.length; i < l; i++) {
+                    if (U.isNumber(colGroup[i].width)) {
+                        totalWidth += colGroup[i]._width = colGroup[i].width;
+                    } else if (colGroup[i].width === "*") {
+                        autoWidthColgroupIndexs.push(i);
+                    } else if (U.right(colGroup[i].width, 1) === "%") {
+                        totalWidth += colGroup[i]._width = CT_WIDTH * U.left(colGroup[i].width, "%") / 100;
+                    }
+                }
+                if (autoWidthColgroupIndexs.length > 0) {
+                    computedWidth = (CT_WIDTH - totalWidth) / autoWidthColgroupIndexs.length;
+                    for (i = 0, l = autoWidthColgroupIndexs.length; i < l; i++) {
+                        colGroup[autoWidthColgroupIndexs[i]]._width = computedWidth;
+                    }
+                }
+            };
+            const initFootSum = function (_footSum) {
+                if (U.isArray(_footSum)) {
+                    this.footSumTable = GRID.util.makeFootSumTable.call(this, this.footSumColumns = _footSum);
+                } else {
+                    this.footSumColumns = [];
+                    this.footSumTable = {};
+                }
+            };
+            const initBodyGroup = function (_grouping) {
+                let grouping = jQuery.extend({}, _grouping);
+                if ("by" in grouping && "columns" in grouping) {
+                    this.bodyGrouping = {
+                        by: grouping.by,
+                        columns: grouping.columns
+                    };
+                    this.bodyGroupingTable = GRID.util.makeBodyGroupingTable.call(this, this.bodyGrouping.columns);
+                    this.sortInfo = (function () {
+                        let sortInfo = {};
+                        for (let k = 0, kl = this.bodyGrouping.by.length; k < kl; k++) {
+                            sortInfo[this.bodyGrouping.by[k]] = {
+                                orderBy: "asc",
+                                seq: k,
+                                fixed: true
+                            };
+                            for (let c = 0, cl = this.colGroup.length; c < cl; c++) {
+                                if (this.colGroup[c].key === this.bodyGrouping.by[k]) {
+                                    this.colGroup[c].sort = "asc";
+                                    this.colGroup[c].sortFixed = true;
+                                }
+                            }
+                        }
+                        return sortInfo;
+                    }).call(this);
+                } else {
+                    cfg.body.grouping = false;
+                }
+            };
+            const alignGrid = function (_isFirst) {
+                // 대상이 크기가 컬럼의 최소 크기 보다 작업 금지
+                if (Math.min(this.$target.innerWidth(), this.$target.innerHeight()) < 5) {
+                    return false;
+                }
+
+                if (!this.config.height) {
+                    this.$["container"]["root"].css({height: this.config._height = this.$target.height()});
+                }
+
+                let CT_WIDTH = this.$["container"]["root"].width(),
+                    CT_HEIGHT = this.$["container"]["root"].height(),
+                    CT_INNER_WIDTH = CT_WIDTH,
+                    CT_INNER_HEIGHT = CT_HEIGHT,
+                    asidePanelWidth = cfg.asidePanelWidth = (function () {
+                        let width = 0;
+                        if (cfg.showLineNumber) width += cfg.lineNumberColumnWidth;
+                        if (cfg.showRowSelector) width += cfg.rowSelectorColumnWidth;
+                        return width;
+                    })(),
+                    frozenPanelWidth = cfg.frozenPanelWidth = (function (colGroup, endIndex) {
+                        let width = 0;
+                        for (let i = 0, l = endIndex; i < l; i++) {
+                            width += colGroup[i]._width;
+                        }
+                        return width;
+                    })(this.colGroup, cfg.frozenColumnIndex),
+                    verticalScrollerWidth, horizontalScrollerHeight, bodyHeight;
+
+                // todo : 우측 함계컬럼 너비 계산
+                let rightPanelWidth = 0,
+                    frozenRowHeight = (function (bodyTrHeight) {
+                        return cfg.frozenRowIndex * bodyTrHeight;
+                    })(this.xvar.bodyTrHeight),
+                    footSumHeight = (function (bodyTrHeight) {
+                        return this.footSumColumns.length * bodyTrHeight;
+                    }).call(this, this.xvar.bodyTrHeight),
+                    headerHeight = (cfg.header.display) ? this.headerTable.rows.length * cfg.header.columnHeight : 0,
+                    pageHeight = (cfg.page.display) ? cfg.page.height : 0;
+
+                (function () {
+                    verticalScrollerWidth = ((CT_HEIGHT - headerHeight - pageHeight - footSumHeight) < this.list.length * this.xvar.bodyTrHeight) ? this.config.scroller.size : 0;
+                    // 남은 너비가 colGroup의 너비보다 넓을때. 수평 스크롤 활성화.
+                    horizontalScrollerHeight = (function () {
+                        let totalColGroupWidth = 0;
+                        // aside 빼고 너비
+                        // 수직 스크롤이 있으면 또 빼고 비교
+                        let bodyWidth = CT_WIDTH - asidePanelWidth - verticalScrollerWidth;
+                        for (let i = 0, l = this.colGroup.length; i < l; i++) {
+                            totalColGroupWidth += this.colGroup[i]._width;
+                        }
+                        return (totalColGroupWidth > bodyWidth) ? this.config.scroller.size : 0;
+                    }).call(this);
+
+                    if (horizontalScrollerHeight > 0) {
+                        verticalScrollerWidth = ((CT_HEIGHT - headerHeight - pageHeight - footSumHeight - horizontalScrollerHeight) < this.list.length * this.xvar.bodyTrHeight) ? this.config.scroller.size : 0;
+                    }
+                }).call(this);
+
+                // 수평 너비 결정
+                CT_INNER_WIDTH = CT_WIDTH - verticalScrollerWidth;
+                // 수직 스크롤러의 높이 결정.
+                CT_INNER_HEIGHT = CT_HEIGHT - pageHeight - horizontalScrollerHeight;
+
+                bodyHeight = CT_INNER_HEIGHT - headerHeight;
+
+                let panelDisplayProcess = function (panel, vPosition, hPosition, containerType) {
+                    let css = {},
+                        isHide = false;
+
+                    switch (hPosition) {
+                        case "aside":
+                            if (asidePanelWidth === 0) {
+                                isHide = true;
+                            } else {
+                                css["left"] = 0;
+                                css["width"] = asidePanelWidth;
+                            }
+                            break;
+                        case "left":
+                            if (cfg.frozenColumnIndex === 0) {
+                                isHide = true;
+                            } else {
+                                css["left"] = asidePanelWidth;
+                                css["width"] = frozenPanelWidth;
+                            }
+                            break;
+                        case "right":
+                            if (!cfg.rightSum) {
+                                isHide = true;
+                            } else {
+
+                            }
+                            break;
+                        default:
+                            if (containerType !== "page") {
+                                if (cfg.frozenColumnIndex === 0) {
+                                    css["left"] = asidePanelWidth;
+                                } else {
+                                    css["left"] = frozenPanelWidth + asidePanelWidth;
+                                }
+                                css["width"] = CT_INNER_WIDTH - asidePanelWidth - frozenPanelWidth - rightPanelWidth;
+                            }
+                            break;
+                    }
+
+                    if (isHide) {
+                        panel.hide();
+                        // 프로세스 중지
+                        return this;
+                    }
+
+                    if (containerType === "body") {
+                        switch (vPosition) {
+                            case "top":
+                                if (cfg.frozenRowIndex == 0) {
+                                    isHide = true;
+                                } else {
+                                    css["top"] = 0;
+                                    css["height"] = frozenRowHeight;
+                                }
+                                break;
+                            case "bottom":
+                                if (!cfg.footSum) {
+                                    isHide = true;
+                                } else {
+                                    css["top"] = bodyHeight - footSumHeight;
+                                    css["height"] = footSumHeight; // footSum height
+                                }
+                                break;
+                            default:
+                                css["top"] = frozenRowHeight;
+                                css["height"] = bodyHeight - frozenRowHeight - footSumHeight;
+
+                                break;
+                        }
+                    } else if (containerType === "header") {
+                        css["height"] = headerHeight;
+                    } else if (containerType === "page") {
+                        if (pageHeight == 0) {
+                            isHide = true;
+                        } else {
+                            css["height"] = pageHeight;
+
+                        }
+                    }
+
+                    if (isHide) {
+                        panel.hide();
+                        // 프로세스 중지
+                        return this;
+                    }
+
+                    panel.show().css(css);
+                    return this;
+                };
+                let scrollerDisplayProcess = function (panel, scrollerWidth, scrollerHeight, containerType) {
+                    let css = {},
+                        isHide = false;
+
+                    switch (containerType) {
+                        case "vertical":
+                            if (scrollerWidth > 0) {
+                                css["width"] = scrollerWidth;
+                                css["height"] = CT_INNER_HEIGHT;
+                                css["bottom"] = scrollerHeight + pageHeight;
+                            } else {
+                                isHide = true;
+                            }
+                            break;
+                        case "horizontal":
+                            if (scrollerHeight > 0) {
+                                css["width"] = CT_INNER_WIDTH;
+                                css["height"] = scrollerHeight;
+                                css["right"] = scrollerWidth;
+                                css["bottom"] = pageHeight;
+                            } else {
+                                isHide = true;
+                            }
+                            break;
+                        case "corner":
+                            if (scrollerWidth > 0 && scrollerHeight > 0) {
+                                css["width"] = scrollerWidth;
+                                css["height"] = scrollerHeight;
+                                css["bottom"] = pageHeight;
+                            } else {
+                                isHide = true;
+                            }
+                            break;
+                    }
+
+                    if (isHide) {
+                        panel.hide();
+                        // 프로세스 중지
+                        return this;
+                    }
+
+                    panel.show().css(css);
+                };
+
+                this.$["container"]["header"].css({height: headerHeight});
+                this.$["container"]["body"].css({height: bodyHeight});
+
+                // 각 패널들의 크기 표시여부를 결정합니다
+                panelDisplayProcess.call(this, this.$["panel"]["aside-header"], "", "aside", "header");
+                panelDisplayProcess.call(this, this.$["panel"]["left-header"], "", "left", "header");
+                panelDisplayProcess.call(this, this.$["panel"]["header"], "", "", "header");
+                panelDisplayProcess.call(this, this.$["panel"]["right-header"], "", "right", "header");
+
+                panelDisplayProcess.call(this, this.$["panel"]["top-aside-body"], "top", "aside", "body");
+                panelDisplayProcess.call(this, this.$["panel"]["top-left-body"], "top", "left", "body");
+                panelDisplayProcess.call(this, this.$["panel"]["top-body"], "top", "", "body");
+                panelDisplayProcess.call(this, this.$["panel"]["top-right-body"], "top", "right", "body");
+
+                panelDisplayProcess.call(this, this.$["panel"]["aside-body"], "", "aside", "body");
+                panelDisplayProcess.call(this, this.$["panel"]["left-body"], "", "left", "body");
+                panelDisplayProcess.call(this, this.$["panel"]["body"], "", "", "body");
+                panelDisplayProcess.call(this, this.$["panel"]["right-body"], "", "right", "body");
+
+                panelDisplayProcess.call(this, this.$["panel"]["bottom-aside-body"], "bottom", "aside", "body");
+                panelDisplayProcess.call(this, this.$["panel"]["bottom-left-body"], "bottom", "left", "body");
+                panelDisplayProcess.call(this, this.$["panel"]["bottom-body"], "bottom", "", "body");
+                panelDisplayProcess.call(this, this.$["panel"]["bottom-right-body"], "bottom", "right", "body");
+
+
+                scrollerDisplayProcess.call(this, this.$["scroller"]["vertical"], verticalScrollerWidth, horizontalScrollerHeight, "vertical");
+                scrollerDisplayProcess.call(this, this.$["scroller"]["horizontal"], verticalScrollerWidth, horizontalScrollerHeight, "horizontal");
+                scrollerDisplayProcess.call(this, this.$["scroller"]["corner"], verticalScrollerWidth, horizontalScrollerHeight, "corner");
+
+                panelDisplayProcess.call(this, this.$["container"]["page"], "", "", "page");
+
+                // 각 패널의 사이즈 결정
+                /// 다른 패널의 사이즈 정보가 필요한 경우 여기서 정의해주고 사용함.
+                this.xvar.bodyHeight = this.$.panel["body"].height();
+                this.xvar.bodyWidth = this.$.panel["body"].width();
+                // scrollContentWidth 는 grid-header repaint에서 결정합니다. 까먹지 맙시다. > this.xvar.scrollContentWidth
+
+                return true;
+            };
+            const sortColumns = function (_sortInfo) {
+                GRID.header.repaint.call(this);
+
+                if (U.isFunction(this.config.remoteSort)) {
+                    let that = {sortInfo: []};
+                    for (let k in _sortInfo) {
+                        that.sortInfo.push({
+                            key: k,
+                            orderBy: _sortInfo[k].orderBy,
+                            seq: _sortInfo[k].seq
+                        });
+                    }
+                    that.sortInfo.sort(function (a, b) {
+                        return a.seq > b.seq;
+                    });
+                    this.config.remoteSort.call(that, that);
+                } else {
+                    if (this.config.body.grouping) {
+                        this.list = GRID.data.initData.call(this,
+                            GRID.data.sort.call(this,
+                                _sortInfo,
+                                GRID.data.clearGroupingData.call(this,
+                                    this.list
+                                )
+                            )
+                        );
+                    }
+                    else {
+                        this.list = GRID.data.sort.call(this, _sortInfo,
+                            GRID.data.clearGroupingData.call(this,
+                                this.list
+                            )
+                        );
+                    }
+                    GRID.body.repaint.call(this, true);
+                    GRID.scroller.resize.call(this);
+                }
+            };
             /// private end
 
             /**
@@ -600,12 +648,17 @@
              * @param {Boolean} [_config.sortable=false]
              * @param {Boolean} [_config.multiSort=false]
              * @param {Function} [_config.remoteSort=false]
+             * @param {Boolean} [_config.virtualScrollY=true] - 세로축 가상스크롤 처리여부
+             * @param {Boolean} [_config.virtualScrollX=true] - 가로축 가상스크롤 처리여부
              * @param {Object} [_config.header]
              * @param {String} [_config.header.align]
              * @param {Number} [_config.header.columnHeight=25]
              * @param {Number} [_config.header.columnPadding=3]
              * @param {Number} [_config.header.columnBorderWidth=1]
              * @param {Object} [_config.body]
+             * @param {Function} [_config.onClick]
+             * @param {Function} [_config.onDBLClick]
+             * @param {String|Array} [_config.body.mergeCells=false] -
              * @param {String} [_config.body.align]
              * @param {Number} [_config.body.columnHeight=25]
              * @param {Number} [_config.body.columnPadding=3]
@@ -636,6 +689,29 @@
              * @param {String} _config.columns[].editor.type - text,number,money,date
              * @param {Object} _config.columns[].editor.config
              * @param {Array} _config.columns[].editor.updateWith
+             * @param {Function} _config.columns[].editor.disabled - disable editor
+             * @param {Boolean} [_config.columns[].multiLine=false]
+             * @param {Object} [_config.tree]
+             * @param {Boolean} [_config.tree.use=false] - Whether tree-type data is used
+             * @param {Number} [_config.tree.hashDigit=8]
+             * @param {Number} [_config.tree.indentWidth=10]
+             * @param {Number} [_config.tree.arrowWidth=15]
+             * @param {Number} [_config.tree.iconWidth=18]
+             * @param {Object} [_config.tree.icons]
+             * @param {String} [_config.tree.icons.openedArrow='▾']
+             * @param {String} [_config.tree.icons.collapsedArrow='▸']
+             * @param {String} [_config.tree.icons.groupIcon='⊚']
+             * @param {String} [_config.tree.icons.collapsedGroupIcon='⊚']
+             * @param {String} [_config.tree.icons.itemIcon='⊙']
+             * @param {Object} [_config.tree.columnKeys]
+             * @param {String} [_config.tree.columnKeys.parentKey="pid"]
+             * @param {String} [_config.tree.columnKeys.selfKey="id"]
+             * @param {String} [_config.tree.columnKeys.collapse="collapse"]
+             * @param {String} [_config.tree.columnKeys.hidden="hidden"]
+             * @param {String} [_config.tree.columnKeys.parentHash="__hp__"]
+             * @param {String} [_config.tree.columnKeys.selfHash="__hs__"]
+             * @param {String} [_config.tree.columnKeys.children="__children__"]
+             * @param {String} [_config.tree.columnKeys.depth="__depth__"]
              * @returns {ax5grid}
              * @example
              * ```js
@@ -693,12 +769,29 @@
              *         return this;
              *     },
              *     setData: function (_pageNo) {
-             *
              *         firstGrid.setData(sampleData);
-             *
              *         return this;
              *     }
              * };
+             *
+             * // onClick, onDBLClick, onDataChanged
+             * firstGrid.setConfig({
+             *      target: $('[data-ax5grid="first-grid"]'),
+             *      columns: [...],
+             *      body: {
+             *          onClick: function(){
+             *              console.log(this);
+             *          },
+             *          onDBLClick: function(){
+             *              console.log(this);
+             *              // If the column does not have an editor attribute, an event is raised.
+             *          },
+             *          onDataChanged: function(){
+             *              console.log(this);
+             *              // If change Data
+             *          }
+             *      }
+             * });
              * ```
              */
             this.init = function (_config) {
@@ -724,10 +817,10 @@
                     }
                 }).call(this, U.parseJson(this.$target.attr("data-ax5grid-config"), true));
 
-                var grid = this.config = cfg;
+                let grid = this.config = cfg;
 
                 if (!this.config.height) {
-                    this.config.height = this.$target.height();
+                    this.config._height = this.$target.height();
                 }
 
                 if (!this.id) this.id = this.$target.data("data-ax5grid-id");
@@ -735,6 +828,14 @@
                     //this.id = 'ax5grid-' + ax5.getGuid();
                     this.id = 'ax5grid-' + this.instanceId;
                     this.$target.data("data-ax5grid-id", grid.id);
+                }
+
+
+                GRID.data.init.call(this);
+
+                if (this.config.tree.use) { // 트리라면
+                    this.sortInfo = {};
+                    this.sortInfo[this.config.tree.columnKeys.selfHash] = {orderBy: "asc", seq: 0, fixed: true};
                 }
 
                 ///========
@@ -769,18 +870,19 @@
                 GRID.scroller.resize.call(this);
 
                 jQuery(window).bind("resize.ax5grid-" + this.id, function () {
-                    alignGrid.call(this);
-                    GRID.scroller.resize.call(this);
-                }.bind(this));
+                    alignGrid.call(self);
+                    GRID.scroller.resize.call(self);
+                    GRID.body.repaint.call(self);  // window resize시 repaint 함수 호출
+                });
 
                 jQuery(document.body).on("click.ax5grid-" + this.id, (function (e) {
-                    var isPickerClick = false;
-                    var target = U.findParentNode(e.target, function (_target) {
-                        if (isPickerClick = _target.getAttribute("data-ax5grid-inline-edit-picker")) {
-                            return true;
-                        }
-                        return _target.getAttribute("data-ax5grid-container") === "root";
-                    });
+                    let isPickerClick = false,
+                        target = U.findParentNode(e.target, function (_target) {
+                            if (isPickerClick = _target.getAttribute("data-ax5grid-inline-edit-picker")) {
+                                return true;
+                            }
+                            return _target.getAttribute("data-ax5grid-container") === "root";
+                        });
 
                     if (target && target.getAttribute("data-ax5grid-instance") === this.id) {
                         self.focused = true;
@@ -790,16 +892,6 @@
                     }
                 }).bind(this));
 
-                var ctrlKeys = {
-                    "33": "KEY_PAGEUP",
-                    "34": "KEY_PAGEDOWN",
-                    "35": "KEY_END",
-                    "36": "KEY_HOME",
-                    "37": "KEY_LEFT",
-                    "38": "KEY_UP",
-                    "39": "KEY_RIGHT",
-                    "40": "KEY_DOWN"
-                };
                 jQuery(window).on("keydown.ax5grid-" + this.instanceId, function (e) {
                     if (self.focused) {
                         if (self.isInlineEditing) {
@@ -830,7 +922,7 @@
                                 }
                             } else {
                                 if (ctrlKeys[e.which]) {
-                                    self.keyDown(ctrlKeys[e.which], e.originalEvent);
+                                    self.keyDown(ctrlKeys[e.which], e.originalEvent); // 키다운 이벤트 호출
                                     U.stopEvent(e);
                                 } else if (e.which == ax5.info.eventKeys.ESC) {
                                     if (self.focused) {
@@ -867,8 +959,10 @@
              * @returns {ax5grid}
              */
             this.align = function () {
-                alignGrid.call(this);
-                GRID.scroller.resize.call(this);
+                if (alignGrid.call(this)) {
+                    GRID.body.repaint.call(this);
+                    GRID.scroller.resize.call(this);
+                }
                 return this;
             };
 
@@ -879,7 +973,7 @@
              * @return {ax5grid}
              */
             this.keyDown = (function () {
-                var processor = {
+                let processor = {
                     "KEY_UP": function () {
                         GRID.body.moveFocus.call(this, "UP");
                     },
@@ -922,6 +1016,9 @@
                         }
                         if (activeEditLength == 0) {
                             GRID.body.inlineEdit.keydown.call(this, "RETURN");
+                            U.stopEvent(_e);
+                        } else {
+
                         }
                     },
                     "TAB": function (_e) {
@@ -951,15 +1048,13 @@
              * @returns {Boolean} copysuccess
              */
             this.copySelect = function () {
-                var copysuccess;
-                var $clipBoard = this.$["form"]["clipboard"];
-                var copyTextArray = [];
-                var copyText = "";
+                let copysuccess,
+                    $clipBoard = this.$["form"]["clipboard"],
+                    copyTextArray = [], copyText = "",
+                    _rowIndex, _colIndex, _dindex, _di = 0;
 
-                var _rowIndex, _colIndex, _dindex;
-                var _di = 0;
-                for (var c in this.selectedColumn) {
-                    var _column = this.selectedColumn[c];
+                for (let c in this.selectedColumn) {
+                    let _column = this.selectedColumn[c];
 
                     if (_column) {
                         if (typeof _dindex === "undefined") {
@@ -975,7 +1070,7 @@
                         if (!copyTextArray[_di]) {
                             copyTextArray[_di] = [];
                         }
-                        var originalColumn = this.bodyRowMap[_column.rowIndex + "_" + _column.colIndex];
+                        let originalColumn = this.bodyRowMap[_column.rowIndex + "_" + _column.colIndex];
                         if (originalColumn) {
                             if (this.list[_column.dindex].__isGrouping) {
                                 copyTextArray[_di].push(this.list[_column.dindex][_column.colIndex]);
@@ -1027,12 +1122,16 @@
              * ```
              */
             this.setData = function (_data) {
+                let isFirstPaint = (typeof this.xvar.paintStartRowIndex === "undefined");
+
                 GRID.data.set.call(this, _data);
                 alignGrid.call(this);
                 GRID.body.repaint.call(this);
-                GRID.scroller.resize.call(this);
+                if(!isFirstPaint) GRID.scroller.resize.call(this);
                 GRID.page.navigationUpdate.call(this);
-                GRID.body.scrollTo.call(this, {top: 0});
+                if(!isFirstPaint) GRID.body.scrollTo.call(this, {top: 0});
+
+                isFirstPaint = null;
                 return this;
             };
 
@@ -1095,6 +1194,25 @@
             };
 
             /**
+             * @method ax5grid.appendToList
+             * @param _list
+             * @returns {ax5grid}
+             * @example
+             * ```js
+             * ax5Grid.appendToList([{},{},{}]);
+             * ax5Grid.appendToList([{},{},{}]);
+             * ```
+             */
+            this.appendToList = function (_list) {
+                GRID.data.append.call(this, _list, (function () {
+                    alignGrid.call(this);
+                    GRID.body.repaint.call(this);
+                    GRID.scroller.resize.call(this);
+                }).bind(this));
+                return this;
+            };
+
+            /**
              * @method ax5grid.removeRow
              * @param {Number|String} [_dindex=last]
              * @returns {ax5grid}
@@ -1123,6 +1241,8 @@
              */
             this.updateRow = function (_row, _dindex) {
                 GRID.data.update.call(this, _row, _dindex);
+                // todo : mergeCells 옵션에 따라 예외처리
+
                 GRID.body.repaintRow.call(this, _dindex);
                 return this;
             };
@@ -1150,13 +1270,49 @@
             };
 
             /**
+             * @method ax5grid.setValue
+             * @param _dindex
+             * @param _key
+             * @param _value
+             * @returns {ax5grid}
+             * @example
+             * ```js
+             * ax5Grid.setValue(0, "price", 100);
+             * ```
+             */
+            this.setValue = function (_dindex, _key, _value) {
+                // getPanelname;
+                if (GRID.data.setValue.call(this, _dindex, _key, _value)) {
+                    let repaintCell = function (_panelName, _rows, __dindex, __key, __value) {
+                        for (let r = 0, rl = _rows.length; r < rl; r++) {
+                            for (let c = 0, cl = _rows[r].cols.length; c < cl; c++) {
+                                if (_rows[r].cols[c].key == __key) {
+                                    if (this.xvar.frozenRowIndex > __dindex) {
+                                        GRID.body.repaintCell.call(this, "top-" + _panelName, __dindex, r, c, __value);
+                                    } else {
+                                        GRID.body.repaintCell.call(this, _panelName + "-scroll", __dindex, r, c, __value);
+                                    }
+                                }
+                            }
+                        }
+                    };
+
+                    repaintCell.call(this, "left-body", this.leftBodyRowData.rows, _dindex, _key, _value);
+                    repaintCell.call(this, "body", this.bodyRowData.rows, _dindex, _key, _value);
+
+                }
+
+                return this;
+            };
+
+            /**
              * @method ax5grid.addColumn
              * @param {Object} _column
              * @param {Number|String} [_cindex=last]
              * @returns {ax5grid}
              */
             this.addColumn = (function () {
-                var processor = {
+                let processor = {
                     "first": function (_column) {
                         this.config.columns = [].concat(_column).concat(this.config.columns);
                     },
@@ -1187,7 +1343,7 @@
              * @returns {ax5grid}
              */
             this.removeColumn = (function () {
-                var processor = {
+                let processor = {
                     "first": function (_cindex) {
                         this.config.columns.splice(_cindex, 1);
                     },
@@ -1251,8 +1407,8 @@
              * @returns {Object} sortInfo
              */
             this.getColumnSortInfo = function () {
-                var that = {sortInfo: []};
-                for (var k in this.sortInfo) {
+                let that = {sortInfo: []};
+                for (let k in this.sortInfo) {
                     that.sortInfo.push({
                         key: k,
                         orderBy: this.sortInfo[k].orderBy,
@@ -1261,7 +1417,7 @@
                 }
                 that.sortInfo.sort(function (a, b) {
                     return a.seq > b.seq;
-                })
+                });
                 return that.sortInfo;
             };
 
@@ -1302,11 +1458,12 @@
              * firstGrid.select(0);
              * firstGrid.select(0, {selected: true});
              * firstGrid.select(0, {selected: false});
+             * firstGrid.select(0, {selectedClear: true});
              * ```
              */
             this.select = function (_selectObject, _options) {
                 if (U.isNumber(_selectObject)) {
-                    var dindex = _selectObject;
+                    let dindex = _selectObject;
 
                     if (!this.config.multipleSelect) {
                         this.clearSelect();
@@ -1372,7 +1529,7 @@
              * ```
              */
             this.exportExcel = function (_fileName) {
-                var table = [];
+                let table = [];
                 table.push('<table border="1">');
                 table.push(GRID.header.getExcelString.call(this));
                 table.push(GRID.body.getExcelString.call(this));
@@ -1386,6 +1543,79 @@
                 }
 
                 return this;
+            };
+
+            /**
+             * @method ax5grid.focus
+             * @param {String|Number} _pos - UP, DOWN, LEFT, RIGHT, HOME, END
+             * @returns {ax5grid}
+             * @example
+             * ```js
+             * firstGrid.focus("UP");
+             * firstGrid.focus("DOWN");
+             * firstGrid.focus("HOME");
+             * firstGrid.focus("END");
+             * ```
+             */
+            this.focus = function (_pos) {
+                if (GRID.body.moveFocus.call(this, _pos)) {
+                    let focusedColumn;
+                    for (let c in this.focusedColumn) {
+                        focusedColumn = jQuery.extend({}, this.focusedColumn[c], true);
+                        break;
+                    }
+                    if (focusedColumn) {
+                        this.select(focusedColumn.dindex, {selectedClear: true});
+                    }
+                }
+                else {
+                    if (typeof this.selectedDataIndexs[0] === "undefined") {
+                        this.select(0);
+                    } else {
+                        let selectedIndex = this.selectedDataIndexs[0];
+                        let processor = {
+                            "UP": function () {
+                                if (selectedIndex > 0) {
+                                    this.select(selectedIndex - 1, {selectedClear: true});
+                                    GRID.body.moveFocus.call(this, selectedIndex - 1);
+                                }
+                            },
+                            "DOWN": function () {
+                                if (selectedIndex < this.list.length - 1) {
+                                    this.select(selectedIndex + 1, {selectedClear: true});
+                                    GRID.body.moveFocus.call(this, selectedIndex + 1);
+                                }
+                            },
+                            "HOME": function () {
+                                this.select(0, {selectedClear: true});
+                                GRID.body.moveFocus.call(this, 0);
+                            },
+                            "END": function () {
+                                this.select(this.list.length - 1, {selectedClear: true});
+                                GRID.body.moveFocus.call(this, this.list.length - 1);
+                            }
+                        };
+
+                        if (_pos in processor) {
+                            processor[_pos].call(this);
+                        }
+                    }
+                }
+                return this;
+            };
+
+            /**
+             * @method ax5grid.destroy
+             * @returns {null}
+             */
+            this.destroy = function () {
+                const instanceId = this.instanceId;
+                this.$target.empty();
+                this.list = [];
+                UI.grid_instance = ax5.util.filter(UI.grid_instance, function () {
+                    return this.instanceId != instanceId;
+                });
+                return null;
             };
 
             // 클래스 생성자
@@ -1404,12 +1634,7 @@
     GRID = ax5.ui.grid;
 })();
 
-// todo : excel export
-// todo : merge cells
-// todo : filter
 // todo : body menu
+// todo : filter
 // todo : column reorder
 // todo : editor 필수값 속성 지정
-
-
-

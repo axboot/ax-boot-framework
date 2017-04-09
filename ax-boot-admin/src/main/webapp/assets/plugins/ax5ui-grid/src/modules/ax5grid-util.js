@@ -5,14 +5,12 @@
     var U = ax5.util;
 
 
-
     /**
      * @method ax5grid.util.divideTableByFrozenColumnIndex
      * @param _table
      * @param _frozenColumnIndex
      * @returns {{leftHeaderData: {rows: Array}, headerData: {rows: Array}}}
      */
-
     var divideTableByFrozenColumnIndex = function (_table, _frozenColumnIndex) {
         var tempTable_l = {rows: []};
         var tempTable_r = {rows: []};
@@ -52,6 +50,37 @@
             leftData: tempTable_l,
             rightData: tempTable_r
         }
+    };
+
+    const getTableByStartEndColumnIndex = function (_table, _startColumnIndex, _endColumnIndex) {
+
+        let tempTable = {rows: []};
+        for (let r = 0, rl = _table.rows.length; r < rl; r++) {
+            let row = _table.rows[r];
+
+            tempTable.rows[r] = {cols: []};
+            for (let c = 0, cl = row.cols.length; c < cl; c++) {
+                let col = jQuery.extend({}, row.cols[c]),
+                    colStartIndex = col.colIndex, colEndIndex = col.colIndex + col.colspan;
+
+                if(_startColumnIndex <= colStartIndex || colEndIndex <= _endColumnIndex){
+                    if(_startColumnIndex <= colStartIndex && colEndIndex <= _endColumnIndex){
+                        // 변형없이 추가
+                        tempTable.rows[r].cols.push(col);
+                    }
+                    else if(_startColumnIndex > colStartIndex && colEndIndex > _startColumnIndex){
+                        // 앞에서 걸친경우
+                        col.colspan = colEndIndex - _startColumnIndex;
+                        tempTable.rows[r].cols.push(col);
+                    }
+                    else if(colEndIndex > _endColumnIndex && colStartIndex <= _endColumnIndex){
+                        tempTable.rows[r].cols.push(col);
+                    }
+                }
+            }
+        }
+
+        return tempTable;
     };
 
     var getMousePosition = function (e) {
@@ -108,6 +137,7 @@
                     }
                     field.colspan = colspan;
                 } else {
+
 
                 }
             }
@@ -261,17 +291,19 @@
         return map;
     };
 
-    var makeFootSumTable = function (_footSumColumns) {
-        var table = {
+    let makeFootSumTable = function (_footSumColumns) {
+        let table = {
             rows: []
         };
 
         for (var r = 0, rl = _footSumColumns.length; r < rl; r++) {
-            var footSumRow = _footSumColumns[r];
+            var footSumRow = _footSumColumns[r],
+                addC = 0;
+
             table.rows[r] = {cols: []};
-            var addC = 0;
+
             for (var c = 0, cl = footSumRow.length; c < cl; c++) {
-                if (addC > this.columns.length) break;
+                if (addC > this.colGroup.length) break;
                 var colspan = footSumRow[c].colspan || 1;
                 if (footSumRow[c].label || footSumRow[c].key) {
                     table.rows[r].cols.push({
@@ -294,33 +326,35 @@
                     });
                 }
                 addC += colspan;
+                colspan = null;
             }
-            addC -= 1;
-            if (addC < this.columns.length + 1) {
-                for (var c = addC; c < this.columns.length + 1; c++) {
+            
+            if (addC < this.colGroup.length) {
+                for (var c = addC; c < this.colGroup.length; c++) {
                     table.rows[r].cols.push({
-                        colIndex: (c + 1),
+                        colIndex: (c),
                         colspan: 1,
                         rowspan: 1,
                         label: "&nbsp;",
                     });
                 }
             }
+            footSumRow = null;
+            addC = null;
         }
+
         return table;
     };
 
-    var makeBodyGroupingTable = function (_bodyGroupingColumns) {
-        var table = {
+    let makeBodyGroupingTable = function (_bodyGroupingColumns) {
+        let table = {
             rows: []
-        };
+        }, r = 0, addC = 0;
 
-        var r = 0;
         table.rows[r] = {cols: []};
-        var addC = 0;
-        for (var c = 0, cl = _bodyGroupingColumns.length; c < cl; c++) {
+        for (let c = 0, cl = _bodyGroupingColumns.length; c < cl; c++) {
             if (addC > this.columns.length) break;
-            var colspan = _bodyGroupingColumns[c].colspan || 1;
+            let colspan = _bodyGroupingColumns[c].colspan || 1;
             if (_bodyGroupingColumns[c].label || _bodyGroupingColumns[c].key) {
                 table.rows[r].cols.push({
                     colspan: colspan,
@@ -350,7 +384,7 @@
             for (var c = addC; c < this.colGroup.length; c++) {
                 table.rows[r].cols.push({
                     rowIndex: 0,
-                    colIndex: (c + 1),
+                    colIndex: (c),
                     colspan: 1,
                     rowspan: 1,
                     label: "&nbsp;",
@@ -361,10 +395,10 @@
         return table;
     };
 
-    var findPanelByColumnIndex = function (_dindex, _colIndex, _rowIndex) {
-        var _containerPanelName;
-        var _isScrollPanel = false;
-        var _panels = [];
+    let findPanelByColumnIndex = function (_dindex, _colIndex, _rowIndex) {
+        let _containerPanelName,
+            _isScrollPanel = false,
+            _panels = [];
 
         if (this.xvar.frozenRowIndex > _dindex) _panels.push("top");
         if (this.xvar.frozenColumnIndex > _colIndex) _panels.push("left");
@@ -378,14 +412,15 @@
 
         return {
             panelName: _panels.join("-"),
-            containerPanelName : _containerPanelName,
+            containerPanelName: _containerPanelName,
             isScrollPanel: _isScrollPanel
         }
     };
 
-    var getRealPathForDataItem = function (_dataPath) {
-        var path = [];
-        var _path = [].concat(_dataPath.split(/[\.\[\]]/g));
+    let getRealPathForDataItem = function (_dataPath) {
+        let path = [],
+            _path = [].concat(_dataPath.split(/[\.\[\]]/g));
+
         _path.forEach(function (n) {
             if (n !== "") path.push("[\"" + n.replace(/['\"]/g, "") + "\"]");
         });
@@ -396,6 +431,7 @@
 
     GRID.util = {
         divideTableByFrozenColumnIndex: divideTableByFrozenColumnIndex,
+        getTableByStartEndColumnIndex: getTableByStartEndColumnIndex,
         getMousePosition: getMousePosition,
         ENM: ENM,
         makeHeaderTable: makeHeaderTable,
@@ -404,7 +440,7 @@
         makeFootSumTable: makeFootSumTable,
         makeBodyGroupingTable: makeBodyGroupingTable,
         findPanelByColumnIndex: findPanelByColumnIndex,
-        getRealPathForDataItem: getRealPathForDataItem
+        getRealPathForDataItem: getRealPathForDataItem,
     };
 
 })();

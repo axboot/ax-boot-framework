@@ -1,0 +1,6 @@
+{
+    "require": {
+        "fzaninotto/faker": "^1.6",
+        "aviat4ion/query": "^2.5"
+    }
+}

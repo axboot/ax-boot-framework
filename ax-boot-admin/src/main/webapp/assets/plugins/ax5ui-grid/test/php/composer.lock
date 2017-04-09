@@ -1,0 +1,111 @@
+{
+    "_readme": [
+        "This file locks the dependencies of your project to a known state",
+        "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
+        "This file is @generated automatically"
+    ],
+    "hash": "a52392adef56416c32d684e3efb4ab3a",
+    "content-hash": "182bc53417cc5ef4fe472c003b2ac6bf",
+    "packages": [
+        {
+            "name": "aviat4ion/query",
+            "version": "v2.5.1",
+            "source": {
+                "type": "git",
+                "url": "https://git.timshomepage.net/aviat4ion/Query.git",
+                "reference": "555865bdb79fcaaf042ad43e45b3c9b0abbe02cc"
+            },
+            "require": {
+                "php": ">=5.3"
+            },
+            "type": "library",
+            "autoload": {
+                "files": [
+                    "autoload.php"
+                ]
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "dbad-license"
+            ],
+            "authors": [
+                {
+                    "name": "Timothy J. Warren",
+                    "email": "tim@timshomepage.net",
+                    "homepage": "https://timshomepage.net",
+                    "role": "Developer"
+                }
+            ],
+            "description": "Database Query Builder and Abstraction layer",
+            "homepage": "https://github.com/aviat4ion/Query",
+            "keywords": [
+                "codeigniter",
+                "database",
+                "firebird",
+                "mysql",
+                "pdo",
+                "postgres",
+                "query builder",
+                "sqlite"
+            ],
+            "abandoned": "aviat/ion",
+            "time": "2015-07-31 14:56:16"
+        },
+        {
+            "name": "fzaninotto/faker",
+            "version": "v1.6.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/fzaninotto/Faker.git",
+                "reference": "44f9a286a04b80c76a4e5fb7aad8bb539b920123"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/fzaninotto/Faker/zipball/44f9a286a04b80c76a4e5fb7aad8bb539b920123",
+                "reference": "44f9a286a04b80c76a4e5fb7aad8bb539b920123",
+                "shasum": ""
+            },
+            "require": {
+                "php": "^5.3.3|^7.0"
+            },
+            "require-dev": {
+                "ext-intl": "*",
+                "phpunit/phpunit": "~4.0",
+                "squizlabs/php_codesniffer": "~1.5"
+            },
+            "type": "library",
+            "extra": {
+                "branch-alias": []
+            },
+            "autoload": {
+                "psr-4": {
+                    "Faker\\": "src/Faker/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "François Zaninotto"
+                }
+            ],
+            "description": "Faker is a PHP library that generates fake data for you.",
+            "keywords": [
+                "data",
+                "faker",
+                "fixtures"
+            ],
+            "time": "2016-04-29 12:21:54"
+        }
+    ],
+    "packages-dev": [],
+    "aliases": [],
+    "minimum-stability": "stable",
+    "stability-flags": [],
+    "prefer-stable": false,
+    "prefer-lowest": false,
+    "platform": [],
+    "platform-dev": []
+}

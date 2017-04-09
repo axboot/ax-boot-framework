@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<!--
+  ~ Copyright (c) 2016. tom@axisj.com
+  ~ - github.com/thomasjang
+  ~ - www.axisj.com
+  -->
+
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <link rel="stylesheet" type="text/css" href="bower_components/bootstrap/dist/css/bootstrap.min.css"/>
+    <link rel="stylesheet" href="bower_components/font-awesome/css/font-awesome.min.css">
+    <link rel="stylesheet" type="text/css" href="../dist/ax5combobox.css"/>
+
+    <script src="bower_components/jquery/dist/jquery.min.js"></script>
+    <script src="bower_components/ax5core/dist/ax5core.js"></script>
+    <script src="../dist/ax5combobox.js"></script>
+</head>
+<body style="padding: 10px;">
+<div class="container">
+    <form name="forms">
+        <h1>form-group</h1>
+
+
+                    <div data-ax5combobox="combobox1" data-ax5combobox-config='{
+                    size: "",
+                    multiple: false
+                }'></div>
+
+        <div></div>
+
+
+    </form>
+
+    <button type="button" class="btn" data-btn="setValue">setValue</button>
+    <button type="button" class="btn" data-btn="getValue">getValue</button>
+    <button type="button" class="btn" data-btn="setValuecombobox">setValue to combobox</button>
+    <button type="button" class="btn" data-btn="update">update options</button>
+</div>
+<script>
+    var options = [{"value":"api","text":"API(api)","progCd":"api","progNm":"API","data":{"createdAt":"2016-09-22T17:34:46.962Z","createdBy":"system","updatedAt":"2016-09-22T17:34:46.962Z","updatedBy":"system","progCd":"api","progNm":"API","progPh":"/swagger/","target":"_self","authCheck":"N","schAh":"Y","savAh":"Y","exlAh":"N","delAh":"N","fn1Ah":"N","fn2Ah":"N","fn3Ah":"N","fn4Ah":"N","fn5Ah":"N","id":"api","dataStatus":"ORIGIN","__deleted__":false,"__created__":false,"__modified__":false}},{"value":"grid-tabform","text":"[샘플]그리드&탭폼 템플릿(grid-tabform)","progCd":"grid-tabform","progNm":"[샘플]그리드&탭폼 템플릿","data":{"createdAt":"2016-09-27T13:15:58.221Z","createdBy":"system","updatedAt":"2016-09-27T13:16:40.461Z","updatedBy":"system","progCd":"grid-tabform","progNm":"[샘플]그리드&탭폼 템플릿","progPh":"/jsp/_samples/grid-tabform.jsp","target":"_self","authCheck":"N","id":"grid-tabform","dataStatus":"ORIGIN","__deleted__":false,"__created__":false,"__modified__":false}},{"value":"grid-form","text":"[샘플]그리드&폼 템플릿(grid-form)","progCd":"grid-form","progNm":"[샘플]그리드&폼 템플릿","data":{"createdAt":"2016-09-27T13:15:58.207Z","createdBy":"system","updatedAt":"2016-09-27T13:16:40.461Z","updatedBy":"system","progCd":"grid-form","progNm":"[샘플]그리드&폼 템플릿","progPh":"/jsp/_samples/grid-form.jsp","target":"_self","authCheck":"N","id":"grid-form","dataStatus":"ORIGIN","__deleted__":false,"__created__":false,"__modified__":false}},{"value":"basic","text":"[샘플]기본템플릿(basic)","progCd":"basic","progNm":"[샘플]기본템플릿","data":{"createdAt":"2016-09-27T13:15:58.200Z","createdBy":"system","updatedAt":"2016-09-27T13:16:40.461Z","updatedBy":"system","progCd":"basic","progNm":"[샘플]기본템플릿","progPh":"/jsp/_samples/basic.jsp","target":"_self","authCheck":"N","id":"basic","dataStatus":"ORIGIN","__deleted__":false,"__created__":false,"__modified__":false}},{"value":"grid-modal","text":"[샘플]모달 템플릿(grid-modal)","progCd":"grid-modal","progNm":"[샘플]모달 템플릿","data":{"createdAt":"2016-09-27T13:15:58.213Z","createdBy":"system","updatedAt":"2016-09-27T13:16:40.611Z","updatedBy":"system","progCd":"grid-modal","progNm":"[샘플]모달 템플릿","progPh":"/jsp/_samples/grid-modal.jsp","target":"_self","authCheck":"N","id":"grid-modal","dataStatus":"ORIGIN","__deleted__":false,"__created__":false,"__modified__":false}},{"value":"horizontal-layout","text":"[샘플]상하레이아웃(horizontal-layout)","progCd":"horizontal-layout","progNm":"[샘플]상하레이아웃","data":{"createdAt":"2016-09-27T13:15:58.184Z","createdBy":"system","updatedAt":"2016-09-27T13:16:53.404Z","updatedBy":"system","progCd":"horizontal-layout","progNm":"[샘플]상하레이아웃","progPh":"/jsp/_samples/horizontal-layout.jsp","target":"_self","authCheck":"N","id":"horizontal-layout","dataStatus":"ORIGIN","__deleted__":false,"__created__":false,"__modified__":false}},{"value":"vertical-layout","text":"[샘플]좌우레이아웃(vertical-layout)","progCd":"vertical-layout","progNm":"[샘플]좌우레이아웃","data":{"createdAt":"2016-09-27T13:15:58.178Z","createdBy":"system","updatedAt":"2016-09-27T13:16:40.700Z","updatedBy":"system","progCd":"vertical-layout","progNm":"[샘플]좌우레이아웃","progPh":"/jsp/_samples/vertical-layout.jsp","target":"_self","authCheck":"N","id":"vertical-layout","dataStatus":"ORIGIN","__deleted__":false,"__created__":false,"__modified__":false}},{"value":"tab-layout","text":"[샘플]탭레이아웃(tab-layout)","progCd":"tab-layout","progNm":"[샘플]탭레이아웃","data":{"createdAt":"2016-09-27T13:15:58.192Z","createdBy":"system","updatedAt":"2016-09-27T13:16:40.700Z","updatedBy":"system","progCd":"tab-layout","progNm":"[샘플]탭레이아웃","progPh":"/jsp/_samples/tab-layout.jsp","target":"_self","authCheck":"N","id":"tab-layout","dataStatus":"ORIGIN","__deleted__":false,"__created__":false,"__modified__":false}},{"value":"page-structure","text":"[샘플]페이지구조(page-structure)","progCd":"page-structure","progNm":"[샘플]페이지구조","data":{"createdAt":"2016-09-27T13:15:58.162Z","createdBy":"system","updatedAt":"2016-09-27T13:16:40.700Z","updatedBy":"system","progCd":"page-structure","progNm":"[샘플]페이지구조","progPh":"/jsp/_samples/page-structure.jsp","target":"_self","authCheck":"N","id":"page-structure","dataStatus":"ORIGIN","__deleted__":false,"__created__":false,"__modified__":false}},{"value":"system-config-common-code","text":"공통코드관리(system-config-common-code)","progCd":"system-config-common-code","progNm":"공통코드관리","data":{"createdAt":"2016-09-22T17:34:46.982Z","createdBy":"system","updatedAt":"2016-09-22T17:34:46.982Z","updatedBy":"system","progCd":"system-config-common-code","progNm":"공통코드관리","progPh":"/jsp/system/system-config-common-code.jsp","target":"_self","authCheck":"Y","schAh":"Y","savAh":"Y","exlAh":"Y","delAh":"N","fn1Ah":"N","fn2Ah":"N","fn3Ah":"N","fn4Ah":"N","fn5Ah":"N","id":"system-config-common-code","dataStatus":"ORIGIN","__deleted__":false,"__created__":false,"__modified__":false}},{"value":"login","text":"로그인(login)","progCd":"login","progNm":"로그인","data":{"createdAt":"2016-09-22T17:34:46.969Z","createdBy":"system","updatedAt":"2016-09-22T17:34:46.969Z","updatedBy":"system","progCd":"login","progNm":"로그인","progPh":"/jsp/login.jsp","target":"_self","authCheck":"N","schAh":"N","savAh":"N","exlAh":"N","delAh":"N","fn1Ah":"N","fn2Ah":"N","fn3Ah":"N","fn4Ah":"N","fn5Ah":"N","id":"login","dataStatus":"ORIGIN","__deleted__":false,"__created__":false,"__modified__":false}},{"value":"system-help-manual","text":"매뉴얼 관리(system-help-manual)","progCd":"system-help-manual","progNm":"매뉴얼 관리","data":{"createdAt":"2016-09-22T17:34:47.013Z","createdBy":"system","updatedAt":"2016-09-22T17:34:47.013Z","updatedBy":"system","progCd":"system-help-manual","progNm":"매뉴얼 관리","progPh":"/jsp/system/system-help-manual.jsp","target":"_self","authCheck":"Y","schAh":"Y","savAh":"N","exlAh":"N","delAh":"N","fn1Ah":"Y","fn2Ah":"N","fn3Ah":"N","fn4Ah":"N","fn5Ah":"N","id":"system-help-manual","dataStatus":"ORIGIN","__deleted__":false,"__created__":false,"__modified__":false}},{"value":"system-config-menu","text":"메뉴관리(system-config-menu)","progCd":"system-config-menu","progNm":"메뉴관리","data":{"createdAt":"2016-09-22T17:34:46.989Z","createdBy":"system","updatedAt":"2016-09-22T17:34:46.989Z","updatedBy":"system","progCd":"system-config-menu","progNm":"메뉴관리","progPh":"/jsp/system/system-config-menu.jsp","target":"_self","authCheck":"Y","schAh":"Y","savAh":"Y","exlAh":"N","delAh":"N","fn1Ah":"N","fn2Ah":"N","fn3Ah":"N","fn4Ah":"N","fn5Ah":"N","id":"system-config-menu","dataStatus":"ORIGIN","__deleted__":false,"__created__":false,"__modified__":false}},{"value":"main","text":"메인(main)","progCd":"main","progNm":"메인","data":{"createdAt":"2016-09-22T17:34:46.975Z","createdBy":"system","updatedAt":"2016-09-22T17:34:46.975Z","updatedBy":"system","progCd":"main","progNm":"메인","progPh":"/jsp/main.jsp","target":"_self","authCheck":"N","schAh":"N","savAh":"N","exlAh":"N","delAh":"N","fn1Ah":"N","fn2Ah":"N","fn3Ah":"N","fn4Ah":"N","fn5Ah":"N","id":"main","dataStatus":"ORIGIN","__deleted__":false,"__created__":false,"__modified__":false}},{"value":"system-auth-user","text":"사용자관리(system-auth-user)","progCd":"system-auth-user","progNm":"사용자관리","data":{"createdAt":"2016-09-22T17:34:47.001Z","createdBy":"system","updatedAt":"2016-09-22T17:34:47.001Z","updatedBy":"system","progCd":"system-auth-user","progNm":"사용자관리","progPh":"/jsp/system/system-auth-user.jsp","target":"_self","authCheck":"Y","schAh":"Y","savAh":"Y","exlAh":"N","delAh":"N","fn1Ah":"N","fn2Ah":"N","fn3Ah":"N","fn4Ah":"N","fn5Ah":"N","id":"system-auth-user","dataStatus":"ORIGIN","__deleted__":false,"__created__":false,"__modified__":false}},{"value":"system-operation-log","text":"에러로그 조회(system-operation-log)","progCd":"system-operation-log","progNm":"에러로그 조회","data":{"createdAt":"2016-09-22T17:34:47.006Z","createdBy":"system","updatedAt":"2016-09-22T17:34:47.006Z","updatedBy":"system","progCd":"system-operation-log","progNm":"에러로그 조회","progPh":"/jsp/system/system-operation-log.jsp","target":"_self","authCheck":"Y","schAh":"Y","savAh":"N","exlAh":"N","delAh":"N","fn1Ah":"Y","fn2Ah":"N","fn3Ah":"N","fn4Ah":"N","fn5Ah":"N","id":"system-operation-log","dataStatus":"ORIGIN","__deleted__":false,"__created__":false,"__modified__":false}},{"value":"system-config-program","text":"프로그램관리(system-config-program)","progCd":"system-config-program","progNm":"프로그램관리","data":{"createdAt":"2016-09-22T17:34:46.995Z","createdBy":"system","updatedAt":"2016-09-22T17:34:46.995Z","updatedBy":"system","progCd":"system-config-program","progNm":"프로그램관리","progPh":"/jsp/system/system-config-program.jsp","target":"_self","authCheck":"Y","schAh":"Y","savAh":"Y","exlAh":"N","delAh":"N","fn1Ah":"N","fn2Ah":"N","fn3Ah":"N","fn4Ah":"N","fn5Ah":"N","id":"system-config-program","dataStatus":"ORIGIN","__deleted__":false,"__created__":false,"__modified__":false}}]
+
+    $(document.body).ready(function () {
+
+        $('[data-btn]').click(function () {
+            var act = this.getAttribute("data-btn");
+            switch (act) {
+                case "setValue":
+
+                    break;
+                case "getValue":
+                    console.log($('[data-ax5combobox="combobox1"]').ax5combobox("getValue"));
+                    break;
+                case "setValuecombobox":
+
+                    break;
+                case "update":
+
+                    break;
+            }
+        });
+
+        this.combobox = $('[data-ax5combobox="combobox1"]').ax5combobox({
+            options: options,
+            onChange: function () {
+                console.log(this);
+            }
+        });
+
+    });
+</script>
+
+</body>
+</html>

@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<!--
+  ~ Copyright (c) 2016. tom@axisj.com
+  ~ - github.com/thomasjang
+  ~ - www.axisj.com
+  -->
+
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <link rel="stylesheet" type="text/css" href="bower_components/bootstrap/dist/css/bootstrap.min.css"/>
+    <link rel="stylesheet" href="bower_components/font-awesome/css/font-awesome.min.css">
+    <link rel="stylesheet" type="text/css" href="../dist/ax5select.css"/>
+
+    <script src="bower_components/jquery/dist/jquery.min.js"></script>
+    <script src="bower_components/ax5core/dist/ax5core.js"></script>
+    <script src="../dist/ax5select.js"></script>
+</head>
+<body style="padding: 10px;">
+<div class="container">
+    <form name="forms">
+        <h1>input-group</h1>
+
+        <div class="input-group">
+            <div data-ax5select="select1" data-ax5select-config='{
+                    multiple: true,
+                    reset:"<i class=\"fa fa-trash\"></i>"
+                }'></div>
+            <span class="input-group-btn">
+                <button type="button" class="btn btn-default" data-search-view-0-btn="printerGrpMng">
+                    Button
+                </button>
+            </span>
+        </div>
+
+        <div style="height: 10px;"></div>
+
+        <div class="input-group">
+            <span class="input-group-btn">
+                <button type="button" class="btn btn-default" data-search-view-0-btn="printerGrpMng">
+                    Button
+                </button>
+            </span>
+            <div data-ax5select="select2" data-ax5select-config='{
+                        minWidth: "150",
+                        multiple: false
+                    }'>
+                <select data-ax-path="select2"></select>
+            </div>
+        </div>
+
+        <div style="height: 10px;"></div>
+
+    </form>
+
+    <button type="button" class="btn" data-btn="setValue">setValue</button>
+    <button type="button" class="btn" data-btn="getValue">getValue</button>
+    <button type="button" class="btn" data-btn="setValueSelect">setValue to select</button>
+    <button type="button" class="btn" data-btn="update">update options</button>
+</div>
+<script>
+    var options = [];
+    for (var i = 0; i < 20; i++) {
+        options.push({value: i, text: "optionText" + i});
+    }
+
+    var mySelect = new ax5.ui.select({
+        theme: "danger"
+    });
+
+    $(document.body).ready(function () {
+
+        $('[data-btn]').click(function () {
+            var act = this.getAttribute("data-btn");
+            switch (act) {
+                case "setValue":
+                    mySelect.val($('[data-ax5select="select1"]'), [11, 12]);
+
+                    //$('[data-ax5select="select2"]').ax5select("setValue", null);
+                    $('[data-ax5select="select2"]').ax5select({
+                        options: []
+                    });
+                    break;
+                case "getValue":
+                    console.log($('[data-ax5select="select2"]').ax5select("getValue"));
+                    console.log(mySelect.val($('[data-ax5select="select1"]')));
+                    console.log($(document.forms).serialize());
+                    break;
+                case "setValueSelect":
+                    $('[data-ax-path="select2"]').val("7").trigger("change");
+                    //$('[data-ax-path="select2"]').val(["optionValue7", "optionValue9"]).trigger("change");
+                    break;
+                case "update":
+                    mySelect.update({
+                        target: $('[data-ax5select="select1"]'),
+                        options: [
+                            {value: 99, text: "optionText"}
+                        ]
+                    });
+
+                    $('[data-ax5select="select2"]').ax5select({
+                        options: [
+                            {value: 99, text: "optionText"}
+                        ]
+                    });
+
+                    break;
+            }
+        });
+
+        var callbackCount = 0;
+        $('[data-ax5select="select2"]').ax5select({
+            onExpand: function (callback) {
+                setTimeout(function () {
+                    if (callbackCount == 0) {
+                        callback({
+                            options: [
+                                {value: "V0", text: "callback Text 0"},
+                                {value: "V1", text: "callback Text 1"},
+                                {value: "V2", text: "callback Text 2"},
+                                {value: "V3", text: "callback Text 3"}
+                            ]
+                        });
+                    } else {
+                        callback({
+                            options: [
+                                {value: "V0", text: "callback Text 0"},
+                                {value: "V11", text: "callback Text 11"},
+                                {value: "V12", text: "callback Text 12"},
+                                {value: "V13", text: "callback Text 13"}
+                            ]
+                        });
+                    }
+                    callbackCount++;
+                }, 300);
+            }
+        });
+        $('[data-ax-path="select2"]').on("change", function () {
+            console.log(this.value);
+        })
+
+
+        mySelect.bind({
+            //theme: "primary",
+            target: $('[data-ax5select="select1"]'),
+            options: options,
+            onChange: function () {
+                console.log(this);
+            },
+            onClose: function () {
+                console.log(this);
+            },
+            onStateChanged: function () {
+                //console.log(this);
+            }
+        });
+
+    });
+
+
+    // todo : onStateChanged
+</script>
+
+</body>
+</html>

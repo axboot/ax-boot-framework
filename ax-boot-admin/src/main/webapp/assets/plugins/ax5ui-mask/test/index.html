@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <script src="bower_components/jquery/dist/jquery.min.js"></script>
+    <script src="bower_components/ax5core/dist/ax5core.js"></script>
+
+    <script src="../dist/ax5mask.js"></script>
+    <link rel="stylesheet" type="text/css" href="../dist/ax5mask.css" />
+</head>
+<body>
+
+<div id="user-content" style="height:300px;border: 1px solid #000;"></div>
+
+<button type="button" id="mask-open">mask-open</button>
+<button type="button" id="mask-close">mask-close</button>
+<button type="button" id="custom-mask-open">custom-mask-open</button>
+<script>
+    $(document.body).ready(function(){
+        var customMask = function customMask() {
+            var cTmpl = '' +
+                    '<div class="ax-mask" id="{{maskId}}" >' +
+                    '    <div class="ax-mask-bg" style="background-color:red !important;"></div>' +
+                    '    <div class="ax-mask-content">' +
+                    '        {{{body}}}' +
+                    '    </div>' +
+                    '</div>';
+            return cTmpl;
+        };
+        ax5.ui.mask.tmpl.customMask = customMask;
+        window.mask = new ax5.ui.mask();
+
+        $("#custom-mask-open").click(function(){
+            mask.open({
+                templateName: 'customMask',
+                content: 'custom MASK on target',
+                target: $("#user-content").get(0),
+                onClick: function(){
+                    console.log(this);
+                }
+            });
+        });
+        /*
+         $("#custom-mask-close").click(function(){
+         mask.close();
+         });
+         */
+
+
+        $("#mask-open").click(function(){
+            mask.open({
+                //position: "fixed",
+                content: 'MASK on target',
+                //target: $("#user-content").get(0),
+                onClick: function(){
+                    console.log(this);
+                }
+            });
+        });
+        $("#mask-close").click(function(){
+            mask.close();
+        });
+
+
+
+    });
+
+
+
+
+
+</script>
+
+</body>
+</html>

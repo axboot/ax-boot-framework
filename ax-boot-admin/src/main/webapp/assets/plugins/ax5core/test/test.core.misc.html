@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>ax5.util MISC testing</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/mocha/3.2.0/mocha.min.css" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/mocha/3.2.0/mocha.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/should.js/11.1.2/should.min.js"></script>
+    <script type="text/javascript" src="https://cdn.rawgit.com/lodash/lodash/master/dist/lodash.min.js"></script>
+    <script src="../dist/ax5core.js"></script>
+</head>
+<body>
+<div id="mocha"></div>
+<div class="test-mockup-1">
+    <div class="list">
+        <div class="first"></div>
+        <div class="second"></div>
+    </div>
+</div>
+
+<script>mocha.setup('bdd')</script>
+<script type="text/javascript" src="test.core.misc.js"></script>
+<script>mocha.run();</script>
+</body>
+</html>

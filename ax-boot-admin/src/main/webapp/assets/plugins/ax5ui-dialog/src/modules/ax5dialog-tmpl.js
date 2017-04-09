@@ -5,11 +5,11 @@
 
     var dialogDisplay = function(columnKeys) {
         return ` 
-        <div id="{{dialogId}}" data-ax5-ui="dialog" class="ax5-ui-dialog {{theme}}">
-            <div class="ax-dialog-header">
+        <div id="{{dialogId}}" data-dialog-els="root" class="ax5-ui-dialog {{theme}}">
+            <div class="ax-dialog-header" data-dialog-els="header">
                 {{{title}}}
             </div>
-            <div class="ax-dialog-body">
+            <div class="ax-dialog-body" data-dialog-els="body">
                 <div class="ax-dialog-msg">{{{msg}}}</div>
                 
                 {{#input}}
@@ -28,7 +28,7 @@
                 </div>
                 {{/input}}
                 
-                <div class="ax-dialog-buttons">
+                <div class="ax-dialog-buttons" data-dialog-els="buttons">
                     <div class="ax-button-wrap">
                     {{#btns}}
                         {{#@each}}
@@ -37,6 +37,10 @@
                     {{/btns}}
                     </div>
                 </div>
+                
+                {{#additionalContent}}
+                <div data-dialog-els="additional-content">{{{.}}}</div>
+                {{/additionalContent}}
             </div>
         </div>  
         `;

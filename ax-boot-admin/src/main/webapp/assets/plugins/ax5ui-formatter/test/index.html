@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+
+    <link rel="stylesheet" type="text/css" href="bower_components/bootstrap/dist/css/bootstrap.min.css"/>
+    <link rel="stylesheet" href="bower_components/font-awesome/css/font-awesome.min.css">
+    <link rel="stylesheet" type="text/css" href="../dist/ax5formatter.css"/>
+
+    <script src="bower_components/jquery/dist/jquery.min.js"></script>
+    <script src="bower_components/ax5core/dist/ax5core.js"></script>
+    <script src="../dist/ax5formatter.js"></script>
+</head>
+<body style="padding: 50px;">
+
+<div class="form-group" id="ax5formatter-01">
+    <div class="input-group">
+        <span class="input-group-addon">Money</span>
+        <input name="1" type="text" class="form-control" placeholder="" data-ax5formatter="money" onchange="console.log('change event : ' + this.value);" />
+    </div>
+</div>
+
+<div class="form-group" id="ax5formatter-01-1">
+    <div class="input-group">
+        <span class="input-group-addon">Money(int)</span>
+        <input name="2" type="text" class="form-control" placeholder="" data-ax5formatter="money(int)" />
+    </div>
+</div>
+<div class="form-group">
+    <div class="input-group">
+        <span class="input-group-addon">Date</span>
+        <input name="3" type="text" class="form-control" placeholder="yyyy-mm-dd" data-ax5formatter="date" />
+    </div>
+</div>
+<div class="form-group">
+    <div class="input-group">
+        <span class="input-group-addon">Date(time)</span>
+        <input name="3" type="text" class="form-control" placeholder="yyyy-mm-dd hh:mi:ss" data-ax5formatter="date(time)" />
+    </div>
+</div>
+
+<div class="form-group">
+    <div class="input-group">
+        <span class="input-group-addon">Date(year)</span>
+        <input name="31" type="text" class="form-control" placeholder="yyyy" data-ax5formatter="date(year)" />
+    </div>
+</div>
+<div class="form-group">
+    <div class="input-group">
+        <span class="input-group-addon">Date(month)</span>
+        <input name="32" type="text" class="form-control" placeholder="yyyy-mm" data-ax5formatter="date(month)" />
+    </div>
+</div>
+<div class="form-group">
+    <div class="input-group">
+        <span class="input-group-addon">Time</span>
+        <input name="3" type="text" class="form-control" placeholder="hh:mi:ss" data-ax5formatter="time" />
+    </div>
+</div>
+<div class="form-group">
+    <div class="input-group">
+        <span class="input-group-addon">Phone</span>
+        <input name="4" type="text" class="form-control" placeholder="" id="ax5formatter-03" data-ax5formatter="phone"/>
+    </div>
+</div>
+<div class="form-group">
+    <div class="input-group">
+        <span class="input-group-addon">Custom</span>
+        <input name="4" type="text" class="form-control" placeholder="" id="ax5formatter-custom" />
+    </div>
+</div>
+
+<div class="form-group" id="formatter-test">
+    <div class="input-group">
+        <span class="input-group-addon">Phone</span>
+        <input name="4" type="text" class="form-control" placeholder="" data-ax5formatter="phone" />
+        <span class="input-group-addon">Date</span>
+        <input name="4" type="text" class="form-control" placeholder="" data-ax5formatter="date" value="20160122" />
+    </div>
+</div>
+<div class="form-group" id="formatter-test">
+    <div class="input-group">
+        <span class="input-group-addon">Credit</span>
+        <input name="4" type="text" class="form-control" placeholder="" data-ax5formatter="credit" />
+    </div>
+</div>
+<!--https://css-tricks.com/snippets/javascript/javascript-keycodes/-->
+<script type="text/javascript">
+
+    $('[data-ax5formatter]').ax5formatter();
+
+    $('[data-ax5formatter="time"]').val("1231232");
+
+    /*
+    $('#ax5formatter-01').ax5formatter({
+        pattern: "date"
+    });
+    */
+
+    $('#ax5formatter-custom').ax5formatter({
+        pattern: "custom",
+        getEnterableKeyCodes: function(){
+            return {
+                '65':'a',
+                '66':'b',
+                '67':'c',
+                '68':'d',
+                '69':'e',
+                '70':'f'
+            };
+        },
+        getPatternValue: function(obj){
+            /*
+            console.log(obj);
+            {
+                event: Event,
+                $input: jQueryObject of input element,
+                value: value of input element
+            }
+             */
+            return obj.value.replace(/./g, "*");
+        }
+    });
+    $('#formatter-test').ax5formatter();
+    /**
+     * {
+     *  pattern: "" // money, money(int), number, number(int), date, date(time), time, bizno, phone, custom
+     *  patternString: ""
+     * }
+     */
+
+    $('[data-ax5formatter="time"]').ax5formatter("formatting");
+</script>
+
+</body>
+</html>

@@ -1,8 +1,8 @@
 // ax5.ui.grid.page
 (function () {
 
-    var GRID = ax5.ui.grid;
-    var U = ax5.util;
+    let GRID = ax5.ui.grid,
+        U = ax5.util;
 
     var onclickPageMove = function (_act) {
         var callback = function (_pageNo) {
@@ -111,7 +111,8 @@
             fromRowIndex: U.number(fromRowIndex + 1, {"money": true}),
             toRowIndex: U.number(toRowIndex, {"money": true}),
             totalElements: U.number(totalElements, {"money": true}),
-            dataRowCount: (totalElements !== this.xvar.dataRealRowCount) ? U.number(this.xvar.dataRealRowCount, {"money": true}) : false
+            dataRowCount: (totalElements !== this.xvar.dataRealRowCount) ? U.number(this.xvar.dataRealRowCount, {"money": true}) : false,
+            progress: (this.appendProgress) ? this.config.appendProgressIcon : ""
         }));
     };
 

@@ -132,8 +132,7 @@
          * ```
          */
         var ax5menu = function () {
-            var
-                self = this,
+            let self = this,
                 cfg;
 
             this.instanceId = ax5.getGuid();
@@ -162,8 +161,7 @@
 
             cfg = this.config;
 
-            var
-                appEventAttach = function (active) {
+            let appEventAttach = function (active) {
                     if (active) {
                         jQuery(document).unbind("click.ax5menu-" + this.menuId).bind("click.ax5menu-" + this.menuId, clickItem.bind(this));
                         jQuery(window).unbind("keydown.ax5menu-" + this.menuId).bind("keydown.ax5menu-" + this.menuId, function (e) {
@@ -203,8 +201,7 @@
                     return true;
                 },
                 popup = function (opt, items, depth, path) {
-                    var
-                        data = opt,
+                    let data = opt,
                         activeMenu,
                         removed
                         ;
@@ -254,8 +251,7 @@
                     });
 
                     activeMenu.find('[data-menu-item-index]').bind("mouseover", function () {
-                        var
-                            depth = this.getAttribute("data-menu-item-depth"),
+                        let depth = this.getAttribute("data-menu-item-depth"),
                             index = this.getAttribute("data-menu-item-index"),
                             path = this.getAttribute("data-menu-item-path"),
                             $this,
@@ -314,7 +310,7 @@
 
                     // mouse out
                     activeMenu.find('[data-menu-item-index]').bind("mouseout", function () {
-                        var depth = this.getAttribute("data-menu-item-depth"),
+                        let depth = this.getAttribute("data-menu-item-depth"),
                             index = this.getAttribute("data-menu-item-index"),
                             path = this.getAttribute("data-menu-item-path"),
                             _items;
@@ -322,7 +318,7 @@
                         _items = self.queue[depth].data[cfg.columnKeys.items][index][cfg.columnKeys.items];
                         if (_items && _items.length > 0) {
 
-                        }else{
+                        } else {
                             jQuery(this).removeClass("hover");
                         }
                     });
@@ -373,7 +369,7 @@
                     if (target) {
                         item = (function (path) {
                             if (!path) return false;
-                            var item;
+                            let item;
                             try {
                                 item = (Function("", "return this.config.items[" + path.substring(5).replace(/\./g, '].' + cfg.columnKeys.items + '[') + "];")).call(self);
                             } catch (e) {
@@ -436,9 +432,7 @@
                     return this;
                 },
                 align = function (activeMenu, data) {
-                    //console.log(data['@parent']);
-                    var
-                        $window = jQuery(window),
+                    let $window = jQuery(window),
                         $document = jQuery(document),
                         wh = (cfg.position == "fixed") ? $window.height() : $document.height(),
                         ww = $window.width(),
@@ -505,60 +499,63 @@
              */
             this.popup = (function () {
 
-                var getOption = {
-                    'event': function (e, opt) {
-                        //var xOffset = Math.max(document.documentElement.scrollLeft, document.body.scrollLeft);
-                        //var yOffset = Math.max(document.documentElement.scrollTop, document.body.scrollTop);
-                        //console.log(e.pageY);
+                let getOption = {
+                        'event': function (e, opt) {
+                            //var xOffset = Math.max(document.documentElement.scrollLeft, document.body.scrollLeft);
+                            //var yOffset = Math.max(document.documentElement.scrollTop, document.body.scrollTop);
+                            //console.log(e.pageY);
 
-                        e = {
-                            left: e.clientX,
-                            top: (cfg.position == "fixed") ? e.clientY : e.pageY,
-                            width: cfg.width,
-                            theme: cfg.theme
-                        };
+                            e = {
+                                left: e.clientX,
+                                top: (cfg.position == "fixed") ? e.clientY : e.pageY,
+                                width: cfg.width,
+                                theme: cfg.theme
+                            };
 
-                        if (cfg.offset) {
-                            if (cfg.offset.left) e.left += cfg.offset.left;
-                            if (cfg.offset.top) e.top += cfg.offset.top;
-                        }
-                        opt = jQuery.extend(true, e, opt);
+                            e.left -= 5;
+                            e.top -= 5;
 
-                        try {
-                            return opt;
-                        }
-                        finally {
-                            e = null;
-                            //opt = null;
+                            if (cfg.offset) {
+                                if (cfg.offset.left) e.left += cfg.offset.left;
+                                if (cfg.offset.top) e.top += cfg.offset.top;
+                            }
+                            opt = jQuery.extend(true, e, opt);
+
+                            try {
+                                return opt;
+                            }
+                            finally {
+                                e = null;
+                                //opt = null;
+                            }
+                        },
+                        'object': function (e, opt) {
+                            e = {
+                                left: e.left,
+                                top: e.top,
+                                width: e.width || cfg.width,
+                                theme: e.theme || cfg.theme
+                            };
+
+                            if (cfg.offset) {
+                                if (cfg.offset.left) e.left += cfg.offset.left;
+                                if (cfg.offset.top) e.top += cfg.offset.top;
+                            }
+
+                            opt = jQuery.extend(true, e, opt);
+
+                            try {
+                                return opt;
+                            }
+                            finally {
+                                e = null;
+                                //opt = null;
+                            }
                         }
                     },
-                    'object': function (e, opt) {
-                        e = {
-                            left: e.left,
-                            top: e.top,
-                            width: e.width || cfg.width,
-                            theme: e.theme || cfg.theme
-                        };
-
-                        if (cfg.offset) {
-                            if (cfg.offset.left) e.left += cfg.offset.left;
-                            if (cfg.offset.top) e.top += cfg.offset.top;
-                        }
-
-                        opt = jQuery.extend(true, e, opt);
-
-                        try {
-                            return opt;
-                        }
-                        finally {
-                            e = null;
-                            //opt = null;
-                        }
-                    }
-                };
-                var updateTheme = function (theme) {
-                    if (theme) cfg.theme = theme;
-                };
+                    updateTheme = function (theme) {
+                        if (theme) cfg.theme = theme;
+                    };
 
                 return function (e, opt) {
 
@@ -566,10 +563,12 @@
                     opt = getOption[((typeof e.clientX == "undefined") ? "object" : "event")].call(this, e, opt);
                     updateTheme(opt.theme);
 
-                    var items = [].concat(cfg.items);
+                    let items = [].concat(cfg.items),
+                        filteringItem;
+
                     if (opt.filter) {
-                        var filteringItem = function (_items) {
-                            var arr = [];
+                        filteringItem = function (_items) {
+                            let arr = [];
                             _items.forEach(function (n) {
                                 if (n.items && n.items.length > 0) {
                                     n.items = filteringItem(n.items);
@@ -585,11 +584,14 @@
 
                     if (items.length) {
                         popup.call(this, opt, items, 0); // 0 is seq of queue
-                        appEventAttach.call(this, true); // 이벤트 연결
+
+                        if(this.popupEventAttachTimer) clearTimeout(this.popupEventAttachTimer);
+                        this.popupEventAttachTimer = setTimeout((function () {
+                            appEventAttach.call(this, true); // 이벤트 연결
+                        }).bind(this), 500);
                     }
 
                     e = null;
-                    //opt = null;
                     return this;
                 }
             })();

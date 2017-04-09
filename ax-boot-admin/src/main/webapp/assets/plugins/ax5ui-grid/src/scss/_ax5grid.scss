@@ -23,6 +23,9 @@
     &.lineNumberColumn {
 
     }
+    &.focused{
+        box-shadow: $ax5grid-cell-focused-box-shadow;
+    }
 
     @if ($container == "header") {
         cursor: pointer;
@@ -56,14 +59,15 @@
         [data-ax5grid-cellHolder] {
             padding: $ax5grid-cell-padding-row-selector;
         }
-        //todo : checkBox CSS 구현
+
         .checkBox {
-            display: block;
+            display: inline-block;
             position: relative;
             border: $ax5grid-cell-checkbox-border;
             border-radius: $ax5grid-cell-checkbox-border-radius;
             @include ax-background(top, $ax5grid-cell-checkbox-bg-colors);
             height: 100%;
+            width: 100%;
             &:after {
                 content: '';
                 width: 60%;
@@ -79,7 +83,7 @@
                 @include transform(rotate(-50deg));
             }
         }
-        &[data-ax5grid-selected="true"]{
+        &[data-ax5grid-selected="true"] {
             .checkBox {
                 &:after {
                     opacity: 1;
@@ -138,7 +142,7 @@
             border: 0px none;
             background: $ax5grid-bg;
         }
-        [data-ax5select]{
+        [data-ax5select] {
             position: absolute;
             display: block;
             left: 0;
@@ -147,7 +151,7 @@
             height: 100%;
             border: 0px none;
             background: $ax5grid-bg;
-            .ax5select-display{
+            .ax5select-display {
                 height: 100%;
                 border-radius: 0;
             }
@@ -181,8 +185,29 @@
             }
         }
 
+        [data-ax5grid-tnode-arrow] {
+            display: inline-block;
+            box-sizing: content-box;
+            text-align: right;
+            text-shadow: 0 -1px #fff;
+            padding: 0 5px 0 0;
+        }
+        a[data-ax5grid-tnode-arrow] {
+            cursor: pointer;
+            text-decoration: none;
+            &:hover {
+                text-decoration: none;
+            }
+        }
+        [data-ax5grid-tnode-item="group"] {
+            display: inline-block;
+        }
+        [data-ax5grid-tnode-item="item"] {
+            display: inline-block;
+        }
     }
 }
+
 
 @mixin gridRowBackground() {
     &.tr-0 {
@@ -235,6 +260,11 @@
             }
         }
     }
+
+    // mergeCells 대상 컬럼 배경생 통일.
+    td.merged {
+        background: $ax5grid-row-bg-1;
+    }
 }
 
 @mixin gridPanel($container) {
@@ -242,6 +272,11 @@
         @include gridBoxModal();
         position: absolute;
         overflow: hidden;
+        /*
+        overflow: hidden;
+        -webkit-overflow-scrolling: touch;
+        transform: translate3d(0, 0, 0);
+        */
 
         table {
             table-layout: fixed;
@@ -257,6 +292,7 @@
                 @include gridRowBackground();
                 td {
                     @include gridColumn($container);
+
                 }
             }
         }
@@ -388,7 +424,7 @@
         }
 
         [data-ax5grid-container="header"] {
-            @include user-select(none);
+            user-select: none;
             @include gridBoxModal();
             position: relative;
             overflow: hidden;

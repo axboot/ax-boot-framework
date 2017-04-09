@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, user-scalable=no">
+
+    <link rel="stylesheet" type="text/css" href="bower_components/bootstrap/dist/css/bootstrap.min.css"/>
+    <link rel="stylesheet" href="bower_components/font-awesome/css/font-awesome.min.css">
+    <link rel="stylesheet" type="text/css" href="../dist/ax5layout.css"/>
+
+    <script src="bower_components/jquery/dist/jquery.min.js"></script>
+    <script src="bower_components/ax5core/dist/ax5core.js"></script>
+    <script src="../dist/ax5layout.js"></script>
+    <style>
+        html, body {
+            padding: 0;
+            height: 100%;
+            overflow: hidden;
+        }
+    </style>
+</head>
+<body>
+
+<div data-ax5layout="ax1" data-config='{layout:"split-panel", orientation: "vertical"}' style="height: 100%;">
+    <div data-split-panel='{width: "300", minWidth:50}'></div>
+    <div data-splitter='{}'></div>
+    <div data-split-panel='{width: "*"}'>
+
+
+    </div>
+    <div data-splitter='{}'></div>
+    <div data-split-panel='{width: "200", minWidth: 50, maxWidth: 300}'></div>
+</div>
+
+<script>
+    // todo : panel show & hide
+    jQuery(document.body).ready(function () {
+        jQuery('[data-ax5layout="ax1"]').ax5layout({
+            autoResize: false,
+            onResize: function () {
+                //console.log(this.$target);
+                //console.log(this);
+            }
+        });
+        jQuery('[data-ax5layout="ax2"]').ax5layout({
+            onResize: function () {
+                //console.log(this.$target);
+                //console.log(this);
+            }
+        });
+    });
+
+    jQuery(window).resize(function () {
+        jQuery('[data-ax5layout="ax1"]').ax5layout("align", "windowResize");
+    })
+</script>
+
+</body>
+</html>

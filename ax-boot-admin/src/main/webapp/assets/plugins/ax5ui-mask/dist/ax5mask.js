@@ -9,7 +9,7 @@
 
     UI.addClass({
         className: "mask",
-        version: "1.3.44"
+        version: "1.4.8"
     }, function () {
         /**
          * @class ax5mask
@@ -48,7 +48,8 @@
             this.instanceId = ax5.getGuid();
             this.config = {
                 theme: '',
-                target: jQuery(document.body).get(0)
+                target: jQuery(document.body).get(0),
+                animateTime: 250
             };
             this.maskContent = '';
             this.status = "off";
@@ -246,31 +247,65 @@
              * ```
              */
             this.close = function (_delay) {
+                var _this = this;
+
                 if (this.$mask) {
-                    var _close = function _close() {
-                        this.status = "off";
-                        this.$mask.remove();
-                        this.$target.removeClass("ax-masking");
+                    (function () {
+                        var _close = function _close() {
+                            this.status = "off";
+                            this.$mask.remove();
+                            this.$target.removeClass("ax-masking");
 
-                        onStateChanged.call(this, null, {
-                            self: this,
-                            state: "close"
-                        });
+                            onStateChanged.call(this, null, {
+                                self: this,
+                                state: "close"
+                            });
 
-                        jQuery(window).unbind("resize.ax5mask-" + this.instanceId);
-                    };
+                            jQuery(window).unbind("resize.ax5mask-" + this.instanceId);
+                        };
 
-                    if (_delay) {
-                        setTimeout(function () {
-                            _close.call(this);
-                        }.bind(this), _delay);
-                    } else {
-                        _close.call(this);
-                    }
+                        if (_delay) {
+                            setTimeout(function () {
+                                _close.call(this);
+                            }.bind(_this), _delay);
+                        } else {
+                            _close.call(_this);
+                        }
+                    })();
                 }
                 return this;
             };
-            //== class body end
+
+            /**
+             * @method ax5mask.fadeOut
+             * @returns {ax5mask}
+             */
+            this.fadeOut = function () {
+                var _this2 = this;
+
+                if (this.$mask) {
+                    (function () {
+                        var _close = function _close() {
+                            this.status = "off";
+                            this.$mask.remove();
+                            this.$target.removeClass("ax-masking");
+
+                            onStateChanged.call(this, null, {
+                                self: this,
+                                state: "close"
+                            });
+
+                            jQuery(window).unbind("resize.ax5mask-" + this.instanceId);
+                        };
+
+                        _this2.$mask.addClass("fade-out");
+                        setTimeout(function () {
+                            _close.call(this);
+                        }.bind(_this2), cfg.animateTime);
+                    })();
+                }
+                return this;
+            };
 
             /**
              * @method ax5mask.align

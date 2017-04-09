@@ -23,7 +23,7 @@ data-ax5autocomplete-display="{{id}}" data-ax5autocomplete-instance="{{instanceI
         <div data-ax5autocomplete-display="label-holder"> 
         <a {{^tabIndex}}{{/tabIndex}}{{#tabIndex}}tabindex="{{tabIndex}}" {{/tabIndex}}
         data-ax5autocomplete-display="label"
-        spellcheck="false"><input type="text"data-ax5autocomplete-display="input" style="border:0px none;background: transparent;" /></a>
+        spellcheck="false"><input type="text"data-ax5autocomplete-display="input" style="border:0px none;" /></a>
         </div>
         <div data-ax5autocomplete-display="addon"> 
             {{#multiple}}{{#reset}}
@@ -85,7 +85,11 @@ data-ax5autocomplete-display="{{id}}" data-ax5autocomplete-instance="{{instanceI
     };
 
     var label = function (columnKeys) {
-        return `{{#selected}}<div tabindex="-1" data-ax5autocomplete-selected-label="{{@i}}" data-ax5autocomplete-selected-text="{{text}}"><div data-ax5autocomplete-remove="true" data-ax5autocomplete-remove-index="{{@i}}">{{{removeIcon}}}</div><span>{{text}}</span></div>{{/selected}}`;
+        return `{{#selected}}
+<div tabindex="-1" data-ax5autocomplete-selected-label="{{@i}}" data-ax5autocomplete-selected-text="{{text}}">
+<div data-ax5autocomplete-remove="true" data-ax5autocomplete-remove-index="{{@i}}">{{{removeIcon}}}</div>
+<span>{{${columnKeys.optionText}}}</span>
+</div>{{/selected}}`;
     };
 
     AUTOCOMPLETE.tmpl = {

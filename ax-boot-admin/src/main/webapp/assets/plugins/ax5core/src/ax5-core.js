@@ -2,9 +2,9 @@
     'use strict';
 
     // root of function
-    var root = this, win = this;
-    var doc = (win) ? win.document : null, docElem = (win) ? win.document.documentElement : null;
-    var reIsJson = /^(["'](\\.|[^"\\\n\r])*?["']|[,:{}\[\]0-9.\-+Eaeflnr-u \n\r\t])+?$/,
+    let root = this, win = this,
+        doc = (win) ? win.document : null, docElem = (win) ? win.document.documentElement : null,
+        reIsJson = /^(["'](\\.|[^"\\\n\r])*?["']|[,:{}\[\]0-9.\-+Eaeflnr-u \n\r\t])+?$/,
         reMs = /^-ms-/,
         reSnakeCase = /[\-_]([\da-z])/gi,
         reCamelCase = /([A-Z])/g,
@@ -29,8 +29,8 @@
      * @method ax5.getGuid
      * @returns {Number} guid
      */
-    ax5.getGuid = function () {
-        return ax5.guid++;
+    ax5.getGuid = () => {
+        return ax5.guid++
     };
 
     /**
@@ -42,13 +42,13 @@
          * ax5 version
          * @member {String} ax5.info.version
          */
-        var version = "${VERSION}";
+        const version = "${VERSION}";
 
         /**
          * ax5 library path
          * @member {String} ax5.info.baseUrl
          */
-        var baseUrl = "";
+        const baseUrl = "";
 
         /**
          * ax5 에러 출력메세지 사용자 재 정의
@@ -60,7 +60,7 @@
 		 * }
          * ```
          */
-        var onerror = function () {
+        let onerror = () => {
             console.error(U.toArray(arguments).join(":"));
         };
 
@@ -76,7 +76,7 @@
 		 * }
          * ```
          */
-        var eventKeys = {
+        const eventKeys = {
             BACKSPACE: 8, TAB: 9,
             RETURN: 13, ESC: 27, LEFT: 37, UP: 38, RIGHT: 39, DOWN: 40, DELETE: 46,
             HOME: 36, END: 35, PAGEUP: 33, PAGEDOWN: 34, INSERT: 45, SPACE: 32
@@ -96,7 +96,7 @@
          * console.log( ax5.info.weekNames[(new Date()).getDay()].label )
          * ```
          */
-        var weekNames = [
+        let weekNames = [
             {label: "SUN"},
             {label: "MON"},
             {label: "TUE"},
@@ -115,7 +115,7 @@
          * //Object {name: "chrome", version: "39.0.2171.71", mobile: false}
          * ```
          */
-        var browser = (function (ua, mobile, browserName, match, browser, browserVersion) {
+        let browser = (function (ua, mobile, browserName, match, browser, browserVersion) {
             if (!win || !win.navigator) return {};
 
             ua = navigator.userAgent.toLowerCase(), mobile = (ua.search(/mobile/g) != -1), browserName, match, browser, browserVersion;
@@ -151,13 +151,13 @@
          * 브라우저 여부
          * @member {Boolean} ax5.info.isBrowser
          */
-        var isBrowser = !!(typeof window !== 'undefined' && typeof navigator !== 'undefined' && win.document);
+        let isBrowser = !!(typeof window !== 'undefined' && typeof navigator !== 'undefined' && win.document);
 
         /**
          * 브라우저에 따른 마우스 휠 이벤트이름
          * @member {Object} ax5.info.wheelEnm
          */
-        var wheelEnm = (win && (/Firefox/i.test(navigator.userAgent)) ? "DOMMouseScroll" : "mousewheel");
+        let wheelEnm = (win && (/Firefox/i.test(navigator.userAgent)) ? "DOMMouseScroll" : "mousewheel");
 
         /**
          * 첫번째 자리수 동사 - (필요한것이 없을때 : 4, 실행오류 : 5)
@@ -165,7 +165,7 @@
          * 세번째 자리수 옵션
          * @member {Object} ax5.info.errorMsg
          */
-        var errorMsg = {};
+        let errorMsg = {};
 
         /**
          * 현재 페이지의 Url 정보를 리턴합니다.
@@ -248,7 +248,9 @@
          * ```
          * var chkFlag = ax5.info.supportTouch;
          */
-        var supportTouch = (win) ? (('ontouchstart' in win) || (navigator.maxTouchPoints > 0) || (navigator.msMaxTouchPoints > 0)) : false;
+        let supportTouch = (win) ? (('ontouchstart' in win) || (navigator.maxTouchPoints > 0) || (navigator.msMaxTouchPoints > 0)) : false;
+
+        let supportFileApi = (win) ? ( win.FileReader && win.File && win.FileList && win.Blob ) : false;
 
         return {
             errorMsg: errorMsg,
@@ -260,6 +262,7 @@
             browser: browser,
             isBrowser: isBrowser,
             supportTouch: supportTouch,
+            supportFileApi: supportFileApi,
             wheelEnm: wheelEnm,
             urlUtil: urlUtil,
             getError: getError
@@ -271,7 +274,7 @@
      * @namespace ax5.util
      */
     ax5['util'] = U = (function () {
-        var _toString = Object.prototype.toString;
+        let _toString = Object.prototype.toString;
 
         /**
          * Object나 Array의 아이템으로 사용자 함수를 호출합니다.
@@ -291,7 +294,7 @@
          */
         function each(O, _fn) {
             if (isNothing(O)) return [];
-            var key, i = 0, l = O.length,
+            let key, i = 0, l = O.length,
                 isObj = l === undefined || typeof O === "function";
             if (isObj) {
                 for (key in O) {
@@ -339,7 +342,7 @@
          */
         function map(O, _fn) {
             if (isNothing(O)) return [];
-            var key, i = 0, l = O.length, results = [], fnResult;
+            let key, i = 0, l = O.length, results = [], fnResult;
             if (isObject(O)) {
                 for (key in O) {
                     if (typeof O[key] != "undefined") {
@@ -396,9 +399,8 @@
          */
         function search(O, _fn) {
             if (isNothing(O)) return -1;
-            var key, i = 0, l = O.length;
             if (isObject(O)) {
-                for (key in O) {
+                for (let key in O) {
                     if (typeof O[key] != "undefined" && isFunction(_fn) && _fn.call(O[key], key, O[key])) {
                         return key;
                         break;
@@ -410,7 +412,7 @@
                 }
             }
             else {
-                for (; i < l;) {
+                for (let i = 0, l = O.length; i < l; i++) {
                     if (typeof O[i] != "undefined" && isFunction(_fn) && _fn.call(O[i], i, O[i])) {
                         return i;
                         break;
@@ -419,7 +421,6 @@
                         return i;
                         break;
                     }
-                    i++;
                 }
             }
             return -1;
@@ -453,7 +454,7 @@
          * ```
          */
         function sum(O, defaultValue, _fn) {
-            var i, l, tokenValue;
+            let i, l, tokenValue;
             if (isFunction(defaultValue) && typeof _fn === "undefined") {
                 _fn = defaultValue;
                 defaultValue = 0;
@@ -509,7 +510,7 @@
          * ```
          */
         function avg(O, defaultValue, _fn) {
-            var i, l, tokenValue;
+            let i, l, tokenValue;
             if (isFunction(defaultValue) && typeof _fn === "undefined") {
                 _fn = defaultValue;
                 defaultValue = 0;
@@ -1376,8 +1377,9 @@
         function localDate(yy, mm, dd, hh, mi, ss) {
             var utcD, localD;
             localD = new Date();
-            if (typeof hh === "undefined") hh = 23;
-            if (typeof mi === "undefined") mi = 59;
+            if (mm < 0) mm = 0;
+            if (typeof hh === "undefined") hh = 12;
+            if (typeof mi === "undefined") mi = 0;
             utcD = new Date(Date.UTC(yy, mm, dd || 1, hh, mi, ss || 0));
 
             if (mm == 0 && dd == 1 && utcD.getUTCHours() + (utcD.getTimezoneOffset() / 60) < 0) {
@@ -1403,12 +1405,11 @@
          * ```
          */
         function date(d, cond) {
-            var yy, mm, dd, hh, mi,
+            let yy, mm, dd, hh, mi,
                 aDateTime, aTimes, aTime, aDate,
-                utcD, localD,
-                va;
-            var ISO_8601 = /^\d{4}(-\d\d(-\d\d(T\d\d:\d\d(:\d\d)?(\.\d+)?(([+-]\d\d:\d\d)|Z)?)?)?)?$/i;
-            var ISO_8601_FULL = /^\d{4}-\d\d-\d\dT\d\d:\d\d:\d\d(\.\d+)?(([+-]\d\d:\d\d)|Z)?$/i;
+                va,
+                ISO_8601 = /^\d{4}(-\d\d(-\d\d(T\d\d:\d\d(:\d\d)?(\.\d+)?(([+-]\d\d:\d\d)|Z)?)?)?)?$/i,
+                ISO_8601_FULL = /^\d{4}-\d\d-\d\dT\d\d:\d\d:\d\d(\.\d+)?(([+-]\d\d:\d\d)|Z)?$/i;
 
             if (isString(d)) {
                 if (d.length == 0) {
@@ -1451,16 +1452,13 @@
                     d = new Date();
                 }
             }
-
-            if (typeof cond === "undefined") {
+            if (typeof cond === "undefined" || typeof d === "undefined") {
                 return d;
             }
             else {
-
                 if ("add" in cond) {
                     d = (function (_d, opts) {
-                        var
-                            yy, mm, dd, mxdd,
+                        let yy, mm, dd, mxdd,
                             DyMilli = ((1000 * 60) * 60) * 24;
 
                         if (typeof opts["d"] !== "undefined") {
@@ -1482,11 +1480,9 @@
                         return _d;
                     })(new Date(d), cond["add"]);
                 }
-
                 if ("set" in cond) {
                     d = (function (_d, opts) {
-                        var
-                            yy, mm, dd,
+                        let yy, mm, dd,
                             processor = {
                                 "firstDayOfMonth": function (date) {
                                     yy = date.getFullYear();
@@ -1508,10 +1504,11 @@
                         }
                     })(new Date(d), cond["set"]);
                 }
-
                 if ("return" in cond) {
                     return (function () {
-                        var fStr = cond["return"], nY, nM, nD, nH, nMM, nS, nDW;
+
+                        let fStr = cond["return"], nY, nM, nD, nH, nMM, nS, nDW,
+                            yre, regY, mre, regM, dre, regD, hre, regH, mire, regMI, sre, regS, dwre, regDW;
 
                         nY = d.getUTCFullYear();
                         nM = setDigit(d.getMonth() + 1, 2);
@@ -1521,27 +1518,27 @@
                         nS = setDigit(d.getSeconds(), 2);
                         nDW = d.getDay();
 
-                        var yre = /[^y]*(yyyy)[^y]*/gi;
+                        yre = /[^y]*(yyyy)[^y]*/gi;
                         yre.exec(fStr);
-                        var regY = RegExp.$1;
-                        var mre = /[^m]*(MM)[^m]*/g;
+                        regY = RegExp.$1;
+                        mre = /[^m]*(MM)[^m]*/g;
                         mre.exec(fStr);
-                        var regM = RegExp.$1;
-                        var dre = /[^d]*(dd)[^d]*/gi;
+                        regM = RegExp.$1;
+                        dre = /[^d]*(dd)[^d]*/gi;
                         dre.exec(fStr);
-                        var regD = RegExp.$1;
-                        var hre = /[^h]*(hh)[^h]*/gi;
+                        regD = RegExp.$1;
+                        hre = /[^h]*(hh)[^h]*/gi;
                         hre.exec(fStr);
-                        var regH = RegExp.$1;
-                        var mire = /[^m]*(mm)[^i]*/g;
+                        regH = RegExp.$1;
+                        mire = /[^m]*(mm)[^i]*/g;
                         mire.exec(fStr);
-                        var regMI = RegExp.$1;
-                        var sre = /[^s]*(ss)[^s]*/gi;
+                        regMI = RegExp.$1;
+                        sre = /[^s]*(ss)[^s]*/gi;
                         sre.exec(fStr);
-                        var regS = RegExp.$1;
-                        var dwre = /[^d]*(dw)[^w]*/gi;
+                        regS = RegExp.$1;
+                        dwre = /[^d]*(dw)[^w]*/gi;
                         dwre.exec(fStr);
-                        var regDW = RegExp.$1;
+                        regDW = RegExp.$1;
 
                         if (regY === "yyyy") {
                             fStr = fStr.replace(regY, right(nY, regY.length));
@@ -2164,7 +2161,7 @@
                  */
                 this.format = function () {
                     var args = [];
-                    for(var i=0,l=arguments.length;i<l;i++){
+                    for (var i = 0, l = arguments.length; i < l; i++) {
                         args = args.concat(arguments[i]);
                     }
                     return this.value.replace(/{(\d+)}/g, function (match, number) {
@@ -2175,28 +2172,28 @@
                  * @method ax5.util.string.escape
                  * @returns {*}
                  */
-                this.escape = function(){
+                this.escape = function () {
                     return escapeHtml(this.value);
                 };
                 /**
                  * @method ax5.util.string.unescape
                  * @returns {*}
                  */
-                this.unescape = function(){
+                this.unescape = function () {
                     return unescapeHtml(this.value);
                 };
                 /**
                  * @method ax5.util.string.encode
                  * @returns {*}
                  */
-                this.encode = function(){
+                this.encode = function () {
                     return encode(this.value);
                 };
                 /**
                  * @method ax5.util.string.decode
                  * @returns {*}
                  */
-                this.decode = function(){
+                this.decode = function () {
                     return decode(this.value);
                 };
                 /**
@@ -2204,7 +2201,7 @@
                  * @param {String|Number} pos - 찾을 문자열 또는 포지션
                  * @returns {*}
                  */
-                this.left = function(_pos){
+                this.left = function (_pos) {
                     return left(this.value, _pos);
                 };
                 /**
@@ -2212,24 +2209,25 @@
                  * @param {String|Number} pos - 찾을 문자열 또는 포지션
                  * @returns {*}
                  */
-                this.right = function(_pos){
+                this.right = function (_pos) {
                     return right(this.value, _pos);
                 };
                 /**
                  * @method ax5.util.string.camelCase
                  * @returns {*}
                  */
-                this.camelCase = function(){
+                this.camelCase = function () {
                     return camelCase(this.value);
                 };
                 /**
                  * @method ax5.util.string.snakeCase
                  * @returns {*}
                  */
-                this.snakeCase = function(){
+                this.snakeCase = function () {
                     return snakeCase(this.value);
                 };
             }
+
             return new ax5string(_string);
         }
 

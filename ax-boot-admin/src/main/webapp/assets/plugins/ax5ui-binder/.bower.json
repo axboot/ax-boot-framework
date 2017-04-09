@@ -1,0 +1,35 @@
+{
+  "name": "ax5ui-binder",
+  "version": "1.3.97",
+  "authors": [
+    "ThomasJ <tom@axisj.com>"
+  ],
+  "description": "Simple 2way binder plugin that works with Bootstrap & jQuery",
+  "main": "dist/ax5binder.js",
+  "keywords": [
+    "bootstrap",
+    "jquery",
+    "ax5ui",
+    "plugin",
+    "bootstrap jQuery plugins",
+    "binder",
+    "ax5ui-binder",
+    "javascript ui"
+  ],
+  "dependencies": {
+    "jquery": "^1.11.0",
+    "ax5core": ">=1.3.0",
+    "bootstrap": "^3.3.6"
+  },
+  "license": "MIT",
+  "homepage": "ax5.io",
+  "_release": "1.3.97",
+  "_resolution": {
+    "type": "version",
+    "tag": "1.3.97",
+    "commit": "a64378502bd577d789ea2dfaa977a03875374006"
+  },
+  "_source": "https://github.com/ax5ui/ax5ui-binder.git",
+  "_target": ">=1.3.0",
+  "_originalSource": "ax5ui-binder"
+}

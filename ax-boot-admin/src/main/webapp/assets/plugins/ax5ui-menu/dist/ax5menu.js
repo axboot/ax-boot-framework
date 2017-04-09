@@ -8,7 +8,7 @@
 
     UI.addClass({
         className: "menu",
-        version: "1.3.44"
+        version: "1.4.8"
     }, function () {
         /**
          * @class ax5.ui.menu
@@ -135,7 +135,7 @@
          */
         var ax5menu = function ax5menu() {
             var self = this,
-                cfg;
+                cfg = void 0;
 
             this.instanceId = ax5.getGuid();
             this.config = {
@@ -202,8 +202,8 @@
             },
                 popup = function popup(opt, items, depth, path) {
                 var data = opt,
-                    activeMenu,
-                    removed;
+                    activeMenu = void 0,
+                    removed = void 0;
 
                 data.theme = opt.theme || cfg.theme;
                 data.cfg = {
@@ -252,12 +252,12 @@
                     var depth = this.getAttribute("data-menu-item-depth"),
                         index = this.getAttribute("data-menu-item-index"),
                         path = this.getAttribute("data-menu-item-path"),
-                        $this,
-                        offset,
-                        scrollTop,
-                        childOpt,
-                        _items,
-                        _activeMenu;
+                        $this = void 0,
+                        offset = void 0,
+                        scrollTop = void 0,
+                        childOpt = void 0,
+                        _items = void 0,
+                        _activeMenu = void 0;
 
                     if (depth != null && typeof depth != "undefined") {
                         _items = self.queue[depth].data[cfg.columnKeys.items][index][cfg.columnKeys.items];
@@ -310,7 +310,7 @@
                     var depth = this.getAttribute("data-menu-item-depth"),
                         index = this.getAttribute("data-menu-item-index"),
                         path = this.getAttribute("data-menu-item-path"),
-                        _items;
+                        _items = void 0;
 
                     _items = self.queue[depth].data[cfg.columnKeys.items][index][cfg.columnKeys.items];
                     if (_items && _items.length > 0) {} else {
@@ -362,7 +362,7 @@
                 if (target) {
                     item = function (path) {
                         if (!path) return false;
-                        var item;
+                        var item = void 0;
                         try {
                             item = Function("", "return this.config.items[" + path.substring(5).replace(/\./g, '].' + cfg.columnKeys.items + '[') + "];").call(self);
                         } catch (e) {
@@ -423,7 +423,6 @@
                 return this;
             },
                 align = function align(activeMenu, data) {
-                //console.log(data['@parent']);
                 var $window = jQuery(window),
                     $document = jQuery(document),
                     wh = cfg.position == "fixed" ? $window.height() : $document.height(),
@@ -503,6 +502,9 @@
                             theme: cfg.theme
                         };
 
+                        e.left -= 5;
+                        e.top -= 5;
+
                         if (cfg.offset) {
                             if (cfg.offset.left) e.left += cfg.offset.left;
                             if (cfg.offset.top) e.top += cfg.offset.top;
@@ -538,8 +540,8 @@
                             //opt = null;
                         }
                     }
-                };
-                var updateTheme = function updateTheme(theme) {
+                },
+                    updateTheme = function updateTheme(theme) {
                     if (theme) cfg.theme = theme;
                 };
 
@@ -549,13 +551,15 @@
                     opt = getOption[typeof e.clientX == "undefined" ? "object" : "event"].call(this, e, opt);
                     updateTheme(opt.theme);
 
-                    var items = [].concat(cfg.items);
+                    var items = [].concat(cfg.items),
+                        _filteringItem = void 0;
+
                     if (opt.filter) {
-                        var filteringItem = function filteringItem(_items) {
+                        _filteringItem = function filteringItem(_items) {
                             var arr = [];
                             _items.forEach(function (n) {
                                 if (n.items && n.items.length > 0) {
-                                    n.items = filteringItem(n.items);
+                                    n.items = _filteringItem(n.items);
                                 }
                                 if (opt.filter.call(n)) {
                                     arr.push(n);
@@ -563,16 +567,19 @@
                             });
                             return arr;
                         };
-                        items = filteringItem(items);
+                        items = _filteringItem(items);
                     }
 
                     if (items.length) {
                         popup.call(this, opt, items, 0); // 0 is seq of queue
-                        appEventAttach.call(this, true); // 이벤트 연결
+
+                        if (this.popupEventAttachTimer) clearTimeout(this.popupEventAttachTimer);
+                        this.popupEventAttachTimer = setTimeout(function () {
+                            appEventAttach.call(this, true); // 이벤트 연결
+                        }.bind(this), 500);
                     }
 
                     e = null;
-                    //opt = null;
                     return this;
                 };
             }();

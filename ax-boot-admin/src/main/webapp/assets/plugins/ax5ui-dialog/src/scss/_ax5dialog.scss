@@ -1,123 +1,125 @@
 @mixin ax-dialog() {
-	box-sizing: $ax5dialog-box-model;
-	background-color: $ax5dialog-bg;
-	border: $ax5dialog-inner-border;
-	border-radius: $ax5dialog-border-radius;
-	box-shadow: $ax5dialog-box-shaodw;
+    box-sizing: $ax5dialog-box-model;
+    background-color: $ax5dialog-bg;
+    border: $ax5dialog-inner-border;
+    border-radius: $ax5dialog-border-radius;
+    box-shadow: $ax5dialog-box-shaodw;
 
-	z-index: $ax5dialog-z-index;
-	position: fixed;
-	left: 0px;
-	top: 0px;
-	overflow: hidden;
+    z-index: $ax5dialog-z-index;
+    position: fixed;
+    left: 0px;
+    top: 0px;
+    overflow: hidden;
 }
 
 @mixin ax-dialog-section() {
-	.ax-dialog-header {
-		//font-size: 1em;
-		font-weight: 600;
-		padding: $ax5dialog-header-padding;
-		border-bottom: 1px solid transparent;
-		.badge {
-			font-size: 0.8em;
-			color: $ax5dialog-default-header-bg;
-			background-color: $ax5dialog-default-text;
-		}
-	}
-	.ax-dialog-body {
-		padding: $ax5dialog-body-padding;
-		text-align: center;
-		.ax-dialog-msg {
-			padding-top: $ax5dialog-body-padding;
-			padding-bottom: $ax5dialog-body-padding;
-		}
-		.ax-dialog-prompt {
-			text-align: left;
-			padding-bottom: $ax5dialog-body-padding/2;
-		}
-		.ax-dialog-buttons {
-			margin-top: $ax5dialog-body-padding;
-			button {
-				&:not(:last-child) {
-					margin-right: 3px;
-				}
-			}
-		}
-	}
+    .ax-dialog-header {
+        //font-size: 1em;
+        font-weight: 600;
+        padding: $ax5dialog-header-padding;
+        border-bottom: 1px solid transparent;
+        .badge {
+            font-size: 0.8em;
+            color: $ax5dialog-default-header-bg;
+            background-color: $ax5dialog-default-text;
+        }
+    }
+    .ax-dialog-body {
+        padding: $ax5dialog-body-padding;
+        text-align: center;
+        .ax-dialog-msg {
+            padding-top: $ax5dialog-body-padding;
+            padding-bottom: $ax5dialog-body-padding;
+        }
+        .ax-dialog-prompt {
+            text-align: left;
+            padding-bottom: $ax5dialog-body-padding/2;
+        }
+        .ax-dialog-buttons {
+            margin-top: $ax5dialog-body-padding;
+            button {
+                &:not(:last-child) {
+                    margin-right: 3px;
+                }
+            }
+        }
+        [data-dialog-els="additional-content"] {
+            margin-top: $ax5dialog-body-padding;
+        }
+    }
 }
 
 @mixin dialog-variant($text-color, $border, $header-bg-color) {
 
-	border: $ax5dialog-inner-border;
+    border: $ax5dialog-inner-border;
 
-	.ax-dialog-header {
-		color: $text-color;
-		background: $header-bg-color;
-		.badge {
-			color: $header-bg-color;
-			background-color: $text-color;
-		}
-	}
-	.ax-dialog-body {
+    .ax-dialog-header {
+        color: $text-color;
+        background: $header-bg-color;
+        .badge {
+            color: $header-bg-color;
+            background-color: $text-color;
+        }
+    }
+    .ax-dialog-body {
 
-	}
+    }
 }
 
 @include keyframes(ax-dialog) {
-	0% {
-		opacity: 0.0;
-		@include transform(scale(1));
-	}
-	1% {
-		opacity: 0.0;
-		@include transform(scale(0.3));
-	}
-	100% {
-		opacity: 1.0;
-		@include transform(scale(1));
-	}
+    0% {
+        opacity: 0.0;
+        @include transform(scale(1));
+    }
+    1% {
+        opacity: 0.0;
+        @include transform(scale(0.3));
+    }
+    100% {
+        opacity: 1.0;
+        @include transform(scale(1));
+    }
 }
 
-
 @include keyframes(ax-dialog-destroy) {
-	from {
-		@include transform(scale(1));
-		opacity: 1.0;
-	}
-	to {
-		@include transform(scale(0.5));
-		opacity: 0.0;
-	}
+    from {
+        @include transform(scale(1));
+        opacity: 1.0;
+    }
+    to {
+        @include transform(scale(0.5));
+        opacity: 0.0;
+    }
 }
 
 // mixins --------------------------------------------- end
 
 .ax5-ui-dialog {
-	@include animation(ax-dialog $ax5dialog-easing-time-open $ease-in-out-cubic);
-	@include transform(translateZ(0));
+    @include animation(ax-dialog $ax5dialog-easing-time-open $ease-in-out-cubic);
+    @include transform(translateZ(0));
 
-	@include ax-dialog();
-	@include ax-dialog-section();
+    @include ax-dialog();
+    @include ax-dialog-section();
 
-	@include dialog-variant($ax5dialog-default-text, $ax5dialog-default-border, $ax5dialog-default-header-bg);
+    @include dialog-variant($ax5dialog-default-text, $ax5dialog-default-border, $ax5dialog-default-header-bg);
 
-	&.primary {
-		@include dialog-variant($ax5dialog-primary-text, $ax5dialog-primary-border, $ax5dialog-primary-header-bg);
-	}
-	&.success {
-		@include dialog-variant($ax5dialog-success-text, $ax5dialog-success-border, $ax5dialog-success-header-bg);
-	}
-	&.info {
-		@include dialog-variant($ax5dialog-info-text, $ax5dialog-info-border, $ax5dialog-info-header-bg);
-	}
-	&.warning {
-		@include dialog-variant($ax5dialog-warning-text, $ax5dialog-warning-border, $ax5dialog-warning-header-bg);
-	}
-	&.danger {
-		@include dialog-variant($ax5dialog-danger-text, $ax5dialog-danger-border, $ax5dialog-danger-header-bg);
-	}
+    &.primary {
+        @include dialog-variant($ax5dialog-primary-text, $ax5dialog-primary-border, $ax5dialog-primary-header-bg);
+    }
+    &.success {
+        @include dialog-variant($ax5dialog-success-text, $ax5dialog-success-border, $ax5dialog-success-header-bg);
+    }
+    &.info {
+        @include dialog-variant($ax5dialog-info-text, $ax5dialog-info-border, $ax5dialog-info-header-bg);
+    }
+    &.warning {
+        @include dialog-variant($ax5dialog-warning-text, $ax5dialog-warning-border, $ax5dialog-warning-header-bg);
+    }
+    &.danger {
+        @include dialog-variant($ax5dialog-danger-text, $ax5dialog-danger-border, $ax5dialog-danger-header-bg);
+    }
 
-	&.destroy {
-		@include animation(ax-dialog-destroy $ax5dialog-easing-time-close $ease-in-out-cubic forwards);
-	}
+    &.destroy {
+        @include animation(ax-dialog-destroy $ax5dialog-easing-time-close $ease-in-out-cubic forwards);
+    }
 }

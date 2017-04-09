@@ -10,7 +10,7 @@
     position: fixed;
     left: 0px;
     top: 0px;
-    overflow: hidden;
+    //overflow: hidden;
     box-sizing: content-box;
 }
 
@@ -21,6 +21,9 @@
         font-weight: 600;
         padding: $ax5modal-header-padding;
         border-bottom: 1px solid transparent;
+        border-top-left-radius: $ax5modal-border-radius;
+        border-top-right-radius: $ax5modal-border-radius;
+
         cursor: move;
         .ax-modal-header-addon{
             position: absolute;
@@ -39,10 +42,15 @@
         }
     }
     .ax-modal-body {
+        border-bottom-left-radius: $ax5modal-border-radius;
+        border-bottom-right-radius: $ax5modal-border-radius;
+
         padding: $ax5modal-body-padding;
         text-align: center;
         @include flex(1);
         position: relative;
+        overflow: hidden;
+
         iframe {
             border: 0 none;
         }
@@ -229,7 +237,7 @@
 // mixins --------------------------------------------- end
 
 .ax5modal {
-    @include animation(ax-modal $ax5modal-easing-time-open $ease-out-back forwards);
+    @include animation(ax-modal $ax5modal-easing-time-open $ax5modal-easing-open forwards);
     @include transform(translateZ(0px));
     //@include transition(all $ax5modal-easing-time-open linear);
 
@@ -254,7 +262,7 @@
     }
 
     &.destroy {
-        @include animation(ax-modal-destroy $ax5modal-easing-time-close $ease-out-back forwards);
+        @include animation(ax-modal-destroy $ax5modal-easing-time-close $ax5modal-easing-close forwards);
     }
 
     &.fullscreen {
@@ -276,6 +284,136 @@
             opacity: 0.5;
         }
     }
+    [data-ax5modal-resizer]{
+        position: absolute;
+        display: block;
+        &:before{
+            position: absolute;
+            content: ' ';
+            display: block;
+            width: auto;
+            height: auto;
+            left: auto;
+            top: auto;
+            right: auto;
+            bottom: auto;
+            //background: #ff3300;
+            //opacity: 0.3;
+        }
+
+        &[data-ax5modal-resizer="top"]{
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 0;
+
+            &:before{
+                width: 100%;
+                height: 8px;
+                left: 0;
+                top: -4px;
+                cursor: row-resize;
+            }
+        }
+        &[data-ax5modal-resizer="bottom"]{
+            left: 0;
+            bottom: 0;
+            width: 100%;
+            height: 0;
+
+            &:before{
+                width: 100%;
+                height: 8px;
+                left: 0;
+                top: -4px;
+                cursor: row-resize;
+            }
+        }
+        &[data-ax5modal-resizer="left"]{
+            left: 0;
+            top: 0;
+            width: 0;
+            height: 100%;
+
+            &:before{
+                width: 8px;
+                height: 100%;
+                left: -4px;
+                top: 0;
+                cursor: col-resize;
+            }
+        }
+        &[data-ax5modal-resizer="right"]{
+            right: 0;
+            top: 0;
+            width: 0;
+            height: 100%;
+
+            &:before{
+                width: 8px;
+                height: 100%;
+                left: -4px;
+                top: 0;
+                cursor: col-resize;
+            }
+        }
+        &[data-ax5modal-resizer="top-left"]{
+            left: 0;
+            top: 0;
+            width: 0;
+            height: 0;
+
+            &:before{
+                width: 8px;
+                height: 8px;
+                left: -4px;
+                top: -4px;
+                cursor: nwse-resize;
+            }
+        }
+        &[data-ax5modal-resizer="top-right"]{
+            right: 0;
+            top: 0;
+            width: 0;
+            height: 0;
+
+            &:before{
+                width: 8px;
+                height: 8px;
+                left: -4px;
+                top: -4px;
+                cursor: nesw-resize;
+            }
+        }
+        &[data-ax5modal-resizer="bottom-left"]{
+            left: 0;
+            bottom: 0;
+            width: 0;
+            height: 0;
+
+            &:before{
+                width: 8px;
+                height: 8px;
+                left: -4px;
+                top: -4px;
+                cursor: nesw-resize;
+            }
+        }
+        &[data-ax5modal-resizer="bottom-right"]{
+            right: 0;
+            bottom: 0;
+            width: 0;
+            height: 0;
+
+            &:before{
+                width: 8px;
+                height: 8px;
+                left: -4px;
+                top: -4px;
+                cursor: nwse-resize;
+            }
+        }
+    }
 }
 
 // resizer가 활성화 되면 리사이저 백그라운드도 함께 활성화 됩니다. 백그라운드는 페이지 전체를 투명 레이어로 덮어 리사이저가 자유롭게 활동 하도록 도와 줍니다.
@@ -288,6 +426,7 @@
     background: transparent;
     z-index: $ax5modal-z-index;
     //opacity: 0.1;
+    cursor: move;
 }
 .ax5modal-resizer{
     position: absolute;

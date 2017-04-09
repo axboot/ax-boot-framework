@@ -1,0 +1,310 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, user-scalable=no">
+
+    <title>GRID</title>
+
+    <link rel="stylesheet" type="text/css" href="bower_components/bootstrap/dist/css/bootstrap.min.css"/>
+    <link rel="stylesheet" type="text/css" href="../../ax5ui-mask/dist/ax5mask.css"/>
+    <link rel="stylesheet" type="text/css" href="../../ax5ui-calendar/dist/ax5calendar.css"/>
+    <link rel="stylesheet" type="text/css" href="../../ax5ui-picker/dist/ax5picker.css"/>
+    <link rel="stylesheet" type="text/css" href="../../ax5ui-select/dist/ax5select.css"/>
+    <link rel="stylesheet" href="bower_components/font-awesome/css/font-awesome.min.css">
+    <link rel="stylesheet" type="text/css" href="../dist/ax5grid.css"/>
+
+    <script src="bower_components/jquery/dist/jquery.min.js"></script>
+    <script src="../../ax5core/dist/ax5core.js"></script>
+    <script src="../../ax5ui-formatter/dist/ax5formatter.min.js"></script>
+    <script src="../../ax5ui-calendar/dist/ax5calendar.min.js"></script>
+    <script src="../../ax5ui-picker/dist/ax5picker.min.js"></script>
+    <script src="../../ax5ui-select/dist/ax5select.js"></script>
+    <script src="../dist/ax5grid.js"></script>
+</head>
+<body style="padding: 20px;">
+
+<div style="position: relative;height:300px;" id="grid-parent">
+    <div data-ax5grid="first-grid" data-ax5grid-config='{showLineNumber: false, showRowSelector: true}' style="height: 100%;"></div>
+</div>
+
+<div style="padding: 5px;">
+    <h3>height</h3>
+    <button class="btn btn-default" data-set-height="300">300px</button>
+    <button class="btn btn-default" data-set-height="400">400px</button>
+    <button class="btn btn-default" data-set-height="800">800px</button>
+    <button class="btn btn-default" data-set-height="100%">100%</button>
+</div>
+<div style="padding: 5px;">
+    <h3>row</h3>
+    <button class="btn btn-default" data-grid-control="row-add">add</button>
+    <button class="btn btn-default" data-grid-control="row-add2">add(no sort)</button>
+    <button class="btn btn-default" data-grid-control="row-remove">remove</button>
+    <button class="btn btn-default" data-grid-control="row-update">update</button>
+    <button class="btn btn-default" data-grid-control="row-delete">delete</button>
+</div>
+<div style="padding: 5px;">
+    <h3>column</h3>
+    <button class="btn btn-default" data-grid-control="column-add">add</button>
+    <button class="btn btn-default" data-grid-control="column-remove">remove</button>
+    <button class="btn btn-default" data-grid-control="column-update">update</button>
+</div>
+<div style="padding: 5px;">
+    <h3>etc.</h3>
+    <button class="btn btn-default" data-grid-control="width-resize">width resize</button>
+    <button class="btn btn-default" data-grid-control="delete-all">delete all</button>
+</div>
+<div style="padding: 5px;">
+    <button class="btn btn-default" data-grid-control="excel">Excel</button>
+</div>
+<div style="padding: 5px;">
+    <button class="btn btn-default" data-grid-control="focus-up">focus-up</button>
+    <button class="btn btn-default" data-grid-control="focus-down">focus-down</button>
+    <button class="btn btn-default" data-grid-control="focus-home">focus-home</button>
+    <button class="btn btn-default" data-grid-control="focus-end">focus-end</button>
+</div>
+
+
+<div style="height: 10px;"></div>
+
+<div data-ax5grid="second-grid" data-ax5grid-config='{showLineNumber: false, showRowSelector: true}' style="height: 200px;"></div>
+
+<script>
+    var firstGrid = new ax5.ui.grid();
+    var secondGrid = new ax5.ui.grid();
+
+    ax5.ui.grid.formatter["myType"] = function () {
+        return "myType" + (this.value || "");
+    };
+    ax5.ui.grid.formatter["capital"] = function () {
+        return ('' + this.value).toUpperCase();
+    };
+
+    ax5.ui.grid.collector["myType"] = function () {
+        return "myType" + (this.value || "");
+    };
+
+    var sampleData = [
+        //{companyJson: {"대표자명": "----"}, a: "A", b: "A01", price: 1000, amount: 12, cost: 12000, saleDt: "2016-08-29", customer: "장기영", saleType: "A", __disable_selection__: true},
+        {companyJson: {"대표자명": "----"}, a: "A", b: "A01", price: 1000, amount: 12, cost: 12000, saleDt: "2016-08-29", customer: "장기영", saleType: "A"},
+        {companyJson: {"대표자명": "abcd"}, a: "A", b: "B01", price: 1100, amount: 11, cost: 12100, saleDt: "2016-08-28", customer: "장서우", saleType: "B"},
+        {companyJson: {"대표자명": "abcd"}, a: "A", b: "C01", price: 1200, amount: 10, cost: 12000, saleDt: "2016-08-27", customer: "이영희", saleType: "A"},
+        {companyJson: {"대표자명": "위세라"}, a: "A", b: "A01", price: 1300, amount: 8, cost: 10400, saleDt: "2016-08-25", customer: "황인서", saleType: "C"},
+        {companyJson: {"대표자명": "abcd"}, a: "A", b: "B01", price: 1400, amount: 5, cost: 7000, saleDt: "2016-08-29", customer: "황세진", saleType: "D"},
+        {companyJson: {"대표자명": "----"}, a: "A", b: "A01", price: 1000, amount: 12, cost: 12000, saleDt: "2016-08-29", customer: "장기영", saleType: "A"},
+        {companyJson: {"대표자명": "abcd"}, a: "A", b: "B01", price: 1100, amount: 11, cost: 12100, saleDt: "2016-08-28", customer: "장서우", saleType: "B"},
+        {companyJson: {"대표자명": "abcd"}, a: "A", b: "C01", price: 1200, amount: 10, cost: 12000, saleDt: "2016-08-27", customer: "이영희", saleType: "A"},
+        {companyJson: {"대표자명": "위세라"}, a: "A", b: "A01", price: 1300, amount: 8, cost: 10400, saleDt: "2016-08-25", customer: "황인서", saleType: "C"},
+        {companyJson: {"대표자명": "abcd"}, a: "A", b: "B01", price: 1400, amount: 5, cost: 7000, saleDt: "2016-08-29", customer: "황세진", saleType: "D"},
+        {companyJson: {"대표자명": "----"}, a: "A", b: "A01", price: 1000, amount: 12, cost: 12000, saleDt: "2016-08-29", customer: "장기영", saleType: "A"},
+        {companyJson: {"대표자명": "abcd"}, a: "A", b: "B01", price: 1100, amount: 11, cost: 12100, saleDt: "2016-08-28", customer: "장서우", saleType: "B"},
+        {companyJson: {"대표자명": "abcd"}, a: "A", b: "C01", price: 1200, amount: 10, cost: 12000, saleDt: "2016-08-27", customer: "이영희", saleType: "A"},
+        {companyJson: {"대표자명": "위세라"}, a: "A", b: "A01", price: 1300, amount: 8, cost: 10400, saleDt: "2016-08-25", customer: "황인서", saleType: "C"},
+        {companyJson: {"대표자명": "abcd"}, a: "A", b: "B01", price: 1400, amount: 5, cost: 7000, saleDt: "2016-08-29", customer: "황세진", saleType: "D"},
+        {companyJson: {"대표자명": "abcd"}, a: "A", b: "A01", price: 1500, amount: 2, cost: 3000, saleDt: "2016-08-26", customer: "이서연", saleType: "A"}
+    ];
+
+    var gridView = {
+        initView: function () {
+            firstGrid.setConfig({
+                target: $('[data-ax5grid="first-grid"]'),
+                sortable: true,
+                multiSort: true,
+                multipleSelect: false,
+
+                appendProgressIcon: '<i class="fa fa-circle-o-notch fa-spin fa-fw"></i>',
+
+                /*
+                remoteSort: function () {
+                    console.log(JSON.stringify(this.sortInfo, null, '\t'));
+                    gridView.setSortData(this.sortInfo);
+                },
+                */
+                body: {
+                    onClick: function () {
+                        this.self.select(this.dindex);
+                    },
+                    onDataChanged: function () {
+                        /*
+                        var rowNum = this.dindex;
+                        var gridData = this.list;
+
+                        // Ajax 로직 대체
+                        setTimeout(function () {
+                            gridData[rowNum].cost = gridData[rowNum].price * gridData[rowNum].amount;
+                            firstGrid.updateRow(gridData[rowNum], rowNum);
+                        }, 1000);
+                        */
+                    }
+                },
+                columns: [
+                    {key: "b", label: "필드B", align: "center"},
+                    {key: "companyJson.대표자명", label: "대표자명", width: 100, align: "center"},
+                    {key: "saleDt", label: "판매일자", width: "*", align: "center", editor: "text", formatter: function formatter() {
+                        return ax5.util.date(this.value, {"return":'yyyy/MM/dd'});
+                    }},
+                    {key: "customer", label: "고객명"},
+                    {key: "saleType", label: "판매타입"}
+                ]
+            });
+            firstGrid.setColumnSort({
+                b: {orderBy: "desc", seq: 0}
+            });
+
+            secondGrid.setConfig({
+                target: $('[data-ax5grid="second-grid"]'),
+                sortable: true,
+                multiSort: true,
+                remoteSort: function () {
+                    console.log(JSON.stringify(this.sortInfo, null, '\t'));
+                    gridView.setSortData(this.sortInfo);
+                },
+                body: {
+                    onClick: function () {
+                        this.self.select(this.dindex);
+                    },
+                    onDataChanged: function () {
+                        var rowNum = this.dindex;
+                        var gridData = this.list;
+                        console.log(rowNum);
+
+                        // Ajax 로직 대체
+                        setTimeout(function () {
+                            gridData[rowNum].cost = gridData[rowNum].price * gridData[rowNum].amount;
+                            firstGrid.updateRow(gridData[rowNum], rowNum);
+                        }, 1000);
+                    }
+                },
+                columns: [
+                    {key: "b", label: "필드B", align: "center"},
+                    {key: "saleDt", label: "판매일자", align: "center"},
+                    {key: "customer", label: "고객명"},
+                    {key: "saleType", label: "판매타입"}
+                ]
+            });
+            return this;
+        },
+        setData: function (_pageNo) {
+            /*
+             firstGrid.setData({
+             list: sampleData,
+             page: {
+             currentPage: _pageNo || 0,
+             pageSize: 50,
+             totalElements: 500,
+             totalPages: 100
+             }
+             });
+             */
+            firstGrid.setData(sampleData);
+            secondGrid.setData(sampleData);
+
+            /*
+            firstGrid.selectAll({
+                filter: function () {
+                    //console.log(this);
+                    return this.b == "A01";
+                }
+            });
+            */
+
+            return this;
+        },
+        setSortData: function (sortInfo) {
+            var sortedList = sampleData.sort(function (a, b) {
+                return a["b"] < b["b"];
+            });
+            firstGrid.setData(sortedList);
+        }
+    };
+
+    $(document.body).ready(function () {
+
+        gridView
+                .initView()
+                .setData();
+
+        $('[data-set-height]').click(function () {
+            var height = this.getAttribute("data-set-height");
+            if (height == "100%") {
+                $("#grid-parent").css({height: 500});
+            } else {
+                $("#grid-parent").css({height: "auto"});
+            }
+            firstGrid.setHeight(height);
+        });
+
+        $('[data-grid-control]').on("mousedown", function (e) {
+            switch (this.getAttribute("data-grid-control")) {
+                case "row-add":
+                    //firstGrid.addRow(sampleData[(Math.floor(Math.random() * sampleData.length))], "last", {sort: true});
+                    //firstGrid.addRow([{},{}], "last", {sort: true});
+                    firstGrid.appendToList([{},{}]);
+                    break;
+
+                case "row-add2":
+                    //firstGrid.addRow(sampleData[(Math.floor(Math.random() * sampleData.length))]);
+                    firstGrid.addRow(sampleData);
+                    break;
+
+                case "row-remove":
+                    firstGrid.removeRow();
+                    break;
+
+                case "row-delete":
+                    firstGrid.deleteRow("selected");
+                    break;
+
+                case "row-update":
+                    firstGrid.updateRow($.extend({}, firstGrid.list[1], {price: 100, amount: 100, cost: 10000}), 1);
+                    break;
+
+                case "column-add":
+                    firstGrid.addColumn({key: "b", label: "필드B"});
+                    break;
+
+                case "column-remove":
+                    firstGrid.removeColumn();
+                    break;
+
+                case "column-update":
+                    firstGrid.updateColumn({key: "b", label: "필드B"}, 0);
+                    break;
+
+                case "width-resize":
+                    $("#grid-parent").css({width: 400});
+                    ax5.ui.grid_instance.forEach(function (g) {
+                        g.align();
+                    });
+                    break;
+
+                case "excel":
+                    firstGrid.exportExcel("myExcel.xls");
+                    break;
+
+                case "focus-up":
+                    firstGrid.focus("UP");
+
+                    break;
+                case "focus-down":
+                    firstGrid.focus("DOWN");
+
+                    break;
+                case "focus-home":
+                    firstGrid.focus("HOME");
+
+                    break;
+                case "focus-end":
+                    firstGrid.focus("END");
+
+                    break;
+            }
+        });
+
+    });
+    //694470860800
+</script>
+
+</body>
+</html>

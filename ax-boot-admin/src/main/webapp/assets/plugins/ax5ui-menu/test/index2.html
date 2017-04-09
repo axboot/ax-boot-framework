@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<!--
+  ~ Copyright (c) 2016. tom@axisj.com
+  ~ - github.com/thomasjang
+  ~ - www.axisj.com
+  -->
+
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+
+    <link rel="stylesheet" type="text/css" href="bower_components/bootstrap/dist/css/bootstrap.min.css"/>
+    <link rel="stylesheet" href="bower_components/font-awesome/css/font-awesome.min.css">
+    <link rel="stylesheet" type="text/css" href="bower_components/ax5ui-toast/dist/ax5toast.css"/>
+    <link rel="stylesheet" type="text/css" href="../dist/ax5menu.css"/>
+
+    <script src="bower_components/jquery/dist/jquery.min.js"></script>
+    <script src="bower_components/ax5core/dist/ax5core.min.js"></script>
+    <script src="bower_components/ax5ui-toast/dist/ax5toast.min.js"></script>
+    <script src="../dist/ax5menu.js"></script>
+</head>
+<body style="padding: 10px;">
+
+
+<div style="background: #eee;height: 1000px;"></div>
+
+<!--https://css-tricks.com/snippets/javascript/javascript-keycodes/-->
+<script type="text/javascript">
+    var toast;
+
+    $(document.body).ready(function () {
+        toast = new ax5.ui.toast({
+            containerPosition: "top-right"
+        });
+
+
+        var menu1 = new ax5.ui.menu({
+            position: "absolute", // default position is "fixed"
+            items: [
+                {type: 1, label: "menu1"},
+                {type: 1, label: "menu2"}
+            ]
+        });
+
+        $(document).bind("contextmenu", function (e) {
+            menu1.popup(e, {filter: function () {
+                return true; //this.type != 1;
+            }});
+
+            ax5.util.stopEvent(e);
+            // e || {left: 'Number', top: 'Number', direction: '', width: 'Number'}
+        });
+    });
+</script>
+
+</body>
+</html>

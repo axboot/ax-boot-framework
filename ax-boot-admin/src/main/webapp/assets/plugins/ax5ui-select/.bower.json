@@ -1,0 +1,35 @@
+{
+  "name": "ax5ui-select",
+  "version": "1.3.97",
+  "description": "A select plugin that works with Bootstrap & jQuery",
+  "authors": [
+    "ThomasJ <tom@axisj.com>"
+  ],
+  "main": "dist/ax5select.js",
+  "keywords": [
+    "bootstrap",
+    "jquery",
+    "ax5ui",
+    "plugin",
+    "bootstrap jQuery plugins",
+    "select",
+    "ax5ui-select",
+    "javascript ui"
+  ],
+  "dependencies": {
+    "jquery": "^1.11.0",
+    "ax5core": ">=1.3.0",
+    "bootstrap": "^3.3.6"
+  },
+  "license": "MIT",
+  "homepage": "ax5.io",
+  "_release": "1.3.97",
+  "_resolution": {
+    "type": "version",
+    "tag": "1.3.97",
+    "commit": "71df4de9637017176a9a9f2b8e62bac17d80a0a6"
+  },
+  "_source": "https://github.com/ax5ui/ax5ui-select.git",
+  "_target": ">=1.3.0",
+  "_originalSource": "ax5ui-select"
+}

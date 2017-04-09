@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <link rel="stylesheet" type="text/css" href="bower_components/bootstrap/dist/css/bootstrap.min.css"/>
+    <link rel="stylesheet" href="bower_components/font-awesome/css/font-awesome.min.css">
+    <link rel="stylesheet" type="text/css" href="../dist/ax5select.css"/>
+
+    <script src="bower_components/jquery/dist/jquery.min.js"></script>
+    <script src="bower_components/ax5core/dist/ax5core.js"></script>
+    <script src="../dist/ax5select.js"></script>
+</head>
+<body style="padding: 10px;background: #f2dede;">
+<div class="container">
+    <form name="forms">
+        <h1>form-group</h1>
+
+        <div class="row">
+            <div class="col-md-6">
+                <div class="form-group">
+                    <div data-ax5select="select1" data-ax5select-config='{
+                    size: "lg",
+                    multiple: false,
+                    reset:"<i class=\"fa fa-trash\"></i>"
+                }'></div>
+                </div>
+            </div>
+
+            <div class="col-md-6">
+                <div class="form-group">
+                    <div data-ax5select="select2" data-ax5select-config='{
+                        size:"",
+                        minWidth: "150",
+                        multiple: true
+                    }'>
+                        <select data-ax-path="select2"></select>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+
+        <div class="form-group">
+            <div data-ax5select="select3" data-ax5select-config='{
+            "size":"lg"
+        }'>
+                <select data-ax-path="select3"></select>
+            </div>
+        </div>
+
+    </form>
+
+    <button type="button" class="btn" data-btn="setValue">setValue</button>
+    <button type="button" class="btn" data-btn="getValue">getValue</button>
+    <button type="button" class="btn" data-btn="setValueSelect">setValue to select</button>
+    <button type="button" class="btn" data-btn="update">update options</button>
+</div>
+<script>
+    var options = [];
+    options.push({id: "", alias: "-- 전체 --"});
+    for (var i = 0; i < 20; i++) {
+        options.push({id: i, alias: "optionText" + i});
+    }
+
+    var mySelect = new ax5.ui.select();
+
+    $(document.body).ready(function () {
+
+        $('[data-btn]').click(function () {
+            var act = this.getAttribute("data-btn");
+            switch (act) {
+                case "setValue":
+                    mySelect.val($('[data-ax5select="select1"]'), [11, 12]);
+                    $('[data-ax5select="select2"]').ax5select("setValue", null);
+                    break;
+                case "getValue":
+                    console.log($('[data-ax5select="select2"]').ax5select("getValue"));
+                    console.log(mySelect.val($('[data-ax5select="select1"]')));
+                    console.log($(document.forms).serialize());
+                    break;
+                case "setValueSelect":
+                    $('[data-ax-path="select3"]').val("7").trigger("change");
+                    //$('[data-ax-path="select2"]').val(["optionValue7", "optionValue9"]).trigger("change");
+                    break;
+                case "update":
+                    mySelect.setOptions($('[data-ax5select="select1"]'),
+                        [
+                            {"id": 0, "alias": "Select connection"},
+                            {
+                                selected: true,
+                                "createdAt": "2017-02-16T07:02:39Z",
+                                "updatedAt": "2017-02-16T07:02:44Z",
+                                "id": 1,
+                                "database": "ORACLE",
+                                "alias": "Ora11g",
+                                "type": "NET",
+                                "host": "14.63.163.228",
+                                "port": 1521,
+                                "userName": "icn_dev2",
+                                "password": "icn_dev2",
+                                "useUnicode": true,
+                                "identityType": "SID",
+                                "identityValue": "XE",
+                                "favorite": true,
+                                "dataStatus": "ORIGIN"
+                            }
+                        ]
+                    );
+
+                    return;
+                    $('[data-ax5select="select2"]').ax5select({
+                        options: options
+                    });
+                    break;
+            }
+        });
+
+        // jquery extend
+        /*
+         $('[data-ax5select]').ax5select({
+         options: options
+         });
+         */
+
+        /*
+         $('[data-ax5select="select2"]').ax5select({
+         options: options
+         });
+         $('[data-ax5select="select3"]').ax5select({
+         options: options
+         });
+         */
+
+        mySelect.bind({
+            columnKeys: {
+                optionValue: "id", optionText: "alias"
+            },
+            //theme: "primary",
+            target: $('[data-ax5select="select1"]'),
+            options: options,
+            onChange: function () {
+                console.log(this);
+            },
+            onClose: function () {
+                console.log(this);
+            },
+            onStateChanged: function () {
+                //console.log(this);
+            }
+        });
+
+    });
+
+
+    // todo : onStateChanged
+</script>
+
+</body>
+</html>

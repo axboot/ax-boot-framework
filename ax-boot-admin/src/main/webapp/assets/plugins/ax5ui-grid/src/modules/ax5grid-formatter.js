@@ -1,9 +1,10 @@
 // ax5.ui.grid.formatter
 (function () {
 
-    var GRID = ax5.ui.grid;
-    var U = ax5.util;
-    var money = function () {
+    let GRID = ax5.ui.grid,
+        U = ax5.util;
+
+    let money = function () {
         return U.number(this.value, {"money":true});
     };
 

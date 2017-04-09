@@ -8,10 +8,10 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
     // root of function
 
     var root = this,
-        win = this;
-    var doc = win ? win.document : null,
-        docElem = win ? win.document.documentElement : null;
-    var reIsJson = /^(["'](\\.|[^"\\\n\r])*?["']|[,:{}\[\]0-9.\-+Eaeflnr-u \n\r\t])+?$/,
+        win = this,
+        doc = win ? win.document : null,
+        docElem = win ? win.document.documentElement : null,
+        reIsJson = /^(["'](\\.|[^"\\\n\r])*?["']|[,:{}\[\]0-9.\-+Eaeflnr-u \n\r\t])+?$/,
         reMs = /^-ms-/,
         reSnakeCase = /[\-_]([\da-z])/gi,
         reCamelCase = /([A-Z])/g,
@@ -26,9 +26,9 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
 
     /** @namespace {Object} ax5 */
     ax5 = {},
-        info,
-        U,
-        dom;
+        info = void 0,
+        U = void 0,
+        dom = void 0;
 
     /**
      * guid
@@ -49,11 +49,13 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
      * @namespace ax5.info
      */
     ax5.info = info = function () {
+        var _arguments = arguments;
+
         /**
          * ax5 version
          * @member {String} ax5.info.version
          */
-        var version = "${VERSION}";
+        var version = "1.4.8";
 
         /**
          * ax5 library path
@@ -72,7 +74,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
          * ```
          */
         var onerror = function onerror() {
-            console.error(U.toArray(arguments).join(":"));
+            console.error(U.toArray(_arguments).join(":"));
         };
 
         /**
@@ -249,6 +251,8 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
          */
         var supportTouch = win ? 'ontouchstart' in win || navigator.maxTouchPoints > 0 || navigator.msMaxTouchPoints > 0 : false;
 
+        var supportFileApi = win ? win.FileReader && win.File && win.FileList && win.Blob : false;
+
         return {
             errorMsg: errorMsg,
             version: version,
@@ -259,6 +263,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
             browser: browser,
             isBrowser: isBrowser,
             supportTouch: supportTouch,
+            supportFileApi: supportFileApi,
             wheelEnm: wheelEnm,
             urlUtil: urlUtil,
             getError: getError
@@ -290,7 +295,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
          */
         function each(O, _fn) {
             if (isNothing(O)) return [];
-            var key,
+            var key = void 0,
                 i = 0,
                 l = O.length,
                 isObj = l === undefined || typeof O === "function";
@@ -337,11 +342,11 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
          */
         function map(O, _fn) {
             if (isNothing(O)) return [];
-            var key,
+            var key = void 0,
                 i = 0,
                 l = O.length,
                 results = [],
-                fnResult;
+                fnResult = void 0;
             if (isObject(O)) {
                 for (key in O) {
                     if (typeof O[key] != "undefined") {
@@ -395,11 +400,8 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
          */
         function search(O, _fn) {
             if (isNothing(O)) return -1;
-            var key,
-                i = 0,
-                l = O.length;
             if (isObject(O)) {
-                for (key in O) {
+                for (var key in O) {
                     if (typeof O[key] != "undefined" && isFunction(_fn) && _fn.call(O[key], key, O[key])) {
                         return key;
                         break;
@@ -409,7 +411,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
                     }
                 }
             } else {
-                for (; i < l;) {
+                for (var i = 0, l = O.length; i < l; i++) {
                     if (typeof O[i] != "undefined" && isFunction(_fn) && _fn.call(O[i], i, O[i])) {
                         return i;
                         break;
@@ -417,7 +419,6 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
                         return i;
                         break;
                     }
-                    i++;
                 }
             }
             return -1;
@@ -451,7 +452,9 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
          * ```
          */
         function sum(O, defaultValue, _fn) {
-            var i, l, tokenValue;
+            var i = void 0,
+                l = void 0,
+                tokenValue = void 0;
             if (isFunction(defaultValue) && typeof _fn === "undefined") {
                 _fn = defaultValue;
                 defaultValue = 0;
@@ -502,7 +505,9 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
          * ```
          */
         function avg(O, defaultValue, _fn) {
-            var i, l, tokenValue;
+            var i = void 0,
+                l = void 0,
+                tokenValue = void 0;
             if (isFunction(defaultValue) && typeof _fn === "undefined") {
                 _fn = defaultValue;
                 defaultValue = 0;
@@ -1324,8 +1329,9 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
         function localDate(yy, mm, dd, hh, mi, ss) {
             var utcD, localD;
             localD = new Date();
-            if (typeof hh === "undefined") hh = 23;
-            if (typeof mi === "undefined") mi = 59;
+            if (mm < 0) mm = 0;
+            if (typeof hh === "undefined") hh = 12;
+            if (typeof mi === "undefined") mi = 0;
             utcD = new Date(Date.UTC(yy, mm, dd || 1, hh, mi, ss || 0));
 
             if (mm == 0 && dd == 1 && utcD.getUTCHours() + utcD.getTimezoneOffset() / 60 < 0) {
@@ -1350,9 +1356,18 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
          * ```
          */
         function date(d, cond) {
-            var yy, mm, dd, hh, mi, aDateTime, aTimes, aTime, aDate, utcD, localD, va;
-            var ISO_8601 = /^\d{4}(-\d\d(-\d\d(T\d\d:\d\d(:\d\d)?(\.\d+)?(([+-]\d\d:\d\d)|Z)?)?)?)?$/i;
-            var ISO_8601_FULL = /^\d{4}-\d\d-\d\dT\d\d:\d\d:\d\d(\.\d+)?(([+-]\d\d:\d\d)|Z)?$/i;
+            var yy = void 0,
+                mm = void 0,
+                dd = void 0,
+                hh = void 0,
+                mi = void 0,
+                aDateTime = void 0,
+                aTimes = void 0,
+                aTime = void 0,
+                aDate = void 0,
+                va = void 0,
+                ISO_8601 = /^\d{4}(-\d\d(-\d\d(T\d\d:\d\d(:\d\d)?(\.\d+)?(([+-]\d\d:\d\d)|Z)?)?)?)?$/i,
+                ISO_8601_FULL = /^\d{4}-\d\d-\d\dT\d\d:\d\d:\d\d(\.\d+)?(([+-]\d\d:\d\d)|Z)?$/i;
 
             if (isString(d)) {
                 if (d.length == 0) {
@@ -1387,17 +1402,15 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
                     d = new Date();
                 }
             }
-
-            if (typeof cond === "undefined") {
+            if (typeof cond === "undefined" || typeof d === "undefined") {
                 return d;
             } else {
-
                 if ("add" in cond) {
                     d = function (_d, opts) {
-                        var yy,
-                            mm,
-                            dd,
-                            mxdd,
+                        var yy = void 0,
+                            mm = void 0,
+                            dd = void 0,
+                            mxdd = void 0,
                             DyMilli = 1000 * 60 * 60 * 24;
 
                         if (typeof opts["d"] !== "undefined") {
@@ -1417,12 +1430,11 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
                         return _d;
                     }(new Date(d), cond["add"]);
                 }
-
                 if ("set" in cond) {
                     d = function (_d, opts) {
-                        var yy,
-                            mm,
-                            dd,
+                        var yy = void 0,
+                            mm = void 0,
+                            dd = void 0,
                             processor = {
                             "firstDayOfMonth": function firstDayOfMonth(date) {
                                 yy = date.getFullYear();
@@ -1444,17 +1456,31 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
                         }
                     }(new Date(d), cond["set"]);
                 }
-
                 if ("return" in cond) {
                     return function () {
+
                         var fStr = cond["return"],
-                            nY,
-                            nM,
-                            nD,
-                            nH,
-                            nMM,
-                            nS,
-                            nDW;
+                            nY = void 0,
+                            nM = void 0,
+                            nD = void 0,
+                            nH = void 0,
+                            nMM = void 0,
+                            nS = void 0,
+                            nDW = void 0,
+                            yre = void 0,
+                            regY = void 0,
+                            mre = void 0,
+                            regM = void 0,
+                            dre = void 0,
+                            regD = void 0,
+                            hre = void 0,
+                            regH = void 0,
+                            mire = void 0,
+                            regMI = void 0,
+                            sre = void 0,
+                            regS = void 0,
+                            dwre = void 0,
+                            regDW = void 0;
 
                         nY = d.getUTCFullYear();
                         nM = setDigit(d.getMonth() + 1, 2);
@@ -1464,27 +1490,27 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
                         nS = setDigit(d.getSeconds(), 2);
                         nDW = d.getDay();
 
-                        var yre = /[^y]*(yyyy)[^y]*/gi;
+                        yre = /[^y]*(yyyy)[^y]*/gi;
                         yre.exec(fStr);
-                        var regY = RegExp.$1;
-                        var mre = /[^m]*(MM)[^m]*/g;
+                        regY = RegExp.$1;
+                        mre = /[^m]*(MM)[^m]*/g;
                         mre.exec(fStr);
-                        var regM = RegExp.$1;
-                        var dre = /[^d]*(dd)[^d]*/gi;
+                        regM = RegExp.$1;
+                        dre = /[^d]*(dd)[^d]*/gi;
                         dre.exec(fStr);
-                        var regD = RegExp.$1;
-                        var hre = /[^h]*(hh)[^h]*/gi;
+                        regD = RegExp.$1;
+                        hre = /[^h]*(hh)[^h]*/gi;
                         hre.exec(fStr);
-                        var regH = RegExp.$1;
-                        var mire = /[^m]*(mm)[^i]*/g;
+                        regH = RegExp.$1;
+                        mire = /[^m]*(mm)[^i]*/g;
                         mire.exec(fStr);
-                        var regMI = RegExp.$1;
-                        var sre = /[^s]*(ss)[^s]*/gi;
+                        regMI = RegExp.$1;
+                        sre = /[^s]*(ss)[^s]*/gi;
                         sre.exec(fStr);
-                        var regS = RegExp.$1;
-                        var dwre = /[^d]*(dw)[^w]*/gi;
+                        regS = RegExp.$1;
+                        dwre = /[^d]*(dw)[^w]*/gi;
                         dwre.exec(fStr);
-                        var regDW = RegExp.$1;
+                        regDW = RegExp.$1;
 
                         if (regY === "yyyy") {
                             fStr = fStr.replace(regY, right(nY, regY.length));
@@ -2155,6 +2181,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
                     return snakeCase(this.value);
                 };
             }
+
             return new ax5string(_string);
         }
 
@@ -3301,8 +3328,11 @@ ax5.ui = function () {
         if (isArray(value)) {
             for (var j = 0, valueLength = value.length; j < valueLength; ++j) {
                 if (value[j]) {
-                    value[j]['@i'] = j;
-                    value[j]['@first'] = j === 0;
+                    if (_typeof(value[j]) === 'object') {
+                        value[j]['@i'] = j;
+                        value[j]['@first'] = j === 0;
+                    }
+
                     buffer += this.renderTokens(token[4], context.push(value[j]), partials, originalTemplate);
                 }
             }

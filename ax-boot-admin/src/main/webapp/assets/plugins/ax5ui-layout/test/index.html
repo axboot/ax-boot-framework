@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, user-scalable=no">
+
+    <link rel="stylesheet" type="text/css" href="bower_components/bootstrap/dist/css/bootstrap.min.css"/>
+    <link rel="stylesheet" href="bower_components/font-awesome/css/font-awesome.min.css">
+    <link rel="stylesheet" type="text/css" href="../dist/ax5layout.css"/>
+
+    <script src="bower_components/jquery/dist/jquery.min.js"></script>
+    <script src="bower_components/ax5core/dist/ax5core.js"></script>
+    <script src="../dist/ax5layout.js"></script>
+    <style>
+        html, body {
+            padding: 0;
+            height: 100%;
+            overflow: hidden;
+        }
+    </style>
+</head>
+<body>
+
+<div data-ax5layout="ax1" data-config='{layout:"dock-panel"}' style="height: 100%;border:1px solid #ccc;">
+    <div data-dock-panel='{dock:"top", split:true, height: 200, maxHeight: 300}'>
+        <div style="height:100%;"></div>
+    </div>
+    <div data-dock-panel='{dock:"bottom", split:"true", height: 200, minHeight: 50, maxHeight: 300}'></div>
+    <div data-dock-panel='{dock:"left", split:true, width: 200, minWidth: 50}'></div>
+    <div data-dock-panel='{dock:"right", split:true, width: "10%", minWidth: 50, maxWidth: 300}'>
+        <!--
+                <div data-ax5layout="ax3" data-config='{layout:"dock-panel"}' style="height: 100%;border:1px solid #ccc;">
+                    <div data-dock-panel='{dock:"top", split:"true", height: 200}'>
+                        <div style="height:100%;border:1px solid #000;"></div>
+                    </div>
+                    <div data-dock-panel='{dock:"center"}'></div>
+                </div>
+        -->
+    </div>
+    <div data-dock-panel='{dock:"center"}' style="padding: 5px;">
+
+        <button class="btn btn-default" data-btn="resize">크기변경</button>
+        <button class="btn btn-default" data-btn="reset">Reset</button>
+        <button class="btn btn-default" data-btn="left-hide">Toggle left</button>
+
+        <!--
+                <div data-ax5layout="ax2" data-config='{layout:"dock-panel"}' style="height: 100%;border:1px solid #ccc;">
+                    <div data-dock-panel='{dock:"top", split:false, height: 100}'>
+                        <div style="height:100%;border-bottom:1px solid #ccc;"></div>
+                    </div>
+                    <div data-dock-panel='{dock:"left", split:"true", width: 100}'></div>
+                    <div data-dock-panel='{dock:"center"}' style="padding: 5px;">
+
+                    </div>
+                </div>
+        -->
+    </div>
+</div>
+
+<script>
+    jQuery(document.body).ready(function () {
+        jQuery('[data-ax5layout="ax1"]').ax5layout({
+            onResize: function () {
+                //console.log(this.$target);
+                //console.log(this);
+            }
+        });
+
+        $('[data-btn="resize"]').click(function () {
+            jQuery('[data-ax5layout="ax1"]').ax5layout("resize",
+                    {
+                        top: {height: 100},
+                        bottom: 100,
+                        left: 100,
+                        right: 100
+                    }
+            );
+        });
+        $('[data-btn="reset"]').click(function () {
+            jQuery('[data-ax5layout="ax1"]').ax5layout("reset");
+        });
+        $('[data-btn="left-hide"]').click(function () {
+            jQuery('[data-ax5layout="ax1"]').ax5layout("hide", "left");
+        });
+
+
+        return;
+        jQuery('[data-ax5layout="ax2"]').ax5layout({
+            onResize: function () {
+                //console.log(this.$target);
+                //console.log(this);
+            }
+        });
+
+        jQuery('[data-ax5layout="ax3"]').ax5layout();
+        jQuery('[data-ax5layout="ax3"]').ax5layout("onResize", function () {
+            // console.log(this.$target);
+        });
+
+        // 특정 레이아웃 리사이즈 이벤트 호출 : jQuery('[data-ax5layout="ax1"]').ax5layout("align");
+    });
+</script>
+
+</body>
+</html>

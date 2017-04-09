@@ -7,23 +7,22 @@
 // ax5.ui.grid.excel
 (function () {
 
-    var GRID = ax5.ui.grid;
-    var U = ax5.util;
+    let GRID = ax5.ui.grid,
+        U = ax5.util;
 
-    var base64 = function (s) {
-        return window.btoa(unescape(encodeURIComponent(s)));
-    };
-    var uri = "data:application/vnd.ms-excel;base64,";
-
-    var getExcelTmpl = function () {
-        return `\ufeff
+    let base64 = function (s) {
+            return window.btoa(unescape(encodeURIComponent(s)));
+        },
+        uri = "data:application/vnd.ms-excel;base64,",
+        getExcelTmpl = function () {
+            return `\ufeff
 {{#tables}}{{{body}}}{{/tables}}
 `;
-    };
+        };
 
     var tableToExcel = function (table, fileName) {
-        var link, a, output;
-        var tables = [].concat(table);
+        let link, a, output,
+            tables = [].concat(table);
 
         output = ax5.mustache.render(getExcelTmpl(), {
             worksheet: (function () {
@@ -42,29 +41,31 @@
             })()
         });
 
-        var isChrome = navigator.userAgent.indexOf("Chrome") > -1;
-        var isSafari = !isChrome && navigator.userAgent.indexOf("Safari") > -1;
+        let isChrome = navigator.userAgent.indexOf("Chrome") > -1,
+            isSafari = !isChrome && navigator.userAgent.indexOf("Safari") > -1,
+            isIE = /*@cc_on!@*/false || !!document.documentMode; // this works with IE10 and IE11 both :)
 
-        var isIE = /*@cc_on!@*/false || !!document.documentMode; // this works with IE10 and IE11 both :)
+        let blob1, blankWindow, $iframe, iframe, anchor;
+
         if (navigator.msSaveOrOpenBlob) {
-            var blob1 = new Blob([output], {type: "text/html"});
+            blob1 = new Blob([output], {type: "text/html"});
             window.navigator.msSaveOrOpenBlob(blob1, fileName);
         }
         else if (isSafari) {
             // 사파리는 지원이 안되므로 그냥 테이블을 클립보드에 복사처리
             //tables
-            var blankWindow = window.open('about:blank', this.id + '-excel-export', 'width=600,height=400');
+            blankWindow = window.open('about:blank', this.id + '-excel-export', 'width=600,height=400');
             blankWindow.document.write(output);
             blankWindow = null;
         }
         else {
             if (isIE && typeof Blob === "undefined") {
-
                 //otherwise use the iframe and save
                 //requires a blank iframe on page called txtArea1
-                var $iframe = jQuery('<iframe id="' + this.id + '-excel-export" style="display:none"></iframe>');
+                $iframe = jQuery('<iframe id="' + this.id + '-excel-export" style="display:none"></iframe>');
                 jQuery(document.body).append($iframe);
-                var iframe = window[this.id + '-excel-export'];
+
+                iframe = window[this.id + '-excel-export'];
                 iframe.document.open("text/html", "replace");
                 iframe.document.write(output);
                 iframe.document.close();
@@ -73,7 +74,7 @@
                 $iframe.remove();
             } else {
                 // Attempt to use an alternative method
-                var anchor = document.body.appendChild(
+                anchor = document.body.appendChild(
                     document.createElement("a")
                 );
 

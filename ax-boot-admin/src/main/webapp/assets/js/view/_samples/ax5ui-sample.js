@@ -28,21 +28,28 @@ var ACTIONS = axboot.actionExtend(fnObj, {
                 n.parentKey = parentData.key;
             });
 
-            axboot
-                .call({
-                    type: "PUT", url: ["samples", "parent"], data: JSON.stringify([parentData]),
-                    callback: function (res) {
-
-                    }
+            axboot.promise()
+                .then(function (ok, fail, data) {
+                    axboot.ajax({
+                        type: "PUT", url: ["samples", "parent"], data: JSON.stringify([parentData]),
+                        callback: function (res) {
+                            ok(res);
+                        }
+                    });
                 })
-                .call({
-                    type: "PUT", url: ["samples", "child"], data: JSON.stringify(childList),
-                    callback: function (res) {
-
-                    }
+                .then(function (ok, fail, data) {
+                    axboot.ajax({
+                        type: "PUT", url: ["samples", "child"], data: JSON.stringify(childList),
+                        callback: function (res) {
+                            ok(res);
+                        }
+                    });
                 })
-                .done(function () {
+                .then(function (ok) {
                     ACTIONS.dispatch(ACTIONS.PAGE_SEARCH);
+                })
+                .catch(function () {
+
                 });
         }
 
@@ -64,7 +71,7 @@ var ACTIONS = axboot.actionExtend(fnObj, {
         axboot.modal.open({
             modalType: "SAMPLE-MODAL",
             param: "",
-            sendData: function(){
+            sendData: function () {
                 return {
                     "sendData": "AX5UI"
                 };
@@ -95,31 +102,35 @@ var CODE = {};
 fnObj.pageStart = function () {
     var _this = this;
 
-    axboot
-        .call({
-            type: "GET", url: ["commonCodes"], data: {groupCd: "USER_ROLE", useYn: "Y"},
-            callback: function (res) {
-                var userRole = [];
-                res.list.forEach(function (n) {
-                    userRole.push({
-                        value: n.code, text: n.name + "(" + n.code + ")",
-                        roleCd: n.code, roleNm: n.name,
-                        data: n
+    axboot.promise()
+        .then(function (ok, fail, data) {
+            axboot.ajax({
+                type: "GET", url: ["commonCodes"], data: {groupCd: "USER_ROLE", useYn: "Y"},
+                callback: function (res) {
+                    var userRole = [];
+                    res.list.forEach(function (n) {
+                        userRole.push({
+                            value: n.code, text: n.name + "(" + n.code + ")",
+                            roleCd: n.code, roleNm: n.name,
+                            data: n
+                        });
                     });
-                });
-                this.userRole = userRole;
-            }
+                    CODE.userRole = userRole;
+
+                    ok();
+                }
+            });
         })
-        .done(function () {
-
-            CODE = this; // this는 call을 통해 수집된 데이터들.
-
+        .then(function (ok) {
             _this.pageButtonView.initView();
             _this.searchView.initView();
             _this.gridView01.initView();
             _this.formView01.initView();
 
             ACTIONS.dispatch(ACTIONS.PAGE_SEARCH);
+        })
+        .catch(function () {
+
         });
 };
 
@@ -164,7 +175,7 @@ fnObj.searchView = axboot.viewExtend(axboot.searchView, {
         axboot.buttonClick(this, "data-searchview-btn", {
             "modal": function () {
                 ACTIONS.dispatch(ACTIONS.MODAL_OPEN)
-            } 
+            }
         });
     },
     getData: function () {

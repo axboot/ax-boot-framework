@@ -39,7 +39,7 @@
             <div class="H10"></div>
         </div>
 
-        <ax:split-layout name="ax1" orientation="horizontal">
+        <ax:split-layout name="ax1" orientation="vertical">
             <ax:split-panel width="*" style="">
 
                 <!-- 목록 -->

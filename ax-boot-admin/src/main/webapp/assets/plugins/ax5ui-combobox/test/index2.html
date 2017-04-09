@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<!--
+  ~ Copyright (c) 2016. tom@axisj.com
+  ~ - github.com/thomasjang
+  ~ - www.axisj.com
+  -->
+
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <link rel="stylesheet" type="text/css" href="bower_components/bootstrap/dist/css/bootstrap.min.css"/>
+    <link rel="stylesheet" href="bower_components/font-awesome/css/font-awesome.min.css">
+    <link rel="stylesheet" type="text/css" href="../dist/ax5combobox.css"/>
+
+    <script src="bower_components/jquery/dist/jquery.min.js"></script>
+    <script src="bower_components/ax5core/dist/ax5core.js"></script>
+    <script src="../dist/ax5combobox.js"></script>
+</head>
+<body style="padding: 10px;">
+<div class="container">
+    <form name="forms">
+        <h1>form-group</h1>
+
+        <div class="row">
+            <div class="col-sm-4">
+
+                    <div data-ax5combobox="combobox1" data-ax5combobox-config='{
+                    size: "",
+                    multiple: false
+                }'></div>
+
+            </div>
+            <div class="col-sm-4">
+                <div class="form-group">
+                    <div data-ax5combobox="combobox2" data-ax5combobox-config='{
+                    size: "",
+                    multiple: true
+                }'></div>
+                </div>
+            </div>
+            <div class="col-sm-4">
+                <div class="form-group">
+                    <div data-ax5combobox="combobox3" data-ax5combobox-config='{
+                    size: "",
+                    multiple: true
+                }'></div>
+                </div>
+            </div>
+
+        </div>
+
+
+    </form>
+
+    <button type="button" class="btn" data-btn="setValue">setValue</button>
+    <button type="button" class="btn" data-btn="getValue">getValue</button>
+    <button type="button" class="btn" data-btn="setValuecombobox">setValue to combobox</button>
+    <button type="button" class="btn" data-btn="update">update options</button>
+</div>
+<script>
+    var options = [];
+    for (var i = 0; i < 20; i++) {
+        options.push({value: i, text: "optionText" + i});
+    }
+
+    $(document.body).ready(function () {
+
+        $('[data-btn]').click(function () {
+            var act = this.getAttribute("data-btn");
+            switch (act) {
+                case "setValue":
+
+                    break;
+                case "getValue":
+                    console.log($('[data-ax5combobox="combobox1"]').ax5combobox("getValue"));
+                    break;
+                case "setValuecombobox":
+
+                    break;
+                case "update":
+
+                    break;
+            }
+        });
+
+        var callBackCount = 0;
+        $('[data-ax5combobox="combobox1"]').ax5combobox({
+            lang: {
+                loading: '<i class="fa fa-spinner fa-pulse"></i>'
+            },
+            onChange: function () {
+                console.log(this);
+            },
+            onExpand: function (callBack) {
+                console.log(this);
+                setTimeout(function () {
+
+                    callBack({
+                        options: [
+                            {value: "V0", text: "callBack Text 0"},
+                            {value: "V1", text: "callBack Text 1"},
+                            {value: "V2", text: "callBack Text 2"},
+                            {value: "V3", text: "callBack Text 3"}
+                        ]
+                    });
+
+                }, 300);
+            }
+        });
+
+        $('[data-ax5combobox="combobox2"]').ax5combobox({
+            options: options
+        });
+        $('[data-ax5combobox="combobox3"]').ax5combobox({
+            options: options
+        });
+
+    });
+
+    /*
+     ,
+     onExpand: function (callBack) {
+
+     setTimeout(function () {
+     if (callBackCount == 0) {
+     callBack({
+     options: [
+     {value: "V0", text: "callBack Text 0"},
+     {value: "V1", text: "callBack Text 1"},
+     {value: "V2", text: "callBack Text 2"},
+     {value: "V3", text: "callBack Text 3"}
+     ]
+     });
+     } else {
+     callBack({
+     options: [
+     {value: "V0", text: "callBack Text 0"},
+     {value: "V11", text: "callBack Text 11"},
+     {value: "V12", text: "callBack Text 12"},
+     {value: "V13", text: "callBack Text 13"}
+     ]
+     });
+     }
+     callBackCount++;
+     }, 300);
+
+     }
+     */
+
+    // todo : onStateChanged
+</script>
+
+</body>
+</html>

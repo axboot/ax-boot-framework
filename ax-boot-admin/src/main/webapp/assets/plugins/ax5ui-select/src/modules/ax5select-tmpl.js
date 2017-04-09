@@ -73,7 +73,7 @@ data-ax5select-display="{{id}}" data-ax5select-instance="{{instanceId}}">
                             <span class="item-checkbox-wrap useCheckBox" data-option-checkbox-index="{{@i}}"></span>
                         </span>
                         {{/multiple}}
-                        <span class="ax-select-option-item-cell ax-select-option-item-label">{{${columnKeys.optionText}}}</span>
+                        <span class="ax-select-option-item-cell ax-select-option-item-label">{{{${columnKeys.optionText}}}}</span>
                     </div>
                 </div>
                 {{/options}}
@@ -87,7 +87,7 @@ data-ax5select-display="{{id}}" data-ax5select-instance="{{instanceId}}">
                     <span class="item-checkbox-wrap useCheckBox" data-option-checkbox-index="{{@i}}"></span>
                 </span>
                 {{/multiple}}
-                <span class="ax-select-option-item-cell ax-select-option-item-label">{{${columnKeys.optionText}}}</span>
+                <span class="ax-select-option-item-cell ax-select-option-item-label">{{{${columnKeys.optionText}}}}</span>
             </div>
         </div>
         {{/optgroup}}

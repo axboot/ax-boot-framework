@@ -1,0 +1,35 @@
+{
+  "name": "ax5ui-toast",
+  "version": "1.3.97",
+  "authors": [
+    "ThomasJ <tom@axisj.com>"
+  ],
+  "description": "",
+  "main": "dist/ax5toast.js",
+  "keywords": [
+    "bootstrap",
+    "jquery",
+    "ax5ui",
+    "plugin",
+    "bootstrap jQuery plugins",
+    "toast",
+    "ax5ui-toast",
+    "javascript ui"
+  ],
+  "dependencies": {
+    "jquery": "^1.11.0",
+    "ax5core": ">=1.3.0",
+    "bootstrap": "^3.3.6"
+  },
+  "license": "MIT",
+  "homepage": "ax5.io",
+  "_release": "1.3.97",
+  "_resolution": {
+    "type": "version",
+    "tag": "1.3.97",
+    "commit": "55ba6805dbac801aff7cbf1519f6cb0e60e8be67"
+  },
+  "_source": "https://github.com/ax5ui/ax5ui-toast.git",
+  "_target": ">=1.3.0",
+  "_originalSource": "ax5ui-toast"
+}

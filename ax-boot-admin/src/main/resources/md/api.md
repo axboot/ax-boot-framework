@@ -3,6 +3,8 @@
 <dl>
 <dt><a href="#ax5ModelFormatter">ax5ModelFormatter</a></dt>
 <dd></dd>
+<dt><a href="#ax5FormFormatter">ax5FormFormatter</a></dt>
+<dd></dd>
 </dl>
 
 ## Members
@@ -19,6 +21,9 @@
 </dd>
 <dt><a href="#axAJAXMask">axAJAXMask</a> : <code>ax5ui</code></dt>
 <dd><p>ajax용 마스크</p>
+</dd>
+<dt><a href="#axProgressMask">axProgressMask</a> : <code>ax5ui</code></dt>
+<dd><p>프로그래스바 형태의 마스크</p>
 </dd>
 <dt><a href="#axModal">axModal</a> : <code>ax5ui</code></dt>
 <dd><p>기본 모달</p>
@@ -79,6 +84,35 @@ this.modelFormatter.formatting(); // 입력된 값을 포메팅 된 값으로 �
 var data = this.modelFormatter.getClearData(this.model.get()); // 모델의 값을 포멧팅 전 값으로 치환.
 return data;
 ```
+<a name="ax5FormFormatter"></a>
+
+## ax5FormFormatter
+**Kind**: global class  
+
+* [ax5FormFormatter](#ax5FormFormatter)
+    * [new ax5FormFormatter(_model)](#new_ax5FormFormatter_new)
+    * [.formatting()](#ax5FormFormatter.formatting)
+
+<a name="new_ax5FormFormatter_new"></a>
+
+### new ax5FormFormatter(_model)
+
+| Param |
+| --- |
+| _model | 
+
+**Example**  
+```js
+this.formFormatter = new axboot.formFormatter(this.$target); // 폼 포메터 시작
+```
+<a name="ax5FormFormatter.formatting"></a>
+
+### ax5FormFormatter.formatting()
+**Kind**: static method of <code>[ax5FormFormatter](#ax5FormFormatter)</code>  
+**Example**  
+```js
+this.modelFormatter.formatting(); // 입력된 값을 포메팅 된 값으로 변경
+```
 <a name="axboot"></a>
 
 ## axboot : <code>Object</code>
@@ -87,6 +121,10 @@ axboot 오브젝트 axboot 애플리케이션을 편리하게 사용하기 위�
 **Kind**: global variable  
 
 * [axboot](#axboot) : <code>Object</code>
+    * [.promise](#axboot.promise)
+        * [.then(fn)](#axboot.promise.then) ⇒ <code>myClass</code>
+        * [.exec(data)](#axboot.promise.exec)
+        * [.catch(fn)](#axboot.promise.catch)
     * [.def](#axboot.def) : <code>Object</code>
     * [.pageAutoHeight](#axboot.pageAutoHeight)
         * [.init()](#axboot.pageAutoHeight.init)
@@ -99,6 +137,7 @@ axboot 오브젝트 axboot 애플리케이션을 편리하게 사용하기 위�
         * [.minimize()](#axboot.modal.minimize)
         * [.callback(data)](#axboot.modal.callback)
     * [.modelFormatter](#axboot.modelFormatter)
+    * [.formFormatter](#axboot.formFormatter)
     * [.preparePlugin](#axboot.preparePlugin)
         * [.define()](#axboot.preparePlugin.define)
         * [.pageStart()](#axboot.preparePlugin.pageStart)
@@ -120,6 +159,43 @@ axboot 오브젝트 axboot 애플리케이션을 편리하게 사용하기 위�
     * [.gridBuilder(_config)](#axboot.gridBuilder)
     * [.extend(_obj1, _obj2)](#axboot.extend)
     * [.actionExtend([_actionThis], _action)](#axboot.actionExtend)
+
+<a name="axboot.promise"></a>
+
+### axboot.promise
+**Kind**: static class of <code>[axboot](#axboot)</code>  
+
+* [.promise](#axboot.promise)
+    * [.then(fn)](#axboot.promise.then) ⇒ <code>myClass</code>
+    * [.exec(data)](#axboot.promise.exec)
+    * [.catch(fn)](#axboot.promise.catch)
+
+<a name="axboot.promise.then"></a>
+
+#### promise.then(fn) ⇒ <code>myClass</code>
+**Kind**: static method of <code>[promise](#axboot.promise)</code>  
+
+| Param |
+| --- |
+| fn | 
+
+<a name="axboot.promise.exec"></a>
+
+#### promise.exec(data)
+**Kind**: static method of <code>[promise](#axboot.promise)</code>  
+
+| Param |
+| --- |
+| data | 
+
+<a name="axboot.promise.catch"></a>
+
+#### promise.catch(fn)
+**Kind**: static method of <code>[promise](#axboot.promise)</code>  
+
+| Param |
+| --- |
+| fn | 
 
 <a name="axboot.def"></a>
 
@@ -261,6 +337,11 @@ callback 으로 정의된 함수에 전달된 파라메터를 넘겨줍니다.
 ### axboot.modelFormatter
 **Kind**: static property of <code>[axboot](#axboot)</code>  
 **Object**: <code>Object</code> axboot.modelFormatter  
+<a name="axboot.formFormatter"></a>
+
+### axboot.formFormatter
+**Kind**: static property of <code>[axboot](#axboot)</code>  
+**Object**: <code>Object</code> axboot.formFormatter  
 <a name="axboot.preparePlugin"></a>
 
 ### axboot.preparePlugin
@@ -353,7 +434,7 @@ axboot.def.pageFunctionName의 pageResize를 실행해 줍니다.
 <a name="axboot.layoutResize"></a>
 
 ### axboot.layoutResize()
-페이지내부에 선언된 ax5layout이 리사이즈 되었을 때. axboot.def.pageFunctionName의 layoutResize를 실행해 줍니다.
+페이지내부에 선언된 ax5layout안에 UI들에 강제 resize이벤트 발생시켜 줌.
 
 **Kind**: static method of <code>[axboot](#axboot)</code>  
 <a name="axboot.ajax"></a>
@@ -595,6 +676,12 @@ appMask.close(1000); // 1초 지연 후 마스크 닫기
 
 ## axAJAXMask : <code>ax5ui</code>
 ajax용 마스크
+
+**Kind**: global variable  
+<a name="axProgressMask"></a>
+
+## axProgressMask : <code>ax5ui</code>
+프로그래스바 형태의 마스크
 
 **Kind**: global variable  
 <a name="axModal"></a>

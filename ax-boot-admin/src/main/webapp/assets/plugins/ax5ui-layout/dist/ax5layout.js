@@ -7,27 +7,14 @@
 
     UI.addClass({
         className: "layout",
-        version: "1.3.44"
+        version: "1.4.8"
     }, function () {
         /**
          * @class ax5layout
          * @alias ax5.ui.layout
          * @author tom@axisj.com
-         * @example
-         * ```js
-         * jQuery('[data-ax5layout="ax1"]').ax5layout({
-         *     onResize: function () {
-         *     }
-         * });
-         *
-         * jQuery('[data-ax5layout="ax1"]').ax5layout("resize", {
-         *     top: {height: 100},
-         *     bottom: 100,
-         *     left: 100,
-         *     right: 100
-         * });
-         * ```
          */
+
         var ax5layout = function ax5layout() {
             var self = this,
                 cfg,
@@ -49,7 +36,7 @@
                 theme: 'default',
                 animateTime: 250,
                 splitter: {
-                    size: 4
+                    size: 1
                 },
                 autoResize: true
             };
@@ -740,7 +727,7 @@
                 this.queue[queIdx].childQueIdxs.push(childQueIdx);
                 this.queue[childQueIdx].parentQueIdx = queIdx;
             };
-            /// private end
+
             /**
              * Preferences of layout UI
              * @method ax5layout.setConfig
@@ -752,6 +739,17 @@
              * @returns {ax5layout}
              * @example
              * ```js
+             * jQuery('[data-ax5layout="ax1"]').ax5layout({
+             *     onResize: function () {
+             *     }
+             * });
+             *
+             * jQuery('[data-ax5layout="ax1"]').ax5layout("resize", {
+             *     top: {height: 100},
+             *     bottom: 100,
+             *     left: 100,
+             *     right: 100
+             * });
              * ```
              */
             this.init = function () {
@@ -984,7 +982,12 @@ ax5.ui.layout_instance = new ax5.ui.layout();
  * @param {String} methodName
  * @example
  * ```js
- * jQuery('[data-ax5layout="ax1"]').ax5layout();
+ * jQuery('[data-ax5layout="ax1"]').ax5layout("align");
+ * jQuery('[data-ax5layout="ax1"]').ax5layout("resize");
+ * jQuery('[data-ax5layout="ax1"]').ax5layout("reset");
+ * jQuery('[data-ax5layout="ax1"]').ax5layout("hide");
+ * jQuery('[data-ax5layout="ax1"]').ax5layout("onResize");
+ * jQuery('[data-ax5layout="ax1"]').ax5layout("tabOpen", 1);
  * ```
  */
 

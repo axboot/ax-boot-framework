@@ -76,8 +76,7 @@
 
             cfg = this.config;
 
-            var
-                formatterEvent = {
+            var formatterEvent = {
                     'focus': function (opts, optIdx, e) {
                         if (!opts.$input.data("__originValue__")) opts.$input.data("__originValue__", opts.$input.val());
                     },

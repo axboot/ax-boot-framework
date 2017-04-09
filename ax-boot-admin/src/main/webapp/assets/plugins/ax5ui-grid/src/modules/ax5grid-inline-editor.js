@@ -7,7 +7,7 @@
         useReturnToSave: true,
         editMode: "popup",
         getHtml: function (_root, _columnKey, _editor, _value) {
-            return '<input type="text" data-ax5grid-editor="text" value="'+ _value +'" >';
+            return '<input type="text" data-ax5grid-editor="text" value="' + _value + '" >';
         },
         init: function (_root, _columnKey, _editor, _$parent, _value) {
             var $el;
@@ -27,7 +27,7 @@
         useReturnToSave: true,
         editMode: "popup",
         getHtml: function (_root, _columnKey, _editor, _value) {
-            return '<input type="text" data-ax5grid-editor="money" value="'+ _value +'" >';
+            return '<input type="text" data-ax5grid-editor="money" value="' + _value + '" >';
         },
         init: function (_root, _columnKey, _editor, _$parent, _value) {
             var $el;
@@ -51,7 +51,7 @@
         useReturnToSave: true,
         editMode: "popup",
         getHtml: function (_root, _columnKey, _editor, _value) {
-            return '<input type="text" data-ax5grid-editor="number" value="'+ _value +'" >';
+            return '<input type="text" data-ax5grid-editor="number" value="' + _value + '" >';
         },
         init: function (_root, _columnKey, _editor, _$parent, _value) {
             var $el;
@@ -75,7 +75,7 @@
         useReturnToSave: true,
         editMode: "popup",
         getHtml: function (_root, _columnKey, _editor, _value) {
-            return '<input type="text" data-ax5grid-editor="calendar" value="'+ _value +'" >';
+            return '<input type="text" data-ax5grid-editor="calendar" value="' + _value + '" >';
         },
         init: function (_root, _columnKey, _editor, _$parent, _value) {
             var $el;
@@ -132,8 +132,8 @@
             };
             jQuery.extend(true, eConfig, _editor.config);
 
-            eConfig.options.forEach(function(n){
-               if(n[eConfig.columnKeys.optionValue] == _value) n[eConfig.columnKeys.optionSelected] = true;
+            eConfig.options.forEach(function (n) {
+                if (n[eConfig.columnKeys.optionValue] == _value) n[eConfig.columnKeys.optionSelected] = true;
             });
 
             var self = _root;

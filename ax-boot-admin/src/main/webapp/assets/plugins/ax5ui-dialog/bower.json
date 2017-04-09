@@ -1,26 +1,26 @@
 {
-	"name": "ax5ui-dialog",
-	"version": "1.3.44",
-	"authors": [
-		"ThomasJ <tom@axisj.com>"
-	],
-	"description": "",
-	"main": "dist/ax5dialog.js",
-	"keywords": [
-		"bootstrap",
-		"jquery",
-		"ax5ui",
-		"plugin",
-		"bootstrap jQuery plugins",
-		"dialog",
-		"ax5ui-dialog",
-		"javascript ui"
-	],
-	"dependencies": {
-		"jquery": "^1.11.0",
-		"ax5core": ">=1.3.0",
-		"bootstrap": "^3.3.6"
-	},
-	"license": "MIT",
-	"homepage": "ax5.io"
+  "name": "ax5ui-dialog",
+  "version": "1.4.8",
+  "description": "A dialog plugin that works with Bootstrap & jQuery",
+  "authors": [
+    "ThomasJ <tom@axisj.com>"
+  ],
+  "main": "dist/ax5dialog.js",
+  "keywords": [
+    "bootstrap",
+    "jquery",
+    "ax5ui",
+    "plugin",
+    "bootstrap jQuery plugins",
+    "dialog",
+    "ax5ui-dialog",
+    "javascript ui"
+  ],
+  "dependencies": {
+    "jquery": "^1.11.0",
+    "ax5core": ">=1.3.0",
+    "bootstrap": "^3.3.6"
+  },
+  "license": "MIT",
+  "homepage": "ax5.io"
 }

@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <link rel="stylesheet" type="text/css" href="bower_components/bootstrap/dist/css/bootstrap.min.css"/>
+    <link rel="stylesheet" href="bower_components/font-awesome/css/font-awesome.min.css">
+    <link rel="stylesheet" type="text/css" href="../dist/ax5combobox.css"/>
+
+    <script src="bower_components/jquery/dist/jquery.min.js"></script>
+    <script src="bower_components/ax5core/dist/ax5core.js"></script>
+    <script src="../dist/ax5combobox.js"></script>
+</head>
+<body style="padding: 10px;">
+<div class="container">
+    <div style="height:300px;"></div>
+    <form name="forms">
+        <h1>form-group</h1>
+
+        <div class="form-group">
+            <div data-ax5combobox="combo1" data-ax5combobox-config='{
+                    multiple: true,
+                    editable: true,
+                    size: ""
+                }'></div>
+        </div>
+
+        <div class="form-group">
+            <div data-ax5combobox="combo2" data-ax5combobox-config='{
+                    size: ""
+                }'></div>
+        </div>
+
+        <div class="form-group">
+            <div data-ax5combobox="combo3" data-ax5combobox-config='{
+            multiple: true,
+            size:""
+        }'>
+                <select data-ax-path="combo3">
+                    <option value="1">장기영</option>
+                    <option value="2">이영희</option>
+                    <option value="3">황인서</option>
+                    <option value="4">장서우</option>
+                    <option value="5">이서연</option>
+                    <option value="6">황세진</option>
+                </select>
+            </div>
+        </div>
+
+    </form>
+
+    <button type="button" class="btn" data-btn="setValue">setValue</button>
+    <button type="button" class="btn" data-btn="setValue2">setValue(array)</button>
+    <button type="button" class="btn" data-btn="setText">setText</button>
+    <button type="button" class="btn" data-btn="setText2">setText(array)</button>
+    <button type="button" class="btn" data-btn="getSelectedOption">getSelectedOption</button>
+    <button type="button" class="btn" data-btn="setValueSelect">setValue to select</button>
+    <button type="button" class="btn" data-btn="update">update options</button>
+    <div style="height:800px;"></div>
+</div>
+<script>
+    var options = [];
+    options.push({value: "1", text: "string"});
+    options.push({value: "2", text: "number"});
+    options.push({value: "3", text: "substr"});
+    options.push({value: "4", text: "substring"});
+    options.push({value: "search", text: "search"});
+    options.push({value: "parseInt", text: "parseInt"});
+    options.push({value: "toFixed", text: "toFixed"});
+    options.push({value: "min", text: "min"});
+    options.push({value: "max", text: "max"});
+
+
+    var myCombo = new ax5.ui.combobox({
+        theme: "danger",
+        removeIcon: '<i class="fa fa-times" aria-hidden="true"></i>'
+    });
+
+
+    $(document.body).ready(function () {
+
+        $('[data-btn]').click(function () {
+            var act = this.getAttribute("data-btn");
+            switch (act) {
+                case "setValue":
+                    myCombo.setValue($('[data-ax5combobox="combo1"]'), "1");
+                    //myCombo.blur($('[data-ax5combobox="combo1"]'));
+                    break;
+                case "setValue2":
+                    myCombo.setValue($('[data-ax5combobox="combo1"]'), ["1", "2"]);
+                    //myCombo.blur($('[data-ax5combobox="combo1"]'));
+                    break;
+                case "setText":
+                    myCombo.setText($('[data-ax5combobox="combo1"]'), "string");
+                    //myCombo.blur($('[data-ax5combobox="combo1"]'));
+                    break;
+                case "setText2":
+                    myCombo.setText($('[data-ax5combobox="combo1"]'), ["substring", "search"]);
+                    //myCombo.blur($('[data-ax5combobox="combo1"]'));
+                    break;
+                case "getSelectedOption":
+                    console.log(myCombo.getSelectedOption($('[data-ax5combobox="combo1"]')));
+                    console.log($(document.forms).serialize());
+                    break;
+                case "setValueSelect":
+                    $('[data-ax-path="combo3"]').val("6").trigger("change");
+                    //$('[data-ax-path="select2"]').val(["optionValue7", "optionValue9"]).trigger("change");
+                    break;
+                case "update":
+                    /*
+                     mySelect.update({
+                     target: $('[data-ax5select="select1"]'),
+                     options: [
+                     {value: 99, text: "optionText"}
+                     ]
+                     });
+                     $('[data-ax5select="select2"]').ax5select({
+                     options: options
+                     });
+                     */
+                    break;
+            }
+        });
+
+
+
+        // jquery extend
+        myCombo.bind({
+            //theme: "primary",
+            target: $('[data-ax5combobox="combo1"]'),
+            options: options,
+            onChange: function () {
+                console.log(this);
+            },
+            onStateChanged: function () {
+                //console.log(this);
+            }
+        });
+        myCombo.disable($('[data-ax5combobox="combo1"]'));
+        myCombo.enable($('[data-ax5combobox="combo1"]'));
+
+        myCombo.bind({
+            //theme: "primary",
+            target: $('[data-ax5combobox="combo2"]'),
+            options: options,
+            onStateChanged: function () {
+                //console.log(this);
+            }
+        });
+
+        myCombo.bind({
+            theme: "primary",
+            target: $('[data-ax5combobox="combo3"]'),
+            onStateChanged: function () {
+                //console.log(this);
+            }
+        });
+
+        //myCombo.open($('[data-ax5combobox="combo1"]'));
+        //myCombo.setValue($('[data-ax5combobox="combo1"]'), "1");
+    });
+
+
+    // todo : onStateChanged
+    // todo : css overflow 상황 해결.
+</script>
+
+</body>
+</html>

@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <link rel="stylesheet" type="text/css" href="../dist/ax5dialog.css"/>
+    <link rel="stylesheet" type="text/css" href="bower_components/bootstrap/dist/css/bootstrap.min.css"/>
+    <link rel="stylesheet" type="text/css" href="bower_components/ax5ui-mask/dist/ax5mask.css"/>
+
+    <script src="bower_components/jquery/dist/jquery.min.js"></script>
+    <script src="bower_components/ax5core/dist/ax5core.js"></script>
+    <script src="bower_components/ax5ui-mask/dist/ax5mask.min.js"></script>
+    <script src="../dist/ax5dialog.js"></script>
+</head>
+<body>
+<div style="padding:20px;">
+    <button type="button" data-alert="default" class="btn btn-default" id="alert-default-open">alert-default-open
+    </button>
+    <button type="button" data-alert="primary" class="btn btn-primary" id="alert-primary-open">alert-primary-open
+    </button>
+    <button type="button" data-alert="success" class="btn btn-success" id="alert-success-open">alert-success-open
+    </button>
+    <button type="button" data-alert="info" class="btn btn-info" id="alert-info-open">alert-info-open</button>
+    <button type="button" data-alert="warning" class="btn btn-warning" id="alert-warning-open">alert-warning-open
+    </button>
+    <button type="button" data-alert="danger" class="btn btn-danger" id="alert-danger-open">alert-danger-open</button>
+</div>
+<div style="padding:20px;">
+    <button type="button" data-confirm="default" class="btn btn-default" id="confirm-default-open">
+        confirm-default-open
+    </button>
+    <button type="button" data-confirm="primary" class="btn btn-primary" id="confirm-primary-open">
+        confirm-primary-open
+    </button>
+    <button type="button" data-confirm="success" class="btn btn-success" id="confirm-success-open">
+        confirm-success-open
+    </button>
+    <button type="button" data-confirm="info" class="btn btn-info" id="confirm-info-open">confirm-info-open</button>
+    <button type="button" data-confirm="warning" class="btn btn-warning" id="confirm-warning-open">
+        confirm-warning-open
+    </button>
+    <button type="button" data-confirm="danger" class="btn btn-danger" id="confirm-danger-open">confirm-danger-open
+    </button>
+</div>
+<div style="padding:20px;">
+    <button type="button" data-prompt="default" class="btn btn-default" id="prompt-default-open">prompt-default-open
+    </button>
+    <button type="button" data-prompt="primary" class="btn btn-primary" id="prompt-primary-open">prompt-primary-open
+    </button>
+    <button type="button" data-prompt="success" class="btn btn-success" id="prompt-success-open">prompt-success-open
+    </button>
+    <button type="button" data-prompt="info" class="btn btn-info" id="prompt-info-open">prompt-info-open</button>
+    <button type="button" data-prompt="warning" class="btn btn-warning" id="prompt-warning-open">prompt-warning-open
+    </button>
+    <button type="button" data-prompt="danger" class="btn btn-danger" id="prompt-danger-open">prompt-danger-open
+    </button>
+</div>
+<div style="padding:20px;">
+    <button type="button" data-alert-double="default" class="btn btn-default" id="alert-default-open">alert-default-double-open
+    </button>
+</div>
+<script>
+    var dialog = new ax5.ui.dialog();
+    var mask = new ax5.ui.mask();
+    dialog.setConfig({
+        zIndex: 5000,
+        onStateChanged: function () {
+            if (this.state === "open") {
+                mask.open();
+            }
+            else if (this.state === "close") {
+                mask.close();
+            }
+        }
+    });
+
+    $(document.body).ready(function () {
+
+        $('button[data-alert]').click(function () {
+            var theme = this.getAttribute("data-alert");
+            dialog.alert({
+                theme: theme,
+                title: 'Alert ' + theme,
+                msg: theme + ' color'
+            }, function () {
+                console.log(this);
+            });
+        });
+
+        $('button[data-alert-double]').click(function () {
+            var theme = this.getAttribute("data-alert-double");
+            dialog.alert({
+                theme: theme,
+                title: 'Alert ' + theme,
+                msg: theme + ' color'
+            }, function () {
+                console.log(this);
+
+                dialog.alert({
+                    theme: theme,
+                    title: 'Alert ' + theme,
+                    msg: theme + ' color'
+                }, function () {
+                    console.log(this);
+                });
+
+            });
+        });
+
+        $('button[data-confirm]').click(function () {
+            var theme = this.getAttribute("data-confirm");
+            dialog.confirm({
+                theme: theme,
+                title: 'Confirm ' + theme,
+                msg: theme + ' color',
+                btns: {
+                    del: {
+                        label: 'Delete', theme: 'warning', onClick: function (key) {
+                            console.log(key, this);
+                            dialog.close();
+                        }
+                    },
+                    cancel: {
+                        label: 'Cancel', theme: 'danger', onClick: function (key) {
+                            console.log(key, this);
+                            dialog.close();
+                        }
+                    },
+                    other: {
+                        label: 'Other', onClick: function (key) {
+                            console.log(key, this);
+                            //my_dialog.close(); // 닫기를 안할 수도 있겠어요.
+                        }
+                    }
+                }
+            }, function () {
+                console.log(this);
+            });
+        });
+
+        $('button[data-prompt]').click(function () {
+            var theme = this.getAttribute("data-prompt");
+            dialog.prompt({
+                theme: theme,
+                title: 'Confirm ' + theme,
+                msg: theme + ' color',
+                input: {
+                    data1: {label: "data1의 라벨"},
+                    data2: {label: "data2의 라벨"}
+                }
+            }, function () {
+                console.log(this);
+            });
+        });
+
+    });
+</script>
+
+</body>
+</html>

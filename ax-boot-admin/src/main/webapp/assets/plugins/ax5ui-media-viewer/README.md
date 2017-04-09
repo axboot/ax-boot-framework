@@ -1,3 +1,4 @@
+[![Build Status](https://travis-ci.org/ax5ui/ax5ui-media-viewer.svg?branch=master)](https://travis-ci.org/ax5ui/ax5ui-media-viewer)
 [![npm version](https://badge.fury.io/js/ax5ui-media-viewer.svg)](https://badge.fury.io/js/ax5ui-media-viewer)
 
 # ax5ui-media-viewer
@@ -42,7 +43,7 @@ Folder location can be any for your project. However, please be sure to assign t
 
 ```html
 <link rel="stylesheet" type="text/css" href="https://cdn.rawgit.com/ax5ui/ax5ui-media-viewer/master/dist/ax5media-viewer.css" />
-<script type="text/javascript" src="https://code.jquery.com/jquery-1.12.3.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
 <script type="text/javascript" src="https://cdn.rawgit.com/ax5ui/ax5core/master/dist/ax5core.min.js"></script>
 <script type="text/javascript" src="https://cdn.rawgit.com/ax5ui/ax5ui-media-viewer/master/dist/ax5media-viewer.min.js"></script>
 ```

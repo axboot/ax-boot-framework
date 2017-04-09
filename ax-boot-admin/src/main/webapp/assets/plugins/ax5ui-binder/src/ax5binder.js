@@ -901,15 +901,27 @@
                 var _this = this;
                 var errors = [];
                 this.view_target.find('[data-ax-path]').each(function () {
-                    var dom = $(this), dataPath = dom.attr("data-ax-path"), is_validate = dom.attr("data-ax-validate");
+                    var dom = $(this), 
+                        dataPath = dom.attr("data-ax-path"), 
+                        is_validate = dom.attr("data-ax-validate"),
+                        pattern = dom.attr("pattern");
+                    
                     if (is_validate) {
-                        var val = (Function("", "return this" + get_real_path(dataPath) + ";")).call(_this.model);
-                        if (typeof val === "undefined") val = "";
-                        var _val = val.toString();
+                        var val, _val, is_error;
 
-                        var is_error = false;
+                        val = (Function("", "return this" + get_real_path(dataPath) + ";")).call(_this.model);
+                        if (typeof val === "undefined") val = "";
+                        _val = val.toString();
+                        is_error = false;
+
                         if (is_validate == "required" && _val.trim() == "") {
                             is_error = true;
+                        }
+                        else if(is_validate == "pattern"){
+                            is_error = !(new RegExp(pattern)).test(_val);
+                        }
+                        else if(is_validate == "email"){
+                            is_error = !(/[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}$/).test(_val);
                         }
                         else if (!(/\D.?/g).test(is_validate) && _val.trim().length < is_validate.number()) {
                             is_error = true;
@@ -942,6 +954,12 @@
                             var is_error = false;
                             if (is_validate == "required" && _val.trim() == "") {
                                 is_error = true;
+                            }
+                            else if(is_validate == "pattern"){
+                                is_error = !(new RegExp(pattern)).test(_val);
+                            }
+                            else if(is_validate == "email"){
+                                is_error = !(/[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}$/).test(_val);
                             }
                             else if (!(/\D.?/g).test(is_validate) && _val.trim().length < is_validate.number()) {
                                 is_error = true;

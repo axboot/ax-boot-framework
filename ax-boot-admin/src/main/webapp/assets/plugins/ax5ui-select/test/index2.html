@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<!--
+  ~ Copyright (c) 2016. tom@axisj.com
+  ~ - github.com/thomasjang
+  ~ - www.axisj.com
+  -->
+
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <link rel="stylesheet" type="text/css" href="bower_components/bootstrap/dist/css/bootstrap.min.css"/>
+    <link rel="stylesheet" href="bower_components/font-awesome/css/font-awesome.min.css">
+    <link rel="stylesheet" type="text/css" href="../dist/ax5select.css"/>
+
+    <script src="bower_components/jquery/dist/jquery.min.js"></script>
+    <script src="bower_components/ax5core/dist/ax5core.js"></script>
+    <script src="../dist/ax5select.js"></script>
+</head>
+<body style="padding: 10px;">
+<div class="container">
+    <form name="forms">
+        <h1>form-group</h1>
+
+        <div class="row">
+            <div class="col-sm-4">
+                <div class="form-group">
+                    <div data-ax5select="select1" data-ax5select-config='{
+                    size: "",
+                    multiple: false,
+                    reset:"<i class=\"fa fa-trash\"></i>"
+                }'></div>
+                </div>
+            </div>
+            <div class="col-sm-4">
+                <div class="form-group">
+                    <div data-ax5select="select2" data-ax5select-config='{
+                    size: "",
+                    multiple: true,
+                    reset:"<i class=\"fa fa-trash\"></i>"
+                }'></div>
+                </div>
+            </div>
+            <div class="col-sm-4">
+                <div class="form-group">
+                    <div data-ax5select="select3" data-ax5select-config='{
+                    size: "",
+                    multiple: true,
+                    reset:"<i class=\"fa fa-trash\"></i>"
+                }'></div>
+                </div>
+            </div>
+
+        </div>
+
+
+    </form>
+
+    <button type="button" class="btn" data-btn="setValue">setValue</button>
+    <button type="button" class="btn" data-btn="getValue">getValue</button>
+    <button type="button" class="btn" data-btn="setValueSelect">setValue to select</button>
+    <button type="button" class="btn" data-btn="update">update options</button>
+</div>
+<script>
+    var options = [];
+    for (var i = 0; i < 20; i++) {
+        options.push({value: i, text: "optionText" + i});
+    }
+
+    $(document.body).ready(function () {
+
+        $('[data-btn]').click(function () {
+            var act = this.getAttribute("data-btn");
+            switch (act) {
+                case "setValue":
+
+                    break;
+                case "getValue":
+                    console.log($('[data-ax5select="select1"]').ax5select("getValue"));
+                    break;
+                case "setValueSelect":
+
+                    break;
+                case "update":
+
+                    break;
+            }
+        });
+
+        var callbackCount = 0;
+        $('[data-ax5select="select1"]').ax5select({
+            lang: {
+                loading: '<i class="fa fa-spinner fa-pulse"></i>'
+            },
+            onChange: function () {
+                console.log(this);
+            },
+            onExpand: function (callback) {
+
+                setTimeout(function () {
+                    if (callbackCount == 0) {
+                        callback({
+                            options: [
+                                {value: "V0", text: "callback Text 0"},
+                                {value: "V1", text: "callback Text 1"},
+                                {value: "V2", text: "callback Text 2"},
+                                {value: "V3", text: "callback Text 3"}
+                            ]
+                        });
+                    } else {
+                        callback({
+                            options: [
+                                {value: "V0", text: "callback Text 0"},
+                                {value: "V11", text: "callback Text 11"},
+                                {value: "V12", text: "callback Text 12"},
+                                {value: "V13", text: "callback Text 13"}
+                            ]
+                        });
+                    }
+                    callbackCount++;
+                }, 300);
+
+            }
+        });
+        $('[data-ax5select="select2"]').ax5select({
+            options: options
+        });
+        $('[data-ax5select="select3"]').ax5select({
+            options: options
+        });
+
+    });
+
+
+    // todo : onStateChanged
+</script>
+
+</body>
+</html>

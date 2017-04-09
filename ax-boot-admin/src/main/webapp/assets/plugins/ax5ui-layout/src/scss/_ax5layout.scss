@@ -95,32 +95,86 @@
         //z-index: 3;
 
         &.dock-panel-top {
-            top: 0px;
+            top: 0;
             width: 100%;
-            cursor: ns-resize;
+            &:before {
+                content: "";
+                position: absolute;
+                z-index: 3;
+                height: 8px;
+                top: -4px;
+                left: 0;
+                right: 0;
+                cursor: row-resize;
+            }
         }
         &.dock-panel-bottom {
-            bottom: 0px;
+            bottom: 0;
             width: 100%;
-            cursor: ns-resize;
+            &:before {
+                content: "";
+                position: absolute;
+                z-index: 3;
+                height: 8px;
+                top: -4px;
+                left: 0;
+                right: 0;
+                cursor: row-resize;
+            }
         }
         &.dock-panel-left {
-            left: 0px;
+            left: 0;
             height: 100%;
-            cursor: ew-resize;
+            &:before {
+                content: "";
+                position: absolute;
+                z-index: 3;
+                width: 8px;
+                left: -4px;
+                top: 0;
+                bottom: 0;
+                cursor: col-resize;
+            }
         }
         &.dock-panel-right {
-            right: 0px;
+            right: 0;
             height: 100%;
-            cursor: ew-resize;
+            &:before {
+                content: "";
+                position: absolute;
+                z-index: 3;
+                width: 8px;
+                left: -4px;
+                top: 0;
+                bottom: 0;
+                cursor: col-resize;
+            }
         }
         &.split-panel-vertical {
             height: 100%;
-            cursor: ew-resize;
+            &:before {
+                content: "";
+                position: absolute;
+                z-index: 3;
+                width: 8px;
+                left: -4px;
+                top: 0;
+                bottom: 0;
+                cursor: col-resize;
+            }
         }
         &.split-panel-horizontal {
             width: 100%;
-            cursor: ns-resize;
+            &:before {
+                content: "";
+                position: absolute;
+                z-index: 3;
+                height: 8px;
+                top: -4px;
+                left: 0;
+                right: 0;
+                cursor: row-resize;
+            }
         }
     }
     > [data-tab-panel-label-holder] {

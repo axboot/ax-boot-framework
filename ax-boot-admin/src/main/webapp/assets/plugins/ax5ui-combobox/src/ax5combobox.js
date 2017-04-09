@@ -32,6 +32,7 @@
          * });
          * ```
          */
+
         var ax5combobox = function () {
             var
                 self = this,
@@ -276,10 +277,10 @@
                 },
 
                 getLabel = function (queIdx) {
-                    var item = this.queue[queIdx];
+                    let item = this.queue[queIdx];
 
                     // 템플릿에 전달 해야할 데이터 선언
-                    var data = {};
+                    let data = {};
                     data.id = item.id;
                     data.theme = item.theme;
                     data.size = "ax5combobox-option-group-" + item.size;
@@ -293,7 +294,7 @@
                     return COMBOBOX.tmpl.get.call(this, "label", data, item.columnKeys);
                 },
                 printLabel = function (queIdx) {
-                    var item = this.queue[queIdx];
+                    let item = this.queue[queIdx];
 
                     item.$displayLabel.find('[data-ax5combobox-selected-label]').remove();
                     item.$displayLabelInput.before(getLabel.call(this, queIdx));
