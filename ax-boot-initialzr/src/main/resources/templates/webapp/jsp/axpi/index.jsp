@@ -6,7 +6,7 @@
     <title>AXBoot DevTools</title>
 
     <link rel="stylesheet" type="text/css" href="/jsp/axpi/plugins/prettify/github.css">
-    <link rel="stylesheet" type="text/css" href="https://cdn.rawgit.com/axisj/ax5/master/src/css/dplus/ax5.min.css">
+    <link rel="stylesheet" type="text/css" href="https://cdn.rawgit.com/thomasJang/ax5/a8d0ab77/pub/css/dplus/ax5.min.css">
     <link rel="stylesheet" type="text/css" href="/jsp/axpi/css/app.css">
     <link rel="stylesheet" type="text/css" href="http://cdno.axisj.com/axicon/axicon.css">
 
@@ -27,8 +27,8 @@
     </style>
 
     <script type="text/javascript" src="/jsp/axpi/plugins/prettify/prettify.js"></script>
-    <script type="text/javascript" src="https://rawgit.com/axisj/ax5/master/pub/ax5.min.js"></script>
-    <script type="text/javascript" src="https://rawgit.com/axisj/ax5/master/pub/ui/all.min.js"></script>
+    <script type="text/javascript" src="https://cdn.rawgit.com/thomasJang/ax5/a8d0ab77/pub/ax5.min.js"></script>
+    <script type="text/javascript" src="https://cdn.rawgit.com/thomasJang/ax5/a8d0ab77/pub/ui/all.min.js"></script>
     <script>
         function makeAll() {
             var my_dialog = new ax5.ui.dialog();
