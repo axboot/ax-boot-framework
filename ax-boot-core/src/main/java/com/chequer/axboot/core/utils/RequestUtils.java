@@ -241,7 +241,7 @@ public class RequestUtils {
             } else {
                 String acceptLanguage = request.getHeader("Accept-Language");
                 String acceptCharset = request.getHeader("Accept-Charset");
-                locale = new Locale("en");
+                locale = new Locale("ko");
             }
         }
 
