@@ -8,6 +8,7 @@ var changed = require('gulp-changed');
 var plumber = require('gulp-plumber');
 var notify = require("gulp-notify");
 var babel = require('gulp-babel');
+var shell = require('gulp-shell');
 var spawn = require('child_process').spawn;
 var fs = require('fs');
 var replace = require('gulp-replace');
@@ -43,6 +44,15 @@ function errorAlert(error) {
     console.log(error.toString());//Prints Error to Console
     this.emit("end"); //End function
 }
+
+
+/**
+ * PLUGIN UPDATE
+ */
+gulp.task('plugin update', shell.task([
+    'bower cache clean',
+    'bower update'
+]));
 
 /**
  * JS
