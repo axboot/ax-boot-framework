@@ -43,42 +43,49 @@
             let gi = 0, gl = groupingKeys.length, compareString, appendRow = [], ari;
             for (; i < l + 1; i++) {
                 gi = 0;
-                if (_list[i] && _list[i][this.config.columnKeys.deleted]) {
-                    this.deletedList.push(_list[i]);
-                } else {
-                    compareString = "";
-                    appendRow = [];
-                    for (; gi < gl; gi++) {
-                        if (_list[i]) {
-                            compareString += "$|$" + _list[i][groupingKeys[gi].key];
-                        }
-                        if (appendIndex > 0 && compareString != groupingKeys[gi].compareString) {
-                            var appendRowItem = {keys: [], labels: [], list: groupingKeys[gi].list};
-                            for (var ki = 0; ki < gi + 1; ki++) {
-                                appendRowItem.keys.push(groupingKeys[ki].key);
-                                appendRowItem.labels.push(_list[i - 1][groupingKeys[ki].key]);
+
+                if (_list[i]) {
+                    if (_list[i][this.config.columnKeys.deleted]) {
+                        this.deletedList.push(_list[i]);
+                    } else {
+                        compareString = ""; // 그룹핑 구문검사용
+                        appendRow = []; // 현재줄 앞에 추가해줘야 하는 줄
+
+                        // 그룹핑 구문검사
+                        for (; gi < gl; gi++) {
+                            if (_list[i]) {
+                                compareString += "$|$" + _list[i][groupingKeys[gi].key];
                             }
-                            appendRow.push(appendRowItem);
-                            groupingKeys[gi].list = [];
+                            if (appendIndex > 0 && compareString != groupingKeys[gi].compareString) {
+                                let appendRowItem = {keys: [], labels: [], list: groupingKeys[gi].list};
+                                for (let ki = 0; ki < gi + 1; ki++) {
+                                    appendRowItem.keys.push(groupingKeys[ki].key);
+                                    appendRowItem.labels.push(_list[i - 1][groupingKeys[ki].key]);
+                                }
+                                appendRow.push(appendRowItem);
+                                groupingKeys[gi].list = [];
+                            }
+                            groupingKeys[gi].list.push(_list[i]);
+                            groupingKeys[gi].compareString = compareString;
                         }
-                        groupingKeys[gi].list.push(_list[i]);
-                        groupingKeys[gi].compareString = compareString;
-                    }
 
-                    ari = appendRow.length;
-                    while (ari--) {
-                        returnList.push({__isGrouping: true, __groupingList: appendRow[ari].list, __groupingBy: {keys: appendRow[ari].keys, labels: appendRow[ari].labels}});
-                    }
+                        // 새로 추가해야할 그룹핑 row
+                        ari = appendRow.length;
+                        while (ari--) {
+                            returnList.push({__isGrouping: true, __groupingList: appendRow[ari].list, __groupingBy: {keys: appendRow[ari].keys, labels: appendRow[ari].labels}});
+                        }
+                        //~ 그룹핑 구문 검사 완료
 
-                    if (_list[i]) {
                         if (_list[i][this.config.columnKeys.selected]) {
                             this.selectedDataIndexs.push(i);
                         }
                         _list[i]["__index"] = lineNumber;
                         dataRealRowCount++;
-                        returnList.push(_list[i]);
+
                         appendIndex++;
                         lineNumber++;
+                        returnList.push(_list[i]);
+
                     }
                 }
             }
@@ -88,14 +95,16 @@
                 if (_list[i]) {
                     if (_list[i][this.config.columnKeys.deleted]) {
                         this.deletedList.push(_list[i]);
-                    } else if (_list[i][this.config.columnKeys.selected]) {
-                        this.selectedDataIndexs.push(i);
+                    } else {
+
+                        if (_list[i][this.config.columnKeys.selected]) {
+                            this.selectedDataIndexs.push(i);
+                        }
+                        _list[i]["__index"] = lineNumber;
+                        dataRealRowCount++;
+                        lineNumber++;
+                        returnList.push(_list[i]);
                     }
-                    // __index변수를 추가하여 lineNumber 에 출력합니다. (body getFieldValue 에서 출력함)
-                    _list[i]["__index"] = lineNumber;
-                    dataRealRowCount++;
-                    lineNumber++;
-                    returnList.push(_list[i]);
                 }
             }
         }
@@ -307,8 +316,13 @@
                 if (!U.isNumber(_dindex)) {
                     throw 'invalid argument _dindex';
                 }
-                //
-                list = list.splice(_dindex, [].concat(_row));
+                if (U.isArray(_row)) {
+                    for (let _i = 0, _l = row.length; _i < _l; _i++) {
+                        list.splice(_dindex + _i, 0, _row[_i]);
+                    }
+                } else {
+                    list.splice(_dindex, 0, _row);
+                }
             }
 
             if (this.config.body.grouping) {
@@ -462,7 +476,7 @@
                     treeKeys = this.config.tree.columnKeys;
 
                 if (_dindex === "selected") {
-                    
+
                     let i = list.length;
                     while (i--) {
                         if (list[i][this.config.columnKeys.selected]) {
@@ -470,7 +484,7 @@
 
                             let selfHash = list[i][treeKeys.selfHash];
                             let ii = list.length;
-                            
+
                             while (ii--) {
                                 if (list[ii][treeKeys.selfHash].substr(0, selfHash.length) === selfHash) {
                                     list[ii][keys.deleted] = true;
@@ -501,7 +515,7 @@
         };
 
         if (typeof _dindex === "undefined") _dindex = "last";
-        
+
         if (_dindex in processor) {
             processor[_dindex].call(this, _dindex);
         } else {

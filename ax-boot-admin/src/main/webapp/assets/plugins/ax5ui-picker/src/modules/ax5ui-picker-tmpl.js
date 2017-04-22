@@ -1,9 +1,11 @@
+
 // ax5.ui.picker.tmpl
 (function () {
-    var PICKER = ax5.ui.picker;
-    var U = ax5.util;
 
-    var pickerTmpl = function () {
+    let PICKER = ax5.ui.picker;
+    const U = ax5.util;
+
+    const pickerTmpl = function () {
         return `
 <div class="ax5-ui-picker {{theme}}" id="{{id}}" data-picker-els="root" {{#zIndex}}style="z-index:{{zIndex}};"{{/zIndex}}>
     {{#title}}
@@ -33,4 +35,5 @@
             return ax5.mustache.render(PICKER.tmpl[tmplName].call(this, columnKeys), data);
         }
     };
+
 })();

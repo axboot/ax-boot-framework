@@ -161,9 +161,9 @@
 
             cfg = this.config;
 
-            let appEventAttach = function (active) {
+            let appEventAttach = function (active, param) {
                     if (active) {
-                        jQuery(document).unbind("click.ax5menu-" + this.menuId).bind("click.ax5menu-" + this.menuId, clickItem.bind(this));
+                        jQuery(document).unbind("click.ax5menu-" + this.menuId).bind("click.ax5menu-" + this.menuId, clickItem.bind(this, param));
                         jQuery(window).unbind("keydown.ax5menu-" + this.menuId).bind("keydown.ax5menu-" + this.menuId, function (e) {
                             if (e.which == ax5.info.eventKeys.ESC) {
                                 self.close();
@@ -315,7 +315,9 @@
                             path = this.getAttribute("data-menu-item-path"),
                             _items;
 
-                        _items = self.queue[depth].data[cfg.columnKeys.items][index][cfg.columnKeys.items];
+                        if (path) {
+                            _items = self.queue[depth].data[cfg.columnKeys.items][index][cfg.columnKeys.items];
+                        }
                         if (_items && _items.length > 0) {
 
                         } else {
@@ -360,7 +362,9 @@
 
                     return this;
                 },
-                clickItem = function (e, target, item) {
+                clickItem = function (param, e) {
+                    let target, item;
+
                     target = U.findParentNode(e.target, function (target) {
                         if (target.getAttribute("data-menu-item-index")) {
                             return true;
@@ -419,7 +423,9 @@
                         }
 
                         if (self.onClick) {
-                            self.onClick.call(item, item);
+                            if (self.onClick.call(item, item, param)) {
+                                self.close();
+                            }
                         }
                         if ((!item[cfg.columnKeys.items] || item[cfg.columnKeys.items].length == 0) && cfg.itemClickAndClose) self.close();
                     }
@@ -585,9 +591,9 @@
                     if (items.length) {
                         popup.call(this, opt, items, 0); // 0 is seq of queue
 
-                        if(this.popupEventAttachTimer) clearTimeout(this.popupEventAttachTimer);
+                        if (this.popupEventAttachTimer) clearTimeout(this.popupEventAttachTimer);
                         this.popupEventAttachTimer = setTimeout((function () {
-                            appEventAttach.call(this, true); // 이벤트 연결
+                            appEventAttach.call(this, true, opt.param); // 이벤트 연결
                         }).bind(this), 500);
                     }
 

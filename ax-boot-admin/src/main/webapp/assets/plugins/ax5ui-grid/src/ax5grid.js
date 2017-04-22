@@ -7,9 +7,9 @@
 // ax5.ui.grid
 (function () {
 
-    let UI = ax5.ui,
-        U = ax5.util,
-        GRID;
+    const UI = ax5.ui;
+    const U = ax5.util;
+    let GRID;
 
     UI.addClass({
         className: "grid",
@@ -24,7 +24,7 @@
          * var myGrid = new ax5.ui.grid();
          * ```
          */
-        let ax5grid = function () {
+        return function () {
             let self = this,
                 cfg,
                 ctrlKeys = {
@@ -144,6 +144,7 @@
             this.isInlineEditing = false;
             this.inlineEditing = {};
             this.listIndexMap = {}; // tree데이터 사용시 데이터 인덱싱 맵
+            this.gridContextMenu = null; // contentMenu 의 인스턴스
 
             // header
             this.headerTable = {};
@@ -253,7 +254,7 @@
             const initColumns = function (_columns) {
                 this.columns = U.deepCopy(_columns);
                 this.headerTable = GRID.util.makeHeaderTable.call(this, this.columns);
-                this.xvar.frozenColumnIndex = (cfg.frozenColumnIndex > this.columns.length) ? this.columns.length : cfg.frozenColumnIndex;
+                this.xvar.frozenColumnIndex = cfg.frozenColumnIndex || 0;
 
                 this.bodyRowTable = GRID.util.makeBodyRowTable.call(this, this.columns);
                 this.bodyRowMap = GRID.util.makeBodyRowMap.call(this, this.bodyRowTable);
@@ -294,6 +295,7 @@
                             let width = 0;
                             if (cfg.showLineNumber) width += cfg.lineNumberColumnWidth;
                             if (cfg.showRowSelector) width += cfg.rowSelectorColumnWidth;
+                            width += cfg.scroller.size;
                             return width;
                         })(),
                     totalWidth = 0, computedWidth, autoWidthColgroupIndexs = [],
@@ -947,7 +949,7 @@
                     if (this.onLoad) {
                         this.onLoad.call({
                             self: this
-                        })
+                        });
                     }
                 }).bind(this));
                 return this;
@@ -1127,9 +1129,10 @@
                 GRID.data.set.call(this, _data);
                 alignGrid.call(this);
                 GRID.body.repaint.call(this);
-                if(!isFirstPaint) GRID.scroller.resize.call(this);
+                GRID.scroller.resize.call(this);
                 GRID.page.navigationUpdate.call(this);
-                if(!isFirstPaint) GRID.body.scrollTo.call(this, {top: 0});
+
+                if (!isFirstPaint) GRID.body.scrollTo.call(this, {top: 0});
 
                 isFirstPaint = null;
                 return this;
@@ -1137,11 +1140,12 @@
 
             /**
              * @method ax5grid.getList
-             * @param {String} _type
+             * @param {String} _type - selected|modified|deleted
              * @returns {Array}
              * @example
              * ```js
              * ax5Grid.getList();
+             * ax5Grid.getList("selected");
              * ax5Grid.getList("modified");
              * ax5Grid.getList("deleted");
              * ```
@@ -1628,13 +1632,11 @@
                 }
             }).apply(this, arguments);
         };
-        return ax5grid;
     })());
 
     GRID = ax5.ui.grid;
 })();
 
-// todo : body menu
 // todo : filter
 // todo : column reorder
 // todo : editor 필수값 속성 지정

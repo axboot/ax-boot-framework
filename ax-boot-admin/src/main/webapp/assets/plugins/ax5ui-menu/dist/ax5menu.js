@@ -8,7 +8,7 @@
 
     UI.addClass({
         className: "menu",
-        version: "1.4.8"
+        version: "1.4.18"
     }, function () {
         /**
          * @class ax5.ui.menu
@@ -163,9 +163,9 @@
 
             cfg = this.config;
 
-            var appEventAttach = function appEventAttach(active) {
+            var appEventAttach = function appEventAttach(active, param) {
                 if (active) {
-                    jQuery(document).unbind("click.ax5menu-" + this.menuId).bind("click.ax5menu-" + this.menuId, clickItem.bind(this));
+                    jQuery(document).unbind("click.ax5menu-" + this.menuId).bind("click.ax5menu-" + this.menuId, clickItem.bind(this, param));
                     jQuery(window).unbind("keydown.ax5menu-" + this.menuId).bind("keydown.ax5menu-" + this.menuId, function (e) {
                         if (e.which == ax5.info.eventKeys.ESC) {
                             self.close();
@@ -312,7 +312,9 @@
                         path = this.getAttribute("data-menu-item-path"),
                         _items = void 0;
 
-                    _items = self.queue[depth].data[cfg.columnKeys.items][index][cfg.columnKeys.items];
+                    if (path) {
+                        _items = self.queue[depth].data[cfg.columnKeys.items][index][cfg.columnKeys.items];
+                    }
                     if (_items && _items.length > 0) {} else {
                         jQuery(this).removeClass("hover");
                     }
@@ -353,7 +355,10 @@
 
                 return this;
             },
-                clickItem = function clickItem(e, target, item) {
+                clickItem = function clickItem(param, e) {
+                var target = void 0,
+                    item = void 0;
+
                 target = U.findParentNode(e.target, function (target) {
                     if (target.getAttribute("data-menu-item-index")) {
                         return true;
@@ -411,7 +416,9 @@
                     }
 
                     if (self.onClick) {
-                        self.onClick.call(item, item);
+                        if (self.onClick.call(item, item, param)) {
+                            self.close();
+                        }
                     }
                     if ((!item[cfg.columnKeys.items] || item[cfg.columnKeys.items].length == 0) && cfg.itemClickAndClose) self.close();
                 } else {
@@ -575,7 +582,7 @@
 
                         if (this.popupEventAttachTimer) clearTimeout(this.popupEventAttachTimer);
                         this.popupEventAttachTimer = setTimeout(function () {
-                            appEventAttach.call(this, true); // 이벤트 연결
+                            appEventAttach.call(this, true, opt.param); // 이벤트 연결
                         }.bind(this), 500);
                     }
 

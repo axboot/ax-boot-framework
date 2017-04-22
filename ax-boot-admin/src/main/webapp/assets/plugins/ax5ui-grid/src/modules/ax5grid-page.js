@@ -1,10 +1,11 @@
 // ax5.ui.grid.page
 (function () {
 
-    let GRID = ax5.ui.grid,
-        U = ax5.util;
+    const GRID = ax5.ui.grid;
 
-    var onclickPageMove = function (_act) {
+    const U = ax5.util;
+
+    const onclickPageMove = function (_act) {
         var callback = function (_pageNo) {
             if (this.page.currentPage != _pageNo) {
                 this.page.selectPage = _pageNo;
@@ -44,7 +45,7 @@
         }
     };
 
-    var navigationUpdate = function () {
+    const navigationUpdate = function () {
         var self = this;
         if (this.page) {
             var page = {
@@ -98,7 +99,7 @@
         }
     };
 
-    var statusUpdate = function () {
+    const statusUpdate = function () {
         var fromRowIndex = this.xvar.paintStartRowIndex;
         var toRowIndex = this.xvar.paintStartRowIndex + this.xvar.paintRowCount - 1;
         //var totalElements = (this.page && this.page.totalElements) ? this.page.totalElements : this.xvar.dataRowCount;

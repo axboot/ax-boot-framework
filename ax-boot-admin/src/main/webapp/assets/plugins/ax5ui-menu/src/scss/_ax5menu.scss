@@ -395,11 +395,9 @@
         @include menu-variant($ax5menu-danger-text, $ax5menu-danger-border-color, $ax5menu-danger-heading-bg,
                 $ax5menu-danger-item-bg, $ax5menu-danger-item-text, $ax5menu-danger-item-hover-bg, $ax5menu-danger-item-hover-text);
     }
-
     &.destroy {
         @include animation(ax-menu-destroy $ax5menu-easing-time-close $ease-in-back forwards);
     }
-
     &.direction-top {
         @include transform-origin(center top);
     }

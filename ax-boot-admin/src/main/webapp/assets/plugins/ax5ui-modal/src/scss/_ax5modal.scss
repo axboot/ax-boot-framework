@@ -16,7 +16,7 @@
 
 @mixin ax-modal-section() {
     .ax-modal-header {
-        @include user-select(none);
+        user-select: none;
         //font-size: 1em;
         font-weight: 600;
         padding: $ax5modal-header-padding;
@@ -237,6 +237,14 @@
 // mixins --------------------------------------------- end
 
 .ax5modal {
+    * {
+        box-sizing: border-box;
+    }
+    *:before,
+    *:after {
+        box-sizing: border-box;
+    }
+
     @include animation(ax-modal $ax5modal-easing-time-open $ax5modal-easing-open forwards);
     @include transform(translateZ(0px));
     //@include transition(all $ax5modal-easing-time-open linear);

@@ -7,7 +7,7 @@
 
     UI.addClass({
         className: "layout",
-        version: "1.4.8"
+        version: "${VERSION}"
     }, function () {
         /**
          * @class ax5layout
@@ -24,7 +24,7 @@
                 "mouseup": ax5.info.supportTouch ? "touchend" : "mouseup"
             },
                 getMousePosition = function getMousePosition(e) {
-                var mouseObj = 'changedTouches' in e.originalEvent ? e.originalEvent.changedTouches[0] : e;
+                var mouseObj = 'changedTouches' in e.originalEvent && e.changedTouches ? e.originalEvent.changedTouches[0] : e;
                 return {
                     clientX: mouseObj.clientX,
                     clientY: mouseObj.clientY
@@ -370,7 +370,7 @@
                     };
                     var getResizerPosition = {
                         "left": function left(e) {
-                            var mouseObj = 'changedTouches' in e.originalEvent ? e.originalEvent.changedTouches[0] : e;
+                            var mouseObj = 'changedTouches' in e.originalEvent && e.changedTouches ? e.originalEvent.changedTouches[0] : e;
 
                             panel.__da = mouseObj.clientX - panel.mousePosition.clientX;
                             var minWidth = panel.minWidth || 0;
@@ -384,7 +384,7 @@
                             return { left: panel.$splitter.position().left + panel.__da };
                         },
                         "right": function right(e) {
-                            var mouseObj = 'changedTouches' in e.originalEvent ? e.originalEvent.changedTouches[0] : e;
+                            var mouseObj = 'changedTouches' in e.originalEvent && e.changedTouches ? e.originalEvent.changedTouches[0] : e;
 
                             panel.__da = mouseObj.clientX - panel.mousePosition.clientX;
                             var minWidth = panel.minWidth || 0;
@@ -398,7 +398,7 @@
                             return { left: panel.$splitter.position().left + panel.__da };
                         },
                         "top": function top(e) {
-                            var mouseObj = 'changedTouches' in e.originalEvent ? e.originalEvent.changedTouches[0] : e;
+                            var mouseObj = 'changedTouches' in e.originalEvent && e.changedTouches ? e.originalEvent.changedTouches[0] : e;
 
                             panel.__da = mouseObj.clientY - panel.mousePosition.clientY;
                             var minHeight = panel.minHeight || 0;
@@ -412,7 +412,7 @@
                             return { top: panel.$splitter.position().top + panel.__da };
                         },
                         "bottom": function bottom(e) {
-                            var mouseObj = 'changedTouches' in e.originalEvent ? e.originalEvent.changedTouches[0] : e;
+                            var mouseObj = 'changedTouches' in e.originalEvent && e.changedTouches ? e.originalEvent.changedTouches[0] : e;
 
                             panel.__da = mouseObj.clientY - panel.mousePosition.clientY;
                             var minHeight = panel.minHeight || 0;
@@ -426,7 +426,7 @@
                             return { top: panel.$splitter.position().top + panel.__da };
                         },
                         "split": function split(e) {
-                            var mouseObj = 'changedTouches' in e.originalEvent ? e.originalEvent.changedTouches[0] : e;
+                            var mouseObj = 'changedTouches' in e.originalEvent && e.changedTouches ? e.originalEvent.changedTouches[0] : e;
 
                             if (item.orientation == "horizontal") {
                                 panel.__da = mouseObj.clientY - panel.mousePosition.clientY;
@@ -957,6 +957,18 @@
                 };
             }();
 
+            this.getActiveTab = function (boundID) {
+                var queIdx = U.isNumber(boundID) ? boundID : getQueIdx.call(this, boundID);
+                if (queIdx === -1) {
+                    console.log(ax5.info.getError("ax5layout", "402", "tabOpen"));
+                    return;
+                }
+
+                if (typeof this.queue[queIdx].activePanelIndex != "undefined") {
+                    return this.queue[queIdx].tabPanel[this.queue[queIdx].activePanelIndex];
+                }
+            };
+
             /// 클래스 생성자
             this.main = function () {
                 if (arguments && U.isObject(arguments[0])) {
@@ -969,6 +981,12 @@
         return ax5layout;
     }());
 })();
+
+/*
+ * Copyright (c) 2017. tom@axisj.com
+ * - github.com/thomasjang
+ * - www.axisj.com
+ */
 
 ax5.ui.layout_instance = new ax5.ui.layout();
 
@@ -990,7 +1008,6 @@ ax5.ui.layout_instance = new ax5.ui.layout();
  * jQuery('[data-ax5layout="ax1"]').ax5layout("tabOpen", 1);
  * ```
  */
-
 jQuery.fn.ax5layout = function () {
     return function (config) {
         if (ax5.util.isString(arguments[0])) {
@@ -1014,6 +1031,9 @@ jQuery.fn.ax5layout = function () {
                     break;
                 case "tabOpen":
                     return ax5.ui.layout_instance.tabOpen(this, arguments[1]);
+                    break;
+                case "getActiveTab":
+                    return ax5.ui.layout_instance.getActiveTab(this, arguments[1]);
                     break;
                 default:
                     return this;

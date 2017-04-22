@@ -1,9 +1,15 @@
+/*
+ * Copyright (c) 2016. tom@axisj.com
+ * - github.com/thomasjang
+ * - www.axisj.com
+ */
+
 // ax5.ui.modal
 (function () {
 
-    var UI = ax5.ui;
-    var U = ax5.util;
-    var MODAL;
+    const UI = ax5.ui;
+    const U = ax5.util;
+    let MODAL;
 
     UI.addClass({
         className: "modal",
@@ -14,7 +20,7 @@
          * @alias ax5.ui.modal
          * @author tom@axisj.com
          */
-        var ax5modal = function () {
+        return function () {
             let self = this,
                 cfg,
                 ENM = {
@@ -24,7 +30,7 @@
                 },
                 getMousePosition = function (e) {
                     let mouseObj = e;
-                    if ('changedTouches' in e) {
+                    if ('changedTouches' in e && e.changedTouches) {
                         mouseObj = e.changedTouches[0];
                     }
                     return {
@@ -1190,7 +1196,6 @@
 
             }).apply(this, arguments);
         };
-        return ax5modal;
     })());
 
     MODAL = ax5.ui.modal;

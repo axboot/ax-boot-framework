@@ -1,8 +1,9 @@
 // ax5.ui.grid.tmpl
 (function () {
 
-    var GRID = ax5.ui.grid;
-    var main = function () {
+    const GRID = ax5.ui.grid;
+
+    const main = function () {
         return `<div data-ax5grid-container="root" data-ax5grid-instance="{{instanceId}}">
             <div data-ax5grid-container="hidden">
                 <textarea data-ax5grid-form="clipboard"></textarea>
@@ -61,32 +62,29 @@
         </div>`;
     };
 
-
-    var page_navigation = function(){
+    const page_navigation = function(){
         return `<div data-ax5grid-page-navigation="holder">
             {{#hasPage}}
             <div data-ax5grid-page-navigation="cell">    
-                {{#firstIcon}}<button data-ax5grid-page-move="first">{{{firstIcon}}}</button>{{/firstIcon}}
-                <button data-ax5grid-page-move="prev">{{{prevIcon}}}</button>
+                {{#firstIcon}}<button type="button" data-ax5grid-page-move="first">{{{firstIcon}}}</button>{{/firstIcon}}
+                <button type="button" data-ax5grid-page-move="prev">{{{prevIcon}}}</button>
             </div>
             <div data-ax5grid-page-navigation="cell-paging">
                 {{#@paging}}
-                <button data-ax5grid-page-move="{{pageNo}}" data-ax5grid-page-selected="{{selected}}">{{pageNo}}</button>
+                <button type="button" data-ax5grid-page-move="{{pageNo}}" data-ax5grid-page-selected="{{selected}}">{{pageNo}}</button>
                 {{/@paging}}
             </div>
             <div data-ax5grid-page-navigation="cell">
-                <button data-ax5grid-page-move="next">{{{nextIcon}}}</button>
-                {{#lastIcon}}<button data-ax5grid-page-move="last">{{{lastIcon}}}</button>{{/lastIcon}}
+                <button type="button" data-ax5grid-page-move="next">{{{nextIcon}}}</button>
+                {{#lastIcon}}<button type="button" data-ax5grid-page-move="last">{{{lastIcon}}}</button>{{/lastIcon}}
             </div>
             {{/hasPage}}
         </div>`;
     };
 
-
-    var page_status = function(){
+    const page_status = function(){
         return `<span>{{{progress}}} {{fromRowIndex}} - {{toRowIndex}} of {{totalElements}}{{#dataRowCount}} ({{dataRowCount}}){{/dataRowCount}}</span>`;
     };
-
 
     GRID.tmpl = {
         "main": main,

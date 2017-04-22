@@ -1,14 +1,16 @@
 // ax5.ui.grid.scroller
 (function () {
 
-    var GRID = ax5.ui.grid;
-    var U = ax5.util;
+    const GRID = ax5.ui.grid;
 
-    var convertScrollPosition = {
+    const U = ax5.util;
+
+    const convertScrollPosition = {
         "vertical": function (css, _var) {
-            var _content_height = _var._content_height - _var._panel_height;
-            var _scroller_height = _var._vertical_scroller_height - _var.verticalScrollBarHeight;
-            var top = (_content_height * css.top) / _scroller_height;
+            let _content_height = _var._content_height - _var._panel_height,
+                _scroller_height = _var._vertical_scroller_height - _var.verticalScrollBarHeight,
+                top = (_content_height * css.top) / _scroller_height;
+
             if (top < 0) top = 0;
             else if (_content_height < top) {
                 top = _content_height;
@@ -18,9 +20,10 @@
             }
         },
         "horizontal": function (css, _var) {
-            var _content_width = _var._content_width - _var._panel_width;
-            var _scroller_width = _var._horizontal_scroller_width - _var.horizontalScrollBarWidth;
-            var left = (_content_width * css.left) / _scroller_width;
+            let _content_width = _var._content_width - _var._panel_width,
+                _scroller_width = _var._horizontal_scroller_width - _var.horizontalScrollBarWidth,
+                left = (_content_width * css.left) / _scroller_width;
+
             if (left < 0) left = 0;
             else if (_content_width < left) {
                 left = _content_width;
@@ -30,18 +33,20 @@
             }
         }
     };
-    var convertScrollBarPosition = {
+
+    const convertScrollBarPosition = {
         "vertical": function (_top, _var) {
 
-            var type = "vertical";
-            var _content_height = _var._content_height - _var._panel_height;
-            var _scroller_height = _var._vertical_scroller_height - _var.verticalScrollBarHeight;
-            var top = (_scroller_height * _top) / _content_height;
+            let type = "vertical",
+                _content_height = _var._content_height - _var._panel_height,
+                _scroller_height = _var._vertical_scroller_height - _var.verticalScrollBarHeight,
+                top = (_scroller_height * _top) / _content_height,
+                scrollPositon;
 
             if (-top > _scroller_height) {
                 top = -_scroller_height;
 
-                var scrollPositon = convertScrollPosition[type].call(this, {top: -top}, {
+                scrollPositon = convertScrollPosition[type].call(this, {top: -top}, {
                     _content_width: _var._content_width,
                     _content_height: _var._content_height,
                     _panel_width: _var._panel_width,
@@ -58,14 +63,15 @@
             return -top
         },
         "horizontal": function (_left, _var) {
-            var type = "horizontal";
-            var _content_width = _var._content_width - _var._panel_width;
-            var _scroller_width = _var._horizontal_scroller_width - _var.horizontalScrollBarWidth;
-            var left = (_scroller_width * _left) / _content_width;
+            let type = "horizontal",
+                _content_width = _var._content_width - _var._panel_width,
+                _scroller_width = _var._horizontal_scroller_width - _var.horizontalScrollBarWidth,
+                left = (_scroller_width * _left) / _content_width,
+                scrollPositon;
 
             if (-left > _scroller_width) {
                 left = -_scroller_width;
-                var scrollPositon = convertScrollPosition[type].call(this, {left: -left}, {
+                scrollPositon = convertScrollPosition[type].call(this, {left: -left}, {
                     _content_width: _var._content_width,
                     _content_height: _var._content_height,
                     _panel_width: _var._panel_width,
@@ -83,7 +89,8 @@
             return -left
         }
     };
-    var scrollBarMover = {
+
+    const scrollBarMover = {
         "click": function (track, bar, type, e) {
 
             // 마우스 무브 완료 타임과 클릭타임 차이가 20 보다 작으면 클릭이벤트 막기.
@@ -91,7 +98,7 @@
                 return false;
             }
 
-            var self = this,
+            let self = this,
                 trackOffset = track.offset(),
                 barBox = {
                     width: bar.outerWidth(), height: bar.outerHeight()
@@ -109,9 +116,9 @@
                 horizontalScrollBarWidth = self.$["scroller"]["horizontal-bar"].outerWidth(),
                 getScrollerPosition = {
                     "vertical": function (e) {
-                        var mouseObj = GRID.util.getMousePosition(e);
+                        let mouseObj = GRID.util.getMousePosition(e);
                         // track을 벗어 나지 안도록 범위 체크
-                        var newTop = mouseObj.clientY - trackOffset.top;
+                        let newTop = mouseObj.clientY - trackOffset.top;
                         if (newTop < 0) {
                             newTop = 0;
                         }
@@ -121,9 +128,9 @@
                         return {top: newTop};
                     },
                     "horizontal": function (e) {
-                        var mouseObj = GRID.util.getMousePosition(e);
+                        let mouseObj = GRID.util.getMousePosition(e);
                         // track을 벗어 나지 안도록 범위 체크
-                        var newLeft = mouseObj.clientX - trackOffset.left;
+                        let newLeft = mouseObj.clientX - trackOffset.left;
                         if (newLeft < 0) {
                             newLeft = 0;
                         }
@@ -132,12 +139,12 @@
                         }
                         return {left: newLeft};
                     }
-                };
+                },
+                css = getScrollerPosition[type](e);
 
-            var css = getScrollerPosition[type](e);
             bar.css(css);
 
-            var scrollPositon = convertScrollPosition[type].call(self, css, {
+            let scrollPositon = convertScrollPosition[type].call(self, css, {
                 _content_width: _content_width,
                 _content_height: _content_height,
                 _panel_width: _panel_width,
@@ -149,9 +156,11 @@
             });
             if (type === "horizontal") GRID.header.scrollTo.call(self, scrollPositon);
             GRID.body.scrollTo.call(self, scrollPositon);
+
+            scrollPositon = null;
         },
         "on": function (track, bar, type, e) {
-            var self = this,
+            let self = this,
                 barOffset = bar.position(),
                 barBox = {
                     width: bar.outerWidth(), height: bar.outerHeight()
@@ -202,10 +211,10 @@
 
             jQuery(document.body)
                 .bind(GRID.util.ENM["mousemove"] + ".ax5grid-" + this.instanceId, function (e) {
-                    var css = getScrollerPosition[type](e);
+                    let css = getScrollerPosition[type](e);
                     bar.css(css);
 
-                    var scrollPositon = convertScrollPosition[type].call(self, css, {
+                    let scrollPositon = convertScrollPosition[type].call(self, css, {
                         _content_width: _content_width,
                         _content_height: _content_height,
                         _panel_width: _panel_width,
@@ -230,6 +239,8 @@
                 .attr('unselectable', 'on')
                 .css('user-select', 'none')
                 .on('selectstart', false);
+
+
         },
         "off": function () {
 
@@ -246,7 +257,8 @@
                 .off('selectstart');
         }
     };
-    var scrollContentMover = {
+
+    const scrollContentMover = {
         "wheel": function (delta) {
             let self = this,
                 _body_scroll_position = self.$["panel"]["body-scroll"].position(),
@@ -350,7 +362,7 @@
                     self.xvar.touchmoved = true;
                 })
                 .on("touchend" + ".ax5grid-" + this.instanceId, function (e) {
-                    if(self.xvar.touchmoved) {
+                    if (self.xvar.touchmoved) {
                         let css = getContentPosition(e);
                         GRID.header.scrollTo.call(self, {left: css.left});
                         GRID.body.scrollTo.call(self, css);
@@ -378,7 +390,7 @@
         }
     };
 
-    var init = function () {
+    const init = function () {
         let self = this,
             margin = this.config.scroller.trackPadding;
 
@@ -455,8 +467,8 @@
 
     };
 
-    var resize = function () {
-        var _vertical_scroller_height = this.$["scroller"]["vertical"].height(),
+    const resize = function () {
+        let _vertical_scroller_height = this.$["scroller"]["vertical"].height(),
             _horizontal_scroller_width = this.$["scroller"]["horizontal"].width(),
             _panel_height = this.$["panel"]["body"].height(),
             _panel_width = this.$["panel"]["body"].width(),

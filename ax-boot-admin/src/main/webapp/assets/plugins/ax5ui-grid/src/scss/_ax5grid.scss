@@ -406,6 +406,14 @@
 
 // body
 [data-ax5grid] {
+    * {
+        box-sizing: border-box;
+    }
+    *:before,
+    *:after {
+        box-sizing: border-box;
+    }
+
     [data-ax5grid-container="root"] {
         @include gridBoxModal();
         position: relative;

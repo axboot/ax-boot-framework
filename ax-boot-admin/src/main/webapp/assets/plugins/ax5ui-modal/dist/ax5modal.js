@@ -1,22 +1,28 @@
 "use strict";
 
+/*
+ * Copyright (c) 2016. tom@axisj.com
+ * - github.com/thomasjang
+ * - www.axisj.com
+ */
+
 // ax5.ui.modal
 (function () {
 
     var UI = ax5.ui;
     var U = ax5.util;
-    var MODAL;
+    var MODAL = void 0;
 
     UI.addClass({
         className: "modal",
-        version: "1.4.8"
+        version: "1.4.18"
     }, function () {
         /**
          * @class ax5modal
          * @alias ax5.ui.modal
          * @author tom@axisj.com
          */
-        var ax5modal = function ax5modal() {
+        return function () {
             var self = this,
                 cfg = void 0,
                 ENM = {
@@ -26,7 +32,7 @@
             },
                 getMousePosition = function getMousePosition(e) {
                 var mouseObj = e;
-                if ('changedTouches' in e) {
+                if ('changedTouches' in e && e.changedTouches) {
                     mouseObj = e.changedTouches[0];
                 }
                 return {
@@ -1121,7 +1127,6 @@
                 }
             }.apply(this, arguments);
         };
-        return ax5modal;
     }());
 
     MODAL = ax5.ui.modal;

@@ -7,20 +7,23 @@
 // ax5.ui.grid.excel
 (function () {
 
-    let GRID = ax5.ui.grid,
-        U = ax5.util;
+    const GRID = ax5.ui.grid;
 
-    let base64 = function (s) {
-            return window.btoa(unescape(encodeURIComponent(s)));
-        },
-        uri = "data:application/vnd.ms-excel;base64,",
-        getExcelTmpl = function () {
-            return `\ufeff
+    const U = ax5.util;
+
+    const base64 = function (s) {
+        return window.btoa(unescape(encodeURIComponent(s)));
+    };
+
+    const uri = "data:application/vnd.ms-excel;base64,";
+
+    const getExcelTmpl = function () {
+        return `\ufeff
 {{#tables}}{{{body}}}{{/tables}}
 `;
-        };
+    };
 
-    var tableToExcel = function (table, fileName) {
+    const tableToExcel = function (table, fileName) {
         let link, a, output,
             tables = [].concat(table);
 

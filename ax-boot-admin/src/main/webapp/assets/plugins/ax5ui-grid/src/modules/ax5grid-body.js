@@ -1,7 +1,9 @@
 // ax5.ui.grid.body
 (function () {
 
-    const GRID = ax5.ui.grid, U = ax5.util;
+    const GRID = ax5.ui.grid;
+
+    const U = ax5.util;
 
     const columnSelect = {
         focusClear: function () {
@@ -427,6 +429,58 @@
             }
         });
 
+        if (this.config.contextMenu) {
+            this.$["container"]["body"].on("contextmenu", function (e) {
+                let target, dindex, rowIndex, colIndex, item, column, param = {};
+
+                target = U.findParentNode(e.target, function (t) {
+                    if (t.getAttribute("data-ax5grid-column-attr")) {
+                        return true;
+                    }
+                });
+
+                if (target) {
+                    // item 찾기
+                    rowIndex = Number(target.getAttribute("data-ax5grid-column-rowIndex"));
+                    colIndex = Number(target.getAttribute("data-ax5grid-column-colIndex"));
+                    dindex = Number(target.getAttribute("data-ax5grid-data-index"));
+                    column = self.bodyRowMap[rowIndex + "_" + colIndex];
+                    item = self.list[dindex];
+                }
+
+                if (!self.contextMenu) {
+                    self.contextMenu = new ax5.ui.menu();
+                }
+
+                self.contextMenu.setConfig(self.config.contextMenu);
+
+                param = {
+                    element: target,
+                    dindex: dindex,
+                    rowIndex: rowIndex,
+                    colIndex: colIndex,
+                    item: item,
+                    column: column
+                };
+
+                self.contextMenu.popup(e, {
+                    filter: function () {
+                        return self.config.contextMenu.popupFilter.call(this, this, param);
+                    },
+                    param: param
+                });
+
+                U.stopEvent(e.originalEvent);
+                target = null;
+                dindex = null;
+                rowIndex = null;
+                colIndex = null;
+                item = null;
+                column = null;
+                param = null;
+            });
+        }
+
         this.$["container"]["body"]
             .on("mousedown", '[data-ax5grid-column-attr="default"]', function (e) {
                 if (self.xvar.touchmoved) return false;
@@ -488,6 +542,9 @@
 
             return data;
         }).call(this, this.bodyRowTable);
+        
+        //console.log(dividedBodyRowObj);
+        
         this.leftBodyRowData = dividedBodyRowObj.leftData;
         this.bodyRowData = dividedBodyRowObj.rightData;
 
@@ -643,7 +700,7 @@
             };
 
             let returnValue = (_col.formatter) ? valueProcessor.formatter.call(this) : valueProcessor.default.call(this);
-            if (_col.treeControl) {
+            if (this.config.tree.use && _col.treeControl) {
                 returnValue = valueProcessor.treeControl.call(this, returnValue);
             }
 
@@ -757,7 +814,9 @@
         }
 
         /// 출력시작 인덱스
-        let paintStartRowIndex = (!this.config.virtualScrollY) ? 0 : Math.floor(-(this.$.panel["body-scroll"].position().top) / this.xvar.bodyTrHeight) + this.xvar.frozenRowIndex;
+        let paintStartRowIndex = (!this.config.virtualScrollY) ?
+            this.xvar.frozenRowIndex :
+            Math.floor(-(this.$.panel["body-scroll"].position().top) / this.xvar.bodyTrHeight) + this.xvar.frozenRowIndex;
         if (isNaN(paintStartRowIndex)) return this;
 
         let paintStartColumnIndex = 0, paintEndColumnIndex = 0, nopaintLeftColumnsWidth = null, nopaintRightColumnsWidth = null;
@@ -1842,9 +1901,9 @@
                     'style="height: ' + (cfg.body.columnHeight) + 'px;min-height: 1px;" ',
                     '></td>');
             }
-            
+
             console.log('tr[data-ax5grid-tr-data-index="' + di + '"]');
-            
+
             _elTarget.find('tr[data-ax5grid-tr-data-index="' + di + '"]').empty().get(0).innerHTML = SS.join('');
         };
 

@@ -22,7 +22,7 @@
                     "mouseup": (ax5.info.supportTouch) ? "touchend" : "mouseup"
                 },
                 getMousePosition = function (e) {
-                    let mouseObj = ('changedTouches' in e.originalEvent) ? e.originalEvent.changedTouches[0] : e;
+                    let mouseObj = ('changedTouches' in e.originalEvent && e.changedTouches) ? e.originalEvent.changedTouches[0] : e;
                     return {
                         clientX: mouseObj.clientX,
                         clientY: mouseObj.clientY
@@ -382,7 +382,7 @@
                         };
                         var getResizerPosition = {
                             "left": function (e) {
-                                var mouseObj = ('changedTouches' in e.originalEvent) ? e.originalEvent.changedTouches[0] : e;
+                                var mouseObj = ('changedTouches' in e.originalEvent && e.changedTouches) ? e.originalEvent.changedTouches[0] : e;
 
                                 panel.__da = mouseObj.clientX - panel.mousePosition.clientX;
                                 var minWidth = panel.minWidth || 0;
@@ -397,7 +397,7 @@
                                 return {left: panel.$splitter.position().left + panel.__da};
                             },
                             "right": function (e) {
-                                var mouseObj = ('changedTouches' in e.originalEvent) ? e.originalEvent.changedTouches[0] : e;
+                                var mouseObj = ('changedTouches' in e.originalEvent && e.changedTouches) ? e.originalEvent.changedTouches[0] : e;
 
                                 panel.__da = mouseObj.clientX - panel.mousePosition.clientX;
                                 var minWidth = panel.minWidth || 0;
@@ -412,7 +412,7 @@
                                 return {left: panel.$splitter.position().left + panel.__da};
                             },
                             "top": function (e) {
-                                var mouseObj = ('changedTouches' in e.originalEvent) ? e.originalEvent.changedTouches[0] : e;
+                                var mouseObj = ('changedTouches' in e.originalEvent && e.changedTouches) ? e.originalEvent.changedTouches[0] : e;
 
                                 panel.__da = mouseObj.clientY - panel.mousePosition.clientY;
                                 var minHeight = panel.minHeight || 0;
@@ -427,7 +427,7 @@
                                 return {top: panel.$splitter.position().top + panel.__da};
                             },
                             "bottom": function (e) {
-                                var mouseObj = ('changedTouches' in e.originalEvent) ? e.originalEvent.changedTouches[0] : e;
+                                var mouseObj = ('changedTouches' in e.originalEvent && e.changedTouches) ? e.originalEvent.changedTouches[0] : e;
 
                                 panel.__da = mouseObj.clientY - panel.mousePosition.clientY;
                                 var minHeight = panel.minHeight || 0;
@@ -442,7 +442,8 @@
                                 return {top: panel.$splitter.position().top + panel.__da};
                             },
                             "split": function (e) {
-                                var mouseObj = ('changedTouches' in e.originalEvent) ? e.originalEvent.changedTouches[0] : e;
+                                var mouseObj = ('changedTouches' in e.originalEvent && e.changedTouches) ? e.originalEvent.changedTouches[0] : e;
+
 
                                 if (item.orientation == "horizontal") {
                                     panel.__da = mouseObj.clientY - panel.mousePosition.clientY;
@@ -1034,6 +1035,18 @@
                 }
             })();
 
+            this.getActiveTab = function (boundID) {
+                var queIdx = (U.isNumber(boundID)) ? boundID : getQueIdx.call(this, boundID);
+                if (queIdx === -1) {
+                    console.log(ax5.info.getError("ax5layout", "402", "tabOpen"));
+                    return;
+                }
+
+                if (typeof this.queue[queIdx].activePanelIndex != "undefined") {
+                    return this.queue[queIdx].tabPanel[this.queue[queIdx].activePanelIndex];
+                }
+            };
+
             /// 클래스 생성자
             this.main = (function () {
                 if (arguments && U.isObject(arguments[0])) {
@@ -1046,68 +1059,4 @@
         };
         return ax5layout;
     })());
-})();
-
-ax5.ui.layout_instance = new ax5.ui.layout();
-
-/**
- * ax5layout jquery extends
- * @namespace jQueryExtends
- */
-
-/**
- * @method jQueryExtends.ax5layout
- * @param {String} methodName
- * @example
- * ```js
- * jQuery('[data-ax5layout="ax1"]').ax5layout("align");
- * jQuery('[data-ax5layout="ax1"]').ax5layout("resize");
- * jQuery('[data-ax5layout="ax1"]').ax5layout("reset");
- * jQuery('[data-ax5layout="ax1"]').ax5layout("hide");
- * jQuery('[data-ax5layout="ax1"]').ax5layout("onResize");
- * jQuery('[data-ax5layout="ax1"]').ax5layout("tabOpen", 1);
- * ```
- */
-
-
-jQuery.fn.ax5layout = (function () {
-    return function (config) {
-        if (ax5.util.isString(arguments[0])) {
-            var methodName = arguments[0];
-
-            switch (methodName) {
-                case "align":
-                    return ax5.ui.layout_instance.align(this, arguments[1]);
-                    break;
-                case "resize":
-                    return ax5.ui.layout_instance.resize(this, arguments[1], arguments[2]);
-                    break;
-                case "reset":
-                    return ax5.ui.layout_instance.reset(this, arguments[1]);
-                    break;
-                case "hide":
-                    return ax5.ui.layout_instance.hide(this, arguments[1]);
-                    break;
-                case "onResize":
-                    return ax5.ui.layout_instance.onResize(this, arguments[1]);
-                    break;
-                case "tabOpen":
-                    return ax5.ui.layout_instance.tabOpen(this, arguments[1]);
-                    break;
-                default:
-                    return this;
-            }
-        }
-        else {
-            if (typeof config == "undefined") config = {};
-            jQuery.each(this, function () {
-                var defaultConfig = {
-                    target: this
-                };
-                config = jQuery.extend({}, config, defaultConfig);
-                ax5.ui.layout_instance.bind(config);
-            });
-        }
-        return this;
-    }
 })();

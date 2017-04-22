@@ -14711,7 +14711,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
          * ax5 version
          * @member {String} ax5.info.version
          */
-        var version = "1.4.8";
+        var version = "1.4.18";
 
         /**
          * ax5 library path
@@ -18105,7 +18105,7 @@ ax5.ui = function () {
 
     UI.addClass({
         className: "dialog",
-        version: "1.4.8"
+        version: "1.4.18"
     }, function () {
         /**
          * @class ax5dialog
@@ -18723,7 +18723,7 @@ ax5.ui = function () {
 
     UI.addClass({
         className: "mask",
-        version: "1.4.8"
+        version: "1.4.18"
     }, function () {
         /**
          * @class ax5mask
@@ -18961,31 +18961,27 @@ ax5.ui = function () {
              * ```
              */
             this.close = function (_delay) {
-                var _this = this;
-
                 if (this.$mask) {
-                    (function () {
-                        var _close = function _close() {
-                            this.status = "off";
-                            this.$mask.remove();
-                            this.$target.removeClass("ax-masking");
+                    var _close = function _close() {
+                        this.status = "off";
+                        this.$mask.remove();
+                        this.$target.removeClass("ax-masking");
 
-                            onStateChanged.call(this, null, {
-                                self: this,
-                                state: "close"
-                            });
+                        onStateChanged.call(this, null, {
+                            self: this,
+                            state: "close"
+                        });
 
-                            jQuery(window).unbind("resize.ax5mask-" + this.instanceId);
-                        };
+                        jQuery(window).unbind("resize.ax5mask-" + this.instanceId);
+                    };
 
-                        if (_delay) {
-                            setTimeout(function () {
-                                _close.call(this);
-                            }.bind(_this), _delay);
-                        } else {
-                            _close.call(_this);
-                        }
-                    })();
+                    if (_delay) {
+                        setTimeout(function () {
+                            _close.call(this);
+                        }.bind(this), _delay);
+                    } else {
+                        _close.call(this);
+                    }
                 }
                 return this;
             };
@@ -18995,28 +18991,24 @@ ax5.ui = function () {
              * @returns {ax5mask}
              */
             this.fadeOut = function () {
-                var _this2 = this;
-
                 if (this.$mask) {
-                    (function () {
-                        var _close = function _close() {
-                            this.status = "off";
-                            this.$mask.remove();
-                            this.$target.removeClass("ax-masking");
+                    var _close = function _close() {
+                        this.status = "off";
+                        this.$mask.remove();
+                        this.$target.removeClass("ax-masking");
 
-                            onStateChanged.call(this, null, {
-                                self: this,
-                                state: "close"
-                            });
+                        onStateChanged.call(this, null, {
+                            self: this,
+                            state: "close"
+                        });
 
-                            jQuery(window).unbind("resize.ax5mask-" + this.instanceId);
-                        };
+                        jQuery(window).unbind("resize.ax5mask-" + this.instanceId);
+                    };
 
-                        _this2.$mask.addClass("fade-out");
-                        setTimeout(function () {
-                            _close.call(this);
-                        }.bind(_this2), cfg.animateTime);
-                    })();
+                    this.$mask.addClass("fade-out");
+                    setTimeout(function () {
+                        _close.call(this);
+                    }.bind(this), cfg.animateTime);
                 }
                 return this;
             };
@@ -19089,7 +19081,7 @@ ax5.ui = function () {
 
     UI.addClass({
         className: "toast",
-        version: "1.4.8"
+        version: "1.4.18"
     }, function () {
         /**
          * @class ax5toast
@@ -19444,23 +19436,29 @@ ax5.ui = function () {
 })();
 "use strict";
 
+/*
+ * Copyright (c) 2016. tom@axisj.com
+ * - github.com/thomasjang
+ * - www.axisj.com
+ */
+
 // ax5.ui.modal
 (function () {
 
     var UI = ax5.ui;
     var U = ax5.util;
-    var MODAL;
+    var MODAL = void 0;
 
     UI.addClass({
         className: "modal",
-        version: "1.4.8"
+        version: "1.4.18"
     }, function () {
         /**
          * @class ax5modal
          * @alias ax5.ui.modal
          * @author tom@axisj.com
          */
-        var ax5modal = function ax5modal() {
+        return function () {
             var self = this,
                 cfg = void 0,
                 ENM = {
@@ -19470,7 +19468,7 @@ ax5.ui = function () {
             },
                 getMousePosition = function getMousePosition(e) {
                 var mouseObj = e;
-                if ('changedTouches' in e) {
+                if ('changedTouches' in e && e.changedTouches) {
                     mouseObj = e.changedTouches[0];
                 }
                 return {
@@ -20565,7 +20563,6 @@ ax5.ui = function () {
                 }
             }.apply(this, arguments);
         };
-        return ax5modal;
     }());
 
     MODAL = ax5.ui.modal;
@@ -20598,7 +20595,7 @@ ax5.ui = function () {
 
     UI.addClass({
         className: "calendar",
-        version: "1.4.8"
+        version: "1.4.18"
     }, function () {
 
         /**
@@ -21658,11 +21655,11 @@ ax5.ui = function () {
 
     var UI = ax5.ui;
     var U = ax5.util;
-    var PICKER;
+    var PICKER = void 0;
 
     UI.addClass({
         className: "picker",
-        version: "1.4.8"
+        version: "1.4.18"
     }, function () {
         /**
          * @class ax5picker
@@ -21693,7 +21690,7 @@ ax5.ui = function () {
          * });
          * ```
          */
-        var ax5picker = function ax5picker() {
+        return function () {
             var self = this,
                 cfg = void 0;
 
@@ -22645,58 +22642,14 @@ ax5.ui = function () {
                 }
             }.apply(this, arguments);
         };
-        return ax5picker;
     }());
 
     PICKER = ax5.ui.picker;
 })();
 
-/**
- * ax5.ui.picker_instance
- * @type {ax5picker}
- * @example
- * ```js
- * // picker 기본 속성을 변경해야 한다면
- * ax5.ui.picker_instance.setConfig({
- * });
- *
- * ```
- */
-ax5.ui.picker_instance = new ax5.ui.picker();
-
-jQuery.fn.ax5picker = function () {
-    return function (config) {
-        if (ax5.util.isString(arguments[0])) {
-            var methodName = arguments[0];
-
-            switch (methodName) {
-                case "open":
-                    return ax5.ui.picker_instance.open(this);
-                    break;
-                case "close":
-                    return ax5.ui.picker_instance.close(this);
-                    break;
-                case "setValue":
-                    return ax5.ui.picker_instance.setContentValue(this, arguments[1], arguments[2]);
-                    break;
-                default:
-                    return this;
-            }
-        } else {
-            if (typeof config == "undefined") config = {};
-            jQuery.each(this, function () {
-                var defaultConfig = {
-                    target: this
-                };
-                config = jQuery.extend(true, config, defaultConfig);
-                ax5.ui.picker_instance.bind(config);
-            });
-        }
-        return this;
-    };
-}();
 // ax5.ui.picker.tmpl
 (function () {
+
     var PICKER = ax5.ui.picker;
     var U = ax5.util;
 
@@ -22712,6 +22665,52 @@ jQuery.fn.ax5picker = function () {
         }
     };
 })();
+/**
+ * ax5.ui.picker_instance
+ * @type {ax5picker}
+ * @example
+ * ```js
+ * // picker 기본 속성을 변경해야 한다면
+ * ax5.ui.picker_instance.setConfig({
+ * });
+ *
+ * ```
+ */
+if (ax5 && ax5.ui && ax5.ui.picker) {
+    ax5.ui.picker_instance = new ax5.ui.picker();
+
+    jQuery.fn.ax5picker = function () {
+        return function (config) {
+            if (ax5.util.isString(arguments[0])) {
+                var methodName = arguments[0];
+
+                switch (methodName) {
+                    case "open":
+                        return ax5.ui.picker_instance.open(this);
+                        break;
+                    case "close":
+                        return ax5.ui.picker_instance.close(this);
+                        break;
+                    case "setValue":
+                        return ax5.ui.picker_instance.setContentValue(this, arguments[1], arguments[2]);
+                        break;
+                    default:
+                        return this;
+                }
+            } else {
+                if (typeof config == "undefined") config = {};
+                jQuery.each(this, function () {
+                    var defaultConfig = {
+                        target: this
+                    };
+                    config = jQuery.extend(true, config, defaultConfig);
+                    ax5.ui.picker_instance.bind(config);
+                });
+            }
+            return this;
+        };
+    }();
+}
 "use strict";
 
 // ax5.ui.formatter
@@ -22722,7 +22721,7 @@ jQuery.fn.ax5picker = function () {
 
     UI.addClass({
         className: "formatter",
-        version: "1.4.8"
+        version: "1.4.18"
     }, function () {
         var TODAY = new Date();
         var setSelectionRange = function setSelectionRange(input, pos) {
@@ -23392,7 +23391,7 @@ jQuery.fn.ax5formatter = function () {
 
     UI.addClass({
         className: "menu",
-        version: "1.4.8"
+        version: "1.4.18"
     }, function () {
         /**
          * @class ax5.ui.menu
@@ -23547,9 +23546,9 @@ jQuery.fn.ax5formatter = function () {
 
             cfg = this.config;
 
-            var appEventAttach = function appEventAttach(active) {
+            var appEventAttach = function appEventAttach(active, param) {
                 if (active) {
-                    jQuery(document).unbind("click.ax5menu-" + this.menuId).bind("click.ax5menu-" + this.menuId, clickItem.bind(this));
+                    jQuery(document).unbind("click.ax5menu-" + this.menuId).bind("click.ax5menu-" + this.menuId, clickItem.bind(this, param));
                     jQuery(window).unbind("keydown.ax5menu-" + this.menuId).bind("keydown.ax5menu-" + this.menuId, function (e) {
                         if (e.which == ax5.info.eventKeys.ESC) {
                             self.close();
@@ -23696,7 +23695,9 @@ jQuery.fn.ax5formatter = function () {
                         path = this.getAttribute("data-menu-item-path"),
                         _items = void 0;
 
-                    _items = self.queue[depth].data[cfg.columnKeys.items][index][cfg.columnKeys.items];
+                    if (path) {
+                        _items = self.queue[depth].data[cfg.columnKeys.items][index][cfg.columnKeys.items];
+                    }
                     if (_items && _items.length > 0) {} else {
                         jQuery(this).removeClass("hover");
                     }
@@ -23737,7 +23738,10 @@ jQuery.fn.ax5formatter = function () {
 
                 return this;
             },
-                clickItem = function clickItem(e, target, item) {
+                clickItem = function clickItem(param, e) {
+                var target = void 0,
+                    item = void 0;
+
                 target = U.findParentNode(e.target, function (target) {
                     if (target.getAttribute("data-menu-item-index")) {
                         return true;
@@ -23795,7 +23799,9 @@ jQuery.fn.ax5formatter = function () {
                     }
 
                     if (self.onClick) {
-                        self.onClick.call(item, item);
+                        if (self.onClick.call(item, item, param)) {
+                            self.close();
+                        }
                     }
                     if ((!item[cfg.columnKeys.items] || item[cfg.columnKeys.items].length == 0) && cfg.itemClickAndClose) self.close();
                 } else {
@@ -23959,7 +23965,7 @@ jQuery.fn.ax5formatter = function () {
 
                         if (this.popupEventAttachTimer) clearTimeout(this.popupEventAttachTimer);
                         this.popupEventAttachTimer = setTimeout(function () {
-                            appEventAttach.call(this, true); // 이벤트 연결
+                            appEventAttach.call(this, true, opt.param); // 이벤트 연결
                         }.bind(this), 500);
                     }
 
@@ -24228,7 +24234,7 @@ jQuery.fn.ax5formatter = function () {
 
     UI.addClass({
         className: "select",
-        version: "1.4.8"
+        version: "1.4.18"
     }, function () {
         /**
          * @class ax5select
@@ -25440,13 +25446,13 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
 // ax5.ui.grid
 (function () {
 
-    var UI = ax5.ui,
-        U = ax5.util,
-        GRID = void 0;
+    var UI = ax5.ui;
+    var U = ax5.util;
+    var GRID = void 0;
 
     UI.addClass({
         className: "grid",
-        version: "1.4.8"
+        version: "${VERSION}"
     }, function () {
         /**
          * @class ax5grid
@@ -25457,7 +25463,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
          * var myGrid = new ax5.ui.grid();
          * ```
          */
-        var ax5grid = function ax5grid() {
+        return function () {
             var self = this,
                 cfg = void 0,
                 ctrlKeys = {
@@ -25577,6 +25583,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
             this.isInlineEditing = false;
             this.inlineEditing = {};
             this.listIndexMap = {}; // tree데이터 사용시 데이터 인덱싱 맵
+            this.gridContextMenu = null; // contentMenu 의 인스턴스
 
             // header
             this.headerTable = {};
@@ -25685,7 +25692,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
             var initColumns = function initColumns(_columns) {
                 this.columns = U.deepCopy(_columns);
                 this.headerTable = GRID.util.makeHeaderTable.call(this, this.columns);
-                this.xvar.frozenColumnIndex = cfg.frozenColumnIndex > this.columns.length ? this.columns.length : cfg.frozenColumnIndex;
+                this.xvar.frozenColumnIndex = cfg.frozenColumnIndex || 0;
 
                 this.bodyRowTable = GRID.util.makeBodyRowTable.call(this, this.columns);
                 this.bodyRowMap = GRID.util.makeBodyRowMap.call(this, this.bodyRowTable);
@@ -25694,9 +25701,9 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
 
                 var colGroupMap = {};
                 for (var r = 0, rl = this.headerTable.rows.length; r < rl; r++) {
-                    var row = this.headerTable.rows[r];
-                    for (var c = 0, cl = row.cols.length; c < cl; c++) {
-                        colGroupMap[row.cols[c].colIndex] = jQuery.extend({}, row.cols[c]);
+                    var _row2 = this.headerTable.rows[r];
+                    for (var c = 0, cl = _row2.cols.length; c < cl; c++) {
+                        colGroupMap[_row2.cols[c].colIndex] = jQuery.extend({}, _row2.cols[c]);
                     }
                 }
 
@@ -25726,6 +25733,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
                     var width = 0;
                     if (cfg.showLineNumber) width += cfg.lineNumberColumnWidth;
                     if (cfg.showRowSelector) width += cfg.rowSelectorColumnWidth;
+                    width += cfg.scroller.size;
                     return width;
                 }(),
                     totalWidth = 0,
@@ -26544,8 +26552,9 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
                 GRID.data.set.call(this, _data);
                 alignGrid.call(this);
                 GRID.body.repaint.call(this);
-                if (!isFirstPaint) GRID.scroller.resize.call(this);
+                GRID.scroller.resize.call(this);
                 GRID.page.navigationUpdate.call(this);
+
                 if (!isFirstPaint) GRID.body.scrollTo.call(this, { top: 0 });
 
                 isFirstPaint = null;
@@ -26554,11 +26563,12 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
 
             /**
              * @method ax5grid.getList
-             * @param {String} _type
+             * @param {String} _type - selected|modified|deleted
              * @returns {Array}
              * @example
              * ```js
              * ax5Grid.getList();
+             * ax5Grid.getList("selected");
              * ax5Grid.getList("modified");
              * ax5Grid.getList("deleted");
              * ```
@@ -26973,8 +26983,6 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
              * ```
              */
             this.focus = function (_pos) {
-                var _this = this;
-
                 if (GRID.body.moveFocus.call(this, _pos)) {
                     var focusedColumn = void 0;
                     for (var c in this.focusedColumn) {
@@ -26988,35 +26996,33 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
                     if (typeof this.selectedDataIndexs[0] === "undefined") {
                         this.select(0);
                     } else {
-                        (function () {
-                            var selectedIndex = _this.selectedDataIndexs[0];
-                            var processor = {
-                                "UP": function UP() {
-                                    if (selectedIndex > 0) {
-                                        this.select(selectedIndex - 1, { selectedClear: true });
-                                        GRID.body.moveFocus.call(this, selectedIndex - 1);
-                                    }
-                                },
-                                "DOWN": function DOWN() {
-                                    if (selectedIndex < this.list.length - 1) {
-                                        this.select(selectedIndex + 1, { selectedClear: true });
-                                        GRID.body.moveFocus.call(this, selectedIndex + 1);
-                                    }
-                                },
-                                "HOME": function HOME() {
-                                    this.select(0, { selectedClear: true });
-                                    GRID.body.moveFocus.call(this, 0);
-                                },
-                                "END": function END() {
-                                    this.select(this.list.length - 1, { selectedClear: true });
-                                    GRID.body.moveFocus.call(this, this.list.length - 1);
+                        var selectedIndex = this.selectedDataIndexs[0];
+                        var processor = {
+                            "UP": function UP() {
+                                if (selectedIndex > 0) {
+                                    this.select(selectedIndex - 1, { selectedClear: true });
+                                    GRID.body.moveFocus.call(this, selectedIndex - 1);
                                 }
-                            };
-
-                            if (_pos in processor) {
-                                processor[_pos].call(_this);
+                            },
+                            "DOWN": function DOWN() {
+                                if (selectedIndex < this.list.length - 1) {
+                                    this.select(selectedIndex + 1, { selectedClear: true });
+                                    GRID.body.moveFocus.call(this, selectedIndex + 1);
+                                }
+                            },
+                            "HOME": function HOME() {
+                                this.select(0, { selectedClear: true });
+                                GRID.body.moveFocus.call(this, 0);
+                            },
+                            "END": function END() {
+                                this.select(this.list.length - 1, { selectedClear: true });
+                                GRID.body.moveFocus.call(this, this.list.length - 1);
                             }
-                        })();
+                        };
+
+                        if (_pos in processor) {
+                            processor[_pos].call(this);
+                        }
                     }
                 }
                 return this;
@@ -27046,21 +27052,20 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
                 }
             }.apply(this, arguments);
         };
-        return ax5grid;
     }());
 
     GRID = ax5.ui.grid;
 })();
 
-// todo : body menu
 // todo : filter
 // todo : column reorder
 // todo : editor 필수값 속성 지정
 // ax5.ui.grid.body
 (function () {
 
-    var GRID = ax5.ui.grid,
-        U = ax5.util;
+    var GRID = ax5.ui.grid;
+
+    var U = ax5.util;
 
     var columnSelect = {
         focusClear: function focusClear() {
@@ -27460,6 +27465,64 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
             }
         });
 
+        if (this.config.contextMenu) {
+            this.$["container"]["body"].on("contextmenu", function (e) {
+                var target = void 0,
+                    dindex = void 0,
+                    rowIndex = void 0,
+                    colIndex = void 0,
+                    item = void 0,
+                    column = void 0,
+                    param = {};
+
+                target = U.findParentNode(e.target, function (t) {
+                    if (t.getAttribute("data-ax5grid-column-attr")) {
+                        return true;
+                    }
+                });
+
+                if (target) {
+                    // item 찾기
+                    rowIndex = Number(target.getAttribute("data-ax5grid-column-rowIndex"));
+                    colIndex = Number(target.getAttribute("data-ax5grid-column-colIndex"));
+                    dindex = Number(target.getAttribute("data-ax5grid-data-index"));
+                    column = self.bodyRowMap[rowIndex + "_" + colIndex];
+                    item = self.list[dindex];
+                }
+
+                if (!self.contextMenu) {
+                    self.contextMenu = new ax5.ui.menu();
+                }
+
+                self.contextMenu.setConfig(self.config.contextMenu);
+
+                param = {
+                    element: target,
+                    dindex: dindex,
+                    rowIndex: rowIndex,
+                    colIndex: colIndex,
+                    item: item,
+                    column: column
+                };
+
+                self.contextMenu.popup(e, {
+                    filter: function filter() {
+                        return self.config.contextMenu.popupFilter.call(this, this, param);
+                    },
+                    param: param
+                });
+
+                U.stopEvent(e.originalEvent);
+                target = null;
+                dindex = null;
+                rowIndex = null;
+                colIndex = null;
+                item = null;
+                column = null;
+                param = null;
+            });
+        }
+
         this.$["container"]["body"].on("mousedown", '[data-ax5grid-column-attr="default"]', function (e) {
             if (self.xvar.touchmoved) return false;
             if (this.getAttribute("data-ax5grid-column-rowIndex")) {
@@ -27519,6 +27582,9 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
 
             return data;
         }.call(this, this.bodyRowTable);
+
+        //console.log(dividedBodyRowObj);
+
         this.leftBodyRowData = dividedBodyRowObj.leftData;
         this.bodyRowData = dividedBodyRowObj.rightData;
 
@@ -27664,7 +27730,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
             };
 
             var returnValue = _col.formatter ? valueProcessor.formatter.call(this) : valueProcessor.default.call(this);
-            if (_col.treeControl) {
+            if (this.config.tree.use && _col.treeControl) {
                 returnValue = valueProcessor.treeControl.call(this, returnValue);
             }
 
@@ -27776,7 +27842,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
         }
 
         /// 출력시작 인덱스
-        var paintStartRowIndex = !this.config.virtualScrollY ? 0 : Math.floor(-this.$.panel["body-scroll"].position().top / this.xvar.bodyTrHeight) + this.xvar.frozenRowIndex;
+        var paintStartRowIndex = !this.config.virtualScrollY ? this.xvar.frozenRowIndex : Math.floor(-this.$.panel["body-scroll"].position().top / this.xvar.bodyTrHeight) + this.xvar.frozenRowIndex;
         if (isNaN(paintStartRowIndex)) return this;
 
         var paintStartColumnIndex = 0,
@@ -29224,8 +29290,6 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
 
     var inlineEdit = {
         active: function active(_focusedColumn, _e, _initValue) {
-            var _this2 = this;
-
             var self = this,
                 dindex,
                 colIndex,
@@ -29304,31 +29368,25 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
                 this.isInlineEditing = true;
             }
             if (this.isInlineEditing) {
-                var _ret4 = function () {
 
-                    var originalValue = GRID.data.getValue.call(self, dindex, col.key),
-                        initValue = function (__value, __editor) {
-                        if (U.isNothing(__value)) {
-                            __value = U.isNothing(originalValue) ? "" : originalValue;
-                        }
+                var originalValue = GRID.data.getValue.call(self, dindex, col.key),
+                    initValue = function (__value, __editor) {
+                    if (U.isNothing(__value)) {
+                        __value = U.isNothing(originalValue) ? "" : originalValue;
+                    }
 
-                        if (__editor.type == "money") {
-                            return U.number(__value, { "money": true });
-                        } else {
-                            return __value;
-                        }
-                    }.call(_this2, _initValue, editor);
+                    if (__editor.type == "money") {
+                        return U.number(__value, { "money": true });
+                    } else {
+                        return __value;
+                    }
+                }.call(this, _initValue, editor);
 
-                    _this2.inlineEditing[key].$inlineEditorCell = _this2.$["panel"][panelName].find('[data-ax5grid-tr-data-index="' + dindex + '"]').find('[data-ax5grid-column-rowindex="' + rowIndex + '"][data-ax5grid-column-colindex="' + colIndex + '"]').find('[data-ax5grid-cellholder]');
+                this.inlineEditing[key].$inlineEditorCell = this.$["panel"][panelName].find('[data-ax5grid-tr-data-index="' + dindex + '"]').find('[data-ax5grid-column-rowindex="' + rowIndex + '"][data-ax5grid-column-colindex="' + colIndex + '"]').find('[data-ax5grid-cellholder]');
 
-                    _this2.inlineEditing[key].$inlineEditor = GRID.inlineEditor[editor.type].init(_this2, key, editor, _this2.inlineEditing[key].$inlineEditorCell, initValue);
+                this.inlineEditing[key].$inlineEditor = GRID.inlineEditor[editor.type].init(this, key, editor, this.inlineEditing[key].$inlineEditorCell, initValue);
 
-                    return {
-                        v: true
-                    };
-                }();
-
-                if ((typeof _ret4 === "undefined" ? "undefined" : _typeof(_ret4)) === "object") return _ret4.v;
+                return true;
             }
         },
         deActive: function deActive(_msg, _key, _value) {
@@ -29567,8 +29625,9 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
 // ax5.ui.grid.collector
 (function () {
 
-    var GRID = ax5.ui.grid,
-        U = ax5.util;
+    var GRID = ax5.ui.grid;
+
+    var U = ax5.util;
 
     var sum = function sum() {
         var value = 0,
@@ -29580,6 +29639,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
         }
         return value;
     };
+
     var avg = function avg() {
         var value = 0,
             i = this.list.length,
@@ -29648,42 +29708,48 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
                 ari = void 0;
             for (; i < l + 1; i++) {
                 gi = 0;
-                if (_list[i] && _list[i][this.config.columnKeys.deleted]) {
-                    this.deletedList.push(_list[i]);
-                } else {
-                    compareString = "";
-                    appendRow = [];
-                    for (; gi < gl; gi++) {
-                        if (_list[i]) {
-                            compareString += "$|$" + _list[i][groupingKeys[gi].key];
-                        }
-                        if (appendIndex > 0 && compareString != groupingKeys[gi].compareString) {
-                            var appendRowItem = { keys: [], labels: [], list: groupingKeys[gi].list };
-                            for (var ki = 0; ki < gi + 1; ki++) {
-                                appendRowItem.keys.push(groupingKeys[ki].key);
-                                appendRowItem.labels.push(_list[i - 1][groupingKeys[ki].key]);
+
+                if (_list[i]) {
+                    if (_list[i][this.config.columnKeys.deleted]) {
+                        this.deletedList.push(_list[i]);
+                    } else {
+                        compareString = ""; // 그룹핑 구문검사용
+                        appendRow = []; // 현재줄 앞에 추가해줘야 하는 줄
+
+                        // 그룹핑 구문검사
+                        for (; gi < gl; gi++) {
+                            if (_list[i]) {
+                                compareString += "$|$" + _list[i][groupingKeys[gi].key];
                             }
-                            appendRow.push(appendRowItem);
-                            groupingKeys[gi].list = [];
+                            if (appendIndex > 0 && compareString != groupingKeys[gi].compareString) {
+                                var appendRowItem = { keys: [], labels: [], list: groupingKeys[gi].list };
+                                for (var ki = 0; ki < gi + 1; ki++) {
+                                    appendRowItem.keys.push(groupingKeys[ki].key);
+                                    appendRowItem.labels.push(_list[i - 1][groupingKeys[ki].key]);
+                                }
+                                appendRow.push(appendRowItem);
+                                groupingKeys[gi].list = [];
+                            }
+                            groupingKeys[gi].list.push(_list[i]);
+                            groupingKeys[gi].compareString = compareString;
                         }
-                        groupingKeys[gi].list.push(_list[i]);
-                        groupingKeys[gi].compareString = compareString;
-                    }
 
-                    ari = appendRow.length;
-                    while (ari--) {
-                        returnList.push({ __isGrouping: true, __groupingList: appendRow[ari].list, __groupingBy: { keys: appendRow[ari].keys, labels: appendRow[ari].labels } });
-                    }
+                        // 새로 추가해야할 그룹핑 row
+                        ari = appendRow.length;
+                        while (ari--) {
+                            returnList.push({ __isGrouping: true, __groupingList: appendRow[ari].list, __groupingBy: { keys: appendRow[ari].keys, labels: appendRow[ari].labels } });
+                        }
+                        //~ 그룹핑 구문 검사 완료
 
-                    if (_list[i]) {
                         if (_list[i][this.config.columnKeys.selected]) {
                             this.selectedDataIndexs.push(i);
                         }
                         _list[i]["__index"] = lineNumber;
                         dataRealRowCount++;
-                        returnList.push(_list[i]);
+
                         appendIndex++;
                         lineNumber++;
+                        returnList.push(_list[i]);
                     }
                 }
             }
@@ -29692,14 +29758,16 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
                 if (_list[i]) {
                     if (_list[i][this.config.columnKeys.deleted]) {
                         this.deletedList.push(_list[i]);
-                    } else if (_list[i][this.config.columnKeys.selected]) {
-                        this.selectedDataIndexs.push(i);
+                    } else {
+
+                        if (_list[i][this.config.columnKeys.selected]) {
+                            this.selectedDataIndexs.push(i);
+                        }
+                        _list[i]["__index"] = lineNumber;
+                        dataRealRowCount++;
+                        lineNumber++;
+                        returnList.push(_list[i]);
                     }
-                    // __index변수를 추가하여 lineNumber 에 출력합니다. (body getFieldValue 에서 출력함)
-                    _list[i]["__index"] = lineNumber;
-                    dataRealRowCount++;
-                    lineNumber++;
-                    returnList.push(_list[i]);
                 }
             }
         }
@@ -29907,8 +29975,13 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
                 if (!U.isNumber(_dindex)) {
                     throw 'invalid argument _dindex';
                 }
-                //
-                list = list.splice(_dindex, [].concat(_row));
+                if (U.isArray(_row)) {
+                    for (var _i = 0, _l = row.length; _i < _l; _i++) {
+                        list.splice(_dindex + _i, 0, _row[_i]);
+                    }
+                } else {
+                    list.splice(_dindex, 0, _row);
+                }
             }
 
             if (this.config.body.grouping) {
@@ -30060,14 +30133,14 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
                     i = null;
                 } else {
                     var _selfHash = list[_dindex][treeKeys.selfHash];
-                    var _i = list.length;
-                    while (_i--) {
-                        if (list[_i][treeKeys.selfHash].substr(0, _selfHash.length) !== _selfHash) {
-                            list[_i][keys.deleted] = true;
+                    var _i2 = list.length;
+                    while (_i2--) {
+                        if (list[_i2][treeKeys.selfHash].substr(0, _selfHash.length) !== _selfHash) {
+                            list[_i2][keys.deleted] = true;
                         }
                     }
                     _selfHash = null;
-                    _i = null;
+                    _i2 = null;
                 }
 
                 keys = null;
@@ -30416,14 +30489,17 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
 // ax5.ui.grid.excel
 (function () {
 
-    var GRID = ax5.ui.grid,
-        U = ax5.util;
+    var GRID = ax5.ui.grid;
+
+    var U = ax5.util;
 
     var base64 = function base64(s) {
         return window.btoa(unescape(encodeURIComponent(s)));
-    },
-        uri = "data:application/vnd.ms-excel;base64,",
-        getExcelTmpl = function getExcelTmpl() {
+    };
+
+    var uri = "data:application/vnd.ms-excel;base64,";
+
+    var getExcelTmpl = function getExcelTmpl() {
         return "\uFEFF\n{{#tables}}{{{body}}}{{/tables}}\n";
     };
 
@@ -30508,8 +30584,9 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
 // ax5.ui.grid.formatter
 (function () {
 
-    var GRID = ax5.ui.grid,
-        U = ax5.util;
+    var GRID = ax5.ui.grid;
+
+    var U = ax5.util;
 
     var money = function money() {
         return U.number(this.value, { "money": true });
@@ -30522,8 +30599,9 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
 // ax5.ui.grid.header
 (function () {
 
-    var GRID = ax5.ui.grid,
-        U = ax5.util;
+    var GRID = ax5.ui.grid;
+
+    var U = ax5.util;
 
     var columnResizerEvent = {
         "on": function on(_columnResizer, _colIndex) {
@@ -30585,30 +30663,40 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
         this.$["container"]["header"].on("click", '[data-ax5grid-column-attr]', function (e) {
             var key = this.getAttribute("data-ax5grid-column-key"),
                 colIndex = this.getAttribute("data-ax5grid-column-colindex"),
-                rowIndex = this.getAttribute("data-ax5grid-column-rowindex"),
-                col = self.colGroup[colIndex];
+
+            //rowIndex = this.getAttribute("data-ax5grid-column-rowindex"),
+            col = self.colGroup[colIndex];
 
             if (key === "__checkbox_header__") {
                 var selected = this.getAttribute("data-ax5grid-selected");
-                selected = U.isNothing(selected) ? true : selected === "true" ? false : true;
+                selected = U.isNothing(selected) ? true : selected !== "true";
 
                 $(this).attr("data-ax5grid-selected", selected);
                 self.selectAll({ selected: selected });
+
+                selected = null;
             } else {
-                if (key && col) {
-                    if ((col.sortable === true || self.config.sortable === true) && col.sortable !== false) {
-                        if (!col.sortFixed) toggleSort.call(self, col.key);
+                if (key && col && col.sortable !== false && !col.sortFixed) {
+                    if (col.sortable === true || self.config.sortable === true) {
+                        toggleSort.call(self, col.key);
                     }
                 }
             }
 
             GRID.body.blur.call(self);
+
+            key = null;
+            colIndex = null;
+            col = null;
         });
         this.$["container"]["header"].on("mousedown", '[data-ax5grid-column-resizer]', function (e) {
             var colIndex = this.getAttribute("data-ax5grid-column-resizer");
+
             self.xvar.mousePosition = GRID.util.getMousePosition(e);
             columnResizerEvent.on.call(self, this, Number(colIndex));
             U.stopEvent(e);
+
+            colIndex = null;
         }).on("dragstart", function (e) {
             U.stopEvent(e);
             return false;
@@ -30619,7 +30707,8 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
 
     var resetFrozenColumn = function resetFrozenColumn() {
         var cfg = this.config,
-            dividedHeaderObj = GRID.util.divideTableByFrozenColumnIndex(this.headerTable, this.config.frozenColumnIndex);
+            dividedHeaderObj = GRID.util.divideTableByFrozenColumnIndex(this.headerTable, this.xvar.frozenColumnIndex);
+
         this.asideHeaderData = function (dataTable) {
             var colGroup = [];
             var data = { rows: [] };
@@ -30654,30 +30743,21 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
                         colGroup.push(_col);
                         data.rows[i].cols.push(_col);
                     }
+
+                    col = null;
                 }
             }
 
             this.asideColGroup = colGroup;
             return data;
         }.call(this, this.headerTable);
+
         this.leftHeaderData = dividedHeaderObj.leftData;
         this.headerData = dividedHeaderObj.rightData;
     };
 
     var getFieldValue = function getFieldValue(_col) {
-        var cfg = this.config,
-            colGroup = this.colGroup,
-            _key = _col.key,
-            tagsToReplace = {
-            '<': '&lt;',
-            '>': '&gt;'
-        };
-
-        if (_key === "__checkbox_header__") {
-            return "<div class=\"checkBox\" style=\"max-height: " + (_col.width - 10) + "px;min-height: " + (_col.width - 10) + "px;\"></div>";
-        } else {
-            return _col.label || "&nbsp;";
-        }
+        return _col.key === "__checkbox_header__" ? "<div class=\"checkBox\" style=\"max-height: " + (_col.width - 10) + "px;min-height: " + (_col.width - 10) + "px;\"></div>" : _col.label || "&nbsp;";
     };
 
     var repaint = function repaint(_reset) {
@@ -31082,8 +31162,9 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
 // ax5.ui.grid.page
 (function () {
 
-    var GRID = ax5.ui.grid,
-        U = ax5.util;
+    var GRID = ax5.ui.grid;
+
+    var U = ax5.util;
 
     var onclickPageMove = function onclickPageMove(_act) {
         var callback = function callback(_pageNo) {
@@ -31204,13 +31285,15 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
 (function () {
 
     var GRID = ax5.ui.grid;
+
     var U = ax5.util;
 
     var convertScrollPosition = {
         "vertical": function vertical(css, _var) {
-            var _content_height = _var._content_height - _var._panel_height;
-            var _scroller_height = _var._vertical_scroller_height - _var.verticalScrollBarHeight;
-            var top = _content_height * css.top / _scroller_height;
+            var _content_height = _var._content_height - _var._panel_height,
+                _scroller_height = _var._vertical_scroller_height - _var.verticalScrollBarHeight,
+                top = _content_height * css.top / _scroller_height;
+
             if (top < 0) top = 0;else if (_content_height < top) {
                 top = _content_height;
             }
@@ -31219,9 +31302,10 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
             };
         },
         "horizontal": function horizontal(css, _var) {
-            var _content_width = _var._content_width - _var._panel_width;
-            var _scroller_width = _var._horizontal_scroller_width - _var.horizontalScrollBarWidth;
-            var left = _content_width * css.left / _scroller_width;
+            var _content_width = _var._content_width - _var._panel_width,
+                _scroller_width = _var._horizontal_scroller_width - _var.horizontalScrollBarWidth,
+                left = _content_width * css.left / _scroller_width;
+
             if (left < 0) left = 0;else if (_content_width < left) {
                 left = _content_width;
             }
@@ -31230,18 +31314,20 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
             };
         }
     };
+
     var convertScrollBarPosition = {
         "vertical": function vertical(_top, _var) {
 
-            var type = "vertical";
-            var _content_height = _var._content_height - _var._panel_height;
-            var _scroller_height = _var._vertical_scroller_height - _var.verticalScrollBarHeight;
-            var top = _scroller_height * _top / _content_height;
+            var type = "vertical",
+                _content_height = _var._content_height - _var._panel_height,
+                _scroller_height = _var._vertical_scroller_height - _var.verticalScrollBarHeight,
+                top = _scroller_height * _top / _content_height,
+                scrollPositon = void 0;
 
             if (-top > _scroller_height) {
                 top = -_scroller_height;
 
-                var scrollPositon = convertScrollPosition[type].call(this, { top: -top }, {
+                scrollPositon = convertScrollPosition[type].call(this, { top: -top }, {
                     _content_width: _var._content_width,
                     _content_height: _var._content_height,
                     _panel_width: _var._panel_width,
@@ -31258,14 +31344,15 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
             return -top;
         },
         "horizontal": function horizontal(_left, _var) {
-            var type = "horizontal";
-            var _content_width = _var._content_width - _var._panel_width;
-            var _scroller_width = _var._horizontal_scroller_width - _var.horizontalScrollBarWidth;
-            var left = _scroller_width * _left / _content_width;
+            var type = "horizontal",
+                _content_width = _var._content_width - _var._panel_width,
+                _scroller_width = _var._horizontal_scroller_width - _var.horizontalScrollBarWidth,
+                left = _scroller_width * _left / _content_width,
+                scrollPositon = void 0;
 
             if (-left > _scroller_width) {
                 left = -_scroller_width;
-                var scrollPositon = convertScrollPosition[type].call(this, { left: -left }, {
+                scrollPositon = convertScrollPosition[type].call(this, { left: -left }, {
                     _content_width: _var._content_width,
                     _content_height: _var._content_height,
                     _panel_width: _var._panel_width,
@@ -31283,6 +31370,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
             return -left;
         }
     };
+
     var scrollBarMover = {
         "click": function click(track, bar, type, e) {
 
@@ -31330,9 +31418,9 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
                     }
                     return { left: newLeft };
                 }
-            };
+            },
+                css = getScrollerPosition[type](e);
 
-            var css = getScrollerPosition[type](e);
             bar.css(css);
 
             var scrollPositon = convertScrollPosition[type].call(self, css, {
@@ -31347,6 +31435,8 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
             });
             if (type === "horizontal") GRID.header.scrollTo.call(self, scrollPositon);
             GRID.body.scrollTo.call(self, scrollPositon);
+
+            scrollPositon = null;
         },
         "on": function on(track, bar, type, e) {
             var self = this,
@@ -31428,6 +31518,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
             jQuery(document.body).removeAttr('unselectable').css('user-select', 'auto').off('selectstart');
         }
     };
+
     var scrollContentMover = {
         "wheel": function wheel(delta) {
             var self = this,
@@ -31682,12 +31773,13 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
 (function () {
 
     var GRID = ax5.ui.grid;
+
     var main = function main() {
         return "<div data-ax5grid-container=\"root\" data-ax5grid-instance=\"{{instanceId}}\">\n            <div data-ax5grid-container=\"hidden\">\n                <textarea data-ax5grid-form=\"clipboard\"></textarea>\n            </div>\n            <div data-ax5grid-container=\"header\">\n                <div data-ax5grid-panel=\"aside-header\"></div>\n                <div data-ax5grid-panel=\"left-header\"></div>\n                <div data-ax5grid-panel=\"header\">\n                    <div data-ax5grid-panel-scroll=\"header\"></div>\n                </div>\n                <div data-ax5grid-panel=\"right-header\"></div>\n            </div>\n            <div data-ax5grid-container=\"body\">\n                <div data-ax5grid-panel=\"top-aside-body\"></div>\n                <div data-ax5grid-panel=\"top-left-body\"></div>\n                <div data-ax5grid-panel=\"top-body\">\n                    <div data-ax5grid-panel-scroll=\"top-body\"></div>\n                </div>\n                <div data-ax5grid-panel=\"top-right-body\"></div>\n                <div data-ax5grid-panel=\"aside-body\">\n                    <div data-ax5grid-panel-scroll=\"aside-body\"></div>\n                </div>\n                <div data-ax5grid-panel=\"left-body\">\n                    <div data-ax5grid-panel-scroll=\"left-body\"></div>\n                </div>\n                <div data-ax5grid-panel=\"body\">\n                    <div data-ax5grid-panel-scroll=\"body\"></div>\n                </div>\n                <div data-ax5grid-panel=\"right-body\">\n                  <div data-ax5grid-panel-scroll=\"right-body\"></div>\n                </div>\n                <div data-ax5grid-panel=\"bottom-aside-body\"></div>\n                <div data-ax5grid-panel=\"bottom-left-body\"></div>\n                <div data-ax5grid-panel=\"bottom-body\">\n                    <div data-ax5grid-panel-scroll=\"bottom-body\"></div>\n                </div>\n                <div data-ax5grid-panel=\"bottom-right-body\"></div>\n            </div>\n            <div data-ax5grid-container=\"page\">\n                <div data-ax5grid-page=\"holder\">\n                    <div data-ax5grid-page=\"navigation\"></div>\n                    <div data-ax5grid-page=\"status\"></div>\n                </div>\n            </div>\n            <div data-ax5grid-container=\"scroller\">\n                <div data-ax5grid-scroller=\"vertical\">\n                    <div data-ax5grid-scroller=\"vertical-bar\"></div>    \n                </div>\n                <div data-ax5grid-scroller=\"horizontal\">\n                    <div data-ax5grid-scroller=\"horizontal-bar\"></div>\n                </div>\n                <div data-ax5grid-scroller=\"corner\"></div>\n            </div>\n            <div data-ax5grid-resizer=\"vertical\"></div>\n            <div data-ax5grid-resizer=\"horizontal\"></div>\n        </div>";
     };
 
     var page_navigation = function page_navigation() {
-        return "<div data-ax5grid-page-navigation=\"holder\">\n            {{#hasPage}}\n            <div data-ax5grid-page-navigation=\"cell\">    \n                {{#firstIcon}}<button data-ax5grid-page-move=\"first\">{{{firstIcon}}}</button>{{/firstIcon}}\n                <button data-ax5grid-page-move=\"prev\">{{{prevIcon}}}</button>\n            </div>\n            <div data-ax5grid-page-navigation=\"cell-paging\">\n                {{#@paging}}\n                <button data-ax5grid-page-move=\"{{pageNo}}\" data-ax5grid-page-selected=\"{{selected}}\">{{pageNo}}</button>\n                {{/@paging}}\n            </div>\n            <div data-ax5grid-page-navigation=\"cell\">\n                <button data-ax5grid-page-move=\"next\">{{{nextIcon}}}</button>\n                {{#lastIcon}}<button data-ax5grid-page-move=\"last\">{{{lastIcon}}}</button>{{/lastIcon}}\n            </div>\n            {{/hasPage}}\n        </div>";
+        return "<div data-ax5grid-page-navigation=\"holder\">\n            {{#hasPage}}\n            <div data-ax5grid-page-navigation=\"cell\">    \n                {{#firstIcon}}<button type=\"button\" data-ax5grid-page-move=\"first\">{{{firstIcon}}}</button>{{/firstIcon}}\n                <button type=\"button\" data-ax5grid-page-move=\"prev\">{{{prevIcon}}}</button>\n            </div>\n            <div data-ax5grid-page-navigation=\"cell-paging\">\n                {{#@paging}}\n                <button type=\"button\" data-ax5grid-page-move=\"{{pageNo}}\" data-ax5grid-page-selected=\"{{selected}}\">{{pageNo}}</button>\n                {{/@paging}}\n            </div>\n            <div data-ax5grid-page-navigation=\"cell\">\n                <button type=\"button\" data-ax5grid-page-move=\"next\">{{{nextIcon}}}</button>\n                {{#lastIcon}}<button type=\"button\" data-ax5grid-page-move=\"last\">{{{lastIcon}}}</button>{{/lastIcon}}\n            </div>\n            {{/hasPage}}\n        </div>";
     };
 
     var page_status = function page_status() {
@@ -31708,6 +31800,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
 (function () {
 
     var GRID = ax5.ui.grid;
+
     var U = ax5.util;
 
     /**
@@ -31717,17 +31810,19 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
      * @returns {{leftHeaderData: {rows: Array}, headerData: {rows: Array}}}
      */
     var divideTableByFrozenColumnIndex = function divideTableByFrozenColumnIndex(_table, _frozenColumnIndex) {
-        var tempTable_l = { rows: [] };
-        var tempTable_r = { rows: [] };
+
+        var tempTable_l = { rows: [] },
+            tempTable_r = { rows: [] };
+
         for (var r = 0, rl = _table.rows.length; r < rl; r++) {
-            var row = _table.rows[r];
+            var _row3 = _table.rows[r];
 
             tempTable_l.rows[r] = { cols: [] };
             tempTable_r.rows[r] = { cols: [] };
 
-            for (var c = 0, cl = row.cols.length; c < cl; c++) {
-                var col = jQuery.extend({}, row.cols[c]);
-                var colStartIndex = col.colIndex,
+            for (var c = 0, cl = _row3.cols.length; c < cl; c++) {
+                var col = jQuery.extend({}, _row3.cols[c]),
+                    colStartIndex = col.colIndex,
                     colEndIndex = col.colIndex + col.colspan;
 
                 if (colStartIndex < _frozenColumnIndex) {
@@ -31735,20 +31830,29 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
                         // 좌측편에 변형없이 추가
                         tempTable_l.rows[r].cols.push(col);
                     } else {
-                        var leftCol = jQuery.extend({}, col);
-                        var rightCol = jQuery.extend({}, leftCol);
+                        var leftCol = jQuery.extend({}, col),
+                            rightCol = jQuery.extend({}, leftCol);
+
                         leftCol.colspan = _frozenColumnIndex - leftCol.colIndex;
                         rightCol.colIndex = _frozenColumnIndex;
                         rightCol.colspan = col.colspan - leftCol.colspan;
 
                         tempTable_l.rows[r].cols.push(leftCol);
-                        tempTable_r.rows[r].cols.push(rightCol);
+                        if (rightCol.colspan) {
+                            tempTable_r.rows[r].cols.push(rightCol);
+                        }
                     }
                 } else {
                     // 오른편
                     tempTable_r.rows[r].cols.push(col);
                 }
+
+                col = null;
+                colStartIndex = null;
+                colEndIndex = null;
             }
+
+            _row3 = null;
         }
 
         return {
@@ -31761,11 +31865,11 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
 
         var tempTable = { rows: [] };
         for (var r = 0, rl = _table.rows.length; r < rl; r++) {
-            var row = _table.rows[r];
+            var _row4 = _table.rows[r];
 
             tempTable.rows[r] = { cols: [] };
-            for (var c = 0, cl = row.cols.length; c < cl; c++) {
-                var col = jQuery.extend({}, row.cols[c]),
+            for (var c = 0, cl = _row4.cols.length; c < cl; c++) {
+                var col = jQuery.extend({}, _row4.cols[c]),
                     colStartIndex = col.colIndex,
                     colEndIndex = col.colIndex + col.colspan;
 
@@ -31788,9 +31892,10 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
     };
 
     var getMousePosition = function getMousePosition(e) {
-        var mouseObj,
+        var mouseObj = void 0,
             originalEvent = e.originalEvent ? e.originalEvent : e;
-        mouseObj = 'changedTouches' in originalEvent ? originalEvent.changedTouches[0] : originalEvent;
+
+        mouseObj = 'changedTouches' in originalEvent && originalEvent.changedTouches ? originalEvent.changedTouches[0] : originalEvent;
         // clientX, Y 쓰면 스크롤에서 문제 발생
         return {
             clientX: mouseObj.pageX,
@@ -31805,13 +31910,13 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
     };
 
     var makeHeaderTable = function makeHeaderTable(_columns) {
-        var columns = U.deepCopy(_columns);
-        var cfg = this.config;
-        var table = {
+        var columns = U.deepCopy(_columns),
+            cfg = this.config,
+            table = {
             rows: []
-        };
-        var colIndex = 0;
-        var maekRows = function maekRows(_columns, depth, parentField) {
+        },
+            colIndex = 0,
+            maekRows = function maekRows(_columns, depth, parentField) {
             var row = { cols: [] };
             var i = 0,
                 l = _columns.length;
@@ -31855,6 +31960,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
                 return colspan;
             }
         };
+
         maekRows(columns, 0);
 
         // set rowspan
@@ -31870,22 +31976,23 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
     };
 
     var makeBodyRowTable = function makeBodyRowTable(_columns) {
-        var columns = U.deepCopy(_columns);
-        var table = {
+        var columns = U.deepCopy(_columns),
+            table = {
             rows: []
-        };
-        var colIndex = 0;
-        var maekRows = function maekRows(_columns, depth, parentField) {
-            var row = { cols: [] };
-            var i = 0,
-                l = _columns.length;
+        },
+            colIndex = 0,
+            maekRows = function maekRows(_columns, depth, parentField) {
+            var row = { cols: [] },
+                i = 0,
+                l = _columns.length,
+                colspan = 1;
 
             var selfMakeRow = function selfMakeRow(__columns) {
                 var i = 0,
                     l = __columns.length;
                 for (; i < l; i++) {
-                    var field = __columns[i];
-                    var colspan = 1;
+                    var field = __columns[i],
+                        _colspan = 1;
 
                     if (!field.hidden) {
 
@@ -31905,9 +32012,9 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
 
                             row.cols.push(field);
                             if ('columns' in field) {
-                                colspan = maekRows(field.columns, depth + 1, field);
+                                _colspan = maekRows(field.columns, depth + 1, field);
                             }
-                            field.colspan = colspan;
+                            field.colspan = _colspan;
                         } else {
                             if ('columns' in field) {
                                 selfMakeRow(field.columns, depth);
@@ -31919,7 +32026,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
 
             for (; i < l; i++) {
                 var field = _columns[i];
-                var colspan = 1;
+                colspan = 1;
 
                 if (!field.hidden) {
 
@@ -31948,6 +32055,8 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
                         }
                     }
                 } else {}
+
+                field = null;
             }
 
             if (row.cols.length > 0) {
@@ -31960,18 +32069,21 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
                 return colspan;
             }
         };
+
         maekRows(columns, 0);
 
         (function (table) {
             // set rowspan
             for (var r = 0, rl = table.rows.length; r < rl; r++) {
-                var row = table.rows[r];
-                for (var c = 0, cl = row.cols.length; c < cl; c++) {
-                    var col = row.cols[c];
+                var _row5 = table.rows[r];
+                for (var c = 0, cl = _row5.cols.length; c < cl; c++) {
+                    var col = _row5.cols[c];
                     if (!('columns' in col)) {
                         col.rowspan = rl - r;
                     }
+                    col = null;
                 }
+                _row5 = null;
             }
         })(table);
 
@@ -32027,9 +32139,9 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
             }
 
             if (addC < this.colGroup.length) {
-                for (var c = addC; c < this.colGroup.length; c++) {
+                for (var _c = addC; _c < this.colGroup.length; _c++) {
                     table.rows[r].cols.push({
-                        colIndex: c,
+                        colIndex: _c,
                         colspan: 1,
                         rowspan: 1,
                         label: "&nbsp;"
@@ -32051,21 +32163,21 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
             addC = 0;
 
         table.rows[r] = { cols: [] };
-        for (var _c = 0, cl = _bodyGroupingColumns.length; _c < cl; _c++) {
+        for (var _c2 = 0, cl = _bodyGroupingColumns.length; _c2 < cl; _c2++) {
             if (addC > this.columns.length) break;
-            var colspan = _bodyGroupingColumns[_c].colspan || 1;
-            if (_bodyGroupingColumns[_c].label || _bodyGroupingColumns[_c].key) {
+            var colspan = _bodyGroupingColumns[_c2].colspan || 1;
+            if (_bodyGroupingColumns[_c2].label || _bodyGroupingColumns[_c2].key) {
                 table.rows[r].cols.push({
                     colspan: colspan,
                     rowspan: 1,
                     rowIndex: 0,
                     colIndex: addC,
                     columnAttr: "default",
-                    align: _bodyGroupingColumns[_c].align,
-                    label: _bodyGroupingColumns[_c].label,
-                    key: _bodyGroupingColumns[_c].key,
-                    collector: _bodyGroupingColumns[_c].collector,
-                    formatter: _bodyGroupingColumns[_c].formatter
+                    align: _bodyGroupingColumns[_c2].align,
+                    label: _bodyGroupingColumns[_c2].label,
+                    key: _bodyGroupingColumns[_c2].key,
+                    collector: _bodyGroupingColumns[_c2].collector,
+                    formatter: _bodyGroupingColumns[_c2].formatter
                 });
             } else {
                 table.rows[r].cols.push({
@@ -32148,11 +32260,11 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
 
     var UI = ax5.ui;
     var U = ax5.util;
-    var COMBOBOX;
+    var COMBOBOX = void 0;
 
     UI.addClass({
         className: "combobox",
-        version: "1.4.8"
+        version: "1.4.18"
     }, function () {
         /**
          * @class ax5combobox
@@ -32177,8 +32289,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
          * });
          * ```
          */
-
-        var ax5combobox = function ax5combobox() {
+        return function () {
             var self = this,
                 cfg;
 
@@ -33557,6 +33668,27 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
                 return this;
             };
 
+            /**
+             * @method ax5combobox.clear
+             * @param {(jQueryObject|Element|Number)} _boundID
+             * @returns {ax5combobox}
+             */
+            this.clear = function (_boundID) {
+                var queIdx = U.isNumber(_boundID) ? _boundID : getQueIdx.call(this, _boundID);
+                if (queIdx === -1) {
+                    console.log(ax5.info.getError("ax5combobox", "402", "clear"));
+                    return;
+                }
+
+                clearSelected.call(this, queIdx);
+                setOptionSelect.call(this, queIdx, [], false, { noStateChange: false });
+                printLabel.call(this, queIdx);
+                blurLabel.call(this, queIdx);
+                alignComboboxDisplay.call(this);
+
+                return this;
+            };
+
             // 클래스 생성자
             this.main = function () {
                 if (arguments && U.isObject(arguments[0])) {
@@ -33566,86 +33698,10 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
                 }
             }.apply(this, arguments);
         };
-        return ax5combobox;
     }());
 
     COMBOBOX = ax5.ui.combobox;
 })();
-
-/**
- * ax5combobox jquery extends
- * @namespace jQueryExtends
- */
-
-/**
- * @method jQueryExtends.ax5combobox
- * @param {String} methodName
- * @param [arguments]
- * @param [arguments]
- * @example
- * ```html
- * <div data-ax5combobox="ax1" data-ax5combobox-config='{
- *  multiple: true,
- *  editable: true,
- *  size: "",
- *  theme:""
- *  }'></div>
- * <script>
- * jQuery('[data-ax5combobox="ax1"]').ax5combobox();
- * $('[data-ax5combobox="ax1"]').ax5combobox("getSelectedOption");
- * $('[data-ax5combobox="ax1"]').ax5combobox("setValue", ["string", "number"]);
- * $('[data-ax5combobox="ax1"]').ax5combobox("enable");
- * $('[data-ax5combobox="ax1"]').ax5combobox("disable");
- * </script>
- * ```
- */
-
-ax5.ui.combobox_instance = new ax5.ui.combobox();
-jQuery.fn.ax5combobox = function () {
-    return function (config) {
-        if (ax5.util.isString(arguments[0])) {
-            var methodName = arguments[0];
-
-            switch (methodName) {
-                case "open":
-                    return ax5.ui.combobox_instance.open(this);
-                    break;
-                case "close":
-                    return ax5.ui.combobox_instance.close(this);
-                    break;
-                case "setValue":
-                    return ax5.ui.combobox_instance.setValue(this, arguments[1], arguments[2], arguments[3], arguments[4] || "justSetValue");
-                    break;
-                case "setText":
-                    return ax5.ui.combobox_instance.setText(this, arguments[1], arguments[2], arguments[3], arguments[4] || "justSetValue");
-                    break;
-                case "getSelectedOption":
-                    return ax5.ui.combobox_instance.getSelectedOption(this);
-                    break;
-                case "enable":
-                    return ax5.ui.combobox_instance.enable(this);
-                    break;
-                case "disable":
-                    return ax5.ui.combobox_instance.disable(this);
-                    break;
-                case "blur":
-                    return ax5.ui.combobox_instance.blur(this);
-                default:
-                    return this;
-            }
-        } else {
-            if (typeof config == "undefined") config = {};
-            jQuery.each(this, function () {
-                var defaultConfig = {
-                    target: this
-                };
-                config = jQuery.extend({}, config, defaultConfig);
-                ax5.ui.combobox_instance.bind(config);
-            });
-        }
-        return this;
-    };
-}();
 
 // ax5.ui.combobox.tmpl
 (function () {
@@ -33782,6 +33838,89 @@ jQuery.fn.ax5combobox = function () {
         nodeTypeProcessor: nodeTypeProcessor
     };
 })();
+
+/*
+ * Copyright (c) 2017. tom@axisj.com
+ * - github.com/thomasjang
+ * - www.axisj.com
+ */
+
+/**
+ * ax5combobox jquery extends
+ * @namespace jQueryExtends
+ */
+
+/**
+ * @method jQueryExtends.ax5combobox
+ * @param {String} methodName
+ * @param [arguments]
+ * @param [arguments]
+ * @example
+ * ```html
+ * <div data-ax5combobox="ax1" data-ax5combobox-config='{
+ *  multiple: true,
+ *  editable: true,
+ *  size: "",
+ *  theme:""
+ *  }'></div>
+ * <script>
+ * jQuery('[data-ax5combobox="ax1"]').ax5combobox();
+ * $('[data-ax5combobox="ax1"]').ax5combobox("getSelectedOption");
+ * $('[data-ax5combobox="ax1"]').ax5combobox("setValue", ["string", "number"]);
+ * $('[data-ax5combobox="ax1"]').ax5combobox("enable");
+ * $('[data-ax5combobox="ax1"]').ax5combobox("disable");
+ * </script>
+ * ```
+ */
+
+ax5.ui.combobox_instance = new ax5.ui.combobox();
+jQuery.fn.ax5combobox = function () {
+    return function (config) {
+        if (ax5.util.isString(arguments[0])) {
+            var methodName = arguments[0];
+
+            switch (methodName) {
+                case "open":
+                    return ax5.ui.combobox_instance.open(this);
+                    break;
+                case "close":
+                    return ax5.ui.combobox_instance.close(this);
+                    break;
+                case "setValue":
+                    return ax5.ui.combobox_instance.setValue(this, arguments[1], arguments[2], arguments[3], arguments[4] || "justSetValue");
+                    break;
+                case "setText":
+                    return ax5.ui.combobox_instance.setText(this, arguments[1], arguments[2], arguments[3], arguments[4] || "justSetValue");
+                    break;
+                case "getSelectedOption":
+                    return ax5.ui.combobox_instance.getSelectedOption(this);
+                    break;
+                case "enable":
+                    return ax5.ui.combobox_instance.enable(this);
+                    break;
+                case "disable":
+                    return ax5.ui.combobox_instance.disable(this);
+                    break;
+                case "blur":
+                    return ax5.ui.combobox_instance.blur(this);
+                case "clear":
+                    return ax5.ui.combobox_instance.clear(this);
+                default:
+                    return this;
+            }
+        } else {
+            if (typeof config == "undefined") config = {};
+            jQuery.each(this, function () {
+                var defaultConfig = {
+                    target: this
+                };
+                config = jQuery.extend({}, config, defaultConfig);
+                ax5.ui.combobox_instance.bind(config);
+            });
+        }
+        return this;
+    };
+}();
 "use strict";
 
 // ax5.ui.layout
@@ -33791,7 +33930,7 @@ jQuery.fn.ax5combobox = function () {
 
     UI.addClass({
         className: "layout",
-        version: "1.4.8"
+        version: "${VERSION}"
     }, function () {
         /**
          * @class ax5layout
@@ -33808,7 +33947,7 @@ jQuery.fn.ax5combobox = function () {
                 "mouseup": ax5.info.supportTouch ? "touchend" : "mouseup"
             },
                 getMousePosition = function getMousePosition(e) {
-                var mouseObj = 'changedTouches' in e.originalEvent ? e.originalEvent.changedTouches[0] : e;
+                var mouseObj = 'changedTouches' in e.originalEvent && e.changedTouches ? e.originalEvent.changedTouches[0] : e;
                 return {
                     clientX: mouseObj.clientX,
                     clientY: mouseObj.clientY
@@ -34154,7 +34293,7 @@ jQuery.fn.ax5combobox = function () {
                     };
                     var getResizerPosition = {
                         "left": function left(e) {
-                            var mouseObj = 'changedTouches' in e.originalEvent ? e.originalEvent.changedTouches[0] : e;
+                            var mouseObj = 'changedTouches' in e.originalEvent && e.changedTouches ? e.originalEvent.changedTouches[0] : e;
 
                             panel.__da = mouseObj.clientX - panel.mousePosition.clientX;
                             var minWidth = panel.minWidth || 0;
@@ -34168,7 +34307,7 @@ jQuery.fn.ax5combobox = function () {
                             return { left: panel.$splitter.position().left + panel.__da };
                         },
                         "right": function right(e) {
-                            var mouseObj = 'changedTouches' in e.originalEvent ? e.originalEvent.changedTouches[0] : e;
+                            var mouseObj = 'changedTouches' in e.originalEvent && e.changedTouches ? e.originalEvent.changedTouches[0] : e;
 
                             panel.__da = mouseObj.clientX - panel.mousePosition.clientX;
                             var minWidth = panel.minWidth || 0;
@@ -34182,7 +34321,7 @@ jQuery.fn.ax5combobox = function () {
                             return { left: panel.$splitter.position().left + panel.__da };
                         },
                         "top": function top(e) {
-                            var mouseObj = 'changedTouches' in e.originalEvent ? e.originalEvent.changedTouches[0] : e;
+                            var mouseObj = 'changedTouches' in e.originalEvent && e.changedTouches ? e.originalEvent.changedTouches[0] : e;
 
                             panel.__da = mouseObj.clientY - panel.mousePosition.clientY;
                             var minHeight = panel.minHeight || 0;
@@ -34196,7 +34335,7 @@ jQuery.fn.ax5combobox = function () {
                             return { top: panel.$splitter.position().top + panel.__da };
                         },
                         "bottom": function bottom(e) {
-                            var mouseObj = 'changedTouches' in e.originalEvent ? e.originalEvent.changedTouches[0] : e;
+                            var mouseObj = 'changedTouches' in e.originalEvent && e.changedTouches ? e.originalEvent.changedTouches[0] : e;
 
                             panel.__da = mouseObj.clientY - panel.mousePosition.clientY;
                             var minHeight = panel.minHeight || 0;
@@ -34210,7 +34349,7 @@ jQuery.fn.ax5combobox = function () {
                             return { top: panel.$splitter.position().top + panel.__da };
                         },
                         "split": function split(e) {
-                            var mouseObj = 'changedTouches' in e.originalEvent ? e.originalEvent.changedTouches[0] : e;
+                            var mouseObj = 'changedTouches' in e.originalEvent && e.changedTouches ? e.originalEvent.changedTouches[0] : e;
 
                             if (item.orientation == "horizontal") {
                                 panel.__da = mouseObj.clientY - panel.mousePosition.clientY;
@@ -34741,6 +34880,18 @@ jQuery.fn.ax5combobox = function () {
                 };
             }();
 
+            this.getActiveTab = function (boundID) {
+                var queIdx = U.isNumber(boundID) ? boundID : getQueIdx.call(this, boundID);
+                if (queIdx === -1) {
+                    console.log(ax5.info.getError("ax5layout", "402", "tabOpen"));
+                    return;
+                }
+
+                if (typeof this.queue[queIdx].activePanelIndex != "undefined") {
+                    return this.queue[queIdx].tabPanel[this.queue[queIdx].activePanelIndex];
+                }
+            };
+
             /// 클래스 생성자
             this.main = function () {
                 if (arguments && U.isObject(arguments[0])) {
@@ -34753,6 +34904,12 @@ jQuery.fn.ax5combobox = function () {
         return ax5layout;
     }());
 })();
+
+/*
+ * Copyright (c) 2017. tom@axisj.com
+ * - github.com/thomasjang
+ * - www.axisj.com
+ */
 
 ax5.ui.layout_instance = new ax5.ui.layout();
 
@@ -34774,7 +34931,6 @@ ax5.ui.layout_instance = new ax5.ui.layout();
  * jQuery('[data-ax5layout="ax1"]').ax5layout("tabOpen", 1);
  * ```
  */
-
 jQuery.fn.ax5layout = function () {
     return function (config) {
         if (ax5.util.isString(arguments[0])) {
@@ -34798,6 +34954,9 @@ jQuery.fn.ax5layout = function () {
                     break;
                 case "tabOpen":
                     return ax5.ui.layout_instance.tabOpen(this, arguments[1]);
+                    break;
+                case "getActiveTab":
+                    return ax5.ui.layout_instance.getActiveTab(this, arguments[1]);
                     break;
                 default:
                     return this;
@@ -34825,7 +34984,7 @@ jQuery.fn.ax5layout = function () {
 
     UI.addClass({
         className: "binder",
-        version: "1.4.8"
+        version: "1.4.18"
     }, function () {
 
         /**
@@ -35788,7 +35947,7 @@ jQuery.fn.ax5layout = function () {
 
     UI.addClass({
         className: "autocomplete",
-        version: "1.4.8"
+        version: "1.4.18"
     }, function () {
         /**
          * @class ax5autocomplete
