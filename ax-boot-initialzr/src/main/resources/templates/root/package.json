@@ -9,25 +9,26 @@
     "postinstall": "node node_modules/bower/bin/bower install && gulp plugin-js"
   },
   "devDependencies": {
-    "node-sass": "*",
-    "markdown-it": "^8.1.0",
-    "strip-indent": "^2.0.0",
+    "babel-cli": "^6.0.0",
+    "babel-preset-es2015": "",
+    "bower": "^1.7.9",
     "fs-finder": "^1.8.1",
     "gulp": "*",
+    "gulp-babel": "^6.1.2",
     "gulp-changed": "*",
+    "gulp-clean": "^0.3.2",
     "gulp-concat": "*",
+    "gulp-notify": "",
+    "gulp-plumber": "",
+    "gulp-replace": "",
     "gulp-sass": "^2.1.1",
+    "gulp-shell": "^0.6.3",
+    "gulp-sourcemaps": "",
     "gulp-uglify": "^1.5.1",
     "gulp-util": "*",
-    "gulp-clean": "^0.3.2",
-    "gulp-plumber": "",
-    "gulp-notify": "",
-    "gulp-replace": "",
     "js-beautify": "^1.5.10",
-    "babel-cli": "^6.0.0",
-    "gulp-babel": "^6.1.2",
-    "babel-preset-es2015": "",
-    "gulp-sourcemaps": "",
-    "bower": "^1.7.9"
+    "markdown-it": "^8.1.0",
+    "node-sass": "*",
+    "strip-indent": "^2.0.0"
   }
 }

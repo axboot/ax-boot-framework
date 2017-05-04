@@ -16,6 +16,17 @@
     </jsp:attribute>
     <jsp:attribute name="script">
         <script type="text/javascript" src="<c:url value='/assets/js/view/_samples/page-structure.js' />"></script>
+        <script>
+            $(function () {
+                //$('[data-ax5layout]').ax5layout("reset");
+                
+                $('[data-left-view-01-btn]').on("click", function () {
+                    //console.log(this.getAttribute("data-left-view-01-btn"));
+                    $('[data-ax5layout="ax2"]').ax5layout("tabOpen", this.getAttribute("data-left-view-01-btn"));
+                });
+                
+            });
+        </script>
     </jsp:attribute>
     <jsp:body>
 
@@ -70,12 +81,11 @@
 
                 <div class="ax-button-group ax-button-group-bottom" data-fit-height-aside="left-view-01">
                     <div class="left">
-                        <button type="button" class="btn btn-default" data-left-view-01-btn="add"><ax:lang id="ax.admin.button"/> FN0</button>
-                        <button type="button" class="btn btn-primary" data-left-view-01-btn="add"><ax:lang id="ax.admin.button"/> FN1</button>
-                        <button type="button" class="btn btn-info" data-left-view-01-btn="add"><ax:lang id="ax.admin.button"/> FN2</button>
-                        <button type="button" class="btn btn-success" data-left-view-01-btn="add"><ax:lang id="ax.admin.button"/> FN3</button>
-                        <button type="button" class="btn btn-warning" data-left-view-01-btn="add"><ax:lang id="ax.admin.button"/> FN3</button>
-                        <button type="button" class="btn btn-danger" data-left-view-01-btn="add"><ax:lang id="ax.admin.button"/> FN3</button>
+                        <button type="button" class="btn btn-default" data-left-view-01-btn="0"><ax:lang id="ax.admin.button"/> 기본정보</button>
+                        <button type="button" class="btn btn-primary" data-left-view-01-btn="1"><ax:lang id="ax.admin.button"/> 일반정보</button>
+                        <button type="button" class="btn btn-info" data-left-view-01-btn="2"><ax:lang id="ax.admin.button"/> 상세정보</button>
+                        <button type="button" class="btn btn-success" data-left-view-01-btn="3"><ax:lang id="ax.admin.button"/> 기타정보</button>
+                        <button type="button" class="btn btn-warning" data-left-view-01-btn="4"><ax:lang id="ax.admin.button"/> 이력조회</button>
                     </div>
                 </div>
 
