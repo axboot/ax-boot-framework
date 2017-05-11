@@ -213,6 +213,9 @@ fnObj.gridView01 = axboot.viewExtend(axboot.gridView, {
                 onClick: function () {
                     this.self.select(this.dindex);
                     ACTIONS.dispatch(ACTIONS.ITEM_CLICK, this.item);
+                },
+                onDBLClick: function () {
+                    alert("DBLClick grid : row " + this.dindex);
                 }
             },
             onPageChange: function (pageNumber) {
