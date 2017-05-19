@@ -1,15 +1,11 @@
 package com.chequer.axboot.core.logging;
 
 import ch.qos.logback.classic.spi.ILoggingEvent;
-import ch.qos.logback.classic.spi.StackTraceElementProxy;
 import ch.qos.logback.core.UnsynchronizedAppenderBase;
-import ch.qos.logback.core.util.ContextUtil;
 import com.chequer.axboot.core.config.AXBootContextConfig;
 import com.chequer.axboot.core.domain.log.AXBootErrorLog;
 import com.chequer.axboot.core.domain.log.AXBootErrorLogService;
 import com.chequer.axboot.core.utils.JsonUtils;
-import com.chequer.axboot.core.utils.MDCUtil;
-import com.chequer.axboot.core.utils.PhaseUtils;
 import lombok.Getter;
 import lombok.Setter;
 import net.gpedro.integrations.slack.SlackApi;
@@ -166,7 +162,7 @@ public class AXBootLogbackAppender extends UnsynchronizedAppenderBase<ILoggingEv
     }
 
     private void toDatabase(AXBootErrorLog errorLog) {
-        errorLogService.save(errorLog);
+        errorLogService.saveLog(errorLog);
     }
 
 }

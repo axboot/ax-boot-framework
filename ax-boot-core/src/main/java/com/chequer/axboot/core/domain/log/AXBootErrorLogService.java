@@ -4,7 +4,7 @@ import ch.qos.logback.classic.spi.ILoggingEvent;
 
 public interface AXBootErrorLogService {
 
-    void save(AXBootErrorLog errorLog);
+    void saveLog(AXBootErrorLog errorLog);
 
     void deleteAllLogs();
 
