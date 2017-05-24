@@ -32,9 +32,9 @@ public class ErrorLogService extends BaseService<ErrorLog, Long> implements AXBo
     }
 
     @Override
-    public void save(AXBootErrorLog axBootErrorLog) {
+    public void saveLog(AXBootErrorLog axBootErrorLog) {
         ErrorLog errorLog = ModelMapperUtils.map(axBootErrorLog, ErrorLog.class);
-        save(errorLog);
+        saveLog(errorLog);
     }
 
     @Transactional
