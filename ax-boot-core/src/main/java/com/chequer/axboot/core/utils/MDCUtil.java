@@ -6,8 +6,6 @@ import org.slf4j.MDC;
 import org.slf4j.spi.MDCAdapter;
 
 public class MDCUtil {
-	private static MDCAdapter mdc = MDC.getMDCAdapter();
-
 	public static final String HEADER_MAP_MDC = "HEADER_MAP_MDC";
 
 	public static final String PARAMETER_BODY_MDC = "PARAMETER_BODY_MDC";
@@ -19,14 +17,14 @@ public class MDCUtil {
 	private static Logger logger = LoggerFactory.getLogger(MDCUtil.class);
 
 	public static void set(String key, String value) {
-		mdc.put(key, value);
+		MDC.put(key, value);
 	}
 
 	public static void setJsonValue(String key, Object value) {
 		try {
 			if (value != null) {
 				String json = JsonUtils.toJson(value);
-				mdc.put(key, json);
+				MDC.put(key, json);
 			}
 		} catch (Exception e) {
 			// ignored
@@ -34,7 +32,7 @@ public class MDCUtil {
 	}
 
 	public static String get(String key) {
-		return mdc.get(key);
+		return MDC.get(key);
 	}
 
 	public static void clear() {
