@@ -12,8 +12,7 @@
     let GRID;
 
     UI.addClass({
-        className: "grid",
-        version: "${VERSION}"
+        className: "grid"
     }, (function () {
         /**
          * @class ax5grid
@@ -56,6 +55,8 @@
                 multipleSelect: true,
                 virtualScrollY: true,
                 virtualScrollX: true,
+                virtualScrollYCountMargin: 0,
+                virtualScrollAccelerated: false,
                 height: 0,
                 columnMinWidth: 100,
                 lineNumberColumnWidth: 30,
@@ -83,6 +84,7 @@
                 page: {
                     height: 25,
                     display: true,
+                    statusDisplay: true,
                     navigationItemCount: 5
                 },
                 scroller: {
@@ -124,7 +126,8 @@
             this.xvar = {
                 bodyTrHeight: 0, // 한줄의 높이
                 scrollContentWidth: 0, // 스크롤 될 내용물의 너비 (스크롤 될 내용물 : panel['body-scroll'] 안에 컬럼이 있는)
-                scrollContentHeight: 0 // 스크롤 된 내용물의 높이
+                scrollContentHeight: 0, // 스크롤 된 내용물의 높이
+                scrollTimer: null
             };
 
             // 그리드 데이터셋
@@ -173,15 +176,6 @@
 
             cfg = this.config;
 
-            const onStateChanged = function (_opts, _that) {
-                if (_opts && _opts.onStateChanged) {
-                    _opts.onStateChanged.call(_that, _that);
-                }
-                else if (this.onStateChanged) {
-                    this.onStateChanged.call(_that, _that);
-                }
-                return true;
-            };
             const initGrid = function () {
                 // 그리드 템플릿에 전달하고자 하는 데이터를 정리합시다.
 
@@ -625,7 +619,8 @@
                         this.list = GRID.data.sort.call(this, _sortInfo,
                             GRID.data.clearGroupingData.call(this,
                                 this.list
-                            )
+                            ),
+                            {resetLineNumber: true}
                         );
                     }
                     GRID.body.repaint.call(this, true);
@@ -634,6 +629,7 @@
             };
             /// private end
 
+            /**
             /**
              * Preferences of grid UI
              * @method ax5grid.setConfig
@@ -670,7 +666,8 @@
              * @param {Array} [_config.body.grouping.columns] - list grouping columns
              * @param {Object} [_config.page]
              * @param {Number} [_config.page.height=25]
-             * @param {Boolean} [_config.page.display=true]
+             * @param {Boolean} [_config.page.display=true] - grid page display
+             * @param {Boolean} [_config.page.statusDisplay=true] - grid status display
              * @param {Number} [_config.page.navigationItemCount=5]
              * @param {Object} [_config.scroller]
              * @param {Number} [_config.scroller.size=15]
@@ -683,6 +680,7 @@
              * @param {String} _config.columns[].label
              * @param {Number} _config.columns[].width
              * @param {(String|Function)} _config.columns[].styleClass
+             * @param {(String|Function)} _config.columns[].headerStyleClass
              * @param {Boolean} _config.columns[].enableFilter
              * @param {Boolean} _config.columns[].sortable
              * @param {String} _config.columns[].align
@@ -1008,7 +1006,10 @@
                         for (var columnKey in this.inlineEditing) {
                             activeEditLength++;
 
-                            GRID.body.inlineEdit.keydown.call(this, "RETURN", columnKey);
+                            if(!GRID.body.inlineEdit.keydown.call(this, "RETURN", columnKey)){
+                                return false;
+                                U.stopEvent(_e);
+                            }
                             // next focus
                             if (activeEditLength == 1) {
                                 if (GRID.body.moveFocus.call(this, (_e.shiftKey) ? "UP" : "DOWN")) {
@@ -1182,17 +1183,24 @@
              * @param {Number|String} [_dindex=last]
              * @param {Object} [_options] - options of addRow
              * @param {Boolean} [_options.sort] - sortData
+             * @param {Number|String} [_options.focus] - HOME|END|[dindex]
              * @returns {ax5grid}
              * @example
              * ```js
              * ax5Grid.addRow($.extend({}, {...}), "first");
+             * ax5Grid.addRow($.extend({}, {...}), "last", {focus: "END"});
+             * ax5Grid.addRow($.extend({}, {...}), "last", {focus: "HOME"});
+             * ax5Grid.addRow($.extend({}, {...}), "last", {focus: 10});
              * ```
              */
             this.addRow = function (_row, _dindex, _options) {
                 GRID.data.add.call(this, _row, _dindex, _options);
                 alignGrid.call(this);
                 GRID.body.repaint.call(this, "reset");
-                GRID.body.moveFocus.call(this, (this.config.body.grouping) ? "START" : "END");
+                if(_options && _options.focus) {
+                    //GRID.body.moveFocus.call(this, (this.config.body.grouping) ? "START" : "END");
+                    GRID.body.moveFocus.call(this, _options.focus);
+                }
                 GRID.scroller.resize.call(this);
                 return this;
             };
@@ -1242,12 +1250,44 @@
              * @param {Object} _row
              * @param {Number} _dindex
              * @returns {ax5grid}
+             * @example
+             * ```js
+             * firstGrid.updateRow({price: 100, amount: 100, cost: 10000}, 1);
+             * ```
              */
             this.updateRow = function (_row, _dindex) {
                 GRID.data.update.call(this, _row, _dindex);
                 // todo : mergeCells 옵션에 따라 예외처리
 
                 GRID.body.repaintRow.call(this, _dindex);
+                return this;
+            };
+
+            /**
+             * @method ax5grid.updateChildRows
+             * @param {Number} _dindex
+             * @param {Object} _updateData
+             * @param {Object} [_options]
+             * @param {Function} [_options.filter]
+             * @returns {ax5grid}
+             * @example
+             * ```js
+             * onDataChanged: function () {
+             *      this.self.updateChildRows(this.dindex, {isChecked: this.item.isChecked});
+             * }
+             *
+             * onDataChanged: function () {
+             *      this.self.updateChildRows(this.dindex, {isChecked: this.item.isChecked}, {filter: function(){
+             *          return this.item.type == "A";
+             *      });
+             * }
+             * ```
+             */
+            this.updateChildRows = function (_dindex, _updateData, _options) {
+                GRID.data.updateChild.call(this, _dindex, _updateData, _options);
+                this.xvar.paintStartRowIndex = undefined;
+                this.xvar.paintStartColumnIndex = undefined;
+                GRID.body.repaint.call(this);
                 return this;
             };
 
@@ -1334,7 +1374,13 @@
                         if (!U.isNumber(_cindex)) {
                             throw 'invalid argument _cindex';
                         }
-                        this.config.columns.splice(_cindex, [].concat(_column))
+                        if (U.isArray(_column)) {
+                            for (let _i = 0, _l = _column.length; _i < _l; _i++) {
+                                this.config.columns.splice(_cindex + _i, 0, _column[_i]);
+                            }
+                        } else {
+                            this.config.columns.splice(_cindex, 0, _column);
+                        }
                     }
                     onResetColumns.call(this); // 컬럼이 변경되었을 때.
                     return this;
@@ -1342,7 +1388,7 @@
             })();
 
             /**
-             * @method ax5grid.removeCloumn
+             * @method ax5grid.removeColumn
              * @param {Number|String} [_cindex=last]
              * @returns {ax5grid}
              */
@@ -1480,6 +1526,26 @@
                     GRID.data.select.call(this, dindex, _options && _options.selected);
                     GRID.body.updateRowState.call(this, ["selected"], dindex);
                 }
+                return this;
+            };
+
+            /**
+             * @method firstGrid.clickBody
+             * @param {Number} _dindex
+             * @returns {ax5grid}
+             */
+            this.clickBody = function (_dindex) {
+                GRID.body.click.call(this, _dindex);
+                return this;
+            };
+
+            /**
+             * @method firstGrid.DBLClickBody
+             * @param {Number} _dindex
+             * @returns {ax5grid}
+             */
+            this.DBLClickBody = function (_dindex) {
+                GRID.body.dblClick.call(this, _dindex);
                 return this;
             };
 

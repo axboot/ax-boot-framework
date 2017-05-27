@@ -14,8 +14,7 @@
     var MODAL = void 0;
 
     UI.addClass({
-        className: "modal",
-        version: "1.4.18"
+        className: "modal"
     }, function () {
         /**
          * @class ax5modal
@@ -1007,15 +1006,13 @@
                 if (this.activeModal && !self.fullScreen) {
                     this.activeModal.css(css);
                     if (css.width) {
-                        self.modalConfig.width = this.activeModal.width();
+                        self.modalConfig.width = css.width;
                     }
                     if (css.height) {
-                        self.modalConfig.height = this.activeModal.height();
-                        if (this.$["iframe"]) {
-                            this.$["iframe-wrap"].css({ height: self.modalConfig.height });
-                            this.$["iframe"].css({ height: self.modalConfig.height });
-                        }
+                        self.modalConfig.height = css.height;
                     }
+
+                    this.align();
                 }
                 return this;
             };

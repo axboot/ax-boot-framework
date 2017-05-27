@@ -6,8 +6,7 @@
         SELECT;
 
     UI.addClass({
-        className: "select",
-        version: "${VERSION}"
+        className: "select"
     }, (function () {
         /**
          * @class ax5select

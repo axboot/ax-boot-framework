@@ -7,7 +7,13 @@
         useReturnToSave: true,
         editMode: "popup",
         getHtml: function (_root, _columnKey, _editor, _value) {
-            return '<input type="text" data-ax5grid-editor="text" value="' + _value + '" >';
+            if(typeof _editor.attributes !== "undefined"){
+                var attributesText  = "";
+                for (var k in _editor.attributes){
+                    attributesText += ` ${k}='${_editor.attributes[k]}'`;
+                }
+            }
+            return `<input type="text" data-ax5grid-editor="text" value="${_value}" ${attributesText}>`;
         },
         init: function (_root, _columnKey, _editor, _$parent, _value) {
             var $el;
@@ -181,13 +187,91 @@
         }
     };
 
+    const edit_textarea = {
+        useReturnToSave: false,
+        editMode: "popup",
+        _getHtml: function (_root, _columnKey, _editor, _value) {
+            // init 에서 사용하게 될 HTML 태그를 만들어 줍니다.
+            return `<div data-ax5grid-editor="textarea"></div>`;
+        },
+        _bindUI: function (_root, _columnKey, _$el, _editor, _$parent, _value) {
+            // 위치와 크기를 구합니다.
+            let offset = _$el.offset();
+            let box = {
+                width: _$el.width()
+            };
+            let editorHeight = 150;
+            let buttonHeight = 30;
+
+            // 새로운 엘리먼트 생성
+            let $newDiv = jQuery(`<div data-ax5grid-popup="textarea" style="z-index: 9999;">
+    <textarea style="width:100%;height:${editorHeight-buttonHeight}px;" class="form-control">${_value}</textarea>
+    <div style="height:${buttonHeight}px;padding:5px;text-align: right;">
+        <button class="btn btn-default">OK</button>
+    </div>
+</div>`);
+            let $newTextarea = $newDiv.find("textarea");
+            // 엘리먼트에 CSS 적용
+            $newDiv.css({
+                position: "absolute",
+                left: offset.left,
+                top: offset.top,
+                width: box.width,
+                height: editorHeight
+            });
+            $newDiv.find("textarea");
+
+            // 새로운 엘리먼트를 document.body에 append
+            jQuery(document.body).append($newDiv);
+            $newTextarea.focus().select();
+
+            $newTextarea.on("blur", function (e) {
+                GRID.body.inlineEdit.deActive.call(_root, "RETURN", _columnKey, this.value);
+                $newDiv.remove();
+                ax5.util.stopEvent(e.originalEvent);
+            });
+            $newTextarea.on("keydown", function (e) {
+                if(e.which == ax5.info.eventKeys.ESC){
+                    GRID.body.inlineEdit.deActive.call(_root, "ESC", _columnKey);
+                    $newDiv.remove();
+                    ax5.util.stopEvent(e.originalEvent);
+                }
+            });
+
+            /// 값 변경
+            /// GRID.body.inlineEdit.deActive.call(_root, "RETURN", _columnKey, this.value[0][eConfig.columnKeys.optionValue]);
+            /// 에디팅 취소
+            /// GRID.body.inlineEdit.deActive.call(_root, "ESC", _columnKey);
+        },
+
+        init: function (_root, _columnKey, _editor, _$parent, _value) {
+            // 인라인 에디팅 활성화 시작
+            /**
+             * _root : gridInstance
+             * _columnKey : di + "_" + col.colIndex + "_" + col.rowIndex
+             * _editor : col.editor
+             * _$parent : 셀
+             * _value : 값
+             */
+            let $el;
+            _$parent.append($el = jQuery(this._getHtml(_root, _columnKey, _editor, _value)));
+            // 셀에 HTML 컨텐츠 추가
+
+            this._bindUI(_root, _columnKey, $el, _editor, _$parent, _value);
+            // 이벤트 바인딩
+
+            return $el;
+        },
+    };
+
     GRID.inlineEditor = {
         "text": edit_text,
         "money": edit_money,
         "number": edit_number,
         "date": edit_date,
         "select": edit_select,
-        "checkbox": edit_checkbox
+        "checkbox": edit_checkbox,
+        "textarea": edit_textarea
     };
 
 })();

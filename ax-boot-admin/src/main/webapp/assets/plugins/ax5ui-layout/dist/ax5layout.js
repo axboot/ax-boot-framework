@@ -6,8 +6,7 @@
     var U = ax5.util;
 
     UI.addClass({
-        className: "layout",
-        version: "${VERSION}"
+        className: "layout"
     }, function () {
         /**
          * @class ax5layout

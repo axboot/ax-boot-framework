@@ -1,12 +1,11 @@
 // ax5.ui.binder
 (function () {
 
-    var UI = ax5.ui;
-    var U = ax5.util;
+    const UI = ax5.ui;
+    const U = ax5.util;
 
     UI.addClass({
-        className: "binder",
-        version: "${VERSION}"
+        className: "binder"
     }, (function () {
 
         /**
@@ -52,7 +51,7 @@
          * myBinder.setModel(obj, $('#form-target'));
          * ```
          */
-        var ax5binder = function () {
+        return function() {
 
             var self = this,
                 cfg;
@@ -525,7 +524,7 @@
                 }
 
                 // binding event to els
-                this.view_target.find('[data-ax-path]').unbind("change.axbinder").bind("change.axbinder", function (e) {
+                this.view_target.find('[data-ax-path]').off("change.axbinder").on("change.axbinder", function (e) {
 
                     var
                         i,
@@ -751,31 +750,31 @@
                 var _this = this, index = target.attr("data-ax-repeat-i");
                 var list = (Function("", "return this" + get_real_path(dataPath) + ";")).call(this.model);
 
-                target.find('[data-ax-repeat-click]').unbind("click.axbinder").bind("click.axbinder", function (e) {
-                    var target = ax5.util.findParentNode(e.target, function (el) {
-                        return el.getAttribute("data-ax-repeat-click");
+                target.find('[data-ax-repeat-click]')
+                    .off("click.axbinder")
+                    .on("click.axbinder", function (e) {
+                        var target = ax5.util.findParentNode(e.target, function (el) {
+                            return el.getAttribute("data-ax-repeat-click");
+                        });
+                        if (target) {
+                            var dom = $(target), value = dom.attr("data-ax-repeat-click"), repeat_path = dom.attr("data-ax-repeat-path");
+                            var that = {
+                                el         : target,
+                                jquery     : dom,
+                                tagname    : target.tagName.toLowerCase(),
+                                value      : value,
+                                repeat_path: dataPath,
+                                item       : list[index],
+                                item_index : index,
+                                item_path  : dataPath + "[" + index + "]"
+                            };
+                            _this.click(dataPath, that);
+                        }
                     });
-                    if (target) {
-                        var dom = $(target), value = dom.attr("data-ax-repeat-click"), repeat_path = dom.attr("data-ax-repeat-path");
-
-                        var that = {
-                            el         : target,
-                            jquery     : dom,
-                            tagname    : target.tagName.toLowerCase(),
-                            value      : value,
-                            repeat_path: dataPath,
-                            item       : list[index],
-                            item_index : index,
-                            item_path  : dataPath + "[" + index + "]"
-                        };
-                        _this.click(dataPath, that);
-                    }
-                });
 
                 // apply data value to els
                 target.find('[data-ax-item-path]').each(function () {
-                    var
-                        dom = $(this),
+                    var dom = $(this),
                         item_path = dom.attr("data-ax-item-path"),
                         mix_path = get_mix_path(dataPath, index, item_path),
                         val,
@@ -794,78 +793,82 @@
                 });
 
                 // binding event to els
-                target.find('[data-ax-item-path]').unbind("change.axbinder").bind("change.axbinder", function (e) {
-                    var
-                        i,
-                        hasItem = false,
-                        checked,
-                        new_value = [],
-                        this_type = (this.type || "").toLowerCase(),
-                        dom = $(e.target),
-                        item_path = dom.attr("data-ax-item-path"),
-                        mix_path = get_mix_path(dataPath, index, item_path),
-                        origin_value = (Function("", "return this." + mix_path + ";")).call(_this.model),
-                        value_type = get_type(origin_value),
-                        setAllow = true
-                        ;
+                target.find('[data-ax-item-path]')
+                    .off("change.axbinder")
+                    .on("change.axbinder", function (e) {
+                        var i,
+                            hasItem = false,
+                            checked,
+                            new_value = [],
+                            this_type = (this.type || "").toLowerCase(),
+                            dom = $(e.target),
+                            item_path = dom.attr("data-ax-item-path"),
+                            mix_path = get_mix_path(dataPath, index, item_path),
+                            origin_value = (Function("", "return this." + mix_path + ";")).call(_this.model),
+                            value_type = get_type(origin_value),
+                            setAllow = true
+                            ;
 
-                    if (value_type == "object" || value_type == "array") {
-                        setAllow = false;
-                    }
+                        if (value_type == "object" || value_type == "array") {
+                            setAllow = false;
+                        }
 
-                    if (this_type == "checkbox") {
-                        if (target.find('[data-ax-item-path="' + item_path + '"]').length > 1) {
-                            if (get_type(origin_value) != "array") {
-                                if (typeof origin_value === "undefined" || origin_value == "") origin_value = [];
-                                else origin_value = [].concat(origin_value);
-                            }
-                            i = origin_value.length, hasItem = false, checked = this.checked;
-                            while (i--) {
-                                if (origin_value[i] == this.value) {
-                                    hasItem = true;
+                        if (this_type == "checkbox") {
+                            if (target.find('[data-ax-item-path="' + item_path + '"]').length > 1) {
+                                if (get_type(origin_value) != "array") {
+                                    if (typeof origin_value === "undefined" || origin_value == "") origin_value = [];
+                                    else origin_value = [].concat(origin_value);
                                 }
-                            }
-
-                            if (checked) {
-                                if (!hasItem) origin_value.push(this.value);
-                            }
-                            else {
-                                i = origin_value.length;
+                                i = origin_value.length, hasItem = false, checked = this.checked;
                                 while (i--) {
                                     if (origin_value[i] == this.value) {
-                                        //hasItemIndex = i;
-                                    }
-                                    else {
-                                        new_value.push(origin_value[i]);
+                                        hasItem = true;
                                     }
                                 }
-                                origin_value = new_value;
-                            }
-                        }
-                        else {
-                            origin_value = (this.checked) ? this.value : "";
-                        }
 
-                        (Function("val", "this." + mix_path + " = val;")).call(_this.model, origin_value);
-                        _this.change(mix_path, {
-                            el: this, jquery: dom, tagname: this.tagName.toLowerCase(), value: origin_value
-                        });
-                    }
-                    else {
-                        if (setAllow) {
-                            (Function("val", "this." + mix_path + " = val;")).call(_this.model, this.value);
+                                if (checked) {
+                                    if (!hasItem) origin_value.push(this.value);
+                                }
+                                else {
+                                    i = origin_value.length;
+                                    while (i--) {
+                                        if (origin_value[i] == this.value) {
+                                            //hasItemIndex = i;
+                                        }
+                                        else {
+                                            new_value.push(origin_value[i]);
+                                        }
+                                    }
+                                    origin_value = new_value;
+                                }
+                            }
+                            else {
+                                origin_value = (this.checked) ? this.value : "";
+                            }
+
+                            (Function("val", "this." + mix_path + " = val;")).call(_this.model, origin_value);
                             _this.change(mix_path, {
-                                el: this, jquery: dom, tagname: this.tagName.toLowerCase(), value: this.value
+                                el: this, jquery: dom, tagname: this.tagName.toLowerCase(), value: origin_value
                             });
                         }
-                    }
+                        else {
+                            if (setAllow) {
+                                (Function("val", "this." + mix_path + " = val;")).call(_this.model, this.value);
+                                _this.change(mix_path, {
+                                    el: this, jquery: dom, tagname: this.tagName.toLowerCase(), value: this.value
+                                });
+                            }
+                        }
 
-                    dom.data("changedTime", (new Date()).getTime());
-                });
-                target.find('[data-ax-item-path]').unbind("blur.axbinder").bind("blur.axbinder", function (e) {
-                    var dom = $(e.target);
-                    if (typeof dom.data("changedTime") == "undefined" || dom.data("changedTime") < (new Date()).getTime() - 10) dom.trigger("change");
-                });
+                        dom.data("changedTime", (new Date()).getTime());
+                    });
+
+                target.find('[data-ax-item-path]')
+                    .off("blur.axbinder")
+                    .on("blur.axbinder", function (e) {
+                        var dom = $(e.target);
+                        if (typeof dom.data("changedTime") == "undefined" || dom.data("changedTime") < (new Date()).getTime() - 10) dom.trigger("change");
+                    });
             };
 
             /**
@@ -910,7 +913,7 @@
                         var val, _val, is_error;
 
                         val = (Function("", "return this" + get_real_path(dataPath) + ";")).call(_this.model);
-                        if (typeof val === "undefined") val = "";
+                        if (typeof val === "undefined" || val === null) val = "";
                         _val = val.toString();
                         is_error = false;
 
@@ -998,7 +1001,6 @@
             }).apply(this, arguments);
 
         };
-        return ax5binder;
     })());
 
 })();

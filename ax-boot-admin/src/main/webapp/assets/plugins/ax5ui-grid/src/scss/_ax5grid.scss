@@ -123,25 +123,19 @@
             white-space: normal;
         }
 
-        input[data-ax5grid-editor] {
+        [data-ax5grid-editor]{
             position: absolute;
             left: 0;
             top: 0;
             width: 100%;
             height: 100%;
-            border: 0px none;
+            border: 0 none;
             background: $ax5grid-bg;
+            &::-ms-clear {
+                display: none;
+            }
         }
-        select[data-ax5grid-editor] {
-            position: absolute;
-            display: block;
-            left: 0;
-            top: 0;
-            width: 100%;
-            height: 100%;
-            border: 0px none;
-            background: $ax5grid-bg;
-        }
+
         [data-ax5select] {
             position: absolute;
             display: block;
@@ -493,7 +487,7 @@
                     &:before {
                         top: 2px;
                         left: 0;
-                        @include sort-arrow($ax5grid-header-sorter-size + 2, 2.5, 2.0, $ax5grid-header-sorter-color, 0.8, "up");
+                        @include sort-arrow($ax5grid-header-sorter-size + 1, 2.5, 2.0, $ax5grid-header-sorter-color, 0.8, "up");
                     }
                     &:after {
                         display: none;
@@ -506,7 +500,7 @@
                     &:after {
                         bottom: 2px;
                         left: 0;
-                        @include sort-arrow($ax5grid-header-sorter-size + 2, 2.5, 2.0, $ax5grid-header-sorter-color, 0.8, "down");
+                        @include sort-arrow($ax5grid-header-sorter-size + 1, 2.5, 2.0, $ax5grid-header-sorter-color, 0.8, "down");
                     }
                 }
 

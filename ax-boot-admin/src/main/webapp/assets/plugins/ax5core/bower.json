@@ -1,6 +1,6 @@
 {
   "name": "ax5core",
-  "version": "1.4.18",
+  "version": "1.4.64",
   "authors": [
     "ThomasJ <tom@axisj.com>"
   ],
@@ -16,11 +16,11 @@
     "javascript ui"
   ],
   "dependencies": {
-    "jquery": "^1.11.0"
+    "jquery": ""
   },
   "devDependencies": {
-    "bootstrap-sass": "^3.3.7",
-    "bourbon": "^4.2.7"
+    "bootstrap-sass": "",
+    "bourbon": ""
   },
   "license": "MIT",
   "homepage": "ax5.io"

@@ -274,7 +274,7 @@
      * @namespace ax5.util
      */
     ax5['util'] = U = (function () {
-        let _toString = Object.prototype.toString;
+        const _toString = Object.prototype.toString;
 
         /**
          * Object나 Array의 아이템으로 사용자 함수를 호출합니다.
@@ -487,7 +487,6 @@
             }
         }
 
-
         /**
          * @method ax5.util.avg
          * @param {Array|Object} O
@@ -529,10 +528,11 @@
                 return defaultValue / l;
             }
             else if (isObject(O)) {
+                l = 0;
                 for (i in O) {
                     if (typeof O[i] != "undefined") {
                         if (( tokenValue = _fn.call(O[i], O[i]) ) === false) break;
-                        else if (typeof tokenValue !== "undefined") defaultValue += tokenValue;
+                        else if (typeof tokenValue !== "undefined") defaultValue += tokenValue; ++l;
                     }
                 }
                 return defaultValue / l;
@@ -1899,7 +1899,7 @@
          * ax5.util.selectRange($("#select-test-0"), [1, 5]); // select 1~5
          * ```
          */
-        var selectRange = (function () {
+        const selectRange = (function () {
             var processor = {
                 'textRange': {
                     'selectAll': function (el, range, offset) {
@@ -2008,7 +2008,7 @@
          * });
          * ```
          */
-        var debounce = function (func, wait, immediately) {
+        const debounce = function (func, wait, immediately) {
             var timeout, removeTimeout;
             var debounced = function () {
                 var args = toArray(arguments);
@@ -2150,7 +2150,7 @@
          * ```
          */
         function string(_string) {
-            function ax5string(_string) {
+            return new (function (_string) {
                 this.value = _string;
                 this.toString = function () {
                     return this.value;
@@ -2226,9 +2226,283 @@
                 this.snakeCase = function () {
                     return snakeCase(this.value);
                 };
+            })(_string);
+        }
+
+        /**
+         * @method ax5.util.color
+         * @param _hexColor
+         * @return {ax5color}
+         * @example
+         * ```js
+         * ax5.util.color("#ff3300").lighten(10).getHexValue()
+         * console.log(ax5.util.color("#ff3300").darken(10).getHexValue());
+         * ```
+         */
+        function color(_hexColor) {
+
+            const matchers = (function () {
+
+                // <http://www.w3.org/TR/css3-values/#integers>
+                const CSS_INTEGER = "[-\\+]?\\d+%?";
+
+                // <http://www.w3.org/TR/css3-values/#number-value>
+                const CSS_NUMBER = "[-\\+]?\\d*\\.\\d+%?";
+
+                // Allow positive/negative integer/number.  Don't capture the either/or, just the entire outcome.
+                const CSS_UNIT = "(?:" + CSS_NUMBER + ")|(?:" + CSS_INTEGER + ")";
+
+                // Actual matching.
+                // Parentheses and commas are optional, but not required.
+                // Whitespace can take the place of commas or opening paren
+                const PERMISSIVE_MATCH3 = "[\\s|\\(]+(" + CSS_UNIT + ")[,|\\s]+(" + CSS_UNIT + ")[,|\\s]+(" + CSS_UNIT + ")\\s*\\)?";
+                const PERMISSIVE_MATCH4 = "[\\s|\\(]+(" + CSS_UNIT + ")[,|\\s]+(" + CSS_UNIT + ")[,|\\s]+(" + CSS_UNIT + ")[,|\\s]+(" + CSS_UNIT + ")\\s*\\)?";
+
+                return {
+                    CSS_UNIT: new RegExp(CSS_UNIT),
+                    rgb: new RegExp("rgb" + PERMISSIVE_MATCH3),
+                    rgba: new RegExp("rgba" + PERMISSIVE_MATCH4),
+                    hsl: new RegExp("hsl" + PERMISSIVE_MATCH3),
+                    hsla: new RegExp("hsla" + PERMISSIVE_MATCH4),
+                    hsv: new RegExp("hsv" + PERMISSIVE_MATCH3),
+                    hsva: new RegExp("hsva" + PERMISSIVE_MATCH4),
+                    hex3: /^#?([0-9a-fA-F]{1})([0-9a-fA-F]{1})([0-9a-fA-F]{1})$/,
+                    hex6: /^#?([0-9a-fA-F]{2})([0-9a-fA-F]{2})([0-9a-fA-F]{2})$/,
+                    hex4: /^#?([0-9a-fA-F]{1})([0-9a-fA-F]{1})([0-9a-fA-F]{1})([0-9a-fA-F]{1})$/,
+                    hex8: /^#?([0-9a-fA-F]{2})([0-9a-fA-F]{2})([0-9a-fA-F]{2})([0-9a-fA-F]{2})$/
+                };
+            })();
+
+            const convertObject = function (_color) {
+                let match;
+                if ((match = matchers.rgb.exec(_color))) {
+                    return {r: match[1], g: match[2], b: match[3]};
+                }
+                if ((match = matchers.rgba.exec(_color))) {
+                    return {r: match[1], g: match[2], b: match[3], a: match[4]};
+                }
+                if ((match = matchers.hsl.exec(_color))) {
+                    return {h: match[1], s: match[2], l: match[3]};
+                }
+                if ((match = matchers.hsla.exec(_color))) {
+                    return {h: match[1], s: match[2], l: match[3], a: match[4]};
+                }
+                if ((match = matchers.hsv.exec(_color))) {
+                    return {h: match[1], s: match[2], v: match[3]};
+                }
+                if ((match = matchers.hsva.exec(_color))) {
+                    return {h: match[1], s: match[2], v: match[3], a: match[4]};
+                }
+                if ((match = matchers.hex8.exec(_color))) {
+                    return {
+                        r: parseInt(match[1], 16),
+                        g: parseInt(match[2], 16),
+                        b: parseInt(match[3], 16),
+                        a: parseInt((match[4]) / 255, 16),
+                        format: "hex8"
+                    };
+                }
+                if ((match = matchers.hex6.exec(_color))) {
+                    return {
+                        r: parseInt(match[1], 16),
+                        g: parseInt(match[2], 16),
+                        b: parseInt(match[3], 16),
+                        format: "hex"
+                    };
+                }
+                if ((match = matchers.hex4.exec(_color))) {
+                    return {
+                        r: parseInt(match[1] + '' + match[1], 16),
+                        g: parseInt(match[2] + '' + match[2], 16),
+                        b: parseInt(match[3] + '' + match[3], 16),
+                        a: parseInt(match[4] + '' + match[4], 16),
+                        format: "hex8"
+                    };
+                }
+                if ((match = matchers.hex3.exec(_color))) {
+                    return {
+                        r: parseInt(match[1] + '' + match[1], 16),
+                        g: parseInt(match[2] + '' + match[2], 16),
+                        b: parseInt(match[3] + '' + match[3], 16),
+                        format: "hex"
+                    };
+                }
+
+                return false;
+            };
+
+            function isOnePointZero(n) {
+                return typeof n == "string" && n.indexOf('.') != -1 && parseFloat(n) === 1;
             }
 
-            return new ax5string(_string);
+            function isPercentage(n) {
+                return typeof n === "string" && n.indexOf('%') != -1;
+            }
+
+            function convertToPercentage(n) {
+                if (n <= 1) {
+                    n = (n * 100) + "%";
+                }
+
+                return n;
+            }
+
+            function convertTo255(n) {
+                return ax5.util.number(Math.min(255, Math.max(n, 0)), {'round': 2});
+            }
+
+            function convertToHex(n) {
+                return setDigit(Math.round(n).toString(16), 2)
+            }
+
+            function bound01(n, max) {
+                if (isOnePointZero(n)) {
+                    n = "100%";
+                }
+
+                var processPercent = isPercentage(n);
+                n = Math.min(max, Math.max(0, parseFloat(n)));
+
+                // Automatically convert percentage into number
+                if (processPercent) {
+                    n = parseInt(n * max, 10) / 100;
+                }
+
+                // Handle floating point rounding errors
+                if ((Math.abs(n - max) < 0.000001)) {
+                    return 1;
+                }
+
+                // Convert into [0, 1] range if it isn't already
+                return (n % max) / parseFloat(max);
+            }
+
+            function rgbToHsl(r, g, b) {
+                r = bound01(r, 255);
+                g = bound01(g, 255);
+                b = bound01(b, 255);
+
+                var max = Math.max(r, g, b), min = Math.min(r, g, b);
+                var h, s, l = (max + min) / 2;
+
+                if (max == min) {
+                    h = s = 0; // achromatic
+                }
+                else {
+                    var d = max - min;
+                    s = l > 0.5 ? d / (2 - max - min) : d / (max + min);
+                    switch (max) {
+                        case r:
+                            h = (g - b) / d + (g < b ? 6 : 0);
+                            break;
+                        case g:
+                            h = (b - r) / d + 2;
+                            break;
+                        case b:
+                            h = (r - g) / d + 4;
+                            break;
+                    }
+
+                    h /= 6;
+                }
+
+                return {h: h, s: s, l: l};
+            }
+
+            function hslToRgb(h, s, l) {
+                let r, g, b;
+
+                h = bound01(h, 360);
+                s = bound01(s, 100);
+                l = bound01(l, 100);
+
+                function hue2rgb(p, q, t) {
+                    if (t < 0) t += 1;
+                    if (t > 1) t -= 1;
+                    if (t < 1 / 6) return p + (q - p) * 6 * t;
+                    if (t < 1 / 2) return q;
+                    if (t < 2 / 3) return p + (q - p) * (2 / 3 - t) * 6;
+                    return p;
+                }
+
+                if (s === 0) {
+                    r = g = b = l; // achromatic
+                }
+                else {
+                    let q = l < 0.5 ? l * (1 + s) : l + s - l * s;
+                    let p = 2 * l - q;
+                    r = hue2rgb(p, q, h + 1 / 3);
+                    g = hue2rgb(p, q, h);
+                    b = hue2rgb(p, q, h - 1 / 3);
+                }
+
+                return {r: r * 255, g: g * 255, b: b * 255};
+            }
+
+            return new (function (_color) {
+                this._originalValue = _color;
+                _color = convertObject(_color);
+                this.r = _color.r;
+                this.g = _color.g;
+                this.b = _color.b;
+                this.a = _color.a || 1;
+                this._format = _color.format;
+                this._hex = convertToHex(this.r) + convertToHex(this.g) + convertToHex(this.b);
+
+                this.getHexValue = function () {
+                    return this._hex;
+                };
+
+                this.lighten = function (amount) {
+                    amount = (amount === 0) ? 0 : (amount || 10);
+                    let hsl = rgbToHsl(this.r, this.g, this.b), rgb = {};
+
+                    hsl.l += amount / 100;
+                    hsl.l = Math.min(1, Math.max(0, hsl.l));
+                    hsl.h = hsl.h * 360;
+
+                    rgb = hslToRgb(hsl.h, convertToPercentage(hsl.s), convertToPercentage(hsl.l));
+
+                    return color('rgba(' + convertTo255(rgb.r) + ', ' + convertTo255(rgb.g)+ ', ' + convertTo255(rgb.b) + ', ' + this.a + ')');
+                };
+
+                this.darken = function (amount) {
+                    amount = (amount === 0) ? 0 : (amount || 10);
+                    let hsl = rgbToHsl(this.r, this.g, this.b), rgb = {};
+
+                    hsl.l -= amount / 100;
+                    hsl.l = Math.min(1, Math.max(0, hsl.l));
+                    hsl.h = hsl.h * 360;
+
+                    rgb = hslToRgb(hsl.h, convertToPercentage(hsl.s), convertToPercentage(hsl.l));
+
+                    return color('rgba(' + convertTo255(rgb.r) + ', ' + convertTo255(rgb.g)+ ', ' + convertTo255(rgb.b) + ', ' + this.a + ')');
+                };
+
+                this.getBrightness = function () {
+                    return (this.r * 299 + this.g * 587 + this.b * 114) / 1000;
+                };
+
+                this.isDark = function() {
+                    return this.getBrightness() < 128;
+                };
+
+                this.isLight = function() {
+                    return !this.isDark();
+                };
+
+                this.getHsl = function () {
+                    let hsl = rgbToHsl(this.r, this.g, this.b);
+                    hsl.l = Math.min(1, Math.max(0, hsl.l));
+                    hsl.h = hsl.h * 360;
+                    return {
+                        h: hsl.h,
+                        s: hsl.s,
+                        l: hsl.l
+                    }
+                };
+
+            })(_hexColor);
         }
 
         return {
@@ -2286,7 +2560,8 @@
             escapeHtml: escapeHtml,
             unescapeHtml: unescapeHtml,
 
-            string: string
+            string: string,
+            color: color
         }
     })();
 
