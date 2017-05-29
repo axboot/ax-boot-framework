@@ -103,14 +103,21 @@ describe('ax5binder TEST', function () {
 
         done(myUI.validate().error[0].type == "email" ? "" : "validate error");
     });
+
+    it('focus ax5binder', function (done) {
+        myUI.focus("password");
+        done(document.activeElement.type == "password" ? "" : "focus error");
+    });
 });
 
 describe('Manipulate list item TEST', function () {
     var myUI;
+    var that;
     var tmpl = '<form class name="binder-list-form" onsubmit="return false;" style="border: 1px solid #ccc;padding: 10px;border-radius: 10px;">' +
         '<div data-ax-repeat="list">' +
         '<script type="text/html">' +
         '<input type="text" name="input-text" data-ax-item-path="A" />' +
+        '<span data-ax-item-path="list"><button class="btn btn-primary btn-sm" type="button" data-ax-repeat-click="btn"></button></span>' +
         '</script>' +
         '</div>' +
         '</form>';
@@ -147,12 +154,8 @@ describe('Manipulate list item TEST', function () {
         done(myUI.get("list[2][A][3][d]") === 4 ? "" : "childAdd error");
     });
 
-    it('childAdd ax5binder', function (done) {
-        myUI.childAdd("list", 2, "A", {d: 4});
-        done(myUI.get("list[2][A][3][d]") === 4 ? "" : "childAdd error");
-    });
-
     it('childRemove ax5binder', function (done) {
+        myUI.childAdd("list", 2, "A", {d: 4});
         myUI.childRemove("list", 2, "A", 3);
         done(myUI.get("list[2][A]").length === 4 ? "" : "childRemove error");
     });
@@ -162,8 +165,59 @@ describe('Manipulate list item TEST', function () {
         done(myUI.get("list[2][A][3][d]") === 5 ? "" : "childUpdate error");
     });
 
-    it('childSet ax5ui', function (done) {
+    it('childSet ax5binder', function (done) {
         myUI.childSet("list", 2, "A", [{a: 10}, {b: 20}]);
         done(myUI.get("list[2][A]").length === 2 && myUI.get("list[2][A][0][a]") === 10 ? "" : "childSet error");
+    });
+
+    it('onClick ax5binder', function (done) {
+        myUI.onClick("list", function () {
+            that = this;
+        });
+        var keyList = ["el", "jquery", "tagname", "value", "repeat_path", "item", "item_index", "item_path"].sort();
+        $('[data-ax-repeat-i="0"]').find('[data-ax-repeat-click="btn"]').trigger("click");
+        done(ae.equalAll(Object.keys(that).sort(), keyList));
+    });
+
+    it('onUpdate[add] ax5binder', function (done) {
+        myUI.onUpdate("list", function () {
+            that = this;
+        });
+        myUI.add("list", {A: 4});
+        var keyList = ["list", "repeat_path", "tmpl"];
+        done(ae.equalAll(Object.keys(that).sort(), keyList.sort()));
+    });
+
+    it('onUpdate[remove] ax5binder', function (done) {
+        myUI.remove("list", 4);
+        var keyList = ["list", "repeat_path", "tmpl"];
+        done(ae.equalAll(Object.keys(that).sort(), keyList.sort())
+            || ae.equalAll(4, that.list.length));
+    });
+
+    it('onUpdate[update] ax5binder', function (done) {
+        myUI.update("list", 3, {A: 5});
+        var keyList = ["list", "repeat_path", "tmpl"];
+        done(ae.equalAll(Object.keys(that).sort(), keyList.sort())
+            || ae.equalAll(5, that.list[3].A));
+    });
+
+    it('onUpdate[childAdd] ax5binder', function (done) {
+        myUI.childAdd("list", 2, "A", {e: 5});
+        done(that.list[2]["A"][2]["e"] === 5 ? "" : "onUpdate[childAdd] error");
+    });
+
+    it('onUpdate[childRemove] ax5binder', function (done) {
+        myUI.childRemove("list", 2, "A", 2);
+        done(that.list[2]["A"].length === 2 ? "" : "onUpdate[childRemove] error");
+    });
+
+    it('onUpdate[childUpdate] ax5binder', function (done) {
+        myUI.childUpdate("list", 2, "A", 2, {e: 15});
+        done(that.list[2]["A"][2]["e"] === 15 ? "" : "onUpdate[childUpdate] error");
+    });
+
+    after(function () {
+        $('form').remove();
     });
 });

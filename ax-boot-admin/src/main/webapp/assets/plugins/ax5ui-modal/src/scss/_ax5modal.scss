@@ -1,5 +1,11 @@
 @mixin ax-modal() {
-    box-sizing: $ax5modal-box-model;
+    box-sizing: border-box;
+    *,
+    *:before,
+    *:after {
+        box-sizing: border-box;
+    }
+
     background-color: $ax5modal-bg;
     border: $ax5modal-border;
 

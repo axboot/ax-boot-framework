@@ -1,0 +1,132 @@
+@mixin color-item($border-color, $box-bg-color, $box-border-radius) {
+    [data-ax5palette-color]{
+        display: table-row;
+        user-select: none;
+        text-align: left;
+        [data-panel]{
+            vertical-align: middle;
+        }
+
+        &:hover{
+            [data-panel="color-preview"]{
+                [data-panel="color-box"]{
+                    background: $ax5palette-hover-color;
+                    border-color: $ax5palette-hover-border-color;
+                }
+                [data-panel="color"]{
+                    border-color: $ax5palette-hover-border-color;
+                }
+            }
+            [data-panel="color-label"]{
+                color: $ax5palette-hover-color;
+            }
+        }
+        &:active{
+            [data-panel="color-preview"]{
+                [data-panel="color-box"]{
+                    background: $ax5palette-active-color;
+                    border-color: $ax5palette-active-border-color;
+                }
+                [data-panel="color"]{
+                    border-color: $ax5palette-active-border-color;
+                }
+            }
+            [data-panel="color-label"]{
+                color: $ax5palette-active-color;
+            }
+        }
+
+        [data-panel="color-preview"]{
+            display: table-cell;
+            padding: $ax5palette-preview-padding;
+            cursor: pointer;
+            [data-panel="color-box"]{
+                border-radius: $box-border-radius;
+                padding: 2px;
+                border-width: 1px;
+                border-style: solid;
+                border-color: $border-color;
+                background: $box-bg-color;
+            }
+            [data-panel="color"]{
+                border-radius: $box-border-radius - 2;
+                border-color: $border-color;
+                border-width: 1px;
+                border-style: solid;
+                height: 100%;
+                box-shadow: inset 1px 1px 1px rgba(255,255,255,.50);
+            }
+        }
+        [data-panel="color-label"]{
+            display: table-cell;
+            cursor: pointer;
+        }
+        [data-panel="color-slider"]{
+            display: table-cell;
+
+            [data-panel="color-track"]{
+                position: relative;
+                display: block;
+                height: 10px;
+                border-radius: 5px;
+                box-shadow: inset 0 0 2px rgba(0,0,0,.50);
+            }
+            [data-panel="color-handle"]{
+                position: absolute;
+                left: 50%;
+                top: 50%;
+                [data-panel="color-handle-after"]{
+                    display: block;
+                    position: absolute;
+                    left: -10px;
+                    top: -10px;
+                    width: 20px;
+                    height: 20px;
+                    border-width: 1px;
+                    border-style: solid;
+                    border-color: $border-color;
+                    @include ax-background(#EAEAEA, #FBFBFB);
+                    box-shadow: 0 1px 0 0 rgba(0,0,0,0.10);
+                    opacity: 0.8;
+                    border-radius: 50%;
+                    cursor: col-resize;
+                }
+            }
+        }
+    }
+}
+
+// mixins --------------------------------------------- end
+
+@include keyframes(something-animation) {
+    from {
+        opacity: 1.0;
+    }
+    to {
+        opacity: 0.5;
+    }
+}
+
+
+[data-ax5palette] {
+    box-sizing: border-box;
+    position: relative;
+
+    [data-ax5palette-container="root"] {
+
+        [data-ax5palette-container="header"] {
+
+        }
+        [data-ax5palette-container="colors"] {
+            display: table;
+            width: 100%;
+            @include color-item($ax5palette-border-color, $ax5palette-box-bg-color, $ax5palette-box-border-radius);
+        }
+        [data-ax5palette-container="controls"] {
+
+        }
+        [data-ax5palette-container="bottom"] {
+
+        }
+    }
+}

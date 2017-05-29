@@ -1,7 +1,7 @@
 {
   "name": "bourbon",
   "description": "A simple and lightweight mixin library for Sass.",
-  "version": "4.2.7",
+  "version": "4.3.4",
   "main": "app/assets/stylesheets/_bourbon.scss",
   "license": "MIT",
   "ignore": [
@@ -33,14 +33,13 @@
     "type": "git",
     "url": "https://github.com/thoughtbot/bourbon.git"
   },
-  "_release": "4.2.7",
+  "_release": "4.3.4",
   "_resolution": {
     "type": "version",
-    "tag": "v4.2.7",
-    "commit": "ae8391d1a83b6e4211902cd6b8f8b30d43d2f3d6"
+    "tag": "v4.3.4",
+    "commit": "f7b19d0770cbe1d7f1b8ccfc306e1202e75c2317"
   },
   "_source": "https://github.com/thoughtbot/bourbon.git",
   "_target": "^4.2.7",
-  "_originalSource": "bourbon",
-  "_direct": true
+  "_originalSource": "bourbon"
 }

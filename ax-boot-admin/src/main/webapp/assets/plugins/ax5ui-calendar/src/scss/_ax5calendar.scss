@@ -26,6 +26,9 @@
 
 .ax5-ui-calendar {
     box-sizing: border-box;
+    * {
+        box-sizing: border-box;
+    }
     position: relative;
     .calendar-control {
         position: relative;

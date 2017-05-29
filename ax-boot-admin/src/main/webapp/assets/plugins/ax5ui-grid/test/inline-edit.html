@@ -61,7 +61,7 @@
 </div>
 <div style="padding: 5px;">
     <button class="btn btn-default" data-grid-control="excel-export">Excel Export</button>
-    <button class="btn btn-default" data-grid-control="excel-string">get Excel String</button>
+    <button class="btn btn-default" data-zgrid-control="excel-string">get Excel String</button>
 </div>
 <div style="height: 10px;"></div>
 
@@ -86,7 +86,7 @@
         {a: "A", b: "C01", price: 1200, amount: 10, saleDt: "2016-08-27", customer: "이영희", saleType: "A", isChecked: "N"},
         {a: "A", b: "A01", price: 1300, amount: 8, saleDt: "2016-08-25", customer: "황인서", saleType: "C", isChecked: "Y"},
         {a: "A", b: "B01", price: 1400, amount: 5, saleDt: "2016-08-29", customer: "황세진", saleType: "D", isChecked: "Y"},
-        {a: "A", b: "A01", price: 1500, amount: 2, saleDt: "2016-08-26", customer: "이서연", saleType: "A", isChecked: "N"}
+        {a: "A", b: "A01", price: 1500, amount: 2, saleDt: "2016-08-26", customer: "이서연", saleType: "A", isChecked: "N"},
     ];
     ///
     var gridView = {
@@ -94,12 +94,14 @@
             firstGrid.setConfig({
                 target: $('[data-ax5grid="first-grid"]'),
                 frozenColumnIndex: 3,
-                frozenRowIndex: 1,
+                frozenRowIndex: 2,
                 showLineNumber: true,
                 showRowSelector: true,
                 multipleSelect: true,
                 lineNumberColumnWidth: 40,
                 rowSelectorColumnWidth: 28,
+                virtualScrollY: false,
+                virtualScrollX: false,
                 sortable: true, // 모든 컬럼에 정렬 아이콘 표시
                 multiSort: false, // 다중 정렬 여부
                 remoteSort: false, // remoteSort에 함수를 sortable 컬럼이 클릭되었을때 실행 setColumnSort를 직접 구현. (remoteSort를 사용하면 헤더에 정렬 상태만 표시 하고 데이터 정렬은 처리 안함)
@@ -114,6 +116,7 @@
                         // console.log(this);
                         // this.self.select(this.dindex);
                     },
+
                     grouping: {
                         by: ["b"],
                         columns: [
@@ -133,7 +136,6 @@
                                 return ax5.util.number(value, {"money": 1});
                             }, align: "right"
                             },
-                            {label: "~~~", colspan: 3}
                         ]
                     }
                 },
@@ -160,9 +162,14 @@
                         enableFilter: true,
                         align: "center",
                         editor: {
-                            type: "text", disabled: function () {
+                            type: "text",
+                            disabled: function () {
                                 // item, value
                                 return false;
+                            },
+                            attributes: {
+                                'maxlength': 5,
+                                'data-maxlength': 10
                             }
                         }
                     },
@@ -170,12 +177,12 @@
                     {
                         key: undefined,
                         label: "필드C", columns: [
-                        {key: "price", label: "단가", align: "right", editor: {type: "money", updateWith: ['cost']}},
-                        {key: "amount", label: "수량", align: "right", formatter: "money", editor: {type: "number", updateWith: ['cost']}},
-                        {
-                            key: "cost", label: "금액", align: "right", formatter: function () {
-                            return ax5.util.number(this.item.price * this.item.amount, {"money": true});
-                        }
+                        {key: "price", label: "단가", align: "right", width: 60, editor: {type: "money", updateWith: ['cost']}},
+                        {key: "amount", label: "수량", align: "right", width: 50, formatter: "money", editor: {type: "number", updateWith: ['cost']}},
+                        {key: "cost", label: "금액", align: "right", width: 80,
+                            formatter: function () {
+                                return ax5.util.number(this.item.price * this.item.amount, {"money": true});
+                            }
                         }
                     ]
                     },
@@ -190,7 +197,7 @@
                     }
                     },
                     {
-                        key: "saleType", label: "판매타입", editor: {
+                        key: "saleType", label: "판매타입", width: 50, editor: {
                         type: "select", config: {
                             columnKeys: {
                                 optionValue: "CD", optionText: "NM"
@@ -213,14 +220,22 @@
                         }
                     }
                     },
-
+                    {
+                        key: "saleDt", label: "판매일자", align: "center", editor: {
+                        type: "date", config: {}
+                    }
+                    },
                     {
                         key: "customer", label: "고객명", editor: {type: "text"}
+                    },
+                    {
+                        key: "desc", label: "상세설명", align: "left", width: 200, editor: {type: "textarea"}
                     }
                 ],
+
                 footSum: [
                     [
-                        {label: "전체 합계", colspan: 2, align: "center"},
+                        {label: "전체 합계", colspan: 6, align: "center"},
                         {key: "price", collector: "avg", formatter: "money", align: "right"},
                         {key: "amount", collector: "sum", formatter: "money", align: "right"},
                         {
@@ -231,8 +246,9 @@
                             });
                             return ax5.util.number(value, {"money": 1});
                         }, align: "right"
-                        }
+                        },
                     ]]
+
             });
 
             firstGrid.onDataChanged = function () {

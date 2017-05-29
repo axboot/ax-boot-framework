@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<!--
+  ~ Copyright (c) 2017. tom@axisj.com
+  ~ - github.com/thomasjang
+  ~ - www.axisj.com
+  -->
+
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <link rel="stylesheet" type="text/css" href="bower_components/bootstrap/dist/css/bootstrap.min.css"/>
+    <link rel="stylesheet" href="bower_components/font-awesome/css/font-awesome.min.css">
+    <link rel="stylesheet" type="text/css" href="../dist/ax5palette.css"/>
+
+    <script src="bower_components/jquery/dist/jquery.min.js"></script>
+    <script src="../../ax5core/dist/ax5core.js"></script>
+    <script src="../dist/ax5palette.js"></script>
+</head>
+<body style="padding: 50px;">
+
+<div style="border:1px solid #ccc;border-radius: 6px;padding: 10px 15px;width: 280px;">
+    <div data-ax5palette="01" style="width:250px;"></div>
+</div>
+
+<script>
+    $(document.body).ready(function () {
+        window.myPalette = new ax5.ui.palette({
+            target: $('[data-ax5palette="01"]'),
+            selectedColor: "#F4F4F4",
+            colors: {
+                preview: {
+                    width: 26,
+                    height: 26,
+                    cellWidth: 32
+                },
+                label: {
+                    width: 70
+                },
+                slider: {
+                    trackHeight: 8,
+                    amount: 20,
+                    handleWidth: 18,
+                    handleHeight: 18
+                },
+                list: [
+                    {label: "red", value: "#ff0000"},
+                    {label: "orange", value: "#ff9802"},
+                    {label: "yellow", value: "#ffff00"},
+                    {label: "green", value: "#00ff36"},
+                    {label: "blue", value: "#0000ff"},
+                    {label: "purple", value: "#ba00ff"},
+                    {label: "skyblue", value: "#84e4ff"},
+                    {label: "pink", value: "#ff77c4"},
+                    {label: "black", value: "#000000"},
+                    {label: "white", value: "#ffffff"}
+                ]
+            }
+        });
+
+        myPalette.onClick = function (hexColor) {
+            console.log(hexColor);
+        }
+    });
+</script>
+
+</body>
+</html>

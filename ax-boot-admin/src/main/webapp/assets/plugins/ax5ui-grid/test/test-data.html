@@ -11,7 +11,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <title>GRID</title>
 
-    <link rel="stylesheet" type="text/css" href="bower_components/bootstrap/dist/css/bootstrap.min.css"/>
+    <link rel="stylesheet" type="text/css" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"/>
     <link rel="stylesheet" type="text/css" href="../../ax5ui-mask/dist/ax5mask.css"/>
     <link rel="stylesheet" type="text/css" href="../../ax5ui-calendar/dist/ax5calendar.css"/>
     <link rel="stylesheet" type="text/css" href="../../ax5ui-picker/dist/ax5picker.css"/>
@@ -39,11 +39,12 @@
 
         firstGrid.setConfig({
             target: $('[data-ax5grid="first-grid"]'),
-            frozenColumnIndex: 1,
+            frozenColumnIndex: 0,
             frozenRowIndex: 0,
             showLineNumber: true,
             showRowSelector: false,
             lineNumberColumnWidth: 40,
+            virtualScrollAccelerated: false,
             header: {
                 columnHeight: 25
             },

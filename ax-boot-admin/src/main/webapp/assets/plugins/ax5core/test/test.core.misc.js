@@ -33,6 +33,13 @@ describe('ax5.util.parseJson TEST', function() {
         actual.a.should.equal(1);
         actual.b.should.Function();
     });
+
+    it('ax5.util.parseJson("{"key": [true, false, true, false], "fn": function(){return "fn";}}", true);', function() {
+        var actual = ax5.util.parseJson('{"key": [true, false, true, false], "fn": function(){return "fn";}}', true);
+
+        actual.key.should.deepEqual([true, false, true, false]);
+        actual.fn.should.Function();
+    });
 });
 
 describe('ax5.util.toJson TEST', function() {
@@ -64,6 +71,10 @@ describe('ax5.util.toJson TEST', function() {
         {
             args: function func() {},
             expect: '"{Function}"'
+        },
+        {
+            args: [true, false, true],
+            expect: '[true,false,true]'
         }
     ];
 

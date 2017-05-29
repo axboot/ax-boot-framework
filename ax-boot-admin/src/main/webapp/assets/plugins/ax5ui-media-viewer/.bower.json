@@ -1,6 +1,6 @@
 {
   "name": "ax5ui-media-viewer",
-  "version": "1.3.97",
+  "version": "1.4.66",
   "description": "A mediaViewer plugin that works with Bootstrap & jQuery",
   "authors": [
     "ThomasJ <tom@axisj.com>"
@@ -18,17 +18,17 @@
     "javascript ui"
   ],
   "dependencies": {
-    "jquery": "^1.11.0",
+    "jquery": "",
     "ax5core": ">=1.3.0",
-    "bootstrap": "^3.3.6"
+    "bootstrap-sass": ""
   },
   "license": "MIT",
   "homepage": "ax5.io",
-  "_release": "1.3.97",
+  "_release": "1.4.66",
   "_resolution": {
     "type": "version",
-    "tag": "1.3.97",
-    "commit": "728b8053e7e80d0d1ee199f0febb39e39903a790"
+    "tag": "1.4.66",
+    "commit": "cd900766e701f3f92f396c0fec07d2bf8e4d7caa"
   },
   "_source": "https://github.com/ax5ui/ax5ui-media-viewer.git",
   "_target": ">=1.3.0",

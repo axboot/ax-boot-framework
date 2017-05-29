@@ -1,8 +1,26 @@
-$brand-primary:         darken(#428bca, 6.5%) !default; // #337ab7
-$brand-success:         #5cb85c !default;
-$brand-info:            #5bc0de !default;
-$brand-warning:         #f0ad4e !default;
-$brand-danger:          #d9534f !default;
+$gray-base:              #000 !default;
+$gray-darker:            lighten($gray-base, 13.5%) !default; // #222
+$gray-dark:              lighten($gray-base, 20%) !default;   // #333
+$gray:                   lighten($gray-base, 33.5%) !default; // #555
+$gray-light:             lighten($gray-base, 46.7%) !default; // #777
+$gray-lighter:           lighten($gray-base, 93.5%) !default; // #eee
+
+$brand-primary:         #616161 !default; // #337ab7
+$brand-success:         #00C6AE !default;
+$brand-info:            #44ADF9 !default;
+$brand-fn1:            #6977CF !default;
+$brand-fn2:            #485398 !default;
+$brand-warning:         #FFB802 !default;
+$brand-danger:          #E97426 !default;
+
+$border-radius-base:        3px !default;
+$border-radius-large:       5px !default;
+$border-radius-small:       2px !default;
+
+
+//== Form states and alerts
+//
+//## Define colors for form feedback states and, by default, alerts.
 
 $state-success-text:             #3c763d !default;
 $state-success-bg:               #dff0d8 !default;
@@ -20,12 +38,21 @@ $state-danger-text:              #a94442 !default;
 $state-danger-bg:                #f2dede !default;
 $state-danger-border:            darken(adjust-hue($state-danger-bg, -10), 5%) !default;
 
+//== Panels
+//
+//##
 
 $panel-bg:                    #fff !default;
+$panel-body-padding:          15px !default;
 $panel-heading-padding:       10px 15px !default;
-$panel-inner-border:          #ddd !default;
+$panel-footer-padding:        $panel-heading-padding !default;
+$panel-border-radius:         $border-radius-base !default;
 
-$panel-default-text:          #333 !default;
+//** Border color for elements within panels
+$panel-inner-border:          #ddd !default;
+$panel-footer-bg:             #f5f5f5 !default;
+
+$panel-default-text:          $gray-dark !default;
 $panel-default-border:        #ddd !default;
 $panel-default-heading-bg:    #f5f5f5 !default;
 
@@ -49,6 +76,8 @@ $panel-danger-text:           $state-danger-text !default;
 $panel-danger-border:         $state-danger-border !default;
 $panel-danger-heading-bg:     $state-danger-bg !default;
 
+
+//============== ax5picker
 $ax5picker-z-index: 2000 !default;
 $ax5picker-box-model: border-box !default;
 $ax5picker-bg: $panel-bg !default;

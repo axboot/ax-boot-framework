@@ -7,6 +7,7 @@
     <link rel="stylesheet" type="text/css" href="bower_components/bootstrap/dist/css/bootstrap.min.css"/>
     <link rel="stylesheet" type="text/css" href="../../ax5ui-mask/dist/ax5mask.css"/>
     <link rel="stylesheet" type="text/css" href="../../ax5ui-calendar/dist/ax5calendar.css"/>
+    <link rel="stylesheet" type="text/css" href="../../ax5ui-palette/dist/ax5palette.css"/>
     <link rel="stylesheet" href="bower_components/font-awesome/css/font-awesome.min.css">
     <link rel="stylesheet" type="text/css" href="../dist/ax5picker.css"/>
 
@@ -14,6 +15,7 @@
     <script src="../../ax5core/dist/ax5core.js"></script>
     <script src="../../ax5ui-mask/dist/ax5mask.min.js"></script>
     <script src="../../ax5ui-calendar/dist/ax5calendar.js"></script>
+    <script src="../../ax5ui-palette/dist/ax5palette.js"></script>
     <script src="../../ax5ui-formatter/dist/ax5formatter.js"></script>
     <script src="../dist/ax5picker.js"></script>
 </head>
@@ -68,6 +70,12 @@
     <input type="text" data-ax5picker="custom" class="form-control" placeholder=""/>
 </div>
 
+
+<h1>Color</h1>
+<div class="form-group">
+    <input type="text" data-ax5picker="color" class="form-control" placeholder=""/>
+</div>
+
 <script>
     // todo : picker align 기능 추가
 
@@ -77,83 +85,8 @@
     ax5.def.picker.date_rightArrow = '<i class="fa fa-chevron-right"></i>';
 
     $(document.body).ready(function () {
-        /*
-         $('[data-ax5picker="date"]').ax5picker({
-         direction: "top",
-         content: {
-         width: 270,
-         margin: 10,
-         type: 'date',
-         config: {
-         control: {
-         left: '<i class="fa fa-chevron-left"></i>',
-         yearTmpl: '%s',
-         monthTmpl: '%s',
-         right: '<i class="fa fa-chevron-right"></i>'
-         },
-         lang: {
-         yearTmpl: "%s년",
-         months: ['01', '02', '03', '04', '05', '06', '07', '08', '09', '10', '11', '12'],
-         dayTmpl: "%s"
-         }
-         },
-         formatter: {
-         pattern: 'date'
-         }
-         },
-         btns: {
-         today: {
-         label: "오늘", onClick: function () {
-         if (this.item.inputLength == 1) {
-         this.self.setContentValue(this.item.id, 0, ax5.util.date(new Date(), {"return": "yyyy-MM-dd"}));
-         }
-         else {
-         this.self.setContentValue(this.item.id, 0, ax5.util.date(new Date(), {"return": "yyyy-MM-dd"}));
-         this.self.setContentValue(this.item.id, 1, ax5.util.date(new Date(), {"return": "yyyy-MM-dd"}));
-         this.self.close();
-         }
-         }
-         },
-         thisMonth: {
-         label: "이번달 1일", onClick: function () {
-         var today = new Date();
-         if (this.item.inputLength == 1) {
-         this.self.setContentValue(this.item.id, 0, ax5.util.date(today, {"return": "yyyy-MM-01"}));
-         }
-         else {
-         this.self.setContentValue(this.item.id, 0, ax5.util.date(today, {"return": "yyyy-MM-01"}));
-         this.self.setContentValue(this.item.id, 1, ax5.util.date(today, {"return": "yyyy-MM"}) + '-' + ax5.util.daysOfMonth(today.getFullYear(), today.getMonth()));
-         this.self.close();
-         }
-         }
-         },
-         ok: {label: "확인", theme: "default"}
-         }
-         });
 
-         $('[data-ax5picker="custom"]').ax5picker({
-         direction: "top",
-         contentWidth: 200,
-         content: function (callback) {
-         var html = ''
-         + '가나다라마바사'
-         + '<div style="padding: 10px;">'
-         + '<button class="btn btn-default">기능 1</button>'
-         + '</div>'
-         ;
-         callback(html);
-         }
-         });
-
-         return;
-         */
         var picker = new ax5.ui.picker({});
-        /*
-         picker.onStateChanged = function(){
-         console.log(this);
-         };
-         */
-
 
         $('[data-picker-date]').on("change", function () {
             console.log("change");
@@ -175,7 +108,7 @@
                 }
             },
             onStateChanged: function () {
-                console.log(this.values);
+                // console.log(this.values);
             }
         });
 
@@ -234,10 +167,16 @@
                         },
                         ok: {label: "확인", theme: "default"}
                     },
-                    onStateChanged: function () {
-                        if (this.state == "changeValue") {
+                    onStateChanged: function (a) {
+                        if(this.state == "open"){
+                            if(this.item && this.item.calendar){
+                                var today = new Date();
+                                this.item.pickerCalendar[0].ax5uiInstance.setSelection([ax5.util.date(today, {'add': {d: 0}})]);
+                                this.item.pickerCalendar[1].ax5uiInstance.setSelection([ax5.util.date(today, {'add': {d: 0}})]);
+                            }
+                        }
+                        else if (this.state == "changeValue") {
                             if (this.item.content.type == "date" && this.values.length > 1) {
-                                console.log(this);
                                 if (this.inputIndex == 0) {
 
                                 }
@@ -280,6 +219,26 @@
                             specialBtnWrapStyle: "padding:2px;",
                             specialBtnStyle: "",
                             specialBtnTheme: " "
+                        }
+                    },
+                    onStateChanged: function () {
+                        //console.log(this);
+                        //if (this.value && this.value.length > 3) {
+                        //    picker.close();
+                        //}
+                    }
+                });
+            }
+            else if (this.getAttribute("data-ax5picker") == "color") {
+                picker.bind({
+                    target: this,
+                    direction: "auto",
+                    content: {
+                        width: 250,
+                        margin: 10,
+                        type: 'color',
+                        config: {
+
                         }
                     },
                     onStateChanged: function () {

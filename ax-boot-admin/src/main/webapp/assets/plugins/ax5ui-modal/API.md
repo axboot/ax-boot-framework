@@ -38,11 +38,53 @@ Preferences of modal UI
 | [config.disableResize] | <code>Boolean</code> | <code>false</code> |  |
 | [config.animateTime] | <code>Number</code> | <code>250</code> |  |
 | [config.fullScreen] | <code>function</code> |  |  |
-| [config.onStateChanged] | <code>function</code> |  |  |
+| [config.onStateChanged] | <code>function</code> |  | `onStateChanged` function can be defined in setConfig method or new ax5.ui.modal initialization method. However, you can us to define an event function after initialization, if necessary |
 | [config.onResize] | <code>function</code> |  |  |
 
 **Example**  
-```
+```js
+var modal = new ax5.ui.modal({
+    iframeLoadingMsg: '<i class="fa fa-spinner fa-5x fa-spin" aria-hidden="true"></i>',
+    header: {
+        title: "MODAL TITLE",
+        btns: {
+            minimize: {
+                label: '<i class="fa fa-minus-circle" aria-hidden="true"></i>', onClick: function () {
+                    modal.minimize();
+                }
+            },
+            maximize: {
+                label: '<i class="fa fa-plus-circle" aria-hidden="true"></i>', onClick: function () {
+                    modal.maximize();
+                }
+            },
+            close: {
+                label: '<i class="fa fa-times-circle" aria-hidden="true"></i>', onClick: function () {
+                    modal.close();
+                }
+            }
+        }
+    }
+});
+
+modal.open({
+    width: 800,
+    height: 600,
+    fullScreen: function(){
+        return ($(window).width() < 600);
+    },
+    iframe: {
+        method: "get",
+        url: "http://chequer-app:2017/html/login.html",
+        param: "callback=modalCallback"
+    },
+    onStateChanged: function(){
+         console.log(this);
+    },
+    onResize: function(){
+         console.log(this);
+    }
+});
 ```
 <a name="ax5modal.open"></a>
 
@@ -52,7 +94,14 @@ open the modal
 **Kind**: static method of <code>[ax5modal](#ax5modal)</code>  
 **Example**  
 ```
-my_modal.open();
+modal.open();
+modal.open({
+ width: 500,
+ height: 500
+});
+moaal.open({}, function(){
+ console.log(this);
+});
 ```
 <a name="ax5modal.close"></a>
 
@@ -102,3 +151,8 @@ setCSS
 | position | 
 | e | 
 
+**Example**  
+```js
+modal.align({left:"center", top:"middle"});
+modal.align({left:"left", top:"top", margin: 20});
+```

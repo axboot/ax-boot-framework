@@ -1,0 +1,41 @@
+{
+  "name": "ax5ui-palette",
+  "version": "1.4.66",
+  "description": "A palette plugin that works with Bootstrap & jQuery",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ax5ui/ax5ui-palette"
+  },
+  "author": {
+    "name": "Thomas Jang",
+    "email": "tom@axisj.com",
+    "url": "ax5.io"
+  },
+  "keywords": [
+    "bootstrap",
+    "jquery",
+    "ax5ui",
+    "plugin",
+    "bootstrap jQuery plugins",
+    "palette",
+    "ax5ui-palette",
+    "javascript ui"
+  ],
+  "scripts": {
+    "test": "karma start karma.conf.js"
+  },
+  "dependencies": {
+    "jquery": "",
+    "ax5core": ">=1.4.41",
+    "bootstrap-sass": ""
+  },
+  "devDependencies": {
+    "karma": "^1.3.0",
+    "karma-mocha": "^1.2.0",
+    "karma-phantomjs-launcher": "^1.0.2",
+    "mocha": "^3.1.0",
+    "phantomjs-prebuilt": "^2.1.13",
+    "webdriverio": "^4.6.1"
+  }
+}

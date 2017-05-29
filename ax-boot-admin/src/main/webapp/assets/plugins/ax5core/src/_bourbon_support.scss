@@ -525,3 +525,13 @@ $prefix-for-spec:      true !default;
 @mixin perspective-origin($value: 50% 50%) {
     @include prefixer(perspective-origin, $value, webkit moz spec);
 }
+
+//// ellipsis
+@mixin ellipsis($width: 100%) {
+    display: inline-block;
+    max-width: $width;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    word-wrap: normal;
+}

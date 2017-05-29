@@ -1,6 +1,6 @@
 {
   "name": "ax5ui-modal",
-  "version": "1.3.97",
+  "version": "1.4.67",
   "authors": [
     "ThomasJ <tom@axisj.com>"
   ],
@@ -17,17 +17,16 @@
     "javascript ui"
   ],
   "dependencies": {
-    "jquery": "^1.11.0",
-    "ax5core": ">=1.3.0",
-    "bootstrap": "^3.3.6"
+    "jquery": "",
+    "ax5core": ">=1.3.0"
   },
   "license": "MIT",
   "homepage": "ax5.io",
-  "_release": "1.3.97",
+  "_release": "1.4.67",
   "_resolution": {
     "type": "version",
-    "tag": "1.3.97",
-    "commit": "d08aad02a56d1a840d8974eee46fa3b4123a45b7"
+    "tag": "1.4.67",
+    "commit": "2e9d8b1d9ac6bbb001769c9951611cd761f6b855"
   },
   "_source": "https://github.com/ax5ui/ax5ui-modal.git",
   "_target": ">=1.3.0",

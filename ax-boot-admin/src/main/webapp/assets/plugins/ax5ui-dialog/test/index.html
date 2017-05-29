@@ -4,13 +4,14 @@
     <meta charset="UTF-8">
     <title>Title</title>
     <link rel="stylesheet" type="text/css" href="../dist/ax5dialog.css"/>
-    <link rel="stylesheet" type="text/css" href="bower_components/bootstrap/dist/css/bootstrap.min.css"/>
+    <!--link rel="stylesheet" type="text/css" href="bower_components/bootstrap/dist/css/bootstrap.min.css"/-->
     <link rel="stylesheet" type="text/css" href="bower_components/ax5ui-mask/dist/ax5mask.css"/>
 
     <script src="bower_components/jquery/dist/jquery.min.js"></script>
     <script src="bower_components/ax5core/dist/ax5core.js"></script>
     <script src="bower_components/ax5ui-mask/dist/ax5mask.min.js"></script>
     <script src="../dist/ax5dialog.js"></script>
+
 </head>
 <body>
 <div style="padding:20px;">
@@ -81,7 +82,8 @@
             dialog.alert({
                 theme: theme,
                 title: 'Alert ' + theme,
-                msg: theme + ' color'
+                msg: theme + ' color',
+                autoCloseTime: 3000
             }, function () {
                 console.log(this);
             });
@@ -132,6 +134,11 @@
                             //my_dialog.close(); // 닫기를 안할 수도 있겠어요.
                         }
                     }
+                },
+                additionalContent: function () {
+                    return "<div style='border:1px solid #ccc;border-radius: 5px;background: #eee;padding: 10px;'>" +
+                        "추가내용 기술 " +
+                        "</div>";
                 }
             }, function () {
                 console.log(this);
@@ -147,6 +154,9 @@
                 input: {
                     data1: {label: "data1의 라벨"},
                     data2: {label: "data2의 라벨"}
+                },
+                onOpen: function () {
+
                 }
             }, function () {
                 console.log(this);

@@ -17,12 +17,12 @@
     "test",
     "tests"
   ],
-  "version": "1.6.0",
-  "_release": "1.6.0",
+  "version": "1.13.0",
+  "_release": "1.13.0",
   "_resolution": {
     "type": "version",
-    "tag": "1.6.0",
-    "commit": "cb9acb8f97b18892fa9cb649cdf97022e58807ed"
+    "tag": "1.13.0",
+    "commit": "ad3803019410b598a15ff74d9fbf930c6c0d387f"
   },
   "_source": "https://github.com/chequer-io/chequer-icon.git",
   "_target": "^1.4.0",

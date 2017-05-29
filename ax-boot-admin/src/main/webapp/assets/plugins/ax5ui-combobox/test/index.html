@@ -57,6 +57,7 @@
     <button type="button" class="btn" data-btn="getSelectedOption">getSelectedOption</button>
     <button type="button" class="btn" data-btn="setValueSelect">setValue to select</button>
     <button type="button" class="btn" data-btn="update">update options</button>
+    <button type="button" class="btn" data-btn="clear">clear</button>
     <div style="height:800px;"></div>
 </div>
 <script>
@@ -119,6 +120,10 @@
                      options: options
                      });
                      */
+                    break;
+                case "clear":
+                    myCombo.clear($('[data-ax5combobox="combo1"]'));
+                    //$('[data-ax-path="select2"]').val(["optionValue7", "optionValue9"]).trigger("change");
                     break;
             }
         });

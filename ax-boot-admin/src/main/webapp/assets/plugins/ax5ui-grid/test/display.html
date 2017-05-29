@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<!--
+  ~ Copyright (c) 2017. tom@axisj.com
+  ~ - github.com/thomasjang
+  ~ - www.axisj.com
+  -->
+
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, user-scalable=no">
+
+    <title>GRID</title>
+
+    <link rel="stylesheet" type="text/css" href="bower_components/bootstrap/dist/css/bootstrap.min.css"/>
+    <link rel="stylesheet" type="text/css" href="../../ax5ui-mask/dist/ax5mask.css"/>
+    <link rel="stylesheet" type="text/css" href="../../ax5ui-calendar/dist/ax5calendar.css"/>
+    <link rel="stylesheet" type="text/css" href="../../ax5ui-picker/dist/ax5picker.css"/>
+    <link rel="stylesheet" type="text/css" href="../../ax5ui-select/dist/ax5select.css"/>
+    <link rel="stylesheet" href="bower_components/font-awesome/css/font-awesome.min.css">
+    <link rel="stylesheet" type="text/css" href="../dist/ax5grid.css"/>
+
+    <script src="bower_components/jquery/dist/jquery.min.js"></script>
+    <script src="../../ax5core/dist/ax5core.js"></script>
+    <script src="../../ax5ui-formatter/dist/ax5formatter.min.js"></script>
+    <script src="../../ax5ui-calendar/dist/ax5calendar.min.js"></script>
+    <script src="../../ax5ui-picker/dist/ax5picker.min.js"></script>
+    <script src="../../ax5ui-select/dist/ax5select.js"></script>
+    <script src="../dist/ax5grid.js"></script>
+</head>
+<body style="padding: 20px;">
+
+<div style="border:1px solid #0a68b4;position: relative;height:400px;" id="grid-parent">
+    <div data-ax5grid="first-grid" data-ax5grid-config='{name:"my first grid"}' style="height: 100%;"></div>
+</div>
+
+<div style="padding: 10px;">
+    <button class="btn btn-default" data-grid-control="toggle-header">show/hide header</button>
+    <button class="btn btn-default" data-grid-control="toggle-page">show/hide page</button>
+</div>
+
+<div style="padding: 10px;">
+    <button class="btn btn-default" data-set-height="300">높이조절(300px)</button>
+    <button class="btn btn-default" data-set-height="400">높이조절(400px)</button>
+    <button class="btn btn-default" data-set-height="800">높이조절(800px)</button>
+    <button class="btn btn-default" data-set-height="100%">높이조절(100%)</button>
+</div>
+<div style="padding: 10px;">
+    <button class="btn btn-default" data-grid-control="row-add">row add</button>
+    <button class="btn btn-default" data-grid-control="row-remove">row remove</button>
+    <button class="btn btn-default" data-grid-control="row-update">row update</button>
+</div>
+<div style="padding: 10px;">
+    <button class="btn btn-default" data-grid-control="column-add">column add</button>
+    <button class="btn btn-default" data-grid-control="column-remove">column remove</button>
+    <button class="btn btn-default" data-grid-control="column-update">column update</button>
+</div>
+
+<div style="height: 10px;"></div>
+
+<TEXTAREA ID="holdtext" STYLE="position:absolute;top:-1000px;"></TEXTAREA>
+<script>
+    var firstGrid = new ax5.ui.grid();
+
+    ax5.ui.grid.formatter["myType"] = function () {
+        return "myType" + (this.value || "");
+    };
+
+    var sampleData = [
+        {a: "A", b: "A01", price: 1000, amount: 12, cost: 12000, saleDt: "2016-08-29", customer: "장기영", saleType: "A"},
+        {a: "A", b: "B01", price: 1100, amount: 11, cost: 12100, saleDt: "2016-08-28", customer: "장서우", saleType: "B"},
+        {a: "A", b: "C01", price: 1200, amount: 10, cost: 12000, saleDt: "2016-08-27", customer: "이영희", saleType: "A"},
+        {a: "A", b: "A01", price: 1300, amount: 8, cost: 10400, saleDt: "2016-08-25", customer: "황인서", saleType: "C"},
+        {a: "A", b: "B01", price: 1400, amount: 5, cost: 7000, saleDt: "2016-08-29", customer: "황세진", saleType: "D"},
+        {a: "A", b: "A01", price: 1500, amount: 2, cost: 3000, saleDt: "2016-08-26", customer: "이서연", saleType: "A"}
+    ];
+
+    var gridView = {
+        initView: function () {
+            firstGrid.setConfig({
+                target: $('[data-ax5grid="first-grid"]'),
+                frozenColumnIndex: 2,
+                frozenRowIndex: 3,
+                showLineNumber: true,
+                showRowSelector: true,
+                multipleSelect: true,
+                lineNumberColumnWidth: 40,
+                rowSelectorColumnWidth: 28,
+                sortable: true, // 모든 컬럼에 정렬 아이콘 표시
+                multiSort: false, // 다중 정렬 여부
+                remoteSort: false, // remoteSort에 함수를 sortable 컬럼이 클릭되었을때 실행 setColumnSort를 직접 구현. (remoteSort를 사용하면 헤더에 정렬 상태만 표시 하고 데이터 정렬은 처리 안함)
+                header: {
+                    display: true,
+                    align: "center",
+                    columnHeight: 28
+                },
+                body: {
+                    align: "center",
+                    columnHeight: 28,
+                    onClick: function () {
+                        // console.log(this);
+                        this.self.select(this.dindex);
+                    },
+                    grouping: {
+                        by: ["a", "b"],
+                        columns: [
+                            {
+                                label: function () {
+                                    return this.groupBy.labels.join(", ") + " 합계";
+                                }, colspan: 2
+                            },
+                            {key: "price", collector: "avg", formatter: "money", align: "right"},
+                            {key: "amount", collector: "sum", formatter: "money", align: "right"},
+                            {key: "cost", collector: "sum", formatter: "money", align: "right"},
+                            {label: "~~~", colspan: 3}
+                        ]
+                    }
+                },
+                page: {
+                    navigationItemCount: 9,
+                    height: 30,
+                    display: true,
+                    firstIcon: '<i class="fa fa-step-backward" aria-hidden="true"></i>',
+                    prevIcon: '<i class="fa fa-caret-left" aria-hidden="true"></i>',
+                    nextIcon: '<i class="fa fa-caret-right" aria-hidden="true"></i>',
+                    lastIcon: '<i class="fa fa-step-forward" aria-hidden="true"></i>',
+                    onChange: function () {
+                        gridView.setData(this.page.selectPage);
+                    }
+                },
+                columns: [
+                    {
+                        key: "a",
+                        label: "필드A",
+                        width: 80,
+                        styleClass: function () {
+                            return "ABC";
+                        },
+                        enableFilter: true,
+                        align: "center"
+                    },
+                    {key: "b", label: "필드B", align: "center"},
+                    {
+                        key: undefined, label: "필드C", columns: [
+                        {key: "price", label: "단가", formatter: "money", align: "right"},
+                        {key: "amount", label: "수량", formatter: "money", align: "right"},
+                        {key: "cost", label: "금액", align: "right", formatter: "money"}
+                    ]
+                    },
+                    {key: "saleDt", label: "판매일자", align: "center"},
+                    {key: "customer", label: "고객명", sortable: false},
+                    {key: "saleType", label: "판매타입"}
+                ],
+                footSum: [
+                    [
+                        {label: "전체 합계", colspan: 2, align: "center"},
+                        {key: "price", collector: "avg", formatter: "money", align: "right"},
+                        {key: "amount", collector: "sum", formatter: "money", align: "right"},
+                        {key: "cost", collector: "sum", formatter: "money", align: "right"}
+                    ]]
+            });
+            return this;
+        },
+        setData: function (_pageNo) {
+            firstGrid.setData({
+                list: sampleData,
+                page: {
+                    currentPage: 0,
+                    pageSize: 0,
+                    totalElements: 0,
+                    totalPages: 0
+                }
+            });
+
+            //firstGrid.setData(list);
+
+            return this;
+        }
+    };
+
+    $(document.body).ready(function () {
+
+        gridView
+            .initView()
+            .setData();
+
+        $('[data-set-height]').click(function () {
+            var height = this.getAttribute("data-set-height");
+            if (height == "100%") {
+                $("#grid-parent").css({height: 500});
+            } else {
+                $("#grid-parent").css({height: "auto"});
+            }
+            firstGrid.setHeight(height);
+        });
+
+        $('[data-grid-control]').click(function () {
+            switch (this.getAttribute("data-grid-control")) {
+                case "row-add":
+                    firstGrid.addRow($.extend({}, sampleData[(Math.floor(Math.random() * sampleData.length))], true), "first");
+                    break;
+                case "row-remove":
+                    firstGrid.removeRow();
+                    break;
+                case "row-update":
+                    firstGrid.updateRow($.extend({}, firstGrid.list[1], {price: 100, amount: 100, cost: 10000}), 1);
+                    break;
+
+                case "column-add":
+                    firstGrid.addColumn({key: "b", label: "필드B"});
+                    break;
+                case "column-remove":
+                    firstGrid.removeColumn();
+                    break;
+                case "column-update":
+                    firstGrid.updateColumn({key: "b", label: "필드B"}, 0);
+                    break;
+                case "toggle-header":
+                    firstGrid
+                        .setConfig({
+                            header: {
+                                display: !firstGrid.config.header.display
+                            }
+                        }, false)
+                        .align();
+                    break;
+                case "toggle-page":
+                    firstGrid
+                        .setConfig({
+                            page: {
+                                display: !firstGrid.config.page.display
+                            }
+                        }, false)
+                        .align();
+                    break;
+            }
+        });
+
+    });
+    //694470860800
+</script>
+
+</body>
+</html>
