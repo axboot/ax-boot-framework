@@ -1,15 +1,14 @@
 // ax5.ui.formatter
 (function () {
-    var UI = ax5.ui;
-    var U = ax5.util;
-    var FORMATTER;
+    const UI = ax5.ui;
+    const U = ax5.util;
+    let FORMATTER;
 
     UI.addClass({
-        className: "formatter",
-        version: "${VERSION}"
+        className: "formatter"
     }, (function () {
-        var TODAY = new Date();
-        var setSelectionRange = function (input, pos) {
+        const TODAY = new Date();
+        const setSelectionRange = function (input, pos) {
             if (typeof pos == "undefined") {
                 pos = input.value.length;
             }
@@ -60,9 +59,8 @@
          * });
          * ```
          */
-        var ax5formatter = function () {
-            var
-                self = this,
+        return function () {
+            var self = this,
                 cfg;
 
             this.instanceId = ax5.getGuid();
@@ -76,7 +74,7 @@
 
             cfg = this.config;
 
-            var formatterEvent = {
+            const formatterEvent = {
                     'focus': function (opts, optIdx, e) {
                         if (!opts.$input.data("__originValue__")) opts.$input.data("__originValue__", opts.$input.val());
                     },
@@ -152,8 +150,9 @@
                             }
                         }
                     }
-                },
-                bindFormatterTarget = function (opts, optIdx) {
+            };
+
+            const bindFormatterTarget = function (opts, optIdx) {
 
                     if (!opts.pattern) {
                         if (opts.$target.get(0).tagName == "INPUT") {
@@ -203,8 +202,9 @@
 
                     return this;
 
-                },
-                getQueIdx = function (boundID) {
+            };
+
+            const getQueIdx = function (boundID) {
                     if (!U.isString(boundID)) {
                         boundID = jQuery(boundID).data("data-formatter");
                     }
@@ -233,8 +233,7 @@
             };
 
             this.bind = function (opts) {
-                var
-                    formatterConfig = {},
+                let formatterConfig = {},
                     optIdx;
 
                 jQuery.extend(true, formatterConfig, cfg);
@@ -295,7 +294,7 @@
              * ```
              */
             this.formatting = function (boundID) {
-                var queIdx = (U.isNumber(boundID)) ? boundID : getQueIdx.call(this, boundID);
+                let queIdx = (U.isNumber(boundID)) ? boundID : getQueIdx.call(this, boundID);
                 if (queIdx === -1) {
                     var i = this.queue.length;
                     while (i--) {
@@ -308,7 +307,7 @@
             };
 
             this.unbind = function () {
-// 구현해야함.
+                // 구현해야함.
             };
 
             // 클래스 생성자
@@ -318,42 +317,7 @@
                 }
             }).apply(this, arguments);
         };
-        return ax5formatter;
     })());
 
     FORMATTER = ax5.ui.formatter;
-})();
-
-ax5.ui.formatter_instance = new ax5.ui.formatter();
-
-jQuery.fn.ax5formatter = (function () {
-    return function (config) {
-        if (ax5.util.isString(arguments[0])) {
-            var methodName = arguments[0];
-
-            switch (methodName) {
-                case "formatting":
-                    return ax5.ui.formatter_instance.formatting(this);
-                    break;
-
-                case "unbind":
-                    return ax5.ui.formatter_instance.unbind(this);
-                    break;
-
-                default:
-                    return this;
-            }
-        }
-        else {
-            if (typeof config == "undefined") config = {};
-            jQuery.each(this, function () {
-                var defaultConfig = {
-                    target: this
-                };
-                config = jQuery.extend({}, config, defaultConfig);
-                ax5.ui.formatter_instance.bind(config);
-            });
-        }
-        return this;
-    }
 })();

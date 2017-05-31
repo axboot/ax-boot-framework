@@ -46,9 +46,9 @@
     };
 
     const navigationUpdate = function () {
-        var self = this;
+        let self = this;
         if (this.page) {
-            var page = {
+            let page = {
                 hasPage: false,
                 currentPage: this.page.currentPage,
                 pageSize: this.page.pageSize,
@@ -59,15 +59,14 @@
                 nextIcon: this.config.page.nextIcon || "»",
                 lastIcon: this.config.page.lastIcon,
             };
-            var navigationItemCount = this.config.page.navigationItemCount;
-
+            let navigationItemCount = this.config.page.navigationItemCount;
 
             page["@paging"] = (function () {
-                var returns = [];
+                let returns = [], startI, endI;
 
-                var startI = page.currentPage - Math.floor(navigationItemCount / 2);
+                startI = page.currentPage - Math.floor(navigationItemCount / 2);
                 if (startI < 0) startI = 0;
-                var endI = page.currentPage + navigationItemCount;
+                endI = page.currentPage + navigationItemCount;
                 if (endI > page.totalPages) endI = page.totalPages;
 
                 if (endI - startI > navigationItemCount) {
@@ -79,7 +78,7 @@
                 }
                 if (startI < 0) startI = 0;
 
-                for (var p = startI, l = endI; p < l; p++) {
+                for (let p = startI, l = endI; p < l; p++) {
                     returns.push({'pageNo': (p + 1), 'selected': page.currentPage == p});
                 }
                 return returns;
@@ -91,19 +90,24 @@
 
             this.$["page"]["navigation"].html(GRID.tmpl.get("page_navigation", page));
             this.$["page"]["navigation"].find("[data-ax5grid-page-move]").on("click", function () {
-                var act = this.getAttribute("data-ax5grid-page-move");
-                onclickPageMove.call(self, act);
+                onclickPageMove.call(self, this.getAttribute("data-ax5grid-page-move"));
             });
+
         } else {
             this.$["page"]["navigation"].empty();
         }
     };
 
     const statusUpdate = function () {
-        var fromRowIndex = this.xvar.paintStartRowIndex;
-        var toRowIndex = this.xvar.paintStartRowIndex + this.xvar.paintRowCount - 1;
+        if(!this.config.page.statusDisplay){
+            return;
+        }
+
+        let fromRowIndex = this.xvar.virtualPaintStartRowIndex;
+        let toRowIndex = this.xvar.virtualPaintStartRowIndex + this.xvar.virtualPaintRowCount;
         //var totalElements = (this.page && this.page.totalElements) ? this.page.totalElements : this.xvar.dataRowCount;
-        var totalElements = this.xvar.dataRowCount;
+        let totalElements = this.xvar.dataRowCount;
+
         if (toRowIndex > totalElements) {
             toRowIndex = totalElements;
         }

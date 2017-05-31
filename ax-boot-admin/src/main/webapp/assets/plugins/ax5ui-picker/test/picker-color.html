@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<!--
+  ~ Copyright (c) 2017. tom@axisj.com
+  ~ - github.com/thomasjang
+  ~ - www.axisj.com
+  -->
+
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+
+    <link rel="stylesheet" type="text/css" href="bower_components/bootstrap/dist/css/bootstrap.min.css"/>
+    <link rel="stylesheet" type="text/css" href="../../ax5ui-mask/dist/ax5mask.css"/>
+    <link rel="stylesheet" type="text/css" href="../../ax5ui-calendar/dist/ax5calendar.css"/>
+    <link rel="stylesheet" type="text/css" href="../../ax5ui-palette/dist/ax5palette.css"/>
+    <link rel="stylesheet" href="bower_components/font-awesome/css/font-awesome.min.css">
+    <link rel="stylesheet" type="text/css" href="../dist/ax5picker.css"/>
+
+    <script src="bower_components/jquery/dist/jquery.min.js"></script>
+    <script src="../../ax5core/dist/ax5core.js"></script>
+    <script src="../../ax5ui-mask/dist/ax5mask.min.js"></script>
+    <script src="../../ax5ui-calendar/dist/ax5calendar.js"></script>
+    <script src="../../ax5ui-palette/dist/ax5palette.js"></script>
+    <script src="../../ax5ui-formatter/dist/ax5formatter.js"></script>
+    <script src="../dist/ax5picker.js"></script>
+</head>
+<body style="padding: 10px;">
+
+<!--http://bootstrap-datepicker.readthedocs.org/en/latest/-->
+<!--http://www.sitepoint.com/pure-css3-speech-bubbles/-->
+<!--https://css-tricks.com/examples/ShapesOfCSS/-->
+<!--https://css-tricks.com/clipping-masking-css/-->
+
+<h1>Color</h1>
+
+<div class="form-group">
+    <input type="text" class="form-control" data-ax5picker="color" placeholder=""/>
+</div>
+
+<div class="form-group" data-ax5picker="color" style="">
+    <div class="input-group">
+        <input type="text" class="form-control" id="test-inp" placeholder="" value="#AF0000"/>
+        <span class="input-group-addon color-preview">
+            <span data-ax5picker-color="preview" style="background: #000;width: 20px;height:20px;margin:5px;border: 1px solid #000;border-radius: 3px;"></span>
+        </span>
+    </div>
+</div>
+
+
+<script>
+    // todo : picker align 기능 추가
+    $(document.body).ready(function () {
+
+        $('[data-ax5picker="color"]').ax5picker({
+            direction: "auto",
+            content: {
+                width: 250,
+                margin: 10,
+                type: 'color',
+                config: {}
+            }
+        });
+
+    });
+</script>
+
+</body>
+</html>

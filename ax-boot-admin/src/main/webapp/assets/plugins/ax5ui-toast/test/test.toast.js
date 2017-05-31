@@ -102,4 +102,15 @@ describe('ax5toast method TEST', function () {
             );
         }, myUI.config.animateTime + myUI.config.displayTime + 50);
     });
+
+    it('toast close test', function (done) {
+        myUI.confirm('message');
+        myUI.close();
+        setTimeout(function () {
+            done(
+                ae.equalAll(0, that.self.queue.length)
+                || ae.equalAll('close', that.state)
+            );
+        }, myUI.config.animateTime + myUI.config.displayTime + 50);
+    });
 });

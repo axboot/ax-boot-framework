@@ -1,10 +1,10 @@
-/** require bourbon */
-@import "bourbon_support";
+/*!
+ * Copyright (c) 2017. tom@axisj.com
+ * - github.com/thomasjang
+ * - www.axisj.com
+ */
 
-/** ax5-ui-mixin : version 1.1 */
 $hack_ie67: '.';
-
-
 
 @mixin placeholder($color: $input-color-placeholder) {
     // Firefox

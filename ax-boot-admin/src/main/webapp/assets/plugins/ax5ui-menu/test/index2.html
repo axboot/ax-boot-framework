@@ -36,17 +36,28 @@
 
 
         var menu1 = new ax5.ui.menu({
+            iconWidth: 18,
             position: "absolute", // default position is "fixed"
             items: [
-                {type: 1, label: "menu1"},
+                {type: 1, icon:'<i class="fa fa-circle" aria-hidden="true"></i>', label: "menu1"},
+                {type: 1, divide: true},
                 {type: 1, label: "menu2"}
-            ]
+            ],
+            onClick: function (item, param) {
+                console.log(item, param);
+            }
         });
 
         $(document).bind("contextmenu", function (e) {
-            menu1.popup(e, {filter: function () {
-                return true; //this.type != 1;
-            }});
+            menu1.popup(
+                e,
+                {
+                    filter: function () {
+                        return true; //this.type != 1;
+                    },
+                    param: {data1:"A", data2:"B"}
+                }
+            );
 
             ax5.util.stopEvent(e);
             // e || {left: 'Number', top: 'Number', direction: '', width: 'Number'}

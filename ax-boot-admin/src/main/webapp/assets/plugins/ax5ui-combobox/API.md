@@ -32,6 +32,7 @@
     * [.enable(_boundID)](#ax5combobox.enable) ⇒ <code>[ax5combobox](#ax5combobox)</code>
     * [.disable(_boundID)](#ax5combobox.disable) ⇒ <code>[ax5combobox](#ax5combobox)</code>
     * [.align()](#ax5combobox.align)
+    * [.clear(_boundID)](#ax5combobox.clear) ⇒ <code>[ax5combobox](#ax5combobox)</code>
 
 <a name="ax5combobox.setConfig"></a>
 
@@ -160,6 +161,15 @@ myCombo.setText($('[data-ax5combobox="combo1"]'), ["substring", "search"]);
 
 ### ax5combobox.align()
 **Kind**: static method of <code>[ax5combobox](#ax5combobox)</code>  
+<a name="ax5combobox.clear"></a>
+
+### ax5combobox.clear(_boundID) ⇒ <code>[ax5combobox](#ax5combobox)</code>
+**Kind**: static method of <code>[ax5combobox](#ax5combobox)</code>  
+
+| Param | Type |
+| --- | --- |
+| _boundID | <code>jQueryObject</code> &#124; <code>Element</code> &#124; <code>Number</code> | 
+
 <a name="jQueryExtends"></a>
 
 ## jQueryExtends : <code>object</code>

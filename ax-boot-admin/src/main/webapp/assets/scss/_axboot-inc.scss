@@ -2,10 +2,13 @@
 @import "modules/var";
 
 //~~~~~~~~~~~~~~~~~~~~~~~~ load plugins
-@import "../plugins/bourbon/app/assets/stylesheets/bourbon";
 @import "../plugins/bootstrap-sass/assets/stylesheets/bootstrap/variables";
 @import "../plugins/bootstrap-sass/assets/stylesheets/bootstrap/mixins";
-@import "../plugins/ax5core/src/ax5-ui-mixin";
+
+//~~~ bootstrap 사용하는 경우 아래쪽
+//@import "../plugins/ax5core/src/ax5";
+@import "../plugins/ax5core/src/bourbon_support";
+@import "../plugins/ax5core/src/mixin";
 
 @import "modules/keyframe";
 @import "modules/mixin";

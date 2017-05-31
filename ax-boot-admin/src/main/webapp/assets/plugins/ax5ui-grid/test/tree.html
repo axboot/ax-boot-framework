@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<!--
+  ~ Copyright (c) 2017. tom@axisj.com
+  ~ - github.com/thomasjang
+  ~ - www.axisj.com
+  -->
+
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, user-scalable=no">
+
+    <title>GRID</title>
+
+    <link rel="stylesheet" type="text/css" href="bower_components/bootstrap/dist/css/bootstrap.min.css"/>
+    <link rel="stylesheet" type="text/css" href="../../ax5ui-mask/dist/ax5mask.css"/>
+    <link rel="stylesheet" type="text/css" href="../../ax5ui-calendar/dist/ax5calendar.css"/>
+    <link rel="stylesheet" type="text/css" href="../../ax5ui-picker/dist/ax5picker.css"/>
+    <link rel="stylesheet" type="text/css" href="../../ax5ui-select/dist/ax5select.css"/>
+    <link rel="stylesheet" href="bower_components/font-awesome/css/font-awesome.min.css">
+    <link rel="stylesheet" type="text/css" href="../dist/ax5grid.css"/>
+
+    <script src="bower_components/jquery/dist/jquery.min.js"></script>
+    <script src="../../ax5core/dist/ax5core.js"></script>
+    <script src="../../ax5ui-formatter/dist/ax5formatter.min.js"></script>
+    <script src="../../ax5ui-calendar/dist/ax5calendar.min.js"></script>
+    <script src="../../ax5ui-picker/dist/ax5picker.min.js"></script>
+    <script src="../../ax5ui-select/dist/ax5select.js"></script>
+    <script src="../dist/ax5grid.js"></script>
+</head>
+<body style="padding: 20px;">
+
+<div style="padding: 10px;">
+    <button class="btn btn-default" data-grid-control="row-add">row add</button>
+    <button class="btn btn-default" data-grid-control="row-remove">row remove</button>
+    <button class="btn btn-default" data-grid-control="row-delete">row delete</button>
+    <button class="btn btn-default" data-grid-control="row-update">row update</button>
+
+    <button class="btn btn-default" data-grid-control="cell-update">cell update</button>
+</div>
+
+<div style="padding: 10px;">
+    <button class="btn btn-default" data-grid-control="select-row-toggle">toggle select list[0]</button>
+    <button class="btn btn-default" data-grid-control="select-row-true">select list[0]</button>
+    <button class="btn btn-default" data-grid-control="select-row-false">deselect list[0]</button>
+
+    <button class="btn btn-default" data-grid-control="select-all-toggle">toggle selectAll</button>
+    <button class="btn btn-default" data-grid-control="select-all-true">select selectAll</button>
+    <button class="btn btn-default" data-grid-control="select-all-false">deselect selectAll</button>
+</div>
+
+<div style="height: 10px;"></div>
+
+<div style="border:1px solid #0a68b4;position: relative;height:400px;" id="grid-parent">
+    <div data-ax5grid="first-grid" data-ax5grid-config='{name:"my first grid"}' style="height: 100%;"></div>
+</div>
+
+<TEXTAREA ID="holdtext" STYLE="position:absolute;top:-1000px;"></TEXTAREA>
+<script>
+    var firstGrid = new ax5.ui.grid();
+
+    var sampleData = [
+        {id: 0, name: "Thomas Jang", price: 1000, amount: null, saleDt: "2016-08-29", customer: "장기영", saleType: "A", isChecked: "N"},
+        {pid: "0", id: "2", name: "Seowoo", price: 1100, amount: 11, saleDt: "2016-08-28", customer: "장서우", saleType: "B", isChecked: "N"},
+        {pid: "0", id: "3", name: "Mondo", price: 1200, amount: 10, saleDt: "2016-08-27", customer: "이영희", saleType: "A", isChecked: "N"},
+        {pid: "0", id: "4", name: "Brant", price: 1300, amount: 8, saleDt: "2016-08-25", customer: "황인서", saleType: "C", isChecked: "N"},
+        {pid: "4", id: "5", name: "Tiffany", price: 1500, amount: 2, saleDt: "2016-08-26", customer: "이서연", saleType: "A", isChecked: "N"},
+        {pid: "4", id: "6", name: "Edward", price: 1400, amount: 5, saleDt: "2016-08-29", customer: "황세진", saleType: "D", isChecked: "N"},
+        {pid: "4", id: "7", name: "Bill", price: 1400, amount: 5, saleDt: "2016-08-29", customer: "이하종", saleType: "B", isChecked: "N"},
+        {pid: "0", id: "8", name: "Aeei", price: 1400, amount: 5, saleDt: "2016-08-29", customer: "김혜미", saleType: "C", isChecked: "N"}
+    ];
+
+    ///
+    var gridView = {
+        initView: function () {
+            firstGrid.setConfig({
+                target: $('[data-ax5grid="first-grid"]'),
+                frozenColumnIndex: 3,
+                frozenRowIndex: 2,
+                showLineNumber: true,
+                showRowSelector: true,
+                multipleSelect: true,
+                lineNumberColumnWidth: 40,
+                rowSelectorColumnWidth: 28,
+                virtualScrollX: true,
+                sortable: true, // 모든 컬럼에 정렬 아이콘 표시
+                multiSort: false, // 다중 정렬 여부
+                remoteSort: false, // remoteSort에 함수를 sortable 컬럼이 클릭되었을때 실행 setColumnSort를 직접 구현. (remoteSort를 사용하면 헤더에 정렬 상태만 표시 하고 데이터 정렬은 처리 안함)
+                header: {
+                    align: "center",
+                    columnHeight: 28
+                },
+                body: {
+                    align: "center",
+                    columnHeight: 28,
+                    onClick: function () {
+
+                    },
+                    onDataChanged: function () {
+                        if (this.key == 'isChecked') {
+                            this.self.updateChildRows(this.dindex, {isChecked: this.item.isChecked}, {filter: function (item) {
+                                return item.saleType != "A";
+                            }});
+                        }
+                        else if(this.key == '__selected__'){
+                            this.self.updateChildRows(this.dindex, {__selected__: this.item.__selected__});
+                        }
+                    }
+                },
+                columns: [
+                    {
+                        key: "id",
+                        label: "필드A",
+                        width: 80,
+                        styleClass: function () {
+                            return "ABC";
+                        },
+                        enableFilter: true,
+                        align: "center",
+                        editor: {
+                            type: "text", disabled: function () {
+                                // item, value
+                                return false;
+                            }
+                        }
+                    },
+                    {key: "name", label: "필드B", align: "left", width: 200, treeControl: true, editor: {type: "text"}},
+                    {
+                        key: "isChecked", label: "체크박스", width: 50, sortable: false, editor: {
+                        type: "checkbox", config: {height: 17, trueValue: "Y", falseValue: "N"}
+                    }
+                    },
+                    {
+                        key: "saleType", label: "판매타입", editor: {
+                        type: "select", config: {
+                            columnKeys: {
+                                optionValue: "CD", optionText: "NM"
+                            },
+                            options: [
+                                {CD: "A", NM: "A: String"},
+                                {CD: "B", NM: "B: Number"},
+                                {CD: "C", NM: "C: substr"},
+                                {CD: "A", NM: "A: String"},
+                                {CD: "B", NM: "B: Number"},
+                                {CD: "C", NM: "C: substr"},
+                                {CD: "A", NM: "A: String"},
+                                {CD: "B", NM: "B: Number"},
+                                {CD: "C", NM: "C: substr"},
+                                {CD: "A", NM: "A: String"},
+                                {CD: "B", NM: "B: Number"},
+                                {CD: "C", NM: "C: substr"},
+                                {CD: "D", NM: "D: substring"}
+                            ]
+                        }
+                    }
+                    },
+                    {
+                        key: "saleDt", label: "판매일자", align: "center", editor: {
+                        type: "date", config: {}
+                    }
+                    },
+                    {
+                        key: "customer", label: "고객명", editor: {type: "text"}
+                    },
+                    {
+                        key: "hash", label: "hash", width: 300, align: "left", formatter: function () {
+                        return this.item["__hs__"];
+                    }
+                    }
+                ],
+                page: {
+                    navigationItemCount: 9,
+                    height: 30,
+                    display: true,
+                    firstIcon: '<i class="fa fa-step-backward" aria-hidden="true"></i>',
+                    prevIcon: '<i class="fa fa-caret-left" aria-hidden="true"></i>',
+                    nextIcon: '<i class="fa fa-caret-right" aria-hidden="true"></i>',
+                    lastIcon: '<i class="fa fa-step-forward" aria-hidden="true"></i>',
+                    onChange: function () {
+                        gridView.setData(this.page.selectPage);
+                    }
+                },
+                tree: {
+                    use: true,
+                    indentWidth: 10,
+                    arrowWidth: 15,
+                    iconWidth: 18,
+                    icons: {
+                        openedArrow: '<i class="fa fa-caret-down" aria-hidden="true"></i>',
+                        collapsedArrow: '<i class="fa fa-caret-right" aria-hidden="true"></i>',
+                        groupIcon: '<i class="fa fa-folder-open" aria-hidden="true"></i>',
+                        collapsedGroupIcon: '<i class="fa fa-folder" aria-hidden="true"></i>',
+                        itemIcon: '<i class="fa fa-circle" aria-hidden="true"></i>'
+                    },
+                    columnKeys: {
+                        parentKey: "pid",
+                        selfKey: "id"
+                    }
+                }
+            });
+
+
+            return this;
+        },
+        setData: function (_pageNo) {
+            firstGrid.setData(sampleData);
+            return this;
+        }
+    };
+
+    $(document.body).ready(function () {
+
+        gridView
+            .initView()
+            .setData();
+
+        $('[data-set-height]').click(function () {
+            var height = this.getAttribute("data-set-height");
+            if (height == "100%") {
+                $("#grid-parent").css({height: 500});
+            } else {
+                $("#grid-parent").css({height: "auto"});
+            }
+            firstGrid.setHeight(height);
+        });
+
+        $('[data-grid-control]').click(function () {
+            switch (this.getAttribute("data-grid-control")) {
+                case "row-add":
+
+                    firstGrid.addRow({pid: "3", id: firstGrid.list.length, name: "A99", price: 1500, amount: 2, saleDt: "2016-08-26", customer: "이서연", saleType: "A", isChecked: "N"}, "first");
+                    break;
+                case "row-remove":
+                    firstGrid.removeRow(2); // 완전제거
+                    break;
+                case "row-delete":
+                    firstGrid.deleteRow("selected");
+                    break;
+                case "row-update":
+                    firstGrid.updateRow($.extend({}, firstGrid.list[1], {price: 100, amount: 100, cost: 10000}), 1);
+                    break;
+                case "cell-update":
+                    firstGrid.setValue(0, "price", 100);
+                    break;
+
+                case "select-row-toggle":
+                    firstGrid.select(0);
+                    break;
+                case "select-row-true":
+                    firstGrid.select(0, {selected: true});
+                    break;
+                case "select-row-false":
+                    firstGrid.select(0, {selected: false});
+                    break;
+                case "select-all-toggle":
+                    firstGrid.selectAll();
+                    break;
+                case "select-all-true":
+                    firstGrid.selectAll({selected: true});
+                    break;
+                case "select-all-false":
+                    firstGrid.selectAll({selected: false});
+                    break;
+
+            }
+        });
+
+    });
+</script>
+
+</body>
+</html>

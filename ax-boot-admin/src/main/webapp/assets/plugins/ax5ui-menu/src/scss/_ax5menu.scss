@@ -64,7 +64,8 @@
                 font-size: $ax5menu-item-font-size;
                 line-height: $ax-menu-item-height;
                 padding: 0px 0px 0px 0px;
-                @include user-select(none);
+
+                user-select: none;
 
                 &.ax-menu-item-checkbox {
                     overflow: hidden;
@@ -309,7 +310,7 @@
 
             .ax-menu-item-cell {
                 white-space: nowrap;
-                @include user-select(none);
+                user-select: none;
             }
         }
     }

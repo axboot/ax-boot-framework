@@ -7,8 +7,7 @@
     var MENU;
 
     UI.addClass({
-        className: "menu",
-        version: "1.4.18"
+        className: "menu"
     }, function () {
         /**
          * @class ax5.ui.menu
@@ -133,7 +132,7 @@
          * });
          * ```
          */
-        var ax5menu = function ax5menu() {
+        return function () {
             var self = this,
                 cfg = void 0;
 
@@ -163,9 +162,9 @@
 
             cfg = this.config;
 
-            var appEventAttach = function appEventAttach(active, param) {
+            var appEventAttach = function appEventAttach(active, opt) {
                 if (active) {
-                    jQuery(document).unbind("click.ax5menu-" + this.menuId).bind("click.ax5menu-" + this.menuId, clickItem.bind(this, param));
+                    jQuery(document).unbind("click.ax5menu-" + this.menuId).bind("click.ax5menu-" + this.menuId, clickItem.bind(this, opt));
                     jQuery(window).unbind("keydown.ax5menu-" + this.menuId).bind("keydown.ax5menu-" + this.menuId, function (e) {
                         if (e.which == ax5.info.eventKeys.ESC) {
                             self.close();
@@ -179,8 +178,8 @@
                     jQuery(window).unbind("keydown.ax5menu-" + this.menuId);
                     jQuery(window).unbind("resize.ax5menu-" + this.menuId);
                 }
-            },
-                onStateChanged = function onStateChanged(opts, that) {
+            };
+            var onStateChanged = function onStateChanged(opts, that) {
                 if (opts && opts.onStateChanged) {
                     opts.onStateChanged.call(that, that);
                 } else if (this.onStateChanged) {
@@ -191,16 +190,16 @@
                 opts = null;
                 that = null;
                 return true;
-            },
-                onLoad = function onLoad(that) {
+            };
+            var onLoad = function onLoad(that) {
                 if (this.onLoad) {
                     this.onLoad.call(that, that);
                 }
 
                 that = null;
                 return true;
-            },
-                popup = function popup(opt, items, depth, path) {
+            };
+            var popup = function popup(opt, items, depth, path) {
                 var data = opt,
                     activeMenu = void 0,
                     removed = void 0;
@@ -354,8 +353,8 @@
                 path = null;
 
                 return this;
-            },
-                clickItem = function clickItem(param, e) {
+            };
+            var clickItem = function clickItem(opt, e) {
                 var target = void 0,
                     item = void 0;
 
@@ -365,11 +364,13 @@
                     }
                 });
                 if (target) {
+                    if (typeof opt === "undefined") opt = {};
                     item = function (path) {
                         if (!path) return false;
                         var item = void 0;
+
                         try {
-                            item = Function("", "return this.config.items[" + path.substring(5).replace(/\./g, '].' + cfg.columnKeys.items + '[') + "];").call(self);
+                            item = Function("", "return this[" + path.substring(5).replace(/\./g, '].' + cfg.columnKeys.items + '[') + "];").call(opt.items || cfg.items);
                         } catch (e) {
                             console.log(ax5.info.getError("ax5menu", "501", "menuItemClick"));
                         }
@@ -416,7 +417,7 @@
                     }
 
                     if (self.onClick) {
-                        if (self.onClick.call(item, item, param)) {
+                        if (self.onClick.call(item, item, opt.param)) {
                             self.close();
                         }
                     }
@@ -428,8 +429,8 @@
                 target = null;
                 item = null;
                 return this;
-            },
-                align = function align(activeMenu, data) {
+            };
+            var align = function align(activeMenu, data) {
                 var $window = jQuery(window),
                     $document = jQuery(document),
                     wh = cfg.position == "fixed" ? $window.height() : $document.height(),
@@ -560,6 +561,7 @@
 
                     var items = [].concat(cfg.items),
                         _filteringItem = void 0;
+                    opt.items = items;
 
                     if (opt.filter) {
                         _filteringItem = function filteringItem(_items) {
@@ -574,7 +576,7 @@
                             });
                             return arr;
                         };
-                        items = _filteringItem(items);
+                        opt.items = items = _filteringItem(items);
                     }
 
                     if (items.length) {
@@ -582,7 +584,7 @@
 
                         if (this.popupEventAttachTimer) clearTimeout(this.popupEventAttachTimer);
                         this.popupEventAttachTimer = setTimeout(function () {
-                            appEventAttach.call(this, true, opt.param); // 이벤트 연결
+                            appEventAttach.call(this, true, opt); // 이벤트 연결
                         }.bind(this), 500);
                     }
 
@@ -647,7 +649,7 @@
                         opt = getOption["object"].call(this, { left: offset.left, top: offset.top + height - scrollTop }, opt);
 
                         popup.call(self, opt, cfg.items[index][cfg.columnKeys.items], 0, 'root.' + target.getAttribute("data-menu-item-index")); // 0 is seq of queue
-                        appEventAttach.call(self, true); // 이벤트 연결
+                        appEventAttach.call(self, true, {}); // 이벤트 연결
                     }
 
                     target = null;
@@ -813,7 +815,6 @@
                 }
             }.apply(this, arguments);
         };
-        return ax5menu;
     }());
 
     MENU = ax5.ui.menu;

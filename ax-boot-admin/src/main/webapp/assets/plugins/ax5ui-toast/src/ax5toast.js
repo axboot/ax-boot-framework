@@ -6,8 +6,7 @@
     var TOAST;
 
     UI.addClass({
-        className: "toast",
-        version: "${VERSION}"
+        className: "toast"
     }, (function () {
         /**
          * @class ax5toast

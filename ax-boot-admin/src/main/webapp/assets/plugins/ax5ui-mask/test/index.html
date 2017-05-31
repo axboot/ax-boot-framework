@@ -29,7 +29,7 @@
             return cTmpl;
         };
         ax5.ui.mask.tmpl.customMask = customMask;
-        window.mask = new ax5.ui.mask();
+        window.mask = new ax5.ui.mask({zIndex: 1000});
 
         $("#custom-mask-open").click(function(){
             mask.open({
@@ -41,6 +41,7 @@
                 }
             });
         });
+
         /*
          $("#custom-mask-close").click(function(){
          mask.close();

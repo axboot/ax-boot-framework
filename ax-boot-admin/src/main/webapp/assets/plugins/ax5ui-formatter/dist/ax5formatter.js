@@ -4,11 +4,10 @@
 (function () {
     var UI = ax5.ui;
     var U = ax5.util;
-    var FORMATTER;
+    var FORMATTER = void 0;
 
     UI.addClass({
-        className: "formatter",
-        version: "1.4.18"
+        className: "formatter"
     }, function () {
         var TODAY = new Date();
         var setSelectionRange = function setSelectionRange(input, pos) {
@@ -60,7 +59,7 @@
          * });
          * ```
          */
-        var ax5formatter = function ax5formatter() {
+        return function () {
             var self = this,
                 cfg;
 
@@ -143,8 +142,9 @@
                         }
                     }
                 }
-            },
-                bindFormatterTarget = function bindFormatterTarget(opts, optIdx) {
+            };
+
+            var bindFormatterTarget = function bindFormatterTarget(opts, optIdx) {
 
                 if (!opts.pattern) {
                     if (opts.$target.get(0).tagName == "INPUT") {
@@ -181,8 +181,9 @@
                 formatterEvent.blur.call(this, this.queue[optIdx], optIdx);
 
                 return this;
-            },
-                getQueIdx = function getQueIdx(boundID) {
+            };
+
+            var getQueIdx = function getQueIdx(boundID) {
                 if (!U.isString(boundID)) {
                     boundID = jQuery(boundID).data("data-formatter");
                 }
@@ -210,7 +211,7 @@
 
             this.bind = function (opts) {
                 var formatterConfig = {},
-                    optIdx;
+                    optIdx = void 0;
 
                 jQuery.extend(true, formatterConfig, cfg);
                 if (opts) jQuery.extend(true, formatterConfig, opts);
@@ -291,45 +292,10 @@
                 }
             }.apply(this, arguments);
         };
-        return ax5formatter;
     }());
 
     FORMATTER = ax5.ui.formatter;
 })();
-
-ax5.ui.formatter_instance = new ax5.ui.formatter();
-
-jQuery.fn.ax5formatter = function () {
-    return function (config) {
-        if (ax5.util.isString(arguments[0])) {
-            var methodName = arguments[0];
-
-            switch (methodName) {
-                case "formatting":
-                    return ax5.ui.formatter_instance.formatting(this);
-                    break;
-
-                case "unbind":
-                    return ax5.ui.formatter_instance.unbind(this);
-                    break;
-
-                default:
-                    return this;
-            }
-        } else {
-            if (typeof config == "undefined") config = {};
-            jQuery.each(this, function () {
-                var defaultConfig = {
-                    target: this
-                };
-                config = jQuery.extend({}, config, defaultConfig);
-                ax5.ui.formatter_instance.bind(config);
-            });
-        }
-        return this;
-    };
-}();
-
 // ax5.ui.formatter.formatter
 (function () {
 
@@ -668,3 +634,42 @@ jQuery.fn.ax5formatter = function () {
         custom: pattern_custom
     };
 })();
+
+/*
+ * Copyright (c) 2017. tom@axisj.com
+ * - github.com/thomasjang
+ * - www.axisj.com
+ */
+
+ax5.ui.formatter_instance = new ax5.ui.formatter();
+
+jQuery.fn.ax5formatter = function () {
+    return function (config) {
+        if (ax5.util.isString(arguments[0])) {
+            var methodName = arguments[0];
+
+            switch (methodName) {
+                case "formatting":
+                    return ax5.ui.formatter_instance.formatting(this);
+                    break;
+
+                case "unbind":
+                    return ax5.ui.formatter_instance.unbind(this);
+                    break;
+
+                default:
+                    return this;
+            }
+        } else {
+            if (typeof config == "undefined") config = {};
+            jQuery.each(this, function () {
+                var defaultConfig = {
+                    target: this
+                };
+                config = jQuery.extend({}, config, defaultConfig);
+                ax5.ui.formatter_instance.bind(config);
+            });
+        }
+        return this;
+    };
+}();

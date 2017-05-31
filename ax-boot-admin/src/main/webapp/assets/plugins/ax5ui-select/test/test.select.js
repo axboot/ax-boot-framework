@@ -140,6 +140,17 @@ describe('ax5.ui.select method TEST', function () {
         );
     });
 
+    it('select setOptions test', function (done) {
+        var myOptions = [
+            {value: "+", text: "addition"},
+            {value: "-", text: "subtraction"},
+            {value: "*", text: "multiplication"},
+            {value: "/", text: "division"}
+        ];
+       myUI.setOptions($('[data-ax5select="select2"]'), myOptions);
+       done(ae.equalAll(myOptions, myUI.queue[0].options));
+    });
+
     after(function () {
         $('[data-ax5select="select2"]').remove();
     });
@@ -175,7 +186,7 @@ describe('multiple ax5.ui.select method TEST', function () {
         });
     });
 
-    it('select multiple setValue / getvalue', function (done) {
+    it('select multiple setValue / getValue', function (done) {
         myUI.val($('[data-ax5select="select3"]'), ["3", "4"], true);
         var val = myUI.val($('[data-ax5select="select3"]'));
 

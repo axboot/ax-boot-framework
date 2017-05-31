@@ -248,27 +248,30 @@
 }
 
 // picker handle
-.input-group {
+
+@mixin ax5picker-handle(){
 	&[data-ax5picker] {
 		.input-group-addon {
 			cursor: pointer;
+
 			&:not(:last-child) {
-				border-left: 0px none;
-				border-right: 0px none;
+				border-left: 0 none;
+				border-right: 0 none;
+			}
+
+			&.color-preview{
+				padding: 0;
+			}
+			[data-ax5picker-color="preview"]{
+				display: block;
 			}
 		}
-
 	}
 }
-.form-group {
-	&[data-ax5picker] {
-		.input-group-addon {
-			cursor: pointer;
-			&:not(:last-child) {
-				border-left: 0px none;
-				border-right: 0px none;
-			}
-		}
 
-	}
+.input-group {
+	@include ax5picker-handle();
+}
+.form-group {
+	@include ax5picker-handle();
 }

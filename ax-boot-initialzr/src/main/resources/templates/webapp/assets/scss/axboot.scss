@@ -1,3 +1,28 @@
-@import "axboot-01";
-@import "axboot-02";
-@import "axboot-03";
+@import "axboot-inc";
+
+@import "modules/bootstrap-custom";
+@import "modules/ax5ui";
+@import "modules/fonts";
+@import "modules/font-icon";
+
+//== component
+@import "modules/ax-body";
+@import "modules/ax-layout";
+@import "modules/ax-form";
+@import "modules/ax-btns";
+@import "modules/ax-tabs";
+@import "modules/ax-markdown";
+
+@import "plugins/ztree";
+
+
+//== pages
+.ax-body {
+    @import "pages/login";
+    @import "pages/frame-set";
+    @import "pages/dev-tools";
+    @import "pages/base";
+    @import "pages/modal-base";
+    @import "pages/error-page";
+    @import "pages/dashboard";
+}

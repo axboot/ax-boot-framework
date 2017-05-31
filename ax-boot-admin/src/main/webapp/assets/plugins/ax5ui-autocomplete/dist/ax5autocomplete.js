@@ -1,15 +1,14 @@
-"use strict";
+'use strict';
 
 // ax5.ui.autocomplete
 (function () {
 
     var UI = ax5.ui;
     var U = ax5.util;
-    var AUTOCOMPLETE;
+    var AUTOCOMPLETE = void 0;
 
     UI.addClass({
-        className: "autocomplete",
-        version: "1.4.18"
+        className: "autocomplete"
     }, function () {
         /**
          * @class ax5autocomplete
@@ -50,7 +49,7 @@
          * });
          * ```
          */
-        var ax5autocomplete = function ax5autocomplete() {
+        return function () {
             var self = this,
                 cfg;
 
@@ -766,7 +765,7 @@
             this.init = function () {
                 this.onStateChanged = cfg.onStateChanged;
                 this.onChange = cfg.onChange;
-                jQuery(window).bind("resize.ax5autocomplete-display-" + this.instanceId, function () {
+                jQuery(window).on("resize.ax5autocomplete-display-" + this.instanceId, function () {
                     alignAutocompleteDisplay.call(this);
                 }.bind(this));
             };
@@ -953,7 +952,7 @@
 
                         alignAutocompleteDisplay.call(this);
 
-                        item.$display.unbind('click.ax5autocomplete').bind('click.ax5autocomplete', autocompleteEvent.click.bind(this, queIdx));
+                        item.$display.off('click.ax5autocomplete').on('click.ax5autocomplete', autocompleteEvent.click.bind(this, queIdx));
 
                         // autocomplete 태그에 대한 이벤트 감시
 
@@ -961,7 +960,7 @@
 
                         // select 태그에 대한 change 이벤트 감시
 
-                        item.$select.unbind('change.ax5autocomplete').bind('change.ax5autocomplete', autocompleteEvent.selectChange.bind(this, queIdx));
+                        item.$select.off('change.ax5autocomplete').on('change.ax5autocomplete', autocompleteEvent.selectChange.bind(this, queIdx));
 
                         data = null;
                         item = null;
@@ -1075,7 +1074,7 @@
                     this.activeautocompleteQueueIndex = queIdx;
 
                     alignAutocompleteOptionGroup.call(this, "append"); // alignAutocompleteOptionGroup 에서 body append
-                    jQuery(window).bind("resize.ax5autocomplete-" + this.instanceId, function () {
+                    jQuery(window).on("resize.ax5autocomplete-" + this.instanceId, function () {
                         alignAutocompleteOptionGroup.call(this);
                     }.bind(this));
 
@@ -1087,7 +1086,7 @@
                         }
                     }
 
-                    jQuery(window).bind("click.ax5autocomplete-" + this.instanceId, function (e) {
+                    jQuery(window).on("click.ax5autocomplete-" + this.instanceId, function (e) {
                         e = e || window.event;
                         onBodyClick.call(this, e);
                         U.stopEvent(e);
@@ -1198,7 +1197,7 @@
 
                 this.activeautocompleteOptionGroup.addClass("destroy");
 
-                jQuery(window).unbind("resize.ax5autocomplete-" + this.instanceId).unbind("click.ax5autocomplete-" + this.instanceId).unbind("keyup.ax5autocomplete-" + this.instanceId);
+                jQuery(window).off("resize.ax5autocomplete-" + this.instanceId).off("click.ax5autocomplete-" + this.instanceId).off("keyup.ax5autocomplete-" + this.instanceId);
 
                 this.closeTimer = setTimeout(function () {
                     if (this.activeautocompleteOptionGroup) this.activeautocompleteOptionGroup.remove();
@@ -1301,12 +1300,56 @@
                 }
             }.apply(this, arguments);
         };
-        return ax5autocomplete;
     }());
 
     AUTOCOMPLETE = ax5.ui.autocomplete;
 })();
 
+// todo : editable 지원.
+// 아이템 박스 안에서 제거 할때 디스플레이 정렬
+
+// ax5.ui.autocomplete.tmpl
+(function () {
+    var AUTOCOMPLETE = ax5.ui.autocomplete;
+    var U = ax5.util;
+
+    var optionGroup = function optionGroup(columnKeys) {
+        return '\n<div class="ax5autocomplete-option-group {{theme}} {{size}}" data-ax5autocomplete-option-group="{{id}}">\n    <div class="ax-autocomplete-body">\n        <div class="ax-autocomplete-option-group-content" data-els="content"></div>\n    </div>\n    <div class="ax-autocomplete-arrow"></div> \n</div>\n';
+    };
+
+    var autocompleteDisplay = function autocompleteDisplay(columnKeys) {
+        return ' \n<input tabindex="-1" type="text" data-input-dummy="" style="display: none;" />\n<div class="form-control {{formSize}} ax5autocomplete-display {{theme}}" \ndata-ax5autocomplete-display="{{id}}" data-ax5autocomplete-instance="{{instanceId}}">\n    <div class="ax5autocomplete-display-table" data-els="display-table">\n        <div data-ax5autocomplete-display="label-holder"> \n        <a {{^tabIndex}}{{/tabIndex}}{{#tabIndex}}tabindex="{{tabIndex}}" {{/tabIndex}}\n        data-ax5autocomplete-display="label"\n        spellcheck="false"><input type="text"data-ax5autocomplete-display="input" style="border:0px none;" /></a>\n        </div>\n        <div data-ax5autocomplete-display="addon"> \n            {{#multiple}}{{#reset}}\n            <span class="addon-icon-reset" data-selected-clear="true">{{{.}}}</span>\n            {{/reset}}{{/multiple}}\n        </div>\n    </div>\n</a>\n';
+    };
+
+    var formSelect = function formSelect(columnKeys) {
+        return '\n<select tabindex="-1" class="form-control {{formSize}}" name="{{name}}" multiple="multiple"></select>\n';
+    };
+
+    var formSelectOptions = function formSelectOptions(columnKeys) {
+        return '\n{{#selected}}\n<option value="{{' + columnKeys.optionValue + '}}" selected="true">{{' + columnKeys.optionText + '}}</option>\n{{/selected}}\n';
+    };
+
+    var options = function options(columnKeys) {
+        return '\n{{#waitOptions}}\n    <div class="ax-autocomplete-option-item">\n            <div class="ax-autocomplete-option-item-holder">\n                <span class="ax-autocomplete-option-item-cell ax-autocomplete-option-item-label">\n                    {{{lang.loading}}}\n                </span>\n            </div>\n        </div>\n{{/waitOptions}}\n{{^waitOptions}}\n    {{#options}}\n        {{^hide}}\n        <div class="ax-autocomplete-option-item" data-option-focus-index="{{@findex}}" data-option-index="{{@index}}" data-option-value="{{' + columnKeys.optionValue + '}}" {{#' + columnKeys.optionSelected + '}}data-option-selected="true"{{/' + columnKeys.optionSelected + '}}>\n            <div class="ax-autocomplete-option-item-holder">\n                <span class="ax-autocomplete-option-item-cell ax-autocomplete-option-item-label">{{' + columnKeys.optionText + '}}</span>\n            </div>\n        </div>\n        {{/hide}}\n    {{/options}}\n    {{^options}}\n        <div class="ax-autocomplete-option-item">\n            <div class="ax-autocomplete-option-item-holder">\n                <span class="ax-autocomplete-option-item-cell ax-autocomplete-option-item-label">\n                    {{{lang.noOptions}}}\n                </span>\n            </div>\n        </div>\n    {{/options}}\n{{/waitOptions}}\n';
+    };
+
+    var label = function label(columnKeys) {
+        return '{{#selected}}\n<div tabindex="-1" data-ax5autocomplete-selected-label="{{@i}}" data-ax5autocomplete-selected-text="{{text}}">\n<div data-ax5autocomplete-remove="true" data-ax5autocomplete-remove-index="{{@i}}">{{{removeIcon}}}</div>\n<span>{{' + columnKeys.optionText + '}}</span>\n</div>{{/selected}}';
+    };
+
+    AUTOCOMPLETE.tmpl = {
+        "autocompleteDisplay": autocompleteDisplay,
+        "formSelect": formSelect,
+        "formSelectOptions": formSelectOptions,
+        "optionGroup": optionGroup,
+        "options": options,
+        "label": label,
+
+        get: function get(tmplName, data, columnKeys) {
+            return ax5.mustache.render(AUTOCOMPLETE.tmpl[tmplName].call(this, columnKeys), data);
+        }
+    };
+})();
 /**
  * autocomplete jquery extends
  * @namespace jQueryExtends
@@ -1364,6 +1407,8 @@ jQuery.fn.ax5autocomplete = function () {
                     break;
                 case "blur":
                     return ax5.ui.autocomplete_instance.blur(this);
+                case "align":
+                    return ax5.ui.autocomplete_instance.align(this);
                 default:
                     return this;
             }
@@ -1380,48 +1425,3 @@ jQuery.fn.ax5autocomplete = function () {
         return this;
     };
 }();
-
-// todo : editable 지원.
-// 아이템 박스 안에서 제거 할때 디스플레이 정렬
-// ax5.ui.autocomplete.tmpl
-(function () {
-    var AUTOCOMPLETE = ax5.ui.autocomplete;
-    var U = ax5.util;
-
-    var optionGroup = function optionGroup(columnKeys) {
-        return "\n<div class=\"ax5autocomplete-option-group {{theme}} {{size}}\" data-ax5autocomplete-option-group=\"{{id}}\">\n    <div class=\"ax-autocomplete-body\">\n        <div class=\"ax-autocomplete-option-group-content\" data-els=\"content\"></div>\n    </div>\n    <div class=\"ax-autocomplete-arrow\"></div> \n</div>\n";
-    };
-
-    var autocompleteDisplay = function autocompleteDisplay(columnKeys) {
-        return " \n<input tabindex=\"-1\" type=\"text\" data-input-dummy=\"\" style=\"display: none;\" />\n<div class=\"form-control {{formSize}} ax5autocomplete-display {{theme}}\" \ndata-ax5autocomplete-display=\"{{id}}\" data-ax5autocomplete-instance=\"{{instanceId}}\">\n    <div class=\"ax5autocomplete-display-table\" data-els=\"display-table\">\n        <div data-ax5autocomplete-display=\"label-holder\"> \n        <a {{^tabIndex}}{{/tabIndex}}{{#tabIndex}}tabindex=\"{{tabIndex}}\" {{/tabIndex}}\n        data-ax5autocomplete-display=\"label\"\n        spellcheck=\"false\"><input type=\"text\"data-ax5autocomplete-display=\"input\" style=\"border:0px none;\" /></a>\n        </div>\n        <div data-ax5autocomplete-display=\"addon\"> \n            {{#multiple}}{{#reset}}\n            <span class=\"addon-icon-reset\" data-selected-clear=\"true\">{{{.}}}</span>\n            {{/reset}}{{/multiple}}\n        </div>\n    </div>\n</a>\n";
-    };
-
-    var formSelect = function formSelect(columnKeys) {
-        return "\n<select tabindex=\"-1\" class=\"form-control {{formSize}}\" name=\"{{name}}\" multiple=\"multiple\"></select>\n";
-    };
-
-    var formSelectOptions = function formSelectOptions(columnKeys) {
-        return "\n{{#selected}}\n<option value=\"{{" + columnKeys.optionValue + "}}\" selected=\"true\">{{" + columnKeys.optionText + "}}</option>\n{{/selected}}\n";
-    };
-
-    var options = function options(columnKeys) {
-        return "\n{{#waitOptions}}\n    <div class=\"ax-autocomplete-option-item\">\n            <div class=\"ax-autocomplete-option-item-holder\">\n                <span class=\"ax-autocomplete-option-item-cell ax-autocomplete-option-item-label\">\n                    {{{lang.loading}}}\n                </span>\n            </div>\n        </div>\n{{/waitOptions}}\n{{^waitOptions}}\n    {{#options}}\n        {{^hide}}\n        <div class=\"ax-autocomplete-option-item\" data-option-focus-index=\"{{@findex}}\" data-option-index=\"{{@index}}\" data-option-value=\"{{" + columnKeys.optionValue + "}}\" {{#" + columnKeys.optionSelected + "}}data-option-selected=\"true\"{{/" + columnKeys.optionSelected + "}}>\n            <div class=\"ax-autocomplete-option-item-holder\">\n                <span class=\"ax-autocomplete-option-item-cell ax-autocomplete-option-item-label\">{{" + columnKeys.optionText + "}}</span>\n            </div>\n        </div>\n        {{/hide}}\n    {{/options}}\n    {{^options}}\n        <div class=\"ax-autocomplete-option-item\">\n            <div class=\"ax-autocomplete-option-item-holder\">\n                <span class=\"ax-autocomplete-option-item-cell ax-autocomplete-option-item-label\">\n                    {{{lang.noOptions}}}\n                </span>\n            </div>\n        </div>\n    {{/options}}\n{{/waitOptions}}\n";
-    };
-
-    var label = function label(columnKeys) {
-        return "{{#selected}}\n<div tabindex=\"-1\" data-ax5autocomplete-selected-label=\"{{@i}}\" data-ax5autocomplete-selected-text=\"{{text}}\">\n<div data-ax5autocomplete-remove=\"true\" data-ax5autocomplete-remove-index=\"{{@i}}\">{{{removeIcon}}}</div>\n<span>{{" + columnKeys.optionText + "}}</span>\n</div>{{/selected}}";
-    };
-
-    AUTOCOMPLETE.tmpl = {
-        "autocompleteDisplay": autocompleteDisplay,
-        "formSelect": formSelect,
-        "formSelectOptions": formSelectOptions,
-        "optionGroup": optionGroup,
-        "options": options,
-        "label": label,
-
-        get: function get(tmplName, data, columnKeys) {
-            return ax5.mustache.render(AUTOCOMPLETE.tmpl[tmplName].call(this, columnKeys), data);
-        }
-    };
-})();

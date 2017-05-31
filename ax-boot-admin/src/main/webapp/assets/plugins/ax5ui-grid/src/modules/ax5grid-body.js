@@ -460,7 +460,8 @@
                     rowIndex: rowIndex,
                     colIndex: colIndex,
                     item: item,
-                    column: column
+                    column: column,
+                    gridSelf: self
                 };
 
                 self.contextMenu.popup(e, {
@@ -500,6 +501,10 @@
             });
 
         resetFrozenColumn.call(this);
+
+        // 그리드 바디에 출력할 여유 카운트
+        this.xvar.paintRowCountMargin = this.config.virtualScrollYCountMargin;
+        this.xvar.paintRowCountTopMargin = this.config.virtualScrollYCountMargin - Math.floor(this.config.virtualScrollYCountMargin / 2);
     };
 
     const resetFrozenColumn = function () {
@@ -814,9 +819,18 @@
         }
 
         /// 출력시작 인덱스
-        let paintStartRowIndex = (!this.config.virtualScrollY) ?
-            this.xvar.frozenRowIndex :
-            Math.floor(-(this.$.panel["body-scroll"].position().top) / this.xvar.bodyTrHeight) + this.xvar.frozenRowIndex;
+        let paintStartRowIndex, virtualPaintStartRowIndex;
+
+        if (this.config.virtualScrollY) {
+            virtualPaintStartRowIndex = paintStartRowIndex = Math.floor(-(this.$.panel["body-scroll"].position().top) / this.xvar.bodyTrHeight) + this.xvar.frozenRowIndex;
+            if (this.xvar.paintRowCountTopMargin < paintStartRowIndex) {
+                paintStartRowIndex -= this.xvar.paintRowCountTopMargin;
+            }
+        }
+        else {
+            paintStartRowIndex = this.xvar.frozenRowIndex;
+        }
+
         if (isNaN(paintStartRowIndex)) return this;
 
         let paintStartColumnIndex = 0, paintEndColumnIndex = 0, nopaintLeftColumnsWidth = null, nopaintRightColumnsWidth = null;
@@ -858,7 +872,19 @@
             leftBodyGroupingData = this.leftBodyGroupingData,
             bodyGroupingData = this.bodyGroupingData,
             bodyAlign = cfg.body.align,
-            paintRowCount = (!this.config.virtualScrollY) ? list.length : Math.ceil(this.xvar.bodyHeight / this.xvar.bodyTrHeight) + 1;
+            paintRowCount, virtualPaintRowCount;
+
+        if (!this.config.virtualScrollY) {
+            virtualPaintRowCount = paintRowCount = list.length;
+        } else {
+            virtualPaintRowCount = Math.ceil(this.xvar.bodyHeight / this.xvar.bodyTrHeight);
+            paintRowCount = virtualPaintRowCount + (this.xvar.paintRowCountMargin || 1);
+        }
+
+        // 여유범위 안에 있으면 페인팅 안할수 있게 paintStartRowIndex 변경하지 않음.
+        if (this.xvar.paintRowCountTopMargin < paintStartRowIndex && Math.abs(this.xvar.paintStartRowIndex - paintStartRowIndex) <= this.xvar.paintRowCountTopMargin) {
+            paintStartRowIndex = this.xvar.paintStartRowIndex;
+        }
 
         if (
             this.xvar.dataRowCount === list.length
@@ -867,7 +893,6 @@
             && this.xvar.paintStartColumnIndex === paintStartColumnIndex
             && this.xvar.paintEndColumnIndex === paintEndColumnIndex
         ) return this; // 스크롤 포지션 변경 여부에 따라 프로세스 진행여부 결정
-
 
         // bodyRowData 수정 : 페인트 컬럼 포지션이 달라지므로
         if (nopaintLeftColumnsWidth || nopaintRightColumnsWidth) {
@@ -885,9 +910,12 @@
             }
         }
 
+
+        /*
         if (!this.config.virtualScrollX && document.addEventListener && ax5.info.supportTouch) {
             paintRowCount = paintRowCount * 2;
         }
+         */
 
         /// 스크롤 컨텐츠의 높이 : 그리드 스크롤의 실제 크기와는 관계 없이 데이터 갯수에 따라 스크롤 컨텐츠 높이값 구해서 저장해두기.
         this.xvar.scrollContentHeight = this.xvar.bodyTrHeight * (this.list.length - this.xvar.frozenRowIndex);
@@ -1019,7 +1047,7 @@
 
                                 return '<span data-ax5grid-cellHolder="' + ((col.multiLine) ? 'multiLine' : '') + '" ' +
                                     ((colAlign) ? 'data-ax5grid-text-align="' + colAlign + '"' : '') +
-                                    '" style="height:' + _cellHeight + 'px;line-height: ' + lineHeight + 'px;">';
+                                    '" style="height:' + _cellHeight + 'px;' + ((col.multiLine) ? '':'line-height: ' + lineHeight + 'px;') + '">';
 
                             })(cellHeight), (isGroupingRow) ? getGroupingValue.call(this, _list[di], di, col) : getFieldValue.call(this, _list, _list[di], di, col), '</span>');
 
@@ -1042,7 +1070,16 @@
                 SS.push('<div style="font-size:0;line-height:0;height: ' + (_list.length - di) * _scrollConfig.bodyTrHeight + 'px;"></div>');
             }
 
-            _elTarget.empty().get(0).innerHTML = SS.join('');
+            _elTarget.empty();
+            SS = SS.join('');
+
+            if (this.config.virtualScrollAccelerated && _elTargetKey !== "aside-body-scroll") {
+                setTimeout(function () {
+                    _elTarget.get(0).innerHTML = SS;
+                });
+            } else {
+                _elTarget.get(0).innerHTML = SS;
+            }
 
             this.$.livePanelKeys.push(_elTargetKey); // 사용중인 패널키를 모아둠. (뷰의 상태 변경시 사용하려고)
             return true;
@@ -1127,7 +1164,7 @@
 
                         return '<span data-ax5grid-cellHolder="' + ((col.multiLine) ? 'multiLine' : '') + '" ' +
                             ((colAlign) ? 'data-ax5grid-text-align="' + colAlign + '"' : '') +
-                            '" style="height:' + _cellHeight + 'px;line-height: ' + lineHeight + 'px;">';
+                            '" style="height:' + _cellHeight + 'px;' + ((col.multiLine) ? '':'line-height: ' + lineHeight + 'px;') + '">';
 
                     })(cellHeight), getSumFieldValue.call(this, _list, col), '</span>');
 
@@ -1144,7 +1181,16 @@
 
             SS.push('</table>');
 
-            _elTarget.empty().get(0).innerHTML = SS.join('');
+            _elTarget.empty();
+            SS = SS.join('');
+            if (this.config.virtualScrollAccelerated) {
+                setTimeout(function () {
+                    _elTarget.get(0).innerHTML = SS;
+                });
+            } else {
+                _elTarget.get(0).innerHTML = SS;
+            }
+
             this.$.livePanelKeys.push(_elTargetKey); // 사용중인 패널키를 모아둠. (뷰의 상태 변경시 사용하려고)
             return true;
         };
@@ -1339,8 +1385,10 @@
             mergeCellsBody.call(this, "body-scroll", this.headerColGroup, bodyRowData, list, scrollConfig);
         }
 
+        this.xvar.virtualPaintStartRowIndex = virtualPaintStartRowIndex;
         this.xvar.paintStartRowIndex = paintStartRowIndex;
         this.xvar.paintRowCount = paintRowCount;
+        this.xvar.virtualPaintRowCount = virtualPaintRowCount;
         this.xvar.paintStartColumnIndex = paintStartColumnIndex;
         this.xvar.paintEndColumnIndex = paintEndColumnIndex;
         this.xvar.nopaintLeftColumnsWidth = nopaintLeftColumnsWidth;
@@ -1474,7 +1522,7 @@
 
                         return '<span data-ax5grid-cellHolder="' + ((col.multiLine) ? 'multiLine' : '') + '" ' +
                             ((colAlign) ? 'data-ax5grid-text-align="' + colAlign + '"' : '') +
-                            '" style="height:' + _cellHeight + 'px;line-height: ' + lineHeight + 'px;">';
+                            '" style="height:' + _cellHeight + 'px;' + ((col.multiLine) ? '':'line-height: ' + lineHeight + 'px;') + '">';
 
                     })(cellHeight), getSumFieldValue.call(this, _list, col), '</span>');
 
@@ -1565,7 +1613,7 @@
 
                                 return '<span data-ax5grid-cellHolder="' + ((col.multiLine) ? 'multiLine' : '') + '" ' +
                                     ((colAlign) ? 'data-ax5grid-text-align="' + colAlign + '"' : '') +
-                                    '" style="height:' + _cellHeight + 'px;line-height: ' + lineHeight + 'px;">';
+                                    '" style="height:' + _cellHeight + 'px;' + ((col.multiLine) ? '':'line-height: ' + lineHeight + 'px;') + '">';
 
                             })(cellHeight), getGroupingValue.call(this, _list[di], di, col), '</span>');
 
@@ -1888,7 +1936,7 @@
 
                         return '<span data-ax5grid-cellHolder="' + ((col.multiLine) ? 'multiLine' : '') + '" ' +
                             ((colAlign) ? 'data-ax5grid-text-align="' + colAlign + '"' : '') +
-                            '" style="height:' + _cellHeight + 'px;line-height: ' + lineHeight + 'px;">';
+                            '" style="height:' + _cellHeight + 'px;' + ((col.multiLine) ? '':'line-height: ' + lineHeight + 'px;') + '">';
 
                     })(cellHeight), getFieldValue.call(this, _list, _list[di], di, col), '</span>');
                     SS.push('</td>');
@@ -1902,8 +1950,6 @@
                     '></td>');
             }
 
-            console.log('tr[data-ax5grid-tr-data-index="' + di + '"]');
-
             _elTarget.find('tr[data-ax5grid-tr-data-index="' + di + '"]').empty().get(0).innerHTML = SS.join('');
         };
 
@@ -1915,7 +1961,6 @@
             } else {
                 replaceTr.call(this, "left-body-scroll", this.leftHeaderColGroup, leftBodyRowData, list, _dindex);
             }
-
         }
 
         // body
@@ -1926,7 +1971,6 @@
             replaceTr.call(this, "body-scroll", this.headerColGroup, bodyRowData, list, _dindex);
         }
 
-
         // body.grouping tr 다시 그리기..
         if (cfg.body.grouping) {
             // left
@@ -1934,7 +1978,8 @@
                 if (this.xvar.frozenRowIndex > _dindex) {
                     // 상단 행고정
                     replaceGroupTr.call(this, "top-left-body", this.leftHeaderColGroup, leftBodyGroupingData, list.slice(0, this.xvar.frozenRowIndex));
-                } else {
+                }
+                else {
                     replaceGroupTr.call(this, "left-body-scroll", this.leftHeaderColGroup, leftBodyGroupingData, list, scrollConfig);
                 }
             }
@@ -1943,7 +1988,8 @@
             if (this.xvar.frozenRowIndex > _dindex) {
                 // 상단 행고정
                 replaceGroupTr.call(this, "top-body-scroll", this.headerColGroup, bodyGroupingData, list.slice(0, this.xvar.frozenRowIndex));
-            } else {
+            }
+            else {
                 replaceGroupTr.call(this, "body-scroll", this.headerColGroup, bodyGroupingData, list, scrollConfig);
             }
         }
@@ -2087,12 +2133,12 @@
                 // 포커스 컬럼의 위치에 따라 스크롤 처리.ㅊㅇ
                 (function () {
                     if (focusedColumn.dindex + 1 > this.xvar.frozenRowIndex) {
-                        if (focusedColumn.dindex <= this.xvar.paintStartRowIndex) {
+                        if (focusedColumn.dindex <= this.xvar.virtualPaintStartRowIndex) {
                             scrollTo.call(this, {top: -(focusedColumn.dindex - this.xvar.frozenRowIndex) * this.xvar.bodyTrHeight});
                             GRID.scroller.resize.call(this);
                         }
-                        else if (focusedColumn.dindex + 1 > this.xvar.paintStartRowIndex + (this.xvar.paintRowCount - 2)) {
-                            scrollTo.call(this, {top: -(focusedColumn.dindex - this.xvar.frozenRowIndex - this.xvar.paintRowCount + 3) * this.xvar.bodyTrHeight});
+                        else if (focusedColumn.dindex + 1 > this.xvar.virtualPaintStartRowIndex + (this.xvar.virtualPaintRowCount - 2)) {
+                            scrollTo.call(this, {top: -(focusedColumn.dindex - this.xvar.frozenRowIndex - this.xvar.virtualPaintRowCount + 3) * this.xvar.bodyTrHeight});
                             GRID.scroller.resize.call(this);
                         }
                     }
@@ -2309,12 +2355,12 @@
                 // 포커스 컬럼의 위치에 따라 스크롤 처리.
                 (function () {
                     if (focusedColumn.dindex + 1 > this.xvar.frozenRowIndex) {
-                        if (focusedColumn.dindex < this.xvar.paintStartRowIndex) {
+                        if (focusedColumn.dindex < this.xvar.virtualPaintStartRowIndex) {
                             scrollTo.call(this, {top: -(focusedColumn.dindex - this.xvar.frozenRowIndex) * this.xvar.bodyTrHeight});
                             GRID.scroller.resize.call(this);
                         }
-                        else if (focusedColumn.dindex + 1 > this.xvar.paintStartRowIndex + (this.xvar.paintRowCount - 2)) {
-                            scrollTo.call(this, {top: -(focusedColumn.dindex - this.xvar.frozenRowIndex - this.xvar.paintRowCount + 3) * this.xvar.bodyTrHeight});
+                        else if (focusedColumn.dindex + 1 > this.xvar.virtualPaintStartRowIndex + (this.xvar.virtualPaintRowCount - 2)) {
+                            scrollTo.call(this, {top: -(focusedColumn.dindex - this.xvar.frozenRowIndex - this.xvar.virtualPaintRowCount + 3) * this.xvar.bodyTrHeight});
                             GRID.scroller.resize.call(this);
                         }
                     }
@@ -2537,9 +2583,10 @@
                     if (this.isInlineEditing) {
                         if (this.inlineEditing[columnKey] && this.inlineEditing[columnKey].useReturnToSave) { // todo : 네이밍 검증 할 필요있음.
                             inlineEdit.deActive.call(this, "RETURN", columnKey);
+                        }else{
+                            return false;
                         }
                     } else {
-
                         for (var k in this.focusedColumn) {
                             let _column = this.focusedColumn[k],
                                 column = this.bodyRowMap[_column.rowIndex + "_" + _column.colIndex],
@@ -2585,6 +2632,7 @@
                             }
                         }
                     }
+                    return true;
                 }
             };
 
@@ -2681,6 +2729,43 @@
         }
     };
 
+    const click = function (_dindex) {
+        let that = {
+            self: this,
+            page: this.page,
+            list: this.list,
+            item: this.list[_dindex],
+            dindex: _dindex
+        };
+
+        moveFocus.call(this, _dindex);
+        if (this.config.body.onClick) {
+            this.config.body.onClick.call(that);
+        }
+
+        that = null;
+        // console.log(this.$["panel"]["body-scroll"].find('[data-ax5grid-tr-data-index="' + _dindex + '"]>td:first-child'));
+    };
+
+    const dblClick = function (_dindex) {
+        let that = {
+            self: this,
+            page: this.page,
+            list: this.list,
+            item: this.list[_dindex],
+            dindex: _dindex
+        };
+
+        moveFocus.call(this, _dindex);
+
+        if (this.config.body.onDBLClick) {
+            this.config.body.onDBLClick.call(that);
+        }
+
+        that = null;
+    };
+
+
     GRID.body = {
         init: init,
         repaint: repaint,
@@ -2693,6 +2778,8 @@
         moveFocus: moveFocus,
         inlineEdit: inlineEdit,
         getExcelString: getExcelString,
-        toggleCollapse: toggleCollapse
+        toggleCollapse: toggleCollapse,
+        click: click,
+        dblClick: dblClick
     };
 })();

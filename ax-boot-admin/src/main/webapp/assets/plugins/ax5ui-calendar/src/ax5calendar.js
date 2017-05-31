@@ -1,13 +1,12 @@
 // ax5.ui.calendar
 (function () {
 
-    var UI = ax5.ui;
-    var U = ax5.util;
-    var CALENDAR;
+    const UI = ax5.ui;
+    const U = ax5.util;
+    let CALENDAR;
 
     UI.addClass({
-        className: "calendar",
-        version: "${VERSION}"
+        className: "calendar"
     }, (function () {
 
         /**
@@ -66,12 +65,10 @@
          *     });
          * ```
          */
-        var ax5calendar = function () {
-            var
-                self = this,
+        return function () {
+            let self = this,
                 cfg,
-                selectableCount = 1
-                ;
+                selectableCount = 1;
 
             this.instanceId = ax5.getGuid();
             this.target = null;
@@ -111,8 +108,7 @@
 
             cfg = this.config;
 
-            var
-                onStateChanged = function (opts, that) {
+            const onStateChanged = function (opts, that) {
                     if (opts && opts.onStateChanged) {
                         opts.onStateChanged.call(that, that);
                     }
@@ -121,8 +117,8 @@
                     }
 
                     that = null;
-                },
-                getFrame = function () {
+            };
+            const getFrame = function () {
                     var
                         data = jQuery.extend(true, {}, cfg, {
                             controlCSS: {},
@@ -142,8 +138,8 @@
                     finally {
                         data = null;
                     }
-                },
-                setDisplay = function () {
+            };
+            const setDisplay = function () {
                     var
                         myDate = U.date(cfg.displayDate),
                         yy = "",
@@ -198,8 +194,8 @@
                     yy1 = null;
                     yy2 = null;
                     return this;
-                },
-                printDay = function (nowDate) {
+            };
+            const printDay = function (nowDate) {
                     var
                         dotDate = U.date(nowDate),
                         monthStratDate = new Date(dotDate.getFullYear(), dotDate.getMonth(), 1, 12),
@@ -344,8 +340,8 @@
                     frameHeight = null;
                     data = null;
                     tmpl = null;
-                },
-                printMonth = function (nowDate) {
+            };
+            const printMonth = function (nowDate) {
                     var
                         dotDate = U.date(nowDate),
                         nMonth = dotDate.getMonth(),
@@ -442,8 +438,8 @@
                     frameHeight = null;
                     data = null;
                     tmpl = null;
-                },
-                printYear = function (nowDate) {
+            };
+            const printYear = function (nowDate) {
                     var
                         dotDate = U.date(nowDate),
                         nYear = dotDate.getFullYear(),
@@ -539,8 +535,8 @@
                     frameHeight = null;
                     data = null;
                     tmpl = null;
-                },
-                onclick = function (e, mode, target, value) {
+            };
+            const onclick = function (e, mode, target, value) {
                     var
                         removed,
                         dt,
@@ -639,8 +635,8 @@
                     removed = null;
                     dt = null;
                     selectable = null;
-                },
-                move = function (e, target, value) {
+            };
+            const move = function (e, target, value) {
                     target = U.findParentNode(e.target, function (target) {
                         if (target.getAttribute("data-calendar-move")) {
                             return true;
@@ -679,8 +675,8 @@
 
                     target = null;
                     value = null;
-                },
-                applyMarkerMap = function () {
+            };
+            const applyMarkerMap = function () {
                     setTimeout((function () {
                         if (cfg.mode === "day" || cfg.mode === "d") {
                             for (var k in this.markerMap) {
@@ -688,15 +684,15 @@
                             }
                         }
                     }).bind(this));
-                },
-                applySelectionMap = function () {
+            };
+            const applySelectionMap = function () {
                     setTimeout((function () {
                         for (var k in this.selectionMap) {
                             this.$["body"].find('[data-calendar-item-date="' + k + '"]').addClass("selected-day");
                         }
                     }).bind(this));
-                },
-                applyPeriodMap = function () {
+            };
+            const applyPeriodMap = function () {
                     setTimeout((function () {
                         if (cfg.mode === "day" || cfg.mode === "d") {
                             for (var k in this.periodMap) {
@@ -707,8 +703,8 @@
                             }
                         }
                     }).bind(this));
-                },
-                clearPeriodMap = function () {
+            };
+            const clearPeriodMap = function () {
                     if (cfg.mode === "day" || cfg.mode === "d") {
                         for (var k in this.periodMap) {
                             this.$["body"].find('[data-calendar-item-date="' + k + '"]').find(".addon-footer").empty();
@@ -1088,7 +1084,6 @@
                 }
             }).apply(this, arguments);
         };
-        return ax5calendar;
     })());
     CALENDAR = ax5.ui.calendar;
 })();

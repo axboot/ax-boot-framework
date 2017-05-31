@@ -31,38 +31,42 @@
 
 <div style="padding: 5px;">
     <h3>height</h3>
-    <button class="btn btn-default" data-set-height="300">300px</button>
-    <button class="btn btn-default" data-set-height="400">400px</button>
-    <button class="btn btn-default" data-set-height="800">800px</button>
-    <button class="btn btn-default" data-set-height="100%">100%</button>
+    <button type="button" class="btn btn-default" data-set-height="300">300px</button>
+    <button type="button" class="btn btn-default" data-set-height="400">400px</button>
+    <button type="button" class="btn btn-default" data-set-height="800">800px</button>
+    <button type="button" class="btn btn-default" data-set-height="100%">100%</button>
 </div>
 <div style="padding: 5px;">
     <h3>row</h3>
-    <button class="btn btn-default" data-grid-control="row-add">add</button>
-    <button class="btn btn-default" data-grid-control="row-add2">add(no sort)</button>
-    <button class="btn btn-default" data-grid-control="row-remove">remove</button>
-    <button class="btn btn-default" data-grid-control="row-update">update</button>
-    <button class="btn btn-default" data-grid-control="row-delete">delete</button>
+    <button type="button" class="btn btn-default" data-grid-control="row-add">add</button>
+    <button type="button" class="btn btn-default" data-grid-control="row-add2">add(no sort)</button>
+    <button type="button" class="btn btn-default" data-grid-control="row-remove">remove</button>
+    <button type="button" class="btn btn-default" data-grid-control="row-update">update</button>
+    <button type="button" class="btn btn-default" data-grid-control="row-delete">delete</button>
 </div>
 <div style="padding: 5px;">
     <h3>column</h3>
-    <button class="btn btn-default" data-grid-control="column-add">add</button>
-    <button class="btn btn-default" data-grid-control="column-remove">remove</button>
-    <button class="btn btn-default" data-grid-control="column-update">update</button>
+    <button type="button" class="btn btn-default" data-grid-control="column-add">add</button>
+    <button type="button" class="btn btn-default" data-grid-control="column-remove">remove</button>
+    <button type="button" class="btn btn-default" data-grid-control="column-update">update</button>
 </div>
 <div style="padding: 5px;">
     <h3>etc.</h3>
-    <button class="btn btn-default" data-grid-control="width-resize">width resize</button>
-    <button class="btn btn-default" data-grid-control="delete-all">delete all</button>
+    <button type="button" class="btn btn-default" data-grid-control="width-resize">width resize</button>
+    <button type="button" class="btn btn-default" data-grid-control="delete-all">delete all</button>
 </div>
 <div style="padding: 5px;">
-    <button class="btn btn-default" data-grid-control="excel">Excel</button>
+    <button type="button" class="btn btn-default" data-grid-control="excel">Excel</button>
 </div>
 <div style="padding: 5px;">
-    <button class="btn btn-default" data-grid-control="focus-up">focus-up</button>
-    <button class="btn btn-default" data-grid-control="focus-down">focus-down</button>
-    <button class="btn btn-default" data-grid-control="focus-home">focus-home</button>
-    <button class="btn btn-default" data-grid-control="focus-end">focus-end</button>
+    <button type="button" class="btn btn-default" data-grid-control="focus-up">focus-up</button>
+    <button type="button" class="btn btn-default" data-grid-control="focus-down">focus-down</button>
+    <button type="button" class="btn btn-default" data-grid-control="focus-home">focus-home</button>
+    <button type="button" class="btn btn-default" data-grid-control="focus-end">focus-end</button>
+</div>
+<div style="padding: 5px;">
+    <button type="button" class="btn btn-default" data-grid-control="clickBody">clickBody(10)</button>
+    <button type="button" class="btn btn-default" data-grid-control="DBLClickBody">DBLClickBody(10)</button>
 </div>
 
 
@@ -86,8 +90,8 @@
     };
 
     var sampleData = [
-        //{companyJson: {"대표자명": "----"}, a: "A", b: "A01", price: 1000, amount: 12, cost: 12000, saleDt: "2016-08-29", customer: "장기영", saleType: "A", __disable_selection__: true},
-        {companyJson: {"대표자명": "----"}, a: "A", b: "A01", price: 1000, amount: 12, cost: 12000, saleDt: "2016-08-29", customer: "장기영", saleType: "A"},
+        {companyJson: {"대표자명": "----"}, a: "A", b: "A01", price: 1000, amount: 12, cost: 12000, saleDt: "2016-08-29", customer: "장기영", saleType: "A", __disable_selection__: true},
+        {companyJson: {"대표자명": "----"}, a: true, b: true, price: 1000, amount: 12, cost: 12000, saleDt: "2016-08-29", customer: "장기영", saleType: "A"},
         {companyJson: {"대표자명": "abcd"}, a: "A", b: "B01", price: 1100, amount: 11, cost: 12100, saleDt: "2016-08-28", customer: "장서우", saleType: "B"},
         {companyJson: {"대표자명": "abcd"}, a: "A", b: "C01", price: 1200, amount: 10, cost: 12000, saleDt: "2016-08-27", customer: "이영희", saleType: "A"},
         {companyJson: {"대표자명": "위세라"}, a: "A", b: "A01", price: 1300, amount: 8, cost: 10400, saleDt: "2016-08-25", customer: "황인서", saleType: "C"},
@@ -112,18 +116,15 @@
                 sortable: true,
                 multiSort: true,
                 multipleSelect: false,
-
                 appendProgressIcon: '<i class="fa fa-circle-o-notch fa-spin fa-fw"></i>',
-
-                /*
-                remoteSort: function () {
-                    console.log(JSON.stringify(this.sortInfo, null, '\t'));
-                    gridView.setSortData(this.sortInfo);
-                },
-                */
                 body: {
+                    columnHeight: 50,
                     onClick: function () {
                         this.self.select(this.dindex);
+                        console.log(this.item);
+                    },
+                    onDBLClick: function () {
+                        console.log("DBLClick", this);
                     },
                     onDataChanged: function () {
                         /*
@@ -141,7 +142,7 @@
                 columns: [
                     {key: "b", label: "필드B", align: "center"},
                     {key: "companyJson.대표자명", label: "대표자명", width: 100, align: "center"},
-                    {key: "saleDt", label: "판매일자", width: "*", align: "center", editor: "text", formatter: function formatter() {
+                    {key: "saleDt", label: "판매일자", width: "*", align: "center", formatter: function formatter() {
                         return ax5.util.date(this.value, {"return":'yyyy/MM/dd'});
                     }},
                     {key: "customer", label: "고객명"},
@@ -157,7 +158,7 @@
                 sortable: true,
                 multiSort: true,
                 remoteSort: function () {
-                    console.log(JSON.stringify(this.sortInfo, null, '\t'));
+                    // console.log(JSON.stringify(this.sortInfo, null, '\t'));
                     gridView.setSortData(this.sortInfo);
                 },
                 body: {
@@ -197,8 +198,8 @@
              }
              });
              */
-            firstGrid.setData(sampleData);
-            secondGrid.setData(sampleData);
+            firstGrid.setData(ax5.util.deepCopy(sampleData));
+            secondGrid.setData(ax5.util.deepCopy(sampleData));
 
             /*
             firstGrid.selectAll({
@@ -215,7 +216,7 @@
             var sortedList = sampleData.sort(function (a, b) {
                 return a["b"] < b["b"];
             });
-            firstGrid.setData(sortedList);
+            secondGrid.setData(sortedList);
         }
     };
 
@@ -235,12 +236,15 @@
             firstGrid.setHeight(height);
         });
 
-        $('[data-grid-control]').on("mousedown", function (e) {
+        $('[data-grid-control]').on("click", function (e) {
             switch (this.getAttribute("data-grid-control")) {
                 case "row-add":
-                    //firstGrid.addRow(sampleData[(Math.floor(Math.random() * sampleData.length))], "last", {sort: true});
+                    firstGrid.addRow(sampleData[(Math.floor(Math.random() * sampleData.length))], "last", {sort: true, focus: "HOME"});
+
+
+                    //firstGrid.addRow(sampleData[(Math.floor(Math.random() * sampleData.length))], "last", {sort: true, focus:3});
                     //firstGrid.addRow([{},{}], "last", {sort: true});
-                    firstGrid.appendToList([{},{}]);
+                    //firstGrid.appendToList([{},{}]);
                     break;
 
                 case "row-add2":
@@ -261,7 +265,7 @@
                     break;
 
                 case "column-add":
-                    firstGrid.addColumn({key: "b", label: "필드B"});
+                    firstGrid.addColumn({key: "bb", label: "필드BB"}, 1);
                     break;
 
                 case "column-remove":
@@ -298,6 +302,12 @@
                 case "focus-end":
                     firstGrid.focus("END");
 
+                    break;
+                case "clickBody":
+                    firstGrid.clickBody(10);
+                    break;
+                case "DBLClickBody":
+                    firstGrid.DBLClickBody(10);
                     break;
             }
         });

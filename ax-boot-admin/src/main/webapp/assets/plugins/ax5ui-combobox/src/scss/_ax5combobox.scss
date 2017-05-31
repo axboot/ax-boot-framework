@@ -49,7 +49,7 @@
         z-index: 1;
         position: absolute;
         opacity: 0;
-        @include user-select(none);
+        user-select: none;
     }
 }
 
@@ -108,7 +108,7 @@
         }
     }
     [disabled] {
-        @include user-select(none);
+        user-select: none;
     }
 }
 
@@ -238,7 +238,7 @@
                         font-size: $font-size;
                         line-height: $ax5combobox-option-item-height;
                         padding: 0px 0px 0px 0px;
-                        @include user-select(none);
+                        user-select: none;
 
                         &.ax-combobox-option-item-checkbox {
                             overflow: hidden;
@@ -303,7 +303,7 @@
                         line-height: $ax5combobox-option-item-height;
 
                         padding: 5px 10px; // todo : theme 정리 나중에
-                        @include user-select(none);
+                        user-select: none;
                     }
                 }
             }

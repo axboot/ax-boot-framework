@@ -1,9 +1,13 @@
 describe('dialog Alert TEST', function(){
     var dialog;
+    var that;
     beforeEach(function(){
         dialog = new ax5.ui.dialog({
             title: "AX5 Dialog",
-            animateTime: 10
+            animateTime: 10,
+            onStateChanged: function () {
+                that = this;
+            }
         });
     });
 
@@ -12,7 +16,7 @@ describe('dialog Alert TEST', function(){
             var dialogDom = $('#' + dialog.config.id).get(0);
             // close check
             should(dialogDom).Undefined(assertMessage);
-
+            that.state.should.equal('close');
             done();
         }, dialog.config.animateTime + 10);
     }
@@ -22,8 +26,10 @@ describe('dialog Alert TEST', function(){
             shouldClosed(dialog, 'dialog close fail.', done);
         });
 
+        console.log(that);
         // open check
-        dialog.activeDialog.attr('data-ax5-ui').should.equal('dialog', 'dialog open fail.');
+        //dialog.activeDialog.attr('data-ax5-ui').should.equal('dialog', 'dialog open fail.');
+        that.state.should.equal('open');
         dialog.close();
     });
 
@@ -33,7 +39,8 @@ describe('dialog Alert TEST', function(){
         });
 
         // open check
-        dialog.activeDialog.attr('data-ax5-ui').should.equal('dialog', 'dialog open fail.');
+        //dialog.activeDialog.attr('data-ax5-ui').should.equal('dialog', 'dialog open fail.');
+        that.state.should.equal('open');
 
         // close click event fire
         dialog.activeDialog.find('[data-dialog-btn="ok"]').click();
@@ -43,10 +50,14 @@ describe('dialog Alert TEST', function(){
 
 describe('dialog Confirm TEST', function(){
     var dialog;
+    var that;
     beforeEach(function(){
         dialog = new ax5.ui.dialog({
             title: "AX5 Confirm",
-            animateTime: 10
+            animateTime: 10,
+            onStateChanged: function () {
+                that = this;
+            }
         });
     });
 
@@ -56,6 +67,7 @@ describe('dialog Confirm TEST', function(){
             // close check
             should(dialogDom).Undefined(assertMessage);
 
+            that.state.should.equal('close');
             done();
         }, dialog.config.animateTime + 10);
     }
@@ -68,7 +80,8 @@ describe('dialog Confirm TEST', function(){
             });
 
             // open check
-            dialog.activeDialog.attr('data-ax5-ui').should.equal('dialog', 'dialog open fail.');
+            //dialog.activeDialog.attr('data-ax5-ui').should.equal('dialog', 'dialog open fail.');
+            that.state.should.equal('open');
             dialog.activeDialog.find('[data-dialog-btn="ok"]').click(); // ok click event fire
         });
 
@@ -79,7 +92,8 @@ describe('dialog Confirm TEST', function(){
             });
 
             // open check
-            dialog.activeDialog.attr('data-ax5-ui').should.equal('dialog', 'dialog open fail.');
+            //dialog.activeDialog.attr('data-ax5-ui').should.equal('dialog', 'dialog open fail.');
+            that.state.should.equal('open');
             dialog.activeDialog.find('[data-dialog-btn="cancel"]').click(); // cancel click event fire
         });
     });
@@ -113,7 +127,8 @@ describe('dialog Confirm TEST', function(){
             });
 
             // open check
-            dialog.activeDialog.attr('data-ax5-ui').should.equal('dialog', 'dialog open fail.');
+            //dialog.activeDialog.attr('data-ax5-ui').should.equal('dialog', 'dialog open fail.');
+            that.state.should.equal('open');
             dialog.activeDialog.find('[data-dialog-btn="del"]').click(); // del click event fire
         });
     });

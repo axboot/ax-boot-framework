@@ -119,6 +119,13 @@
     width: $ax5toast-container-width;
     padding: $ax5toast-container-padding;
 
+    box-sizing: border-box;
+    *,
+    *:before,
+    *:after {
+        box-sizing: border-box;
+    }
+
     .ax5-ui-toast {
         @include ax-toast();
         @include ax-toast-section();

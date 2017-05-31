@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <meta name="viewport" content="width=device-width, user-scalable=no">
+    <link rel="stylesheet" type="text/css" href="bower_components/bootstrap/dist/css/bootstrap.min.css"/>
+    <link rel="stylesheet" href="bower_components/font-awesome/css/font-awesome.min.css">
+    <link rel="stylesheet" type="text/css" href="../dist/ax5palette.css"/>
+
+    <script src="bower_components/jquery/dist/jquery.min.js"></script>
+    <script src="../../ax5core/dist/ax5core.js"></script>
+    <script src="../dist/ax5palette.js"></script>
+</head>
+<body style="padding: 50px;">
+
+<div style="border:1px solid #ccc;border-radius: 6px;padding: 20px;width: 290px;">
+    <div data-ax5palette="01" style="height:500px;width:250px;"></div>
+</div>
+
+<script>
+    $(document.body).ready(function () {
+        window.myPalette = new ax5.ui.palette({
+            target: $('[data-ax5palette="01"]'),
+            onClick: function (hexColor) {
+                console.log(hexColor);
+            }
+        });
+
+        setTimeout(function () {
+            //selectedColor: "#A0A0A0",
+            myPalette.setSelectedColor("#4f4f4f  ");
+        }, 200);
+
+    });
+</script>
+
+</body>
+</html>

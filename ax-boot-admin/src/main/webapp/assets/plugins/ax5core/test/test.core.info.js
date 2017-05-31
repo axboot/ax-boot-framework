@@ -58,4 +58,36 @@ describe('ax5.info TEST', function() {
         should(ax5.info.supportTouch).Boolean();
     });
 
+    it('ax5.info.getError expect {className: "ax5dialog", ...}', function (done) {
+        var expect = {
+            className: "ax5dialog",
+            errorCode: "501",
+            methodName: "methodName",
+            msg: "Duplicate call error"
+        };
+        done(ae.equalAll(expect, ax5.info.getError("ax5dialog", "501", "methodName")));
+    });
+
+    it('ax5.info.getError not in ax5.info.errorMsg expect {className: "ax5custom", ...}', function (done) {
+        var expect = {
+            className: "ax5custom",
+            errorCode: "501",
+            methodName: "methodName"
+        };
+        done(ae.equalAll(expect, ax5.info.getError("ax5custom", "501", "methodName")));
+    });
+
+    it('ax5.info.errorMsg expect ["ax5dialog", "ax5picker" ...]', function (done) {
+        var expect = [
+            "ax5dialog",
+            "ax5picker",
+            "single-uploader",
+            "ax5calendar",
+            "ax5formatter",
+            "ax5menu",
+            "ax5select",
+            "ax5combobox"
+        ];
+        done(ae.equalAll(expect, Object.keys(ax5.info.errorMsg)));
+    });
 });

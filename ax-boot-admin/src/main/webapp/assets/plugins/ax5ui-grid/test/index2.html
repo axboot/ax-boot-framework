@@ -63,20 +63,20 @@
     };
 
     var sampleData = [
-        {a: "A", b: "A01", price: 1000, amount: 12, cost: 12000, saleDt: "2016-08-29", customer: "장기영", saleType: "A"},
-        {a: "A", b: "B01", price: 1100, amount: 11, cost: 12100, saleDt: "2016-08-28", customer: "장서우", saleType: "B"},
-        {a: "A", b: "C01", price: 1200, amount: 10, cost: 12000, saleDt: "2016-08-27", customer: "이영희", saleType: "A"},
-        {a: "A", b: "A01", price: 1300, amount: 8, cost: 10400, saleDt: "2016-08-25", customer: "황인서", saleType: "C"},
-        {a: "A", b: "B01", price: 1400, amount: 5, cost: 7000, saleDt: "2016-08-29", customer: "황세진", saleType: "D"},
-        {a: "A", b: "A01", price: 1500, amount: 2, cost: 3000, saleDt: "2016-08-26", customer: "이서연", saleType: "A"}
+        {a: "A", b: "A01", c:"장", price: 1000, amount: 12, cost: 12000, saleDt: "2016-08-29", customer: "장기영", saleType: "A"},
+        {a: "A", b: "B01", c:"장", price: 1100, amount: 11, cost: 12100, saleDt: "2016-08-28", customer: "장서우", saleType: "B"},
+        {a: "A", b: "C01", c:"이", price: 1200, amount: 10, cost: 12000, saleDt: "2016-08-27", customer: "이영희", saleType: "A"},
+        {a: "A", b: "A01", c:"황", price: 1300, amount: 8, cost: 10400, saleDt: "2016-08-25", customer: "황인서", saleType: "C"},
+        {a: "A", b: "B01", c:"황", price: 1400, amount: 5, cost: 7000, saleDt: "2016-08-29", customer: "황세진", saleType: "D"},
+        {a: "A", b: "A01", c:"이", price: 1500, amount: 2, cost: 3000, saleDt: "2016-08-26", customer: "이서연", saleType: "A"}
     ];
 
     var gridView = {
         initView: function () {
             firstGrid.setConfig({
                 target: $('[data-ax5grid="first-grid"]'),
-                frozenColumnIndex: 2,
-                frozenRowIndex: 3,
+                frozenColumnIndex: 0,
+                frozenRowIndex: 0,
                 showLineNumber: true,
                 showRowSelector: true,
                 multipleSelect: true,
@@ -102,7 +102,7 @@
                             {
                                 label: function () {
                                     return this.groupBy.labels.join(", ") + " 합계";
-                                }, colspan: 2
+                                }, colspan: 3
                             },
                             {key: "price", collector: "avg", formatter: "money", align: "right"},
                             {key: "amount", collector: "sum", formatter: "money", align: "right"},
@@ -115,6 +115,7 @@
                     navigationItemCount: 9,
                     height: 30,
                     display: true,
+                    statusDisplay: false,
                     firstIcon: '<i class="fa fa-step-backward" aria-hidden="true"></i>',
                     prevIcon: '<i class="fa fa-caret-left" aria-hidden="true"></i>',
                     nextIcon: '<i class="fa fa-caret-right" aria-hidden="true"></i>',
@@ -135,12 +136,13 @@
                         align: "center"
                     },
                     {key: "b", label: "필드B", align: "center"},
+                    {key: "c", label: "필드C", align: "center"},
                     {
                         key: undefined, label: "필드C", columns: [
-                        {key: "price", label: "단가", formatter: "money", align: "right"},
-                        {key: "amount", label: "수량", formatter: "money", align: "right"},
-                        {key: "cost", label: "금액", align: "right", formatter: "money"}
-                    ]
+                            {key: "price", label: "단가", formatter: "money", align: "right"},
+                            {key: "amount", label: "수량", formatter: "money", align: "right"},
+                            {key: "cost", label: "금액", align: "right", formatter: "money"}
+                        ]
                     },
                     {key: "saleDt", label: "판매일자", align: "center"},
                     {key: "customer", label: "고객명", sortable: false},
@@ -148,7 +150,7 @@
                 ],
                 footSum: [
                     [
-                        {label: "전체 합계", colspan: 2, align: "center"},
+                        {label: "전체 합계", colspan: 3, align: "center"},
                         {key: "price", collector: "avg", formatter: "money", align: "right"},
                         {key: "amount", collector: "sum", formatter: "money", align: "right"},
                         {key: "cost", collector: "sum", formatter: "money", align: "right"}
@@ -192,7 +194,7 @@
         $('[data-grid-control]').click(function () {
             switch (this.getAttribute("data-grid-control")) {
                 case "row-add":
-                    firstGrid.addRow($.extend({}, sampleData[(Math.floor(Math.random() * sampleData.length))], true), "first");
+                    firstGrid.addRow($.extend({}, sampleData[(Math.floor(Math.random() * sampleData.length))], true), 2);
                     break;
                 case "row-remove":
                     firstGrid.removeRow();

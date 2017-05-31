@@ -6,8 +6,7 @@
     var MEDIAVIEWER;
 
     UI.addClass({
-        className: "mediaViewer",
-        version: "${VERSION}"
+        className: "mediaViewer"
     }, (function () {
         /**
          * @class ax5mediaViewer
@@ -99,7 +98,7 @@
                     "mouseup": (ax5.info.supportTouch) ? "touchend" : "mouseup"
                 },
                 getMousePosition = function (e) {
-                    var mouseObj = ('changedTouches' in e.originalEvent) ? e.originalEvent.changedTouches[0] : e;
+                    var mouseObj = ('changedTouches' in e.originalEvent && e.changedTouches) ? e.originalEvent.changedTouches[0] : e;
 
                     return {
                         clientX: mouseObj.clientX,
@@ -290,7 +289,7 @@
                         // console.log(mousePosition);
                         var getSwipePosition = function (e) {
                             var mouseObj = e;
-                            if ('changedTouches' in e.originalEvent) {
+                            if ('changedTouches' in e.originalEvent && e.changedTouches) {
                                 mouseObj = e.originalEvent.changedTouches[0];
                             }
 

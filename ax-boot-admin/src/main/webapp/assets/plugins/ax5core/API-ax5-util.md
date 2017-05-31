@@ -775,4 +775,10 @@ $(document.body).click(function(){
 ax5.util.string("{0} is dead, but {1} is alive! {0} {2}").format("ASP", "ASP.NET");
 ax5.util.string("{0} is dead, but {1} is alive! {0} {2}").format(["ASP", "ASP.NET"]);
 ax5.util.stinrg("{0} counts").format(100);
-```
+``````
+
+## ax5.util.color
+`ax5.util.color("#ff3300");`  
+`ax5.util.color("rgb(255, 100, 100)");`  
+`ax5.util.color("#ff3300").lighten(10).getHexValue();`  
+`ax5.util.color("#ff3300").darken(10).getHexValue();`  

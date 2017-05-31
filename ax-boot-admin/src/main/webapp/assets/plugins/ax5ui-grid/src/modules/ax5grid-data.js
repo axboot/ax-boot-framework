@@ -32,6 +32,7 @@
             lineNumber = 0;
 
         if (this.config.body.grouping) {
+
             let groupingKeys = U.map(this.bodyGrouping.by, function () {
                 return {
                     key: this,
@@ -40,53 +41,56 @@
                     list: []
                 }
             });
+
             let gi = 0, gl = groupingKeys.length, compareString, appendRow = [], ari;
             for (; i < l + 1; i++) {
                 gi = 0;
 
-                if (_list[i]) {
-                    if (_list[i][this.config.columnKeys.deleted]) {
+                if (_list[i] && _list[i][this.config.columnKeys.deleted]) {
                         this.deletedList.push(_list[i]);
-                    } else {
-                        compareString = ""; // 그룹핑 구문검사용
-                        appendRow = []; // 현재줄 앞에 추가해줘야 하는 줄
+                }
 
-                        // 그룹핑 구문검사
-                        for (; gi < gl; gi++) {
-                            if (_list[i]) {
-                                compareString += "$|$" + _list[i][groupingKeys[gi].key];
-                            }
-                            if (appendIndex > 0 && compareString != groupingKeys[gi].compareString) {
-                                let appendRowItem = {keys: [], labels: [], list: groupingKeys[gi].list};
-                                for (let ki = 0; ki < gi + 1; ki++) {
-                                    appendRowItem.keys.push(groupingKeys[ki].key);
-                                    appendRowItem.labels.push(_list[i - 1][groupingKeys[ki].key]);
-                                }
-                                appendRow.push(appendRowItem);
-                                groupingKeys[gi].list = [];
-                            }
-                            groupingKeys[gi].list.push(_list[i]);
-                            groupingKeys[gi].compareString = compareString;
-                        }
+                compareString = ""; // 그룹핑 구문검사용
+                appendRow = []; // 현재줄 앞에 추가해줘야 하는 줄
 
-                        // 새로 추가해야할 그룹핑 row
-                        ari = appendRow.length;
-                        while (ari--) {
-                            returnList.push({__isGrouping: true, __groupingList: appendRow[ari].list, __groupingBy: {keys: appendRow[ari].keys, labels: appendRow[ari].labels}});
-                        }
-                        //~ 그룹핑 구문 검사 완료
-
-                        if (_list[i][this.config.columnKeys.selected]) {
-                            this.selectedDataIndexs.push(i);
-                        }
-                        _list[i]["__index"] = lineNumber;
-                        dataRealRowCount++;
-
-                        appendIndex++;
-                        lineNumber++;
-                        returnList.push(_list[i]);
-
+                // 그룹핑 구문검사
+                for (; gi < gl; gi++) {
+                    if (_list[i]) {
+                        compareString += "$|$" + _list[i][groupingKeys[gi].key];
                     }
+
+                    if (appendIndex > 0 && compareString != groupingKeys[gi].compareString) {
+                        let appendRowItem = {keys: [], labels: [], list: groupingKeys[gi].list};
+                        for (let ki = 0; ki < gi + 1; ki++) {
+                            appendRowItem.keys.push(groupingKeys[ki].key);
+                            appendRowItem.labels.push(_list[i - 1][groupingKeys[ki].key]);
+                        }
+                        appendRow.push(appendRowItem);
+                        groupingKeys[gi].list = [];
+                    }
+
+                    groupingKeys[gi].list.push(_list[i]);
+                    groupingKeys[gi].compareString = compareString;
+                }
+
+                // 새로 추가해야할 그룹핑 row
+                ari = appendRow.length;
+                while (ari--) {
+                    returnList.push({__isGrouping: true, __groupingList: appendRow[ari].list, __groupingBy: {keys: appendRow[ari].keys, labels: appendRow[ari].labels}});
+                }
+                //~ 그룹핑 구문 검사 완료
+
+                if (_list[i]) {
+                    if (_list[i][this.config.columnKeys.selected]) {
+                        this.selectedDataIndexs.push(i);
+                    }
+                    // 그룹핑이 적용된 경우 오리지널 인덱스 의미 없음 : 정렬보다 그룹핑이 더 중요하므로.
+                    _list[i]["__original_index"] = _list[i]["__index"] = lineNumber;
+                    returnList.push(_list[i]);
+
+                    dataRealRowCount++;
+                    appendIndex++;
+                    lineNumber++;
                 }
             }
         }
@@ -99,6 +103,11 @@
 
                         if (_list[i][this.config.columnKeys.selected]) {
                             this.selectedDataIndexs.push(i);
+                        }
+
+                        // __original_index 인덱스 키가 없다면 추가.
+                        if(typeof _list[i]["__original_index"] === "undefined"){
+                            _list[i]["__original_index"] = lineNumber;
                         }
                         _list[i]["__index"] = lineNumber;
                         dataRealRowCount++;
@@ -215,38 +224,33 @@
     };
 
     const set = function (data) {
+
+        let list;
         if (U.isArray(data)) {
-
             this.page = null;
-            if (this.config.tree.use) {
-                this.list = arrangeData4tree.call(this, data);
-                this.proxyList = getProxyList.call(this, sort.call(this, this.sortInfo, this.list));
-            } else {
-                this.proxyList = null;
-                this.list = initData.call(this,
-                    (!this.config.remoteSort && Object.keys(this.sortInfo).length) ? sort.call(this, this.sortInfo, data) : data
-                );
-            }
-            this.deletedList = [];
-
+            list = data;
         } else if ("page" in data) {
-
             this.page = jQuery.extend({}, data.page);
-            if (this.config.tree.use) {
-                this.list = arrangeData4tree.call(this, data.list);
-                this.proxyList = getProxyList.call(this, sort.call(this, this.sortInfo, this.list));
-            } else {
-                this.list = initData.call(this,
-                    (!this.config.remoteSort && Object.keys(this.sortInfo).length) ? sort.call(this, this.sortInfo, data.list) : data.list
-                );
-            }
-            this.deletedList = [];
-
+            list = data.list;
         }
+
+        // console.log(this.list.length);
+
+        if (this.config.tree.use) {
+            this.list = arrangeData4tree.call(this, list);
+            this.proxyList = getProxyList.call(this, sort.call(this, this.sortInfo, this.list));
+        } else {
+            this.proxyList = null;
+            this.list = initData.call(this,
+                (!this.config.remoteSort && Object.keys(this.sortInfo).length) ? sort.call(this, this.sortInfo, list) : list
+            );
+        }
+        this.deletedList = [];
 
         this.needToPaintSum = true;
         this.xvar.frozenRowIndex = (this.config.frozenRowIndex > this.list.length) ? this.list.length : this.config.frozenRowIndex;
         this.xvar.paintStartRowIndex = undefined; // 스크롤 포지션 저장변수 초기화
+        this.xvar.virtualPaintStartRowIndex = undefined; // 스크롤 포지션 저장변수 초기화
         GRID.page.navigationUpdate.call(this);
 
         if (this.config.body.grouping) {
@@ -317,7 +321,7 @@
                     throw 'invalid argument _dindex';
                 }
                 if (U.isArray(_row)) {
-                    for (let _i = 0, _l = row.length; _i < _l; _i++) {
+                    for (let _i = 0, _l = _row.length; _i < _l; _i++) {
                         list.splice(_dindex + _i, 0, _row[_i]);
                     }
                 } else {
@@ -351,6 +355,7 @@
         this.needToPaintSum = true;
         this.xvar.frozenRowIndex = (this.config.frozenRowIndex > this.list.length) ? this.list.length : this.config.frozenRowIndex;
         this.xvar.paintStartRowIndex = undefined; // 스크롤 포지션 저장변수 초기화
+        this.xvar.virtualPaintStartRowIndex = undefined; // 스크롤 포지션 저장변수 초기화
         GRID.page.navigationUpdate.call(this);
         return this;
     };
@@ -432,6 +437,7 @@
         this.needToPaintSum = true;
         this.xvar.frozenRowIndex = (this.config.frozenRowIndex > this.list.length) ? this.list.length : this.config.frozenRowIndex;
         this.xvar.paintStartRowIndex = undefined; // 스크롤 포지션 저장변수 초기화
+        this.xvar.virtualPaintStartRowIndex = undefined; // 스크롤 포지션 저장변수 초기화
         GRID.page.navigationUpdate.call(this);
         return this;
     };
@@ -554,6 +560,7 @@
         this.needToPaintSum = true;
         this.xvar.frozenRowIndex = (this.config.frozenRowIndex > this.list.length) ? this.list.length : this.config.frozenRowIndex;
         this.xvar.paintStartRowIndex = undefined; // 스크롤 포지션 저장변수 초기화
+        this.xvar.virtualPaintStartRowIndex = undefined; // 스크롤 포지션 저장변수 초기화
         GRID.page.navigationUpdate.call(this);
         return this;
     };
@@ -568,6 +575,60 @@
 
         if (this.config.body.grouping) {
             this.list = initData.call(this, clearGroupingData.call(this, this.list));
+        }
+    };
+
+    const updateChild = function (_dindex, _updateData, _options) {
+        let keys = this.config.tree.columnKeys, selfHash, originIndex;
+
+        if (typeof _dindex === "undefined") return false;
+        originIndex = this.proxyList[_dindex].__origin_index__;
+
+        if (this.list[originIndex][keys.children]) {
+            this.proxyList = []; // 리셋 프록시
+
+            if (_options && _options.filter) {
+                if (_options.filter.call({item: this.list[originIndex], dindex: originIndex}, this.list[originIndex])) {
+                    for (let _k in _updateData) {
+                        this.list[originIndex][_k] = _updateData[_k];
+                    }
+                }
+            }
+            else {
+                for (let _k in _updateData) {
+                    this.list[originIndex][_k] = _updateData[_k];
+                }
+            }
+
+            selfHash = this.list[originIndex][keys.selfHash];
+
+            let i = 0, l = this.list.length;
+            for (; i < l; i++) {
+                if (this.list[i]) {
+                    if (this.list[i][keys.parentHash].substr(0, selfHash.length) === selfHash) {
+                        if (_options && _options.filter) {
+                            if (_options.filter.call({item: this.list[i], dindex: i}, this.list[i])) {
+                                for (let _k in _updateData) {
+                                    this.list[i][_k] = _updateData[_k];
+                                }
+                            }
+                        }
+                        else {
+                            for (let _k in _updateData) {
+                                this.list[i][_k] = _updateData[_k];
+                            }
+                        }
+                    }
+
+                    if (!this.list[i][keys.hidden]) {
+                        this.proxyList.push(this.list[i]);
+                    }
+                }
+            }
+
+            return true;
+        } else {
+            return false;
         }
     };
 
@@ -697,8 +758,8 @@
         return this.list;
     };
 
-    const sort = function (_sortInfo, _list) {
-        let self = this, list = _list || this.list, sortInfoArray = [];
+    const sort = function (_sortInfo, _list, _options) {
+        let self = this, list = _list || this.list, sortInfoArray = [], lineNumber = 0;
         let getKeyValue = function (_item, _key, _value) {
             if (/[\.\[\]]/.test(_key)) {
                 try {
@@ -717,6 +778,11 @@
         sortInfoArray = U.filter(sortInfoArray, function () {
             return typeof this !== "undefined";
         });
+
+        // 정렬조건이 없으면 original_index값을 이용하여 정렬처리
+        if(_options && _options.resetLineNumber && sortInfoArray.length === 0) {
+            sortInfoArray[0] = {key: '__original_index', order: "asc"}
+        }
 
         let i = 0, l = sortInfoArray.length, _a_val, _b_val;
 
@@ -737,11 +803,21 @@
             }
         });
 
+        if(_options && _options.resetLineNumber) {
+            i = 0, l = list.length, lineNumber = 0;
+            for (; i < l; i++) {
+                if (_list[i] && !_list[i]["__isGrouping"]) {
+                    _list[i]["__index"] = lineNumber++;
+                }
+            }
+        }
+
         if (_list) {
             return list;
         } else {
             this.xvar.frozenRowIndex = (this.config.frozenRowIndex > this.list.length) ? this.list.length : this.config.frozenRowIndex;
             this.xvar.paintStartRowIndex = undefined; // 스크롤 포지션 저장변수 초기화
+            this.xvar.virtualPaintStartRowIndex = undefined; // 스크롤 포지션 저장변수 초기화
             GRID.page.navigationUpdate.call(this);
             return this;
         }
@@ -801,6 +877,7 @@
         this.needToPaintSum = true;
         this.xvar.frozenRowIndex = (this.config.frozenRowIndex > this.list.length) ? this.list.length : this.config.frozenRowIndex;
         this.xvar.paintStartRowIndex = undefined; // 스크롤 포지션 저장변수 초기화
+        this.xvar.virtualPaintStartRowIndex = undefined; // 스크롤 포지션 저장변수 초기화
         GRID.page.navigationUpdate.call(this);
     };
 
@@ -854,6 +931,7 @@
         remove: remove,
         deleteRow: deleteRow,
         update: update,
+        updateChild: updateChild,
         sort: sort,
         initData: initData,
         clearGroupingData: clearGroupingData,

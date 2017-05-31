@@ -8,8 +8,7 @@
     var PICKER = void 0;
 
     UI.addClass({
-        className: "picker",
-        version: "1.4.18"
+        className: "picker"
     }, function () {
         /**
          * @class ax5picker
@@ -63,7 +62,8 @@
                         right: ax5.def.picker.date_rightArrow || '&#x02192',
                         yearFirst: true
                     }
-                }
+                },
+                palette: {}
             };
             this.queue = [];
             this.activePicker = null;
@@ -80,8 +80,8 @@
                     this.onStateChanged.call(that, that);
                 }
                 return true;
-            },
-                bindPickerTarget = function () {
+            };
+            var bindPickerTarget = function () {
 
                 var pickerEvent = {
                     'focus': function focus(queIdx, e) {
@@ -112,9 +112,6 @@
                         inputLength = null;
                     },
                     'date': function date(queIdx, _input) {
-                        // 1. 이벤트 바인딩
-                        // 2. ui 준비
-
                         var item = this.queue[queIdx],
                             contentWidth = item.content ? item.content.width || 270 : 270,
                             contentMargin = item.content ? item.content.margin || 5 : 5,
@@ -173,12 +170,45 @@
 
                         config = null;
                         inputLength = null;
+                    },
+                    'color': function color(queIdx, _input) {
+                        var item = this.queue[queIdx],
+                            contentWidth = item.content ? item.content.width || 270 : 270,
+                            contentMargin = item.content ? item.content.margin || 5 : 5,
+                            inputLength = _input.length,
+                            config = {
+                            contentWidth: contentWidth * inputLength + (inputLength - 1) * contentMargin,
+                            content: { width: contentWidth, margin: contentMargin },
+                            inputLength: inputLength || 1
+                        },
+                            $colorPreview = item.$target.find('[data-ax5picker-color="preview"]');
+
+                        if ($colorPreview.get(0)) {
+                            $colorPreview.css({ "background-color": "#" + U.color(_input.val() || "#000000").getHexValue() });
+                            // 컬러 피커인 경우 input의 값이 변경되면 preview를 수정
+                            _input.on("change", function () {
+                                $colorPreview.css({ "background-color": "#" + U.color(this.value || "#000000").getHexValue() });
+                            });
+                        }
+
+                        if (inputLength > 1 && !item.btns) {
+                            config.btns = {
+                                ok: { label: cfg.lang["ok"], theme: cfg.theme }
+                            };
+                        }
+
+                        this.queue[queIdx] = jQuery.extend(true, config, item);
+
+                        contentWidth = null;
+                        contentMargin = null;
+                        config = null;
+                        inputLength = null;
                     }
                 };
 
                 return function (queIdx) {
                     var item = this.queue[queIdx],
-                        input;
+                        input = void 0;
 
                     if (!item.content) {
                         console.log(ax5.info.getError("ax5picker", "501", "bind"));
@@ -212,8 +242,9 @@
                     queIdx = null;
                     return this;
                 };
-            }(),
-                alignPicker = function alignPicker(append) {
+            }();
+
+            var alignPicker = function alignPicker(append) {
                 if (!this.activePicker) return this;
 
                 var _alignPicker = function _alignPicker(item) {
@@ -302,8 +333,9 @@
                 setTimeout(function () {
                     _alignPicker.call(this, item);
                 }.bind(this));
-            },
-                onBodyClick = function onBodyClick(e, target) {
+            };
+
+            var onBodyClick = function onBodyClick(e, target) {
                 if (!this.activePicker) return this;
 
                 var item = this.queue[this.activePickerQueueIndex];
@@ -321,8 +353,9 @@
                 }
                 //console.log("i'm picker");
                 return this;
-            },
-                onBtnClick = function onBtnClick(e, target) {
+            };
+
+            var onBtnClick = function onBtnClick(e, target) {
                 // console.log('btn click');
                 if (e.srcElement) e.target = e.srcElement;
 
@@ -348,13 +381,15 @@
                         this.close();
                     }
                 }
-            },
-                onBodyKeyup = function onBodyKeyup(e) {
+            };
+
+            var onBodyKeyup = function onBodyKeyup(e) {
                 if (e.keyCode == ax5.info.eventKeys.ESC) {
                     this.close();
                 }
-            },
-                getQueIdx = function getQueIdx(boundID) {
+            };
+
+            var getQueIdx = function getQueIdx(boundID) {
                 if (!U.isString(boundID)) {
                     boundID = jQuery(boundID).data("data-axpicker-id");
                 }
@@ -535,11 +570,13 @@
                     }
                 };
 
-                return function (boundID, inputIndex, val) {
+                return function (boundID, inputIndex, val, _option) {
 
                     var queIdx = U.isNumber(boundID) ? boundID : getQueIdx.call(this, boundID),
                         item = this.queue[queIdx],
                         _input = void 0;
+
+                    if (!_option) _option = {};
 
                     if (item) {
 
@@ -548,6 +585,11 @@
 
                         if (!item.disableChangeTrigger) {
                             _input.trigger("change");
+                        } else {
+                            var $colorPreview = item.$target.find('[data-ax5picker-color="preview"]');
+                            if ($colorPreview.get(0)) {
+                                $colorPreview.css({ "background-color": val });
+                            }
                         }
 
                         // picker의 입력이 2개이상인 경우
@@ -576,7 +618,7 @@
 
                         onStateChanged.call(this, item, that);
 
-                        if (item.inputLength == 1) {
+                        if (item.inputLength == 1 && !_option.doNotClose) {
                             this.close();
                         }
                     }
@@ -585,6 +627,30 @@
                     boundID = null;
                     inputIndex = null;
                     val = null;
+                    return this;
+                };
+            }();
+
+            /**
+             * @method ax5picker.getContentValue
+             * @param {String} boundID
+             * @param {Number} inputIndex
+             * @returns {ax5picker} this
+             */
+            this.getContentValue = function () {
+                return function (boundID, inputIndex) {
+                    var queIdx = U.isNumber(boundID) ? boundID : getQueIdx.call(this, boundID),
+                        item = this.queue[queIdx],
+                        _input = void 0;
+
+                    if (item) {
+                        _input = item.$target.get(0).tagName.toUpperCase() == "INPUT" ? item.$target : jQuery(item.$target.find('input[type]').get(inputIndex));
+                        return _input.val();
+                    }
+
+                    item = null;
+                    boundID = null;
+                    inputIndex = null;
                     return this;
                 };
             }();
@@ -879,6 +945,44 @@
                                     item: item,
                                     value: _input.val()
                                 });
+                            });
+                        });
+                    },
+                    'color': function color(queIdx) {
+                        var item = this.queue[queIdx],
+                            html = [],
+                            paletteConfig = jQuery.extend({}, cfg.palette),
+                            input = item.$target.get(0).tagName.toUpperCase() == "INPUT" ? item.$target : item.$target.find('input[type]');
+
+                        for (var i = 0; i < item.inputLength; i++) {
+                            html.push('<div ' + 'style="padding: 5px;width:' + U.cssNumber(item.content.width) + ';float:left;" ' + 'class="ax-picker-content-box" ' + 'data-palette-target="' + i + '" data-ax5palette="ax5picker-' + item.id + '"></div>');
+                            if (i < item.inputLength - 1) html.push('<div style="width:' + item.content.margin + 'px;float:left;height: 5px;"></div>');
+                        }
+                        html.push('<div style="clear:both;"></div>');
+                        item.pickerContent.html(html.join(''));
+
+                        // calendar bind
+                        item.pickerPalette = [];
+
+                        item.pickerContent.find('[data-palette-target]').each(function () {
+                            // calendarConfig extend ~
+                            var idx = this.getAttribute("data-palette-target"),
+                                dColor = input.get(idx).value;
+
+                            paletteConfig.selectedColor = dColor;
+                            paletteConfig = jQuery.extend(true, paletteConfig, item.content.config || {});
+                            paletteConfig.target = this;
+                            paletteConfig.onClick = function (color) {
+                                self.setContentValue(item.id, idx, color);
+                            };
+                            paletteConfig.onUpdateColor = function (color) {
+                                self.setContentValue(item.id, idx, color, { doNotClose: true });
+                            };
+
+                            item.pickerPalette.push({
+                                itemId: item.id,
+                                inputIndex: idx,
+                                ax5uiInstance: new ax5.ui.palette(paletteConfig)
                             });
                         });
                     }

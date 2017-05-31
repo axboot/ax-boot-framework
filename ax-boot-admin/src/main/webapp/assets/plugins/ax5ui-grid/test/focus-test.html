@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<!--
+  ~ Copyright (c) 2017. tom@axisj.com
+  ~ - github.com/thomasjang
+  ~ - www.axisj.com
+  -->
+
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, user-scalable=no">
+
+    <title>GRID</title>
+
+    <link rel="stylesheet" type="text/css" href="bower_components/bootstrap/dist/css/bootstrap.min.css"/>
+    <link rel="stylesheet" type="text/css" href="../../ax5ui-mask/dist/ax5mask.css"/>
+    <link rel="stylesheet" type="text/css" href="../../ax5ui-calendar/dist/ax5calendar.css"/>
+    <link rel="stylesheet" type="text/css" href="../../ax5ui-picker/dist/ax5picker.css"/>
+    <link rel="stylesheet" type="text/css" href="../../ax5ui-select/dist/ax5select.css"/>
+    <link rel="stylesheet" href="bower_components/font-awesome/css/font-awesome.min.css">
+    <link rel="stylesheet" type="text/css" href="../dist/ax5grid.css"/>
+
+    <script src="bower_components/jquery/dist/jquery.min.js"></script>
+    <script src="../../ax5core/dist/ax5core.js"></script>
+    <script src="../../ax5ui-formatter/dist/ax5formatter.min.js"></script>
+    <script src="../../ax5ui-calendar/dist/ax5calendar.min.js"></script>
+    <script src="../../ax5ui-picker/dist/ax5picker.min.js"></script>
+    <script src="../../ax5ui-select/dist/ax5select.js"></script>
+    <script src="../dist/ax5grid.js"></script>
+</head>
+<body style="padding: 20px;">
+
+<div style="position: relative;height:400px;" id="grid-parent">
+    <div data-ax5grid="first-grid" data-ax5grid-config="" style="height: 300px;"></div>
+</div>
+
+<script>
+    var myUI = new ax5.ui.grid();
+
+    $(document.body).ready(function () {
+
+        myUI.setConfig({
+            target: $('[data-ax5grid="first-grid"]'),
+            frozenColumnIndex: 3,
+            frozenRowIndex: 1,
+            showLineNumber: true,
+            showRowSelector: true,
+            multipleSelect: true,
+            lineNumberColumnWidth: 40,
+            rowSelectorColumnWidth: 28,
+            sortable: true, // 모든 컬럼에 정렬 아이콘 표시
+            multiSort: false, // 다중 정렬 여부
+            remoteSort: false, // remoteSort에 함수를 sortable 컬럼이 클릭되었을때 실행 setColumnSort를 직접 구현. (remoteSort를 사용하면 헤더에 정렬 상태만 표시 하고 데이터 정렬은 처리 안함)
+            header: {
+                align: "center",
+                columnHeight: 28
+            },
+            body: {
+                mergeCells: true,
+                align: "center",
+                columnHeight: 28,
+                onClick: function () {
+
+                },
+                grouping: {
+                    by: ["b"],
+                    columns: [
+                        {
+                            label: function () {
+                                return this.groupBy.labels.join(", ") + " 합계";
+                            }, colspan: 2
+                        },
+                        {key: "price", collector: "avg", formatter: "money", align: "right"},
+                        {key: "amount", collector: "sum", formatter: "money", align: "right"},
+                        {
+                            key: "cost", collector: function () {
+                            var value = 0;
+                            this.list.forEach(function (n) {
+                                if (!n.__isGrouping) value += (n.price * n.amount);
+                            });
+                            return ax5.util.number(value, {"money": 1});
+                        }, align: "right"
+                        },
+                        {label: "~~~", colspan: 3}
+                    ]
+                }
+            },
+            page: {
+                navigationItemCount: 9,
+                height: 30,
+                display: true,
+                firstIcon: '<i class="fa fa-step-backward" aria-hidden="true"></i>',
+                prevIcon: '<i class="fa fa-caret-left" aria-hidden="true"></i>',
+                nextIcon: '<i class="fa fa-caret-right" aria-hidden="true"></i>',
+                lastIcon: '<i class="fa fa-step-forward" aria-hidden="true"></i>',
+                onChange: function () {
+
+                }
+            },
+            columns: [
+                {
+                    key: "a",
+                    label: "필드A",
+                    width: 80,
+                    styleClass: function () {
+                        return "ABC";
+                    },
+                    enableFilter: true,
+                    align: "center",
+                    editor: {
+                        type: "text", disabled: function () {
+                            // item, value
+                            return false;
+                        }
+                    }
+                },
+                {key: "b", label: "필드B", align: "center", editor: {type: "text"}},
+                {
+                    key: undefined,
+                    label: "필드C", columns: [
+                    {key: "price", label: "단가", align: "right", editor: {type: "money", updateWith: ['cost']}},
+                    {key: "amount", label: "수량", align: "right", formatter: "money", editor: {type: "number", updateWith: ['cost']}},
+                    {
+                        key: "cost", label: "금액", align: "right", formatter: function () {
+                        return ax5.util.number(this.item.price * this.item.amount, {"money": true});
+                    }
+                    }
+                ]
+                },
+                {
+                    key: "saleDt", label: "판매일자", align: "center", editor: {
+                    type: "date", config: {}
+                }
+                },
+                {
+                    key: "isChecked", label: "체크박스", width: 50, sortable: false, editor: {
+                    type: "checkbox", config: {height: 17, trueValue: "Y", falseValue: "N"}
+                }
+                },
+                {
+                    key: "saleType", label: "판매타입", editor: {
+                    type: "select", config: {
+                        columnKeys: {
+                            optionValue: "CD", optionText: "NM"
+                        },
+                        options: [
+                            {CD: "A", NM: "A: String"},
+                            {CD: "B", NM: "B: Number"},
+                            {CD: "C", NM: "C: substr"},
+                            {CD: "A", NM: "A: String"},
+                            {CD: "B", NM: "B: Number"},
+                            {CD: "C", NM: "C: substr"},
+                            {CD: "A", NM: "A: String"},
+                            {CD: "B", NM: "B: Number"},
+                            {CD: "C", NM: "C: substr"},
+                            {CD: "A", NM: "A: String"},
+                            {CD: "B", NM: "B: Number"},
+                            {CD: "C", NM: "C: substr"},
+                            {CD: "D", NM: "D: substring"}
+                        ]
+                    }
+                }
+                },
+
+                {
+                    key: "customer", label: "고객명", editor: {type: "text"}
+                }
+            ],
+            footSum: [
+                [
+                    {label: "전체 합계", colspan: 2, align: "center"},
+                    {key: "price", collector: "avg", formatter: "money", align: "right"},
+                    {key: "amount", collector: "sum", formatter: "money", align: "right"},
+                    {
+                        key: "cost", collector: function () {
+                        var value = 0;
+                        this.list.forEach(function (n) {
+                            if (!n.__isGrouping) value += (n.price * n.amount);
+                        });
+                        return ax5.util.number(value, {"money": 1});
+                    }, align: "right"
+                    }
+                ]]
+        });
+        myUI.setData([
+            {a: "A", b: "A", price: 1000, amount: 2000, cost: 500, saleDt: "2013-01-01", isChecked: "Y", saleType: "A", customer: "name01", __modified__: true},
+            {a: "B", b: "B", price: 1200, amount: 2200, cost: 1000, saleDt: "2014-01-01", isChecked: "N", saleType: "B", customer: "name02"},
+            {a: "C", b: "C", price: 1400, amount: 2400, cost: 1500, saleDt: "2015-01-01", isChecked: "N", saleType: "C", customer: "name03", __deleted__: false}
+        ]);
+        myUI.appendToList([
+            {a: "D", b: "D", price: 1600, amount: 2600, cost: 2000, saleDt: "2016-01-01", isChecked: "Y", saleType: "D", customer: "name04"},
+            {a: "E", b: "E", price: 1800, amount: 2800, cost: 2500, saleDt: "2017-01-01", isChecked: "Y", saleType: "A", customer: "name05"},
+            {a: "F", b: "F", price: 2000, amount: 3000, cost: 3000, saleDt: "2017-02-01", isChecked: "N", saleType: "B", customer: "name06"}
+        ]);
+        myUI.focusedColumn = {
+            "6_0_0": {
+                "panelName": "left-body-scroll",
+                "dindex": 6,
+                "rowIndex": 0,
+                "colIndex": 0,
+                "colspan": 1
+            }
+        };
+        myUI.clearSelect().select(0).focus("DOWN");
+        
+        console.log(myUI.focusedColumn);
+
+    });
+    //694470860800
+</script>
+
+</body>
+</html>

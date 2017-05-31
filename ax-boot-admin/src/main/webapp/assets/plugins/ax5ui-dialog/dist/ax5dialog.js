@@ -8,8 +8,7 @@
     var DIALOG = void 0;
 
     UI.addClass({
-        className: "dialog",
-        version: "1.4.18"
+        className: "dialog"
     }, function () {
         /**
          * @class ax5dialog
