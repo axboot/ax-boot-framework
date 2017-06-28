@@ -1,5 +1,10 @@
 @mixin ax-picker() {
-	box-sizing: $ax5picker-box-model;
+	box-sizing: border-box;
+	*,
+	*:before,
+	*:after {
+		box-sizing: border-box;
+	}
 
 	z-index: $ax5picker-z-index;
 	position: absolute;
@@ -173,23 +178,27 @@
 
 	0% {
 		opacity: 0.0;
-		@include transform(scale(0));
+		//@include transform(scale(0));
+		@include transform(translate(0, -10%));
 	}
 
 	100% {
 		opacity: 1.0;
-		@include transform(scale(1));
+		//@include transform(scale(1));
+		@include transform(translate(0, 0));
 	}
 }
 
 @include keyframes(ax-picker-destroy) {
 	from {
-		@include transform(scale(1));
+		//@include transform(scale(1));
 		opacity: 1.0;
+		@include transform(translate(0, 0));
 	}
 	to {
-		@include transform(scale(0.95));
+		//@include transform(scale(0.95));
 		opacity: 0.0;
+		@include transform(translate(0, -10%));
 	}
 }
 

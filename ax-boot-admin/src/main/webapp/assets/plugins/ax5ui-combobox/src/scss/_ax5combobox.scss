@@ -44,6 +44,9 @@
     overflow: visible;
     display: block;
     margin: 0px;
+    * {
+        box-sizing: border-box;
+    }
 
     select {
         z-index: 1;
@@ -135,6 +138,7 @@
                                 .item-checkbox-wrap {
                                     &.useCheckBox {
                                         &:after {
+                                            box-sizing: border-box;
                                             @if nth($hover-type, 1) == "lighten" {
                                                 border-color: lighten($base-color, nth($hover-type, 2)) !important;
                                             } @else if nth($hover-type, 1) == "darken" {
@@ -164,6 +168,7 @@
                                 .item-checkbox-wrap {
                                     &.useCheckBox {
                                         &:after {
+                                            box-sizing: border-box;
                                             @if nth($hover-type, 1) == "lighten" {
                                                 border-color: lighten($base-color, nth($hover-type, 2)) !important;
                                             } @else if nth($hover-type, 1) == "darken" {
@@ -252,6 +257,7 @@
 
                                 &.useCheckBox {
                                     &:after {
+                                        box-sizing: border-box;
                                         content: '';
                                         width: $ax5combobox-option-item-checkbox-size;
                                         height: $ax5combobox-option-item-checkbox-size / 2;

@@ -34,6 +34,13 @@
 }
 
 .ax-mask {
+    box-sizing: border-box;
+    *,
+    *:before,
+    *:after {
+        box-sizing: border-box;
+    }
+
     z-index: $ax5mask-z-index;
     position: fixed;
     left: 0px;
@@ -65,7 +72,7 @@
         * {
             color: inherit;
         }
-        div {
+        > div {
             display: table-cell;
             vertical-align: middle;
             text-align: center;

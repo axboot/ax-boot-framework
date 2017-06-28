@@ -268,19 +268,21 @@
 
     const getList = function (_type) {
         let returnList = [];
-        let i = 0, l = this.list.length;
+        //let list = (this.proxyList) ? this.proxyList : this.list;
+        let list = this.list;
+        let i = 0, l = list.length;
         switch (_type) {
             case "modified":
                 for (; i < l; i++) {
-                    if (this.list[i] && !this.list[i]["__isGrouping"] && this.list[i][this.config.columnKeys.modified]) {
-                        returnList.push(jQuery.extend({}, this.list[i]));
+                    if (list[i] && !list[i]["__isGrouping"] && list[i][this.config.columnKeys.modified]) {
+                        returnList.push(jQuery.extend({}, list[i]));
                     }
                 }
                 break;
             case "selected":
                 for (; i < l; i++) {
-                    if (this.list[i] && !this.list[i]["__isGrouping"] && this.list[i][this.config.columnKeys.selected]) {
-                        returnList.push(jQuery.extend({}, this.list[i]));
+                    if (list[i] && !list[i]["__isGrouping"] && list[i][this.config.columnKeys.selected]) {
+                        returnList.push(jQuery.extend({}, list[i]));
                     }
                 }
                 break;
@@ -289,7 +291,7 @@
                 returnList = [].concat(this.deletedList);
                 break;
             default:
-                returnList = GRID.data.clearGroupingData.call(this, this.list);
+                returnList = GRID.data.clearGroupingData.call(this, list);
         }
         return returnList;
     };
@@ -606,6 +608,7 @@
             for (; i < l; i++) {
                 if (this.list[i]) {
                     if (this.list[i][keys.parentHash].substr(0, selfHash.length) === selfHash) {
+                        
                         if (_options && _options.filter) {
                             if (_options.filter.call({item: this.list[i], dindex: i}, this.list[i])) {
                                 for (let _k in _updateData) {
@@ -632,8 +635,8 @@
         }
     };
 
-    const setValue = function (_dindex, _key, _value) {
-        let originalValue = getValue.call(this, _dindex, _key);
+    const setValue = function (_dindex, _doindex, _key, _value) {
+        let originalValue = getValue.call(this, _dindex, _doindex, _key);
         this.needToPaintSum = true;
 
         if (originalValue !== _value) {
@@ -654,6 +657,7 @@
                     self: this,
                     list: this.list,
                     dindex: _dindex,
+                    doindex: _doindex,
                     item: this.list[_dindex],
                     key: _key,
                     value: _value
@@ -664,17 +668,18 @@
         return true;
     };
 
-    let getValue = function (_dindex, _key, _value) {
+    let getValue = function (_dindex, _doindex, _key, _value) {
         let list = this.list;
+        let listIndex = (typeof _doindex === "undefined") ? _dindex : _doindex;
 
         if (/[\.\[\]]/.test(_key)) {
             try {
-                _value = (Function("", "return this" + GRID.util.getRealPathForDataItem(_key) + ";")).call(list[_dindex]);
+                _value = (Function("", "return this" + GRID.util.getRealPathForDataItem(_key) + ";")).call(list[listIndex]);
             } catch (e) {
 
             }
         } else {
-            _value = list[_dindex][_key];
+            _value = list[listIndex][_key];
         }
         return _value;
     };
@@ -683,20 +688,30 @@
         this.selectedDataIndexs = [];
     };
 
-    const select = function (_dindex, _selected, _options) {
+    const select = function (_dindex, _doindex, _selected, _options) {
         let cfg = this.config;
 
-        if (!this.list[_dindex]) return false;
-        if (this.list[_dindex].__isGrouping) return false;
-        if (this.list[_dindex][cfg.columnKeys.disableSelection]) return false;
+        if(typeof _doindex === "undefined") _doindex = _dindex;
+
+        if (!this.list[_doindex]) return false;
+        if (this.list[_doindex].__isGrouping) return false;
+        if (this.list[_doindex][cfg.columnKeys.disableSelection]) return false;
 
         if (typeof _selected === "undefined") {
-            if (this.list[_dindex][cfg.columnKeys.selected] = !this.list[_dindex][cfg.columnKeys.selected]) {
-                this.selectedDataIndexs.push(_dindex);
+            if (this.list[_doindex][cfg.columnKeys.selected] = !this.list[_doindex][cfg.columnKeys.selected]) {
+                this.selectedDataIndexs.push(_doindex);
+            } else {
+                this.selectedDataIndexs.splice(U.search(this.selectedDataIndexs, function () {
+                    return this == _doindex;
+                }), 1);
             }
         } else {
-            if (this.list[_dindex][cfg.columnKeys.selected] = _selected) {
-                this.selectedDataIndexs.push(_dindex);
+            if (this.list[_doindex][cfg.columnKeys.selected] = _selected) {
+                this.selectedDataIndexs.push(_doindex);
+            } else {
+                this.selectedDataIndexs.splice(U.search(this.selectedDataIndexs, function () {
+                    return this == _doindex;
+                }), 1);
             }
         }
 
@@ -705,18 +720,21 @@
                 self: this,
                 list: this.list,
                 dindex: _dindex,
-                item: this.list[_dindex],
+                doindex: _doindex,
+                item: this.list[_doindex],
                 key: cfg.columnKeys.selected,
-                value: this.list[_dindex][cfg.columnKeys.selected]
+                value: this.list[_doindex][cfg.columnKeys.selected]
             });
         }
 
-        return this.list[_dindex][cfg.columnKeys.selected];
+        return this.list[_doindex][cfg.columnKeys.selected];
     };
 
     const selectAll = function (_selected, _options) {
         let cfg = this.config,
             dindex = this.list.length;
+
+        this.selectedDataIndexs = [];
 
         if (typeof _selected === "undefined") {
             while (dindex--) {
@@ -838,8 +856,7 @@
 
         this.appendProgress = true;
         GRID.page.statusUpdate.call(this);
-
-
+        
         if (this.appendDebouncer) {
             if (self.appendDebounceTimes < this.config.debounceTime / 10) {
                 clearTimeout(this.appendDebouncer);
@@ -881,7 +898,7 @@
         GRID.page.navigationUpdate.call(this);
     };
 
-    const toggleCollapse = function (_dindex, _collapse) {
+    const toggleCollapse = function (_dindex, _doindx, _collapse) {
         let keys = this.config.tree.columnKeys, selfHash, originIndex;
 
         if (typeof _dindex === "undefined") return false;

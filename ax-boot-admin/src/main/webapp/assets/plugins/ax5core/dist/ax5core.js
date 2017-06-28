@@ -55,7 +55,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
          * ax5 version
          * @member {String} ax5.info.version
          */
-        var version = "1.4.67";
+        var version = "1.4.83";
 
         /**
          * ax5 library path
@@ -1427,7 +1427,10 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
                             _d = new Date(yy, mm, dd, 12);
                         } else if (typeof opts["y"] !== "undefined") {
                             _d.setTime(_d.getTime() + opts["y"] * 365 * DyMilli);
+                        } else if (typeof opts["h"] !== "undefined") {
+                            _d.setTime(_d.getTime() + opts["h"] * 1000 * 60 * 60);
                         }
+
                         return _d;
                     }(new Date(d), cond["add"]);
                 }

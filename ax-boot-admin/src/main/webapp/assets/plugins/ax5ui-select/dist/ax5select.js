@@ -417,6 +417,7 @@
 
                     // find selected
                     item.selected = [];
+                    if (!item.options) item.options = [];
                     item.options.forEach(function (n) {
                         if (n[cfg.columnKeys.optionSelected]) item.selected.push(jQuery.extend({}, n));
                     });

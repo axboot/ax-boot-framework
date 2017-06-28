@@ -49,7 +49,7 @@
                     margin: 10
                 },
                 minimizePosition: "bottom-right",
-                clickEventName: "click", //(('ontouchstart' in document.documentElement) ? "touchstart" : "click"),
+                clickEventName: 'ontouchstart' in document.documentElement ? "touchstart" : "click",
                 theme: 'default',
                 width: 300,
                 height: 400,
@@ -179,17 +179,12 @@
                         onkeyup.call(this, e || window.event);
                     }.bind(this));
                 }
+
                 jQuery(window).bind("resize.ax-modal", function (e) {
                     this.align(null, e || window.event);
                 }.bind(this));
 
-                this.activeModal.on(cfg.clickEventName, "[data-modal-header-btn]", function (e) {
-                    btnOnClick.call(this, e || window.event, opts);
-                }.bind(this));
-
                 this.$.header.off(ENM["mousedown"]).off("dragstart").on(ENM["mousedown"], function (e) {
-                    if (opts.isFullScreen) return false;
-
                     /// 이벤트 필터링 추가 : 버튼엘리먼트로 부터 발생된 이벤트이면 moveModal 시작하지 않도록 필터링
                     var isButton = U.findParentNode(e.target, function (_target) {
                         if (_target.getAttribute("data-modal-header-btn")) {
@@ -197,9 +192,12 @@
                         }
                     });
 
-                    if (!isButton && opts.disableDrag != true) {
+                    if (!opts.isFullScreen && !isButton && opts.disableDrag != true) {
                         self.mousePosition = getMousePosition(e);
                         moveModal.on.call(self);
+                    }
+                    if (isButton) {
+                        btnOnClick.call(self, e || window.event, opts);
                     }
                 }).on("dragstart", function (e) {
                     U.stopEvent(e.originalEvent);
@@ -1005,10 +1003,10 @@
             this.css = function (css) {
                 if (this.activeModal && !self.fullScreen) {
                     this.activeModal.css(css);
-                    if (css.width) {
+                    if (typeof css.width !== "undefined") {
                         self.modalConfig.width = css.width;
                     }
-                    if (css.height) {
+                    if (typeof css.height !== "undefined") {
                         self.modalConfig.height = css.height;
                     }
 
@@ -1060,6 +1058,12 @@
 
                     if (fullScreen) {
                         if (opts.header) this.$.header.show();
+                        if (opts.header) {
+                            opts.headerHeight = this.$.header.outerHeight();
+                            box.height += opts.headerHeight;
+                        } else {
+                            opts.headerHeight = 0;
+                        }
                         box.width = jQuery(window).width();
                         box.height = opts.height;
                         box.left = 0;
@@ -1103,8 +1107,8 @@
                     }
 
                     this.activeModal.css(box);
+                    this.$["body"].css({ height: box.height - (opts.headerHeight || 0) });
 
-                    this.$["body"].css({ height: box.height - opts.headerHeight });
                     if (opts.iframe) {
                         this.$["iframe-wrap"].css({ height: box.height - opts.headerHeight });
                         this.$["iframe"].css({ height: box.height - opts.headerHeight });

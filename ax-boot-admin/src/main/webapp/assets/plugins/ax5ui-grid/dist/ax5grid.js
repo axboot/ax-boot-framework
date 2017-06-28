@@ -59,8 +59,12 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
                 multipleSelect: true,
                 virtualScrollY: true,
                 virtualScrollX: true,
+
+                // 스크롤될 때 body 페인팅 딜레이를 주어 성능이 좋은 않은 브라우저에서 반응을 빠르게 할 때 사용하는 옵션들
                 virtualScrollYCountMargin: 0,
-                virtualScrollAccelerated: false,
+                virtualScrollAccelerated: true,
+                virtualScrollAcceleratedDelayTime: 30,
+
                 height: 0,
                 columnMinWidth: 100,
                 lineNumberColumnWidth: 30,
@@ -151,7 +155,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
             this.isInlineEditing = false;
             this.inlineEditing = {};
             this.listIndexMap = {}; // tree데이터 사용시 데이터 인덱싱 맵
-            this.gridContextMenu = null; // contentMenu 의 인스턴스
+            this.contextMenu = null; // contentMenu 의 인스턴스
 
             // header
             this.headerTable = {};
@@ -1314,23 +1318,27 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
              */
             this.setValue = function (_dindex, _key, _value) {
                 // getPanelname;
-                if (GRID.data.setValue.call(this, _dindex, _key, _value)) {
-                    var repaintCell = function repaintCell(_panelName, _rows, __dindex, __key, __value) {
+                // let doindex = (typeof _doindex === "undefined") ? _dindex : _doindex;
+                // setValue를 doindex로 처리하는 상황이 아직 발생전으므로 선언만 하고 넘어감
+                var doindex = void 0;
+
+                if (GRID.data.setValue.call(this, _dindex, doindex, _key, _value)) {
+                    var repaintCell = function repaintCell(_panelName, _rows, __dindex, __doindex, __key, __value) {
                         for (var r = 0, rl = _rows.length; r < rl; r++) {
                             for (var c = 0, cl = _rows[r].cols.length; c < cl; c++) {
                                 if (_rows[r].cols[c].key == __key) {
                                     if (this.xvar.frozenRowIndex > __dindex) {
-                                        GRID.body.repaintCell.call(this, "top-" + _panelName, __dindex, r, c, __value);
+                                        GRID.body.repaintCell.call(this, "top-" + _panelName, __dindex, __doindex, r, c, __value);
                                     } else {
-                                        GRID.body.repaintCell.call(this, _panelName + "-scroll", __dindex, r, c, __value);
+                                        GRID.body.repaintCell.call(this, _panelName + "-scroll", __dindex, __doindex, r, c, __value);
                                     }
                                 }
                             }
                         }
                     };
 
-                    repaintCell.call(this, "left-body", this.leftBodyRowData.rows, _dindex, _key, _value);
-                    repaintCell.call(this, "body", this.bodyRowData.rows, _dindex, _key, _value);
+                    repaintCell.call(this, "left-body", this.leftBodyRowData.rows, _dindex, doindex, _key, _value);
+                    repaintCell.call(this, "body", this.bodyRowData.rows, _dindex, doindex, _key, _value);
                 }
 
                 return this;
@@ -1510,8 +1518,8 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
                         }
                     }
 
-                    GRID.data.select.call(this, _dindex2, _options && _options.selected);
-                    GRID.body.updateRowState.call(this, ["selected"], _dindex2);
+                    GRID.data.select.call(this, _dindex2, undefined, _options && _options.selected);
+                    GRID.body.updateRowState.call(this, ["selected"], _dindex2, undefined);
                 }
                 return this;
             };
@@ -1614,6 +1622,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
              * ```
              */
             this.focus = function (_pos) {
+
                 if (GRID.body.moveFocus.call(this, _pos)) {
                     var focusedColumn = void 0;
                     for (var c in this.focusedColumn) {
@@ -1628,6 +1637,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
                         this.select(0);
                     } else {
                         var selectedIndex = this.selectedDataIndexs[0];
+
                         var processor = {
                             "UP": function UP() {
                                 if (selectedIndex > 0) {
@@ -1736,6 +1746,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
             self.focusedColumn[column.dindex + "_" + column.colIndex + "_" + column.rowIndex] = {
                 panelName: column.panelName,
                 dindex: column.dindex,
+                doindex: column.doindex,
                 rowIndex: column.rowIndex,
                 colIndex: column.colIndex,
                 colspan: column.colspan
@@ -1754,6 +1765,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
                     return {
                         panelName: column.panelName,
                         dindex: column.dindex,
+                        doindex: column.doindex,
                         rowIndex: column.rowIndex,
                         colIndex: column.colIndex,
                         colspan: column.colspan
@@ -1769,7 +1781,11 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
         },
         update: function update(column) {
             var self = this;
-            var dindex, colIndex, rowIndex, trl;
+            var dindex = void 0,
+                doindex = void 0,
+                colIndex = void 0,
+                rowIndex = void 0,
+                trl = void 0;
 
             self.xvar.selectedRange["end"] = [column.dindex, column.rowIndex, column.colIndex, column.colspan - 1];
             columnSelect.clear.call(self);
@@ -1816,6 +1832,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
                 }
             }
             dindex = null;
+            doindex = null;
             colIndex = null;
             rowIndex = null;
 
@@ -1843,6 +1860,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
                     columnSelect.update.call(self, {
                         panelName: this.getAttribute("data-ax5grid-panel-name"),
                         dindex: Number(this.getAttribute("data-ax5grid-data-index")),
+                        doindex: Number(this.getAttribute("data-ax5grid-data-o-index")),
                         rowIndex: Number(this.getAttribute("data-ax5grid-column-rowIndex")),
                         colIndex: Number(this.getAttribute("data-ax5grid-column-colIndex")),
                         colspan: Number(this.getAttribute("colspan"))
@@ -1865,33 +1883,54 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
         }
     };
 
-    var updateRowState = function updateRowState(_states, _dindex, _data) {
+    var updateRowState = function updateRowState(_states, _dindex, _doindex, _data) {
         var self = this,
             cfg = this.config,
             processor = {
-            "selected": function selected(_dindex) {
-                if (this.list[_dindex]) {
+            "selected": function selected(_dindex, _doindex) {
+                if (this.list[_doindex]) {
                     var i = this.$.livePanelKeys.length;
                     while (i--) {
-                        this.$.panel[this.$.livePanelKeys[i]].find('[data-ax5grid-tr-data-index="' + _dindex + '"]').attr("data-ax5grid-selected", this.list[_dindex][cfg.columnKeys.selected]);
+                        this.$.panel[this.$.livePanelKeys[i]].find('[data-ax5grid-tr-data-index="' + _dindex + '"]').attr("data-ax5grid-selected", this.list[_doindex][cfg.columnKeys.selected]);
                     }
                 }
             },
             "selectedClear": function selectedClear() {
-                var si = this.selectedDataIndexs.length;
-                while (si--) {
-                    var dindex = this.selectedDataIndexs[si];
-                    var i = this.$.livePanelKeys.length;
-                    while (i--) {
-                        this.$.panel[this.$.livePanelKeys[i]].find('[data-ax5grid-tr-data-index="' + dindex + '"]').attr("data-ax5grid-selected", false);
-                        this.list[dindex][cfg.columnKeys.selected] = false;
+                var di = this.list.length;
+                var pi = void 0;
+
+                if (!this.proxyList) {
+                    while (di--) {
+                        if (this.list[di][cfg.columnKeys.selected]) {
+                            pi = this.$.livePanelKeys.length;
+                            while (pi--) {
+                                this.$.panel[this.$.livePanelKeys[pi]].find('[data-ax5grid-tr-data-index="' + di + '"]').attr("data-ax5grid-selected", false);
+                            }
+                        }
+                        this.list[di][cfg.columnKeys.selected] = false;
+                    }
+                } else {
+                    while (di--) {
+                        this.list[di][cfg.columnKeys.selected] = false;
+                    }
+                    di = this.proxyList.length;
+                    while (di--) {
+                        if (this.list[doi][cfg.columnKeys.selected]) {
+                            pi = this.$.livePanelKeys.length;
+                            while (pi--) {
+                                this.$.panel[this.$.livePanelKeys[pi]].find('[data-ax5grid-tr-data-index="' + di + '"]').attr("data-ax5grid-selected", false);
+                            }
+                        }
+
+                        this.proxyList[di][cfg.columnKeys.selected] = false;
+                        var doi = this.proxyList[di].__original_index__;
                     }
                 }
             },
-            "cellChecked": function cellChecked(_dindex, _data) {
-                var key = _data.key;
-                var rowIndex = _data.rowIndex;
-                var colIndex = _data.colIndex;
+            "cellChecked": function cellChecked(_dindex, _doindex, _data) {
+                var key = _data.key,
+                    rowIndex = _data.rowIndex,
+                    colIndex = _data.colIndex;
 
                 var panelName = function () {
                     var _panels = [];
@@ -1906,9 +1945,11 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
             }
         };
 
+        if (typeof _doindex === "undefined") _doindex = _dindex;
+
         _states.forEach(function (_state) {
             if (!processor[_state]) throw 'invaild state name';
-            processor[_state].call(self, _dindex, _data);
+            processor[_state].call(self, _dindex, _doindex, _data);
         });
     };
 
@@ -1936,6 +1977,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
                 row = void 0,
                 col = void 0,
                 dindex = void 0,
+                doindex = void 0,
                 rowIndex = void 0,
                 colIndex = void 0,
                 disableSelection = void 0,
@@ -1946,8 +1988,9 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
                         self: self,
                         page: self.page,
                         list: self.list,
-                        item: self.list[_column.dindex],
+                        item: self.list[_column.doindex],
                         dindex: _column.dindex,
+                        doindex: _column.doindex,
                         rowIndex: _column.rowIndex,
                         colIndex: _column.colIndex,
                         column: column,
@@ -1956,7 +1999,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
 
                     if (column.editor && column.editor.type == "checkbox") {
                         // todo : GRID.inlineEditor에서 처리 할수 있도록 구문 변경 필요.
-                        var value = GRID.data.getValue.call(self, _column.dindex, column.key),
+                        var value = GRID.data.getValue.call(self, _column.dindex, _column.doindex, column.key),
                             checked = void 0,
                             newValue = void 0;
 
@@ -1970,9 +2013,9 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
                             newValue = checked = value == false || value == "false" || value < "1" ? "true" : "false";
                         }
 
-                        GRID.data.setValue.call(self, _column.dindex, column.key, newValue);
+                        GRID.data.setValue.call(self, _column.dindex, _column.doindex, column.key, newValue);
 
-                        updateRowState.call(self, ["cellChecked"], _column.dindex, {
+                        updateRowState.call(self, ["cellChecked"], _column.dindex, _column.doindex, {
                             key: column.key, rowIndex: _column.rowIndex, colIndex: _column.colIndex,
                             editorConfig: column.editor.config, checked: checked
                         });
@@ -1983,24 +2026,25 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
                     }
                 },
                 "rowSelector": function rowSelector(_column) {
-                    if (self.list[_column.dindex][self.config.columnKeys.disableSelection]) {
+                    var item = self.list[_column.doindex];
+                    if (item[self.config.columnKeys.disableSelection]) {
                         return false;
                     }
 
-                    if (!self.config.multipleSelect && self.selectedDataIndexs[0] !== _column.dindex) {
+                    if (!self.config.multipleSelect && self.selectedDataIndexs[0] !== _column.doindex) {
                         updateRowState.call(self, ["selectedClear"]);
                         GRID.data.clearSelect.call(self);
                     }
 
-                    GRID.data.select.call(self, _column.dindex, undefined, {
+                    GRID.data.select.call(self, _column.dindex, _column.doindex, undefined, {
                         internalCall: true
                     });
-                    updateRowState.call(self, ["selected"], _column.dindex);
+                    updateRowState.call(self, ["selected"], _column.dindex, _column.doindex);
                 },
                 "lineNumber": function lineNumber(_column) {},
                 "tree-control": function treeControl(_column, _el) {
                     //console.log(_column);
-                    toggleCollapse.call(self, _column.dindex);
+                    toggleCollapse.call(self, _column.dindex, _column.doindex);
                 }
             };
 
@@ -2011,6 +2055,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
             rowIndex = Number(this.getAttribute("data-ax5grid-column-rowIndex"));
             colIndex = Number(this.getAttribute("data-ax5grid-column-colIndex"));
             dindex = Number(this.getAttribute("data-ax5grid-data-index"));
+            doindex = Number(this.getAttribute("data-ax5grid-data-o-index"));
 
             if (attr in targetClick) {
                 targetClick[attr]({
@@ -2019,6 +2064,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
                     row: row,
                     col: col,
                     dindex: dindex,
+                    doindex: doindex,
                     rowIndex: rowIndex,
                     colIndex: colIndex
                 }, this);
@@ -2030,6 +2076,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
                 row = void 0,
                 col = void 0,
                 dindex = void 0,
+                doindex = void 0,
                 rowIndex = void 0,
                 colIndex = void 0,
                 targetDBLClick = {
@@ -2046,7 +2093,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
                         value = "";
                     if (column) {
                         if (!self.list[dindex].__isGrouping) {
-                            value = GRID.data.getValue.call(self, dindex, column.key);
+                            value = GRID.data.getValue.call(self, dindex, doindex, column.key);
                         }
                     }
 
@@ -2062,6 +2109,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
                                 list: self.list,
                                 item: self.list[_column.dindex],
                                 dindex: _column.dindex,
+                                doindex: _column.doindex,
                                 rowIndex: _column.rowIndex,
                                 colIndex: _column.colIndex,
                                 column: column,
@@ -2082,6 +2130,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
             rowIndex = Number(this.getAttribute("data-ax5grid-column-rowIndex"));
             colIndex = Number(this.getAttribute("data-ax5grid-column-colIndex"));
             dindex = Number(this.getAttribute("data-ax5grid-data-index"));
+            doindex = Number(this.getAttribute("data-ax5grid-data-o-index"));
 
             if (attr in targetDBLClick) {
                 targetDBLClick[attr]({
@@ -2090,6 +2139,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
                     row: row,
                     col: col,
                     dindex: dindex,
+                    doindex: doindex,
                     rowIndex: rowIndex,
                     colIndex: colIndex
                 });
@@ -2100,6 +2150,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
             this.$["container"]["body"].on("contextmenu", function (e) {
                 var target = void 0,
                     dindex = void 0,
+                    doindex = void 0,
                     rowIndex = void 0,
                     colIndex = void 0,
                     item = void 0,
@@ -2117,6 +2168,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
                     rowIndex = Number(target.getAttribute("data-ax5grid-column-rowIndex"));
                     colIndex = Number(target.getAttribute("data-ax5grid-column-colIndex"));
                     dindex = Number(target.getAttribute("data-ax5grid-data-index"));
+                    doindex = Number(target.getAttribute("data-ax5grid-data-o-index"));
                     column = self.bodyRowMap[rowIndex + "_" + colIndex];
                     item = self.list[dindex];
                 }
@@ -2130,6 +2182,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
                 param = {
                     element: target,
                     dindex: dindex,
+                    doindex: doindex,
                     rowIndex: rowIndex,
                     colIndex: colIndex,
                     item: item,
@@ -2147,6 +2200,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
                 U.stopEvent(e.originalEvent);
                 target = null;
                 dindex = null;
+                doindex = null;
                 rowIndex = null;
                 colIndex = null;
                 item = null;
@@ -2161,6 +2215,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
                 columnSelector.on.call(self, {
                     panelName: this.getAttribute("data-ax5grid-panel-name"),
                     dindex: Number(this.getAttribute("data-ax5grid-data-index")),
+                    doindex: Number(this.getAttribute("data-ax5grid-data-o-index")),
                     rowIndex: Number(this.getAttribute("data-ax5grid-column-rowIndex")),
                     colIndex: Number(this.getAttribute("data-ax5grid-column-colIndex")),
                     colspan: Number(this.getAttribute("colspan"))
@@ -2277,6 +2332,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
     };
 
     var getFieldValue = function getFieldValue(_list, _item, _index, _col, _value, _returnPlainText) {
+
         var _key = _col.key,
             tagsToReplace = {
             '<': '&lt;',
@@ -2296,7 +2352,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
             }(_col.editor)) {
                 // editor가 inline타입이라면
 
-                _value = _value || GRID.data.getValue.call(this, typeof _item.__origin_index__ === "undefined" ? _index : _item.__origin_index__, _key);
+                _value = _value || GRID.data.getValue.call(this, _index, _item.__origin_index__, _key);
 
                 if (U.isFunction(_col.editor.disabled)) {
                     if (_col.editor.disabled.call({
@@ -2318,7 +2374,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
                 "formatter": function formatter() {
                     var that = {
                         key: _key,
-                        value: _value || GRID.data.getValue.call(this, typeof _item.__origin_index__ === "undefined" ? _index : _item.__origin_index__, _key),
+                        value: _value || GRID.data.getValue.call(this, _index, _item.__origin_index__, _key),
                         dindex: _index,
                         item: _item,
                         list: _list
@@ -2335,7 +2391,12 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
                     if (typeof _value !== "undefined") {
                         returnValue = _value;
                     } else {
-                        _value = GRID.data.getValue.call(this, typeof _item.__origin_index__ === "undefined" ? _index : _item.__origin_index__, _key);
+                        if (/[\.\[\]]/.test(_key)) {
+                            _value = GRID.data.getValue.call(this, _index, _item.__origin_index__, _key);
+                        } else {
+                            _value = _item[_key];
+                        }
+
                         if (_value !== null && typeof _value !== "undefined") returnValue = _value;
                     }
 
@@ -2568,12 +2629,6 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
             }
         }
 
-        /*
-        if (!this.config.virtualScrollX && document.addEventListener && ax5.info.supportTouch) {
-            paintRowCount = paintRowCount * 2;
-        }
-         */
-
         /// 스크롤 컨텐츠의 높이 : 그리드 스크롤의 실제 크기와는 관계 없이 데이터 갯수에 따라 스크롤 컨텐츠 높이값 구해서 저장해두기.
         this.xvar.scrollContentHeight = this.xvar.bodyTrHeight * (this.list.length - this.xvar.frozenRowIndex);
         /// 사용된 패널들의 키 모음
@@ -2620,13 +2675,13 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
                 } else {
                     return true;
                 }
-            }();
+            }(),
+                stripeString = '#fff 0px, #fff ' + (cfg.body.columnHeight - cfg.body.columnBorderWidth) + 'px, #eee ' + (cfg.body.columnHeight - cfg.body.columnBorderWidth) + 'px, #eee ' + cfg.body.columnHeight + 'px';
 
             if (isScrolled) {
-                SS.push('<div style="font-size:0;line-height:0;height: ' + (_scrollConfig.paintStartRowIndex - this.xvar.frozenRowIndex) * _scrollConfig.bodyTrHeight + 'px;"></div>');
+                SS.push('<div style="background:repeating-linear-gradient(to top, ' + stripeString + ');' + 'font-size:0;' + 'line-height:0;height: ' + (_scrollConfig.paintStartRowIndex - this.xvar.frozenRowIndex) * _scrollConfig.bodyTrHeight + 'px;"></div>');
             }
 
-            // 가로 가상 스크롤 적용하지 않는 경우
             SS.push('<table border="0" cellpadding="0" cellspacing="0">');
             SS.push('<colgroup>');
             for (cgi = 0, cgl = _colGroup.length; cgi < cgl; cgi++) {
@@ -2635,7 +2690,9 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
             SS.push('<col  />');
             SS.push('</colgroup>');
 
-            for (di = _scrollConfig.paintStartRowIndex, dl = function () {
+            di = _scrollConfig.paintStartRowIndex;
+
+            for (dl = function () {
                 var len = void 0;
                 len = _list.length;
                 if (_scrollConfig.paintRowCount + _scrollConfig.paintStartRowIndex < len) {
@@ -2643,6 +2700,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
                 }
                 return len;
             }(); di < dl; di++) {
+
                 if (_list[di]) {
                     var isGroupingRow = false,
                         rowTable = void 0,
@@ -2656,13 +2714,13 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
 
                     for (tri = 0, trl = rowTable.rows.length; tri < trl; tri++) {
 
-                        SS.push('<tr class="tr-' + di % 4 + '"', isGroupingRow ? ' data-ax5grid-grouping-tr="true"' : '', ' data-ax5grid-tr-data-index="' + di + '"', ' data-ax5grid-selected="' + (_list[di][cfg.columnKeys.selected] || "false") + '"', ' data-ax5grid-disable-selection="' + (_list[di][cfg.columnKeys.disableSelection] || "false") + '"', '>');
+                        SS.push('<tr class="tr-' + di % 4 + '"', isGroupingRow ? ' data-ax5grid-grouping-tr="true"' : '', ' data-ax5grid-tr-data-index="' + di + '"', ' data-ax5grid-tr-data-o-index="' + odi + '"', ' data-ax5grid-selected="' + (_list[di][cfg.columnKeys.selected] || "false") + '"', ' data-ax5grid-disable-selection="' + (_list[di][cfg.columnKeys.disableSelection] || "false") + '"', '>');
                         for (ci = 0, cl = rowTable.rows[tri].cols.length; ci < cl; ci++) {
                             col = rowTable.rows[tri].cols[ci];
                             cellHeight = cfg.body.columnHeight * col.rowspan - cfg.body.columnBorderWidth;
                             colAlign = col.align || bodyAlign;
 
-                            SS.push('<td ', 'data-ax5grid-panel-name="' + _elTargetKey + '" ', 'data-ax5grid-data-index="' + di + '" ', 'data-ax5grid-column-row="' + tri + '" ', 'data-ax5grid-column-col="' + ci + '" ', 'data-ax5grid-column-rowIndex="' + col.rowIndex + '" ', 'data-ax5grid-column-colIndex="' + col.colIndex + '" ', 'data-ax5grid-column-attr="' + (col.columnAttr || "default") + '" ', function (_focusedColumn, _selectedColumn) {
+                            SS.push('<td ', 'data-ax5grid-panel-name="' + _elTargetKey + '" ', 'data-ax5grid-data-index="' + di + '" ', 'data-ax5grid-data-o-index="' + odi + '" ', 'data-ax5grid-column-row="' + tri + '" ', 'data-ax5grid-column-col="' + ci + '" ', 'data-ax5grid-column-rowIndex="' + col.rowIndex + '" ', 'data-ax5grid-column-colIndex="' + col.colIndex + '" ', 'data-ax5grid-column-attr="' + (col.columnAttr || "default") + '" ', function (_focusedColumn, _selectedColumn) {
                                 var attrs = "";
                                 if (_focusedColumn) {
                                     attrs += 'data-ax5grid-column-focused="true" ';
@@ -2701,7 +2759,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
 
                             SS.push('</td>');
                         }
-                        SS.push('<td ', 'data-ax5grid-column-row="null" ', 'data-ax5grid-column-col="null" ', 'data-ax5grid-data-index="' + odi + '" ', 'data-ax5grid-column-attr="' + "default" + '" ', 'style="height: ' + cfg.body.columnHeight + 'px;min-height: 1px;" ', '></td>');
+                        SS.push('<td ', 'data-ax5grid-column-row="null" ', 'data-ax5grid-column-col="null" ', 'data-ax5grid-data-index="' + di + '" ', 'data-ax5grid-data-o-index="' + odi + '" ', 'data-ax5grid-column-attr="' + "default" + '" ', 'style="height: ' + cfg.body.columnHeight + 'px;min-height: 1px;" ', '></td>');
                         SS.push('</tr>');
                     }
                 }
@@ -2709,19 +2767,13 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
             SS.push('</table>');
 
             if (isScrolled && _list.length) {
-                SS.push('<div style="font-size:0;line-height:0;height: ' + (_list.length - di) * _scrollConfig.bodyTrHeight + 'px;"></div>');
+                SS.push('<div style="background:repeating-linear-gradient(to bottom, ' + stripeString + ');' + 'font-size:0;' + 'line-height:0;height: ' + (_list.length - di) * _scrollConfig.bodyTrHeight + 'px;"></div>');
             }
 
             _elTarget.empty();
             SS = SS.join('');
 
-            if (this.config.virtualScrollAccelerated && _elTargetKey !== "aside-body-scroll") {
-                setTimeout(function () {
-                    _elTarget.get(0).innerHTML = SS;
-                });
-            } else {
-                _elTarget.get(0).innerHTML = SS;
-            }
+            _elTarget.get(0).innerHTML = SS;
 
             this.$.livePanelKeys.push(_elTargetKey); // 사용중인 패널키를 모아둠. (뷰의 상태 변경시 사용하려고)
             return true;
@@ -2815,13 +2867,8 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
 
             _elTarget.empty();
             SS = SS.join('');
-            if (this.config.virtualScrollAccelerated) {
-                setTimeout(function () {
-                    _elTarget.get(0).innerHTML = SS;
-                });
-            } else {
-                _elTarget.get(0).innerHTML = SS;
-            }
+
+            _elTarget.get(0).innerHTML = SS;
 
             this.$.livePanelKeys.push(_elTargetKey); // 사용중인 패널키를 모아둠. (뷰의 상태 변경시 사용하려고)
             return true;
@@ -2840,37 +2887,34 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
             var _elTarget = this.$.panel[_elTargetKey];
             var token = {},
                 hasMergeTd = void 0;
-            //console.log(_elTarget);
 
             // 테이블의 td들을 수잡하여 저장해두고 스크립트로 반복하여 정리.
             var tableTrs = _elTarget.find("tr");
             for (var ri = 0, rl = tableTrs.length; ri < rl; ri++) {
                 var tableTrTds = void 0,
                     trMaps = void 0;
+                tableTrTds = tableTrs[ri].childNodes;
+                trMaps = [];
 
-                if (!tableTrs[ri].getAttribute("data-ax5grid-grouping-tr")) {
-                    tableTrTds = tableTrs[ri].childNodes;
-                    trMaps = [];
-                    for (var _ci = 0, cl = tableTrTds.length; _ci < cl; _ci++) {
-                        var tdObj = {
-                            "$": jQuery(tableTrTds[_ci])
-                        };
+                for (var _ci = 0, cl = tableTrTds.length; _ci < cl; _ci++) {
+                    var tdObj = {
+                        "$": jQuery(tableTrTds[_ci])
+                    };
 
-                        if (tdObj["$"].attr("data-ax5grid-column-col") != "null") {
-                            tdObj.dindex = tdObj["$"].attr("data-ax5grid-data-index");
-                            tdObj.tri = tdObj["$"].attr("data-ax5grid-column-row");
-                            tdObj.ci = tdObj["$"].attr("data-ax5grid-column-col");
-                            tdObj.rowIndex = tdObj["$"].attr("data-ax5grid-column-rowIndex");
-                            tdObj.colIndex = tdObj["$"].attr("data-ax5grid-column-colIndex");
-                            tdObj.rowspan = tdObj["$"].attr("rowspan");
-                            tdObj.text = tdObj["$"].text();
-                            trMaps.push(tdObj);
-                        }
-
-                        tdObj = null;
+                    if (tdObj["$"].attr("data-ax5grid-column-col") != "null") {
+                        tdObj.dindex = tdObj["$"].attr("data-ax5grid-data-index");
+                        tdObj.tri = tdObj["$"].attr("data-ax5grid-column-row");
+                        tdObj.ci = tdObj["$"].attr("data-ax5grid-column-col");
+                        tdObj.rowIndex = tdObj["$"].attr("data-ax5grid-column-rowIndex");
+                        tdObj.colIndex = tdObj["$"].attr("data-ax5grid-column-colIndex");
+                        tdObj.rowspan = tdObj["$"].attr("rowspan");
+                        tdObj.text = tdObj["$"].text();
+                        trMaps.push(tdObj);
                     }
-                    tblRowMaps.push(trMaps);
+
+                    tdObj = null;
                 }
+                tblRowMaps.push(trMaps);
             }
 
             // 두줄이상 일 때 의미가 있으니.
@@ -2882,6 +2926,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
 
                     var _loop2 = function _loop2(_ci3, _cl2) {
                         // 적용 하려는 컬럼에 editor 속성이 없다면 머지 대상입니다.
+
                         if (!_colGroup[_ci3].editor && function () {
                             if (U.isArray(cfg.body.mergeCells)) {
                                 return ax5.util.search(cfg.body.mergeCells, _colGroup[_ci3].key) > -1;
@@ -2954,19 +2999,23 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
             virtualScrollX: this.config.virtualScrollX,
             virtualScrollY: this.config.virtualScrollY
         };
+        var frozenScrollConfig = jQuery.extend({}, scrollConfig, {
+            paintStartRowIndex: 0,
+            paintRowCount: this.xvar.frozenRowIndex
+        });
 
         // aside
         if (cfg.asidePanelWidth > 0) {
             if (this.xvar.frozenRowIndex > 0) {
                 // 상단 행고정
-                repaintBody.call(this, "top-aside-body", this.asideColGroup, asideBodyRowData, asideBodyGroupingData, list.slice(0, this.xvar.frozenRowIndex));
+                repaintBody.call(this, "top-aside-body", this.asideColGroup, asideBodyRowData, asideBodyGroupingData, list.slice(0, this.xvar.frozenRowIndex), frozenScrollConfig);
             }
 
             repaintBody.call(this, "aside-body-scroll", this.asideColGroup, asideBodyRowData, asideBodyGroupingData, list, scrollConfig);
 
             if (cfg.footSum) {
                 // 바닥 요약 (footSum에 대한 aside 사용안함)
-                //repaintSum.call(this, "bottom-aside-body", this.asideColGroup, asideBodyRowData, null, list);
+                repaintSum.call(this, "bottom-aside-body", this.asideColGroup, asideBodyRowData, null, list);
             }
         }
 
@@ -2974,10 +3023,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
         if (this.xvar.frozenColumnIndex > 0) {
             if (this.xvar.frozenRowIndex > 0) {
                 // 상단 행고정
-                repaintBody.call(this, "top-left-body", this.leftHeaderColGroup, leftBodyRowData, leftBodyGroupingData, list.slice(0, this.xvar.frozenRowIndex), jQuery.extend({}, scrollConfig, {
-                    paintStartRowIndex: 0,
-                    paintRowCount: this.xvar.frozenRowIndex
-                }));
+                repaintBody.call(this, "top-left-body", this.leftHeaderColGroup, leftBodyRowData, leftBodyGroupingData, list.slice(0, this.xvar.frozenRowIndex), frozenScrollConfig);
             }
 
             repaintBody.call(this, "left-body-scroll", this.leftHeaderColGroup, leftBodyRowData, leftBodyGroupingData, list, scrollConfig);
@@ -2991,10 +3037,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
         // body
         if (this.xvar.frozenRowIndex > 0) {
             // 상단 행고정
-            repaintBody.call(this, "top-body-scroll", headerColGroup, bodyRowData, bodyGroupingData, list.slice(0, this.xvar.frozenRowIndex), jQuery.extend({}, scrollConfig, {
-                paintStartRowIndex: 0,
-                paintRowCount: this.xvar.frozenRowIndex
-            }));
+            repaintBody.call(this, "top-body-scroll", headerColGroup, bodyRowData, bodyGroupingData, list.slice(0, this.xvar.frozenRowIndex), frozenScrollConfig);
         }
         repaintBody.call(this, "body-scroll", headerColGroup, bodyRowData, bodyGroupingData, list, scrollConfig);
 
@@ -3041,7 +3084,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
         GRID.page.statusUpdate.call(this);
     };
 
-    var repaintCell = function repaintCell(_panelName, _dindex, _rowIndex, _colIndex, _newValue) {
+    var repaintCell = function repaintCell(_panelName, _dindex, _doindex, _rowIndex, _colIndex, _newValue) {
         var self = this,
             cfg = this.config,
             list = this.list;
@@ -3475,7 +3518,8 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
                 col = void 0,
                 cellHeight = void 0,
                 colAlign = void 0,
-                rowTable = _bodyRow;
+                rowTable = _bodyRow,
+                odi = typeof _list[di].__origin_index__ !== "undefined" ? _list[di].__origin_index__ : di;
 
             for (tri = 0, trl = rowTable.rows.length; tri < trl; tri++) {
                 for (ci = 0, cl = rowTable.rows[tri].cols.length; ci < cl; ci++) {
@@ -3483,7 +3527,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
                     cellHeight = cfg.body.columnHeight * col.rowspan - cfg.body.columnBorderWidth;
                     colAlign = col.align || bodyAlign;
 
-                    SS.push('<td ', 'data-ax5grid-panel-name="' + _elTargetKey + '" ', 'data-ax5grid-data-index="' + di + '" ', 'data-ax5grid-column-row="' + tri + '" ', 'data-ax5grid-column-col="' + ci + '" ', 'data-ax5grid-column-rowIndex="' + col.rowIndex + '" ', 'data-ax5grid-column-colIndex="' + col.colIndex + '" ', 'data-ax5grid-column-attr="' + (col.columnAttr || "default") + '" ', function (_focusedColumn, _selectedColumn) {
+                    SS.push('<td ', 'data-ax5grid-panel-name="' + _elTargetKey + '" ', 'data-ax5grid-data-index="' + di + '" ', 'data-ax5grid-data-o-index="' + odi + '" ', 'data-ax5grid-column-row="' + tri + '" ', 'data-ax5grid-column-col="' + ci + '" ', 'data-ax5grid-column-rowIndex="' + col.rowIndex + '" ', 'data-ax5grid-column-colIndex="' + col.colIndex + '" ', 'data-ax5grid-column-attr="' + (col.columnAttr || "default") + '" ', function (_focusedColumn, _selectedColumn) {
                         var attrs = "";
                         if (_focusedColumn) {
                             attrs += 'data-ax5grid-column-focused="true" ';
@@ -3579,8 +3623,9 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
         }
     };
 
-    var scrollTo = function scrollTo(css, noRepaint) {
-
+    var scrollTo = function scrollTo(css, opts) {
+        var self = this;
+        if (typeof opts === "undefined") opts = { timeoutUnUse: false };
         if (this.isInlineEditing) {
             for (var key in this.inlineEditing) {
                 //if(this.inlineEditing[key].editor.type === "select") {}
@@ -3605,10 +3650,28 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
             this.$.panel["bottom-body-scroll"].css({ left: css.left });
         }
 
-        if (this.config.virtualScrollY && !noRepaint && "top" in css) {
-            repaint.call(this);
-        } else if (this.config.virtualScrollX && !noRepaint && "left" in css) {
-            repaint.call(this);
+        if (this.config.virtualScrollAccelerated && !opts.timeoutUnUse) {
+            if (this.xvar.bodyScrollToTimer) clearTimeout(this.xvar.bodyScrollToTimer);
+            this.xvar.bodyScrollToTimer = setTimeout(function () {
+
+                if (self.config.virtualScrollY && !opts.noRepaint && "top" in css) {
+                    repaint.call(self);
+                } else if (self.config.virtualScrollX && !opts.noRepaint && "left" in css) {
+                    repaint.call(self);
+                }
+                if (opts.callback) {
+                    opts.callback();
+                }
+            }, this.config.virtualScrollAcceleratedDelayTime);
+        } else {
+            if (self.config.virtualScrollY && !opts.noRepaint && "top" in css) {
+                repaint.call(self);
+            } else if (self.config.virtualScrollX && !opts.noRepaint && "left" in css) {
+                repaint.call(self);
+            }
+            if (opts.callback) {
+                opts.callback();
+            }
         }
     };
 
@@ -3641,6 +3704,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
                 columnSelect.clear.call(this);
 
                 if (_dy > 0) {
+                    // 아래로
                     if (focusedColumn.rowIndex + (originalColumn.rowspan - 1) + _dy > this.bodyRowTable.rows.length - 1) {
                         focusedColumn.dindex = focusedColumn.dindex + _dy;
                         focusedColumn.rowIndex = 0;
@@ -3652,6 +3716,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
                         focusedColumn.rowIndex = focusedColumn.rowIndex + _dy;
                     }
                 } else {
+                    // 위로
                     if (focusedColumn.rowIndex + _dy < 0) {
                         focusedColumn.dindex = focusedColumn.dindex + _dy;
                         focusedColumn.rowIndex = this.bodyRowTable.rows.length - 1;
@@ -3702,17 +3767,19 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
                 focusedColumn.panelName = nPanelInfo.panelName;
 
                 // 포커스 컬럼의 위치에 따라 스크롤 처리.ㅊㅇ
-                (function () {
-                    if (focusedColumn.dindex + 1 > this.xvar.frozenRowIndex) {
-                        if (focusedColumn.dindex <= this.xvar.virtualPaintStartRowIndex) {
-                            scrollTo.call(this, { top: -(focusedColumn.dindex - this.xvar.frozenRowIndex) * this.xvar.bodyTrHeight });
-                            GRID.scroller.resize.call(this);
-                        } else if (focusedColumn.dindex + 1 > this.xvar.virtualPaintStartRowIndex + (this.xvar.virtualPaintRowCount - 2)) {
-                            scrollTo.call(this, { top: -(focusedColumn.dindex - this.xvar.frozenRowIndex - this.xvar.virtualPaintRowCount + 3) * this.xvar.bodyTrHeight });
-                            GRID.scroller.resize.call(this);
-                        }
+
+                if (focusedColumn.dindex + 1 > this.xvar.frozenRowIndex) {
+                    if (focusedColumn.dindex <= this.xvar.virtualPaintStartRowIndex) {
+                        var newTop = (focusedColumn.dindex - this.xvar.frozenRowIndex - 1) * this.xvar.bodyTrHeight;
+                        if (newTop < 0) newTop = 0;
+
+                        scrollTo.call(this, { top: -newTop, timeoutUnUse: false });
+                        GRID.scroller.resize.call(this);
+                    } else if (focusedColumn.dindex + 1 > this.xvar.virtualPaintStartRowIndex + (this.xvar.virtualPaintRowCount - 2)) {
+                        scrollTo.call(this, { top: (this.xvar.virtualPaintRowCount - 2 - focusedColumn.dindex) * this.xvar.bodyTrHeight, timeoutUnUse: false });
+                        GRID.scroller.resize.call(this);
                     }
-                }).call(this);
+                }
 
                 this.focusedColumn[focusedColumn.dindex + "_" + focusedColumn.colIndex + "_" + focusedColumn.rowIndex] = focusedColumn;
                 this.$.panel[focusedColumn.panelName].find('[data-ax5grid-tr-data-index="' + focusedColumn.dindex + '"]').find('[data-ax5grid-column-rowindex="' + focusedColumn.rowIndex + '"][data-ax5grid-column-colindex="' + focusedColumn.colIndex + '"]').attr('data-ax5grid-column-focused', "true");
@@ -3970,18 +4037,19 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
     var inlineEdit = {
         active: function active(_focusedColumn, _e, _initValue) {
             var self = this,
-                dindex,
-                colIndex,
-                rowIndex,
-                panelName,
-                colspan,
-                col,
-                editor;
+                dindex = void 0,
+                doindex = void 0,
+                colIndex = void 0,
+                rowIndex = void 0,
+                panelName = void 0,
+                colspan = void 0,
+                col = void 0,
+                editor = void 0;
 
-            // this.inlineEditing = {};
             for (var key in _focusedColumn) {
                 panelName = _focusedColumn[key].panelName;
                 dindex = _focusedColumn[key].dindex;
+                doindex = _focusedColumn[key].doindex;
                 colIndex = _focusedColumn[key].colIndex;
                 rowIndex = _focusedColumn[key].rowIndex;
                 colspan = _focusedColumn[key].colspan;
@@ -4011,7 +4079,8 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
                 }(editor)) {
                     // 체크 박스 타입이면 값 변경 시도
                     if (editor.type == "checkbox") {
-                        var checked, newValue;
+                        var checked = void 0,
+                            newValue = void 0;
                         if (editor.config && editor.config.trueValue) {
                             if (checked = !(_initValue == editor.config.trueValue)) {
                                 newValue = editor.config.trueValue;
@@ -4022,7 +4091,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
                             newValue = checked = _initValue == false || _initValue == "false" || _initValue < "1" ? "true" : "false";
                         }
 
-                        GRID.data.setValue.call(self, dindex, col.key, newValue);
+                        GRID.data.setValue.call(self, dindex, doindex, col.key, newValue);
                         updateRowState.call(self, ["cellChecked"], dindex, {
                             key: col.key, rowIndex: rowIndex, colIndex: colIndex,
                             editorConfig: col.editor.config, checked: checked
@@ -4037,6 +4106,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
                 if (key in this.inlineEditing) {
                     return false;
                 }
+
                 this.inlineEditing[key] = {
                     editor: editor,
                     panelName: panelName,
@@ -4048,7 +4118,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
             }
             if (this.isInlineEditing) {
 
-                var originalValue = GRID.data.getValue.call(self, dindex, col.key),
+                var originalValue = GRID.data.getValue.call(self, dindex, doindex, col.key),
                     initValue = function (__value, __editor) {
                     if (U.isNothing(__value)) {
                         __value = U.isNothing(originalValue) ? "" : originalValue;
@@ -4074,6 +4144,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
 
             var panelName = this.inlineEditing[_key].panelName,
                 dindex = this.inlineEditing[_key].column.dindex,
+                doindex = this.inlineEditing[_key].column.doindex,
                 rowIndex = this.inlineEditing[_key].column.rowIndex,
                 colIndex = this.inlineEditing[_key].column.colIndex,
                 column = this.bodyRowMap[this.inlineEditing[_key].column.rowIndex + "_" + this.inlineEditing[_key].column.colIndex],
@@ -4101,10 +4172,10 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
                 "CANCEL": function CANCEL(_dindex, _column, _newValue) {
                     action["__clear"].call(this);
                 },
-                "RETURN": function RETURN(_dindex, _column, _newValue) {
-                    if (GRID.data.setValue.call(this, _dindex, _column.key, _newValue)) {
+                "RETURN": function RETURN(_dindex, _doindex, _column, _newValue) {
+                    if (GRID.data.setValue.call(this, _dindex, _doindex, _column.key, _newValue)) {
                         action["__clear"].call(this);
-                        GRID.body.repaintCell.call(this, panelName, dindex, rowIndex, colIndex, _newValue);
+                        GRID.body.repaintCell.call(this, panelName, _dindex, _doindex, rowIndex, colIndex, _newValue);
                     } else {
                         action["__clear"].call(this);
                     }
@@ -4127,7 +4198,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
             };
 
             if (_msg in action) {
-                action[_msg || "RETURN"].call(this, dindex, column, newValue);
+                action[_msg || "RETURN"].call(this, dindex, doindex, column, newValue);
             } else {
                 action["__clear"].call(this);
             }
@@ -4148,24 +4219,25 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
                             return false;
                         }
                     } else {
+
                         for (var k in this.focusedColumn) {
                             var _column = this.focusedColumn[k],
                                 column = this.bodyRowMap[_column.rowIndex + "_" + _column.colIndex],
                                 _dindex3 = _column.dindex,
+                                doindex = _column.doindex,
                                 value = "",
                                 col = this.colGroup[_column.colIndex];
-                            ;
 
                             if (column) {
                                 if (!this.list[_dindex3].__isGrouping) {
-                                    value = GRID.data.getValue.call(this, _dindex3, column.key);
+                                    value = GRID.data.getValue.call(this, _dindex3, doindex, column.key);
                                 }
                             }
 
                             if (col.editor && GRID.inlineEditor[col.editor.type].editMode === "inline") {
                                 if (_options && _options.moveFocus) {} else {
                                     if (column.editor && column.editor.type == "checkbox") {
-                                        value = GRID.data.getValue.call(this, _dindex3, column.key);
+                                        value = GRID.data.getValue.call(this, _dindex3, doindex, column.key);
 
                                         var checked = void 0,
                                             newValue = void 0;
@@ -4179,7 +4251,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
                                             newValue = checked = value == false || value == "false" || value < "1" ? "true" : "false";
                                         }
 
-                                        GRID.data.setValue.call(this, _column.dindex, column.key, newValue);
+                                        GRID.data.setValue.call(this, _column.dindex, _column.doindex, column.key, newValue);
                                         updateRowState.call(this, ["cellChecked"], _dindex3, {
                                             key: column.key, rowIndex: _column.rowIndex, colIndex: _column.colIndex,
                                             editorConfig: column.editor.config, checked: checked
@@ -4217,7 +4289,8 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
                 trl = void 0,
                 ci = void 0,
                 cl = void 0,
-                col = void 0;
+                col = void 0,
+                val = void 0;
 
             //SS.push('<table border="1">');
             for (di = 0, dl = _list.length; di < dl; di++) {
@@ -4236,7 +4309,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
                     for (ci = 0, cl = rowTable.rows[tri].cols.length; ci < cl; ci++) {
                         col = rowTable.rows[tri].cols[ci];
 
-                        SS.push('<td ', 'colspan="' + col.colspan + '" ', 'rowspan="' + col.rowspan + '" ', '>', isGroupingRow ? getGroupingValue.call(this, _list[di], di, col) : getFieldValue.call(this, _list, _list[di], di, col, undefined, "text"), '&nbsp;</td>');
+                        SS.push('<td ', 'colspan="' + col.colspan + '" ', 'rowspan="' + col.rowspan + '" ', '>', isGroupingRow ? getGroupingValue.call(this, _list[di], di, col) : getFieldValue.call(this, _list, _list[di], di, col, val, "text"), '&nbsp;</td>');
                     }
                     SS.push('\n</tr>');
                 }
@@ -4281,14 +4354,15 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
         return po.join('');
     };
 
-    var toggleCollapse = function toggleCollapse(_dindex, _collapse) {
-        if (GRID.data.toggleCollapse.call(this, _dindex, _collapse)) {
+    var toggleCollapse = function toggleCollapse(_dindex, _doindex, _collapse) {
+        if (GRID.data.toggleCollapse.call(this, _dindex, _doindex, _collapse)) {
             this.proxyList = GRID.data.getProxyList.call(this, this.list);
             repaint.call(this);
         }
     };
 
-    var click = function click(_dindex) {
+    // todo : tree에서 dindex만으로 구현 했을 때 오류 발생 해결. (_doindex 이용)
+    var click = function click(_dindex, _doindex) {
         var that = {
             self: this,
             page: this.page,
@@ -4306,7 +4380,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
         // console.log(this.$["panel"]["body-scroll"].find('[data-ax5grid-tr-data-index="' + _dindex + '"]>td:first-child'));
     };
 
-    var dblClick = function dblClick(_dindex) {
+    var dblClick = function dblClick(_dindex, _doindex) {
         var that = {
             self: this,
             page: this.page,
@@ -4651,20 +4725,22 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
 
     var getList = function getList(_type) {
         var returnList = [];
+        //let list = (this.proxyList) ? this.proxyList : this.list;
+        var list = this.list;
         var i = 0,
-            l = this.list.length;
+            l = list.length;
         switch (_type) {
             case "modified":
                 for (; i < l; i++) {
-                    if (this.list[i] && !this.list[i]["__isGrouping"] && this.list[i][this.config.columnKeys.modified]) {
-                        returnList.push(jQuery.extend({}, this.list[i]));
+                    if (list[i] && !list[i]["__isGrouping"] && list[i][this.config.columnKeys.modified]) {
+                        returnList.push(jQuery.extend({}, list[i]));
                     }
                 }
                 break;
             case "selected":
                 for (; i < l; i++) {
-                    if (this.list[i] && !this.list[i]["__isGrouping"] && this.list[i][this.config.columnKeys.selected]) {
-                        returnList.push(jQuery.extend({}, this.list[i]));
+                    if (list[i] && !list[i]["__isGrouping"] && list[i][this.config.columnKeys.selected]) {
+                        returnList.push(jQuery.extend({}, list[i]));
                     }
                 }
                 break;
@@ -4673,7 +4749,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
                 returnList = [].concat(this.deletedList);
                 break;
             default:
-                returnList = GRID.data.clearGroupingData.call(this, this.list);
+                returnList = GRID.data.clearGroupingData.call(this, list);
         }
         return returnList;
     };
@@ -4955,6 +5031,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
             for (; i < l; i++) {
                 if (this.list[i]) {
                     if (this.list[i][keys.parentHash].substr(0, selfHash.length) === selfHash) {
+
                         if (_options && _options.filter) {
                             if (_options.filter.call({ item: this.list[i], dindex: i }, this.list[i])) {
                                 for (var _k3 in _updateData) {
@@ -4980,8 +5057,8 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
         }
     };
 
-    var setValue = function setValue(_dindex, _key, _value) {
-        var originalValue = getValue.call(this, _dindex, _key);
+    var setValue = function setValue(_dindex, _doindex, _key, _value) {
+        var originalValue = getValue.call(this, _dindex, _doindex, _key);
         this.needToPaintSum = true;
 
         if (originalValue !== _value) {
@@ -5000,6 +5077,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
                     self: this,
                     list: this.list,
                     dindex: _dindex,
+                    doindex: _doindex,
                     item: this.list[_dindex],
                     key: _key,
                     value: _value
@@ -5010,15 +5088,16 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
         return true;
     };
 
-    var getValue = function getValue(_dindex, _key, _value) {
+    var getValue = function getValue(_dindex, _doindex, _key, _value) {
         var list = this.list;
+        var listIndex = typeof _doindex === "undefined" ? _dindex : _doindex;
 
         if (/[\.\[\]]/.test(_key)) {
             try {
-                _value = Function("", "return this" + GRID.util.getRealPathForDataItem(_key) + ";").call(list[_dindex]);
+                _value = Function("", "return this" + GRID.util.getRealPathForDataItem(_key) + ";").call(list[listIndex]);
             } catch (e) {}
         } else {
-            _value = list[_dindex][_key];
+            _value = list[listIndex][_key];
         }
         return _value;
     };
@@ -5027,20 +5106,30 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
         this.selectedDataIndexs = [];
     };
 
-    var select = function select(_dindex, _selected, _options) {
+    var select = function select(_dindex, _doindex, _selected, _options) {
         var cfg = this.config;
 
-        if (!this.list[_dindex]) return false;
-        if (this.list[_dindex].__isGrouping) return false;
-        if (this.list[_dindex][cfg.columnKeys.disableSelection]) return false;
+        if (typeof _doindex === "undefined") _doindex = _dindex;
+
+        if (!this.list[_doindex]) return false;
+        if (this.list[_doindex].__isGrouping) return false;
+        if (this.list[_doindex][cfg.columnKeys.disableSelection]) return false;
 
         if (typeof _selected === "undefined") {
-            if (this.list[_dindex][cfg.columnKeys.selected] = !this.list[_dindex][cfg.columnKeys.selected]) {
-                this.selectedDataIndexs.push(_dindex);
+            if (this.list[_doindex][cfg.columnKeys.selected] = !this.list[_doindex][cfg.columnKeys.selected]) {
+                this.selectedDataIndexs.push(_doindex);
+            } else {
+                this.selectedDataIndexs.splice(U.search(this.selectedDataIndexs, function () {
+                    return this == _doindex;
+                }), 1);
             }
         } else {
-            if (this.list[_dindex][cfg.columnKeys.selected] = _selected) {
-                this.selectedDataIndexs.push(_dindex);
+            if (this.list[_doindex][cfg.columnKeys.selected] = _selected) {
+                this.selectedDataIndexs.push(_doindex);
+            } else {
+                this.selectedDataIndexs.splice(U.search(this.selectedDataIndexs, function () {
+                    return this == _doindex;
+                }), 1);
             }
         }
 
@@ -5049,18 +5138,21 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
                 self: this,
                 list: this.list,
                 dindex: _dindex,
-                item: this.list[_dindex],
+                doindex: _doindex,
+                item: this.list[_doindex],
                 key: cfg.columnKeys.selected,
-                value: this.list[_dindex][cfg.columnKeys.selected]
+                value: this.list[_doindex][cfg.columnKeys.selected]
             });
         }
 
-        return this.list[_dindex][cfg.columnKeys.selected];
+        return this.list[_doindex][cfg.columnKeys.selected];
     };
 
     var selectAll = function selectAll(_selected, _options) {
         var cfg = this.config,
             dindex = this.list.length;
+
+        this.selectedDataIndexs = [];
 
         if (typeof _selected === "undefined") {
             while (dindex--) {
@@ -5224,7 +5316,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
         GRID.page.navigationUpdate.call(this);
     };
 
-    var toggleCollapse = function toggleCollapse(_dindex, _collapse) {
+    var toggleCollapse = function toggleCollapse(_dindex, _doindx, _collapse) {
         var keys = this.config.tree.columnKeys,
             selfHash = void 0,
             originIndex = void 0;
@@ -5393,7 +5485,22 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
     var U = ax5.util;
 
     var money = function money() {
-        return U.number(this.value, { "money": true });
+        if (typeof this.value !== "undefined") {
+            var val = ('' + this.value).replace(/[^0-9^\.^\-]/g, ""),
+                regExpPattern = new RegExp('([0-9])([0-9][0-9][0-9][,.])'),
+                arrNumber = val.split('.'),
+                returnValue = void 0;
+
+            arrNumber[0] += '.';
+
+            do {
+                arrNumber[0] = arrNumber[0].replace(regExpPattern, '$1,$2');
+            } while (regExpPattern.test(arrNumber[0]));
+
+            return arrNumber.length > 1 ? arrNumber[0] + U.left(arrNumber[1], 2) : arrNumber[0].split('.')[0];
+        } else {
+            return "";
+        }
     };
 
     GRID.formatter = {
@@ -5807,7 +5914,13 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
         useReturnToSave: true,
         editMode: "popup",
         getHtml: function getHtml(_root, _columnKey, _editor, _value) {
-            return '<input type="text" data-ax5grid-editor="money" value="' + _value + '" >';
+            if (typeof _editor.attributes !== "undefined") {
+                var attributesText = "";
+                for (var k in _editor.attributes) {
+                    attributesText += " " + k + "='" + _editor.attributes[k] + "'";
+                }
+            }
+            return '<input type="text" data-ax5grid-editor="money" value="' + _value + '" ${attributesText}>';
         },
         init: function init(_root, _columnKey, _editor, _$parent, _value) {
             var $el;
@@ -5820,9 +5933,9 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
         },
         bindUI: function bindUI(_root, _columnKey, _$el, _editor, _$parent, _value) {
             _$el.data("binded-ax5ui", "ax5formater");
-            _$el.ax5formatter({
+            _$el.ax5formatter($.extend(true, {
                 pattern: "money"
-            });
+            }, _editor.config));
             _$el.focus().select();
         }
     };
@@ -5831,7 +5944,13 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
         useReturnToSave: true,
         editMode: "popup",
         getHtml: function getHtml(_root, _columnKey, _editor, _value) {
-            return '<input type="text" data-ax5grid-editor="number" value="' + _value + '" >';
+            if (typeof _editor.attributes !== "undefined") {
+                var attributesText = "";
+                for (var k in _editor.attributes) {
+                    attributesText += " " + k + "='" + _editor.attributes[k] + "'";
+                }
+            }
+            return '<input type="text" data-ax5grid-editor="number" value="' + _value + '" ${attributesText}>';
         },
         init: function init(_root, _columnKey, _editor, _$parent, _value) {
             var $el;
@@ -5844,9 +5963,9 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
         },
         bindUI: function bindUI(_root, _columnKey, _$el, _editor, _$parent, _value) {
             _$el.data("binded-ax5ui", "ax5formater");
-            _$el.ax5formatter({
+            _$el.ax5formatter($.extend(true, {
                 pattern: "number"
-            });
+            }, _editor.config));
             _$el.focus().select();
         }
     };
@@ -5866,7 +5985,8 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
         bindUI: function bindUI(_root, _columnKey, _$el, _editor, _$parent, _value) {
             var self = _root;
             _$el.data("binded-ax5ui", "ax5picker");
-            _$el.ax5picker({
+
+            _$el.ax5picker($.extend(true, {
                 direction: "auto",
                 content: {
                     type: 'date',
@@ -5881,7 +6001,8 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
                         GRID.body.inlineEdit.deActive.call(self, "RETURN", _columnKey);
                     }
                 }
-            });
+            }, _editor.config));
+
             _$el.focus().select();
         }
     };
@@ -5918,7 +6039,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
 
             var self = _root;
             _$el.data("binded-ax5ui", "ax5select");
-            _$el.ax5select({
+            _$el.ax5select($.extend(true, {
                 direction: "auto",
                 columnKeys: eConfig.columnKeys,
                 options: eConfig.options,
@@ -5931,7 +6052,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
                         GRID.body.inlineEdit.deActive.call(self, "ESC", _columnKey);
                     }
                 }
-            });
+            }, _editor.config));
             _$el.ax5select("open");
             _$el.ax5select("setValue", _value);
             _$el.find("a").focus();
@@ -6230,13 +6351,6 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
                 });
 
                 GRID.body.scrollTo.call(self, scrollPositon);
-
-                /*
-                if (this.xvar.scrollTimer) clearTimeout(this.xvar.scrollTimer);
-                this.xvar.scrollTimer = setTimeout(function () {
-                    GRID.body.scrollTo.call(self, scrollPositon);
-                });
-                */
             }
 
             return -top;
@@ -6264,12 +6378,6 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
 
                 GRID.header.scrollTo.call(self, scrollPositon);
                 GRID.body.scrollTo.call(self, scrollPositon);
-
-                /*
-                if (this.xvar.scrollTimer) clearTimeout(this.xvar.scrollTimer);
-                this.xvar.scrollTimer = setTimeout(function () {
-                  });
-                */
             }
 
             return -left;
@@ -6406,10 +6514,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
 
                 if (type === "horizontal") GRID.header.scrollTo.call(self, scrollPositon);
 
-                if (self.xvar.scrollTimer) clearTimeout(self.xvar.scrollTimer);
-                self.xvar.scrollTimer = setTimeout(function () {
-                    GRID.body.scrollTo.call(self, scrollPositon);
-                });
+                GRID.body.scrollTo.call(self, scrollPositon);
             }).bind(GRID.util.ENM["mouseup"] + ".ax5grid-" + this.instanceId, function (e) {
                 scrollBarMover.off.call(self);
             }).bind("mouseleave.ax5grid-" + this.instanceId, function (e) {
@@ -6431,8 +6536,8 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
         "wheel": function wheel(delta) {
             var self = this,
                 _body_scroll_position = self.$["panel"]["body-scroll"].position(),
-                _panel_height = self.$["panel"]["body"].height(),
-                _panel_width = self.$["panel"]["body"].width(),
+                _panel_height = self.xvar.body_panel_height,
+                _panel_width = self.xvar.body_panel_width,
                 _content_height = self.xvar.scrollContentHeight,
                 _content_width = self.xvar.scrollContentWidth;
 
@@ -6472,21 +6577,20 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
                 if (delta.x == 0) _left_is_end = true;
             }
 
-            resize.call(this);
             GRID.header.scrollTo.call(self, { left: newLeft });
-
-            if (this.xvar.scrollTimer) clearTimeout(this.xvar.scrollTimer);
-            this.xvar.scrollTimer = setTimeout(function () {
-                GRID.body.scrollTo.call(self, { left: newLeft, top: newTop });
-            }, 0);
+            GRID.body.scrollTo.call(self, { left: newLeft, top: newTop }, {
+                callback: function callback() {
+                    resize.call(self);
+                }
+            });
 
             return !_top_is_end || !_left_is_end;
         },
         "on": function on() {
             var self = this,
                 _body_scroll_position = self.$["panel"]["body-scroll"].position(),
-                _panel_height = self.$["panel"]["body"].height(),
-                _panel_width = self.$["panel"]["body"].width(),
+                _panel_height = self.xvar.body_panel_height,
+                _panel_width = self.xvar.body_panel_width,
                 _content_height = self.xvar.scrollContentHeight,
                 _content_width = self.xvar.scrollContentWidth,
                 getContentPosition = function getContentPosition(e) {
@@ -6529,11 +6633,11 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
                 var css = getContentPosition(e);
 
                 resize.call(self);
-                if (self.xvar.scrollTimer) clearTimeout(self.xvar.scrollTimer);
-                self.xvar.scrollTimer = setTimeout(function () {
-                    GRID.header.scrollTo.call(self, { left: css.left });
-                    GRID.body.scrollTo.call(self, css, "noRepaint");
-                }, 0);
+                //if (self.xvar.scrollTimer) clearTimeout(self.xvar.scrollTimer);
+                //self.xvar.scrollTimer = setTimeout(function () {
+                GRID.header.scrollTo.call(self, { left: css.left });
+                GRID.body.scrollTo.call(self, css, { noRepaint: "noRepaint" });
+                //}, 0);
                 U.stopEvent(e.originalEvent);
                 self.xvar.touchmoved = true;
             }).on("touchend" + ".ax5grid-" + this.instanceId, function (e) {
@@ -6541,11 +6645,11 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
                     var css = getContentPosition(e);
 
                     resize.call(self);
-                    if (self.xvar.scrollTimer) clearTimeout(self.xvar.scrollTimer);
-                    self.xvar.scrollTimer = setTimeout(function () {
-                        GRID.header.scrollTo.call(self, { left: css.left });
-                        GRID.body.scrollTo.call(self, css);
-                    }, 0);
+                    //if (self.xvar.scrollTimer) clearTimeout(self.xvar.scrollTimer);
+                    //self.xvar.scrollTimer = setTimeout(function () {
+                    GRID.header.scrollTo.call(self, { left: css.left });
+                    GRID.body.scrollTo.call(self, css);
+                    //}, 0);
 
                     U.stopEvent(e.originalEvent);
                     scrollContentMover.off.call(self);
@@ -6629,6 +6733,9 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
                 scrollContentMover.on.call(self);
             });
         }
+
+        this.xvar.body_panel_height = this.$["panel"]["body"].height();
+        this.xvar.body_panel_width = this.$["panel"]["body"].width();
     };
 
     var resize = function resize() {
@@ -6672,6 +6779,9 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
             width: horizontalScrollBarWidth
         });
 
+        this.xvar.body_panel_height = _panel_height;
+        this.xvar.body_panel_width = _panel_width;
+
         _vertical_scroller_height = null;
         _horizontal_scroller_width = null;
         _panel_height = null;
@@ -6712,7 +6822,9 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
         "page_status": page_status,
 
         get: function get(tmplName, data, columnKeys) {
-            return ax5.mustache.render(GRID.tmpl[tmplName].call(this, columnKeys), data);
+            var template = GRID.tmpl[tmplName].call(this, columnKeys);
+            ax5.mustache.parse(template);
+            return ax5.mustache.render(template, data);
         }
     };
 })();

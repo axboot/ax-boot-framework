@@ -55,8 +55,12 @@
                 multipleSelect: true,
                 virtualScrollY: true,
                 virtualScrollX: true,
+
+                // 스크롤될 때 body 페인팅 딜레이를 주어 성능이 좋은 않은 브라우저에서 반응을 빠르게 할 때 사용하는 옵션들
                 virtualScrollYCountMargin: 0,
-                virtualScrollAccelerated: false,
+                virtualScrollAccelerated: true,
+                virtualScrollAcceleratedDelayTime: 30,
+
                 height: 0,
                 columnMinWidth: 100,
                 lineNumberColumnWidth: 30,
@@ -147,7 +151,7 @@
             this.isInlineEditing = false;
             this.inlineEditing = {};
             this.listIndexMap = {}; // tree데이터 사용시 데이터 인덱싱 맵
-            this.gridContextMenu = null; // contentMenu 의 인스턴스
+            this.contextMenu = null; // contentMenu 의 인스턴스
 
             // header
             this.headerTable = {};
@@ -1326,24 +1330,27 @@
              */
             this.setValue = function (_dindex, _key, _value) {
                 // getPanelname;
-                if (GRID.data.setValue.call(this, _dindex, _key, _value)) {
-                    let repaintCell = function (_panelName, _rows, __dindex, __key, __value) {
+                // let doindex = (typeof _doindex === "undefined") ? _dindex : _doindex;
+                // setValue를 doindex로 처리하는 상황이 아직 발생전으므로 선언만 하고 넘어감
+                let doindex;
+
+                if (GRID.data.setValue.call(this, _dindex, doindex, _key, _value)) {
+                    let repaintCell = function (_panelName, _rows, __dindex, __doindex, __key, __value) {
                         for (let r = 0, rl = _rows.length; r < rl; r++) {
                             for (let c = 0, cl = _rows[r].cols.length; c < cl; c++) {
                                 if (_rows[r].cols[c].key == __key) {
                                     if (this.xvar.frozenRowIndex > __dindex) {
-                                        GRID.body.repaintCell.call(this, "top-" + _panelName, __dindex, r, c, __value);
+                                        GRID.body.repaintCell.call(this, "top-" + _panelName, __dindex, __doindex, r, c, __value);
                                     } else {
-                                        GRID.body.repaintCell.call(this, _panelName + "-scroll", __dindex, r, c, __value);
+                                        GRID.body.repaintCell.call(this, _panelName + "-scroll", __dindex, __doindex, r, c, __value);
                                     }
                                 }
                             }
                         }
                     };
 
-                    repaintCell.call(this, "left-body", this.leftBodyRowData.rows, _dindex, _key, _value);
-                    repaintCell.call(this, "body", this.bodyRowData.rows, _dindex, _key, _value);
-
+                    repaintCell.call(this, "left-body", this.leftBodyRowData.rows, _dindex, doindex, _key, _value);
+                    repaintCell.call(this, "body", this.bodyRowData.rows, _dindex, doindex, _key, _value);
                 }
 
                 return this;
@@ -1523,8 +1530,8 @@
                         }
                     }
 
-                    GRID.data.select.call(this, dindex, _options && _options.selected);
-                    GRID.body.updateRowState.call(this, ["selected"], dindex);
+                    GRID.data.select.call(this, dindex, undefined, _options && _options.selected);
+                    GRID.body.updateRowState.call(this, ["selected"], dindex, undefined);
                 }
                 return this;
             };
@@ -1628,6 +1635,7 @@
              * ```
              */
             this.focus = function (_pos) {
+
                 if (GRID.body.moveFocus.call(this, _pos)) {
                     let focusedColumn;
                     for (let c in this.focusedColumn) {
@@ -1643,6 +1651,7 @@
                         this.select(0);
                     } else {
                         let selectedIndex = this.selectedDataIndexs[0];
+                        
                         let processor = {
                             "UP": function () {
                                 if (selectedIndex > 0) {

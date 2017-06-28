@@ -1,5 +1,10 @@
 @mixin ax-menu() {
     box-sizing: border-box;
+    *,
+    *:before,
+    *:after {
+        box-sizing: border-box;
+    }
 
     z-index: $ax5menu-z-index;
     position: fixed;

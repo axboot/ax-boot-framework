@@ -59,13 +59,6 @@
                 });
 
                 GRID.body.scrollTo.call(self, scrollPositon);
-
-                /*
-                if (this.xvar.scrollTimer) clearTimeout(this.xvar.scrollTimer);
-                this.xvar.scrollTimer = setTimeout(function () {
-                    GRID.body.scrollTo.call(self, scrollPositon);
-                });
-                */
             }
 
             return -top
@@ -93,13 +86,6 @@
 
                 GRID.header.scrollTo.call(self, scrollPositon);
                 GRID.body.scrollTo.call(self, scrollPositon);
-
-                /*
-                if (this.xvar.scrollTimer) clearTimeout(this.xvar.scrollTimer);
-                this.xvar.scrollTimer = setTimeout(function () {
-
-                });
-                */
             }
 
             return -left
@@ -243,10 +229,7 @@
 
                     if (type === "horizontal") GRID.header.scrollTo.call(self, scrollPositon);
 
-                    if (self.xvar.scrollTimer) clearTimeout(self.xvar.scrollTimer);
-                    self.xvar.scrollTimer = setTimeout(function () {
                         GRID.body.scrollTo.call(self, scrollPositon);
-                    });
                 })
                 .bind(GRID.util.ENM["mouseup"] + ".ax5grid-" + this.instanceId, function (e) {
                     scrollBarMover.off.call(self);
@@ -279,8 +262,8 @@
         "wheel": function (delta) {
             let self = this,
                 _body_scroll_position = self.$["panel"]["body-scroll"].position(),
-                _panel_height = self.$["panel"]["body"].height(),
-                _panel_width = self.$["panel"]["body"].width(),
+                _panel_height = self.xvar.body_panel_height,
+                _panel_width = self.xvar.body_panel_width,
                 _content_height = self.xvar.scrollContentHeight,
                 _content_width = self.xvar.scrollContentWidth;
 
@@ -319,21 +302,20 @@
                 if (delta.x == 0) _left_is_end = true;
             }
 
-            resize.call(this);
             GRID.header.scrollTo.call(self, {left: newLeft});
-
-            if (this.xvar.scrollTimer) clearTimeout(this.xvar.scrollTimer);
-            this.xvar.scrollTimer = setTimeout(function () {
-                GRID.body.scrollTo.call(self, {left: newLeft, top: newTop});
-            }, 0);
+            GRID.body.scrollTo.call(self, {left: newLeft, top: newTop}, {
+                callback: function () {
+                    resize.call(self);
+                }
+            });
 
             return !_top_is_end || !_left_is_end;
         },
         "on": function () {
             let self = this,
                 _body_scroll_position = self.$["panel"]["body-scroll"].position(),
-                _panel_height = self.$["panel"]["body"].height(),
-                _panel_width = self.$["panel"]["body"].width(),
+                _panel_height = self.xvar.body_panel_height,
+                _panel_width = self.xvar.body_panel_width,
                 _content_height = self.xvar.scrollContentHeight,
                 _content_width = self.xvar.scrollContentWidth,
                 getContentPosition = function (e) {
@@ -375,11 +357,11 @@
                     let css = getContentPosition(e);
 
                     resize.call(self);
-                    if (self.xvar.scrollTimer) clearTimeout(self.xvar.scrollTimer);
-                    self.xvar.scrollTimer = setTimeout(function () {
+                    //if (self.xvar.scrollTimer) clearTimeout(self.xvar.scrollTimer);
+                    //self.xvar.scrollTimer = setTimeout(function () {
                         GRID.header.scrollTo.call(self, {left: css.left});
-                        GRID.body.scrollTo.call(self, css, "noRepaint");
-                    }, 0);
+                    GRID.body.scrollTo.call(self, css, {noRepaint: "noRepaint"});
+                    //}, 0);
                     U.stopEvent(e.originalEvent);
                     self.xvar.touchmoved = true;
                 })
@@ -388,11 +370,11 @@
                         let css = getContentPosition(e);
 
                         resize.call(self);
-                        if (self.xvar.scrollTimer) clearTimeout(self.xvar.scrollTimer);
-                        self.xvar.scrollTimer = setTimeout(function () {
+                        //if (self.xvar.scrollTimer) clearTimeout(self.xvar.scrollTimer);
+                        //self.xvar.scrollTimer = setTimeout(function () {
                             GRID.header.scrollTo.call(self, {left: css.left});
                             GRID.body.scrollTo.call(self, css);
-                        }, 0);
+                        //}, 0);
 
                         U.stopEvent(e.originalEvent);
                         scrollContentMover.off.call(self);
@@ -483,7 +465,6 @@
             }
         }).bind(this));
 
-
         if (ax5.info.supportTouch) {
             this.$["container"]["body"]
                 .on("touchstart", '[data-ax5grid-panel]', function (e) {
@@ -492,6 +473,8 @@
                 });
         }
 
+        this.xvar.body_panel_height = this.$["panel"]["body"].height();
+        this.xvar.body_panel_width = this.$["panel"]["body"].width();
     };
 
     const resize = function () {
@@ -534,6 +517,9 @@
             }),
             width: horizontalScrollBarWidth
         });
+
+        this.xvar.body_panel_height = _panel_height;
+        this.xvar.body_panel_width = _panel_width;
 
         _vertical_scroller_height = null;
         _horizontal_scroller_width = null;

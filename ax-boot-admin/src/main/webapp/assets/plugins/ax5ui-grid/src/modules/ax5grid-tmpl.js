@@ -92,8 +92,11 @@
         "page_status": page_status,
 
         get: function (tmplName, data, columnKeys) {
-            return ax5.mustache.render(GRID.tmpl[tmplName].call(this, columnKeys), data);
+            let template = GRID.tmpl[tmplName].call(this, columnKeys);
+            ax5.mustache.parse(template);
+            return ax5.mustache.render(template, data);
         }
     };
+
 
 })();

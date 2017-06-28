@@ -164,21 +164,24 @@
 
             var appEventAttach = function appEventAttach(active, opt) {
                 if (active) {
-                    jQuery(document).unbind("click.ax5menu-" + this.menuId).bind("click.ax5menu-" + this.menuId, clickItem.bind(this, opt));
-                    jQuery(window).unbind("keydown.ax5menu-" + this.menuId).bind("keydown.ax5menu-" + this.menuId, function (e) {
+                    jQuery(document.body).off("click.ax5menu-" + this.instanceId).on("click.ax5menu-" + this.instanceId, clickItem.bind(this, opt));
+
+                    jQuery(window).off("keydown.ax5menu-" + this.instanceId).on("keydown.ax5menu-" + this.instanceId, function (e) {
                         if (e.which == ax5.info.eventKeys.ESC) {
                             self.close();
                         }
                     });
-                    jQuery(window).unbind("resize.ax5menu-" + this.menuId).bind("resize.ax5menu-" + this.menuId, function (e) {
+
+                    jQuery(window).on("resize.ax5menu-" + this.instanceId).on("resize.ax5menu-" + this.instanceId, function (e) {
                         self.close();
                     });
                 } else {
-                    jQuery(document).unbind("click.ax5menu-" + this.menuId);
-                    jQuery(window).unbind("keydown.ax5menu-" + this.menuId);
-                    jQuery(window).unbind("resize.ax5menu-" + this.menuId);
+                    jQuery(document.body).off("click.ax5menu-" + this.instanceId);
+                    jQuery(window).off("keydown.ax5menu-" + this.instanceId);
+                    jQuery(window).off("resize.ax5menu-" + this.instanceId);
                 }
             };
+
             var onStateChanged = function onStateChanged(opts, that) {
                 if (opts && opts.onStateChanged) {
                     opts.onStateChanged.call(that, that);
@@ -191,6 +194,7 @@
                 that = null;
                 return true;
             };
+
             var onLoad = function onLoad(that) {
                 if (this.onLoad) {
                     this.onLoad.call(that, that);
@@ -199,6 +203,7 @@
                 that = null;
                 return true;
             };
+
             var popup = function popup(opt, items, depth, path) {
                 var data = opt,
                     activeMenu = void 0,
@@ -354,6 +359,7 @@
 
                 return this;
             };
+
             var clickItem = function clickItem(opt, e) {
                 var target = void 0,
                     item = void 0;
@@ -430,6 +436,7 @@
                 item = null;
                 return this;
             };
+
             var align = function align(activeMenu, data) {
                 var $window = jQuery(window),
                     $document = jQuery(document),
@@ -472,8 +479,6 @@
             /// private end
 
             this.init = function () {
-                self.menuId = ax5.getGuid();
-
                 /**
                  * config에 선언된 이벤트 함수들을 this로 이동시켜 주어 나중에 인스턴스.on... 으로 처리 가능 하도록 변경
                  */
@@ -580,6 +585,7 @@
                     }
 
                     if (items.length) {
+                        appEventAttach.call(this, false);
                         popup.call(this, opt, items, 0); // 0 is seq of queue
 
                         if (this.popupEventAttachTimer) clearTimeout(this.popupEventAttachTimer);

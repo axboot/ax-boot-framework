@@ -131,6 +131,7 @@
                                 .item-checkbox-wrap {
                                     &.useCheckBox {
                                         &:after {
+                                            box-sizing: border-box;
                                             @if nth($hover-type, 1) == "lighten" {
                                                 border-color: lighten($base-color, nth($hover-type, 2)) !important;
                                             } @else if nth($hover-type, 1) == "darken" {
@@ -160,6 +161,7 @@
                                 .item-checkbox-wrap {
                                     &.useCheckBox {
                                         &:after {
+                                            box-sizing: border-box;
                                             @if nth($hover-type, 1) == "lighten" {
                                                 border-color: lighten($base-color, nth($hover-type, 2)) !important;
                                             } @else if nth($hover-type, 1) == "darken" {
@@ -248,6 +250,7 @@
 
                                 &.useCheckBox {
                                     &:after {
+                                        box-sizing: border-box;
                                         content: '';
                                         width: $ax5autocomplete-option-item-checkbox-size;
                                         height: $ax5autocomplete-option-item-checkbox-size / 2;

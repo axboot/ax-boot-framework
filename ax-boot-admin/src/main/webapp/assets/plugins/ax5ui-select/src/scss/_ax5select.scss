@@ -49,10 +49,12 @@
     overflow: visible;
     display: block;
     box-sizing: border-box;
-    * {
+    *,
+    *:before,
+    *:after {
         box-sizing: border-box;
     }
-    margin: 0px;
+    margin: 0;
 
     select {
         z-index: 1;

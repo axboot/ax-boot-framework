@@ -162,205 +162,217 @@
 
             const appEventAttach = function (active, opt) {
                     if (active) {
-                        jQuery(document).unbind("click.ax5menu-" + this.menuId).bind("click.ax5menu-" + this.menuId, clickItem.bind(this, opt));
-                        jQuery(window).unbind("keydown.ax5menu-" + this.menuId).bind("keydown.ax5menu-" + this.menuId, function (e) {
+                        jQuery(document.body)
+                            .off("click.ax5menu-" + this.instanceId)
+                            .on("click.ax5menu-" + this.instanceId, clickItem.bind(this, opt));
+
+                        jQuery(window)
+                            .off("keydown.ax5menu-" + this.instanceId)
+                            .on("keydown.ax5menu-" + this.instanceId, function (e) {
                             if (e.which == ax5.info.eventKeys.ESC) {
                                 self.close();
                             }
                         });
-                        jQuery(window).unbind("resize.ax5menu-" + this.menuId).bind("resize.ax5menu-" + this.menuId, function (e) {
+
+                        jQuery(window)
+                            .on("resize.ax5menu-" + this.instanceId)
+                            .on("resize.ax5menu-" + this.instanceId, function (e) {
                             self.close();
                         });
                     }
                     else {
-                        jQuery(document).unbind("click.ax5menu-" + this.menuId);
-                        jQuery(window).unbind("keydown.ax5menu-" + this.menuId);
-                        jQuery(window).unbind("resize.ax5menu-" + this.menuId);
+                        jQuery(document.body).off("click.ax5menu-" + this.instanceId);
+                        jQuery(window).off("keydown.ax5menu-" + this.instanceId);
+                        jQuery(window).off("resize.ax5menu-" + this.instanceId);
                     }
             };
+            
             const onStateChanged = function (opts, that) {
-                    if (opts && opts.onStateChanged) {
-                        opts.onStateChanged.call(that, that);
-                    }
-                    else if (this.onStateChanged) {
-                        this.onStateChanged.call(that, that);
-                    }
+                if (opts && opts.onStateChanged) {
+                    opts.onStateChanged.call(that, that);
+                }
+                else if (this.onStateChanged) {
+                    this.onStateChanged.call(that, that);
+                }
 
-                    self.state = that.state;
-                    opts = null;
-                    that = null;
-                    return true;
+                self.state = that.state;
+                opts = null;
+                that = null;
+                return true;
             };
+            
             const onLoad = function (that) {
-                    if (this.onLoad) {
-                        this.onLoad.call(that, that);
-                    }
+                if (this.onLoad) {
+                    this.onLoad.call(that, that);
+                }
 
-                    that = null;
-                    return true;
+                that = null;
+                return true;
             };
+            
             const popup = function (opt, items, depth, path) {
-                    let data = opt,
-                        activeMenu,
-                        removed
-                        ;
+                let data = opt,
+                    activeMenu,
+                    removed
+                    ;
 
-                    data.theme = opt.theme || cfg.theme;
-                    data.cfg = {
-                        icons: jQuery.extend({}, cfg.icons),
-                        iconWidth: opt.iconWidth || cfg.iconWidth,
-                        acceleratorWidth: opt.acceleratorWidth || cfg.acceleratorWidth
-                    };
+                data.theme = opt.theme || cfg.theme;
+                data.cfg = {
+                    icons: jQuery.extend({}, cfg.icons),
+                    iconWidth: opt.iconWidth || cfg.iconWidth,
+                    acceleratorWidth: opt.acceleratorWidth || cfg.acceleratorWidth
+                };
 
-                    items.forEach(function (n) {
-                        if (n.html || n.divide) {
-                            n['@isMenu'] = false;
-                            if (n.html) {
-                                n['@html'] = n.html.call({
-                                    item: n,
-                                    config: cfg,
-                                    opt: opt
+                items.forEach(function (n) {
+                    if (n.html || n.divide) {
+                        n['@isMenu'] = false;
+                        if (n.html) {
+                            n['@html'] = n.html.call({
+                                item: n,
+                                config: cfg,
+                                opt: opt
+                            });
+                        }
+                    }
+                    else {
+                        n['@isMenu'] = true;
+                    }
+                });
+
+                data[cfg.columnKeys.items] = items;
+                data['@depth'] = depth;
+                data['@path'] = path || "root";
+                data['@hasChild'] = function () {
+                    return this[cfg.columnKeys.items] && this[cfg.columnKeys.items].length > 0;
+                };
+                activeMenu = jQuery(MENU.tmpl.get.call(this, "tmpl", data, cfg.columnKeys));
+                jQuery(document.body).append(activeMenu);
+
+                // remove queue
+
+                removed = this.queue.splice(depth);
+                removed.forEach(function (n) {
+                    n.$target.remove();
+                });
+
+                this.queue.push({
+                    '$target': activeMenu,
+                    'data': jQuery.extend({}, data)
+                });
+
+                activeMenu.find('[data-menu-item-index]').bind("mouseover", function () {
+                    let depth = this.getAttribute("data-menu-item-depth"),
+                        index = this.getAttribute("data-menu-item-index"),
+                        path = this.getAttribute("data-menu-item-path"),
+                        $this,
+                        offset,
+                        scrollTop,
+                        childOpt,
+                        _items,
+                        _activeMenu;
+
+                    if (depth != null && typeof depth != "undefined") {
+                        _items = self.queue[depth].data[cfg.columnKeys.items][index][cfg.columnKeys.items];
+                        _activeMenu = self.queue[depth].$target;
+                        _activeMenu.find('[data-menu-item-index]').removeClass("hover");
+                        jQuery(this).addClass("hover");
+
+                        if (_activeMenu.attr("data-selected-menu-item-index") != index) {
+                            _activeMenu.attr("data-selected-menu-item-index", index);
+
+                            if (_items && _items.length > 0) {
+
+                                $this = jQuery(this);
+                                offset = $this.offset();
+                                scrollTop = (cfg.position == "fixed" ? jQuery(document).scrollTop() : 0);
+                                childOpt = {
+                                    '@parent': {
+                                        left: offset.left,
+                                        top: offset.top,
+                                        width: $this.outerWidth(),
+                                        height: $this.outerHeight()
+                                    },
+                                    left: offset.left + $this.outerWidth() - cfg.menuBodyPadding,
+                                    top: offset.top - cfg.menuBodyPadding - 1 - scrollTop
+                                };
+
+                                childOpt = jQuery.extend(true, opt, childOpt);
+                                popup.call(self, childOpt, _items, (Number(depth) + 1), path);
+                            }
+                            else {
+                                self.queue.splice(Number(depth) + 1).forEach(function (n) {
+                                    n.$target.remove();
                                 });
                             }
                         }
-                        else {
-                            n['@isMenu'] = true;
-                        }
-                    });
-
-                    data[cfg.columnKeys.items] = items;
-                    data['@depth'] = depth;
-                    data['@path'] = path || "root";
-                    data['@hasChild'] = function () {
-                        return this[cfg.columnKeys.items] && this[cfg.columnKeys.items].length > 0;
-                    };
-                    activeMenu = jQuery(MENU.tmpl.get.call(this, "tmpl", data, cfg.columnKeys));
-                    jQuery(document.body).append(activeMenu);
-
-                    // remove queue
-
-                    removed = this.queue.splice(depth);
-                    removed.forEach(function (n) {
-                        n.$target.remove();
-                    });
-
-                    this.queue.push({
-                        '$target': activeMenu,
-                        'data': jQuery.extend({}, data)
-                    });
-
-                    activeMenu.find('[data-menu-item-index]').bind("mouseover", function () {
-                        let depth = this.getAttribute("data-menu-item-depth"),
-                            index = this.getAttribute("data-menu-item-index"),
-                            path = this.getAttribute("data-menu-item-path"),
-                            $this,
-                            offset,
-                            scrollTop,
-                            childOpt,
-                            _items,
-                            _activeMenu;
-
-                        if (depth != null && typeof depth != "undefined") {
-                            _items = self.queue[depth].data[cfg.columnKeys.items][index][cfg.columnKeys.items];
-                            _activeMenu = self.queue[depth].$target;
-                            _activeMenu.find('[data-menu-item-index]').removeClass("hover");
-                            jQuery(this).addClass("hover");
-
-                            if (_activeMenu.attr("data-selected-menu-item-index") != index) {
-                                _activeMenu.attr("data-selected-menu-item-index", index);
-
-                                if (_items && _items.length > 0) {
-
-                                    $this = jQuery(this);
-                                    offset = $this.offset();
-                                    scrollTop = (cfg.position == "fixed" ? jQuery(document).scrollTop() : 0);
-                                    childOpt = {
-                                        '@parent': {
-                                            left: offset.left,
-                                            top: offset.top,
-                                            width: $this.outerWidth(),
-                                            height: $this.outerHeight()
-                                        },
-                                        left: offset.left + $this.outerWidth() - cfg.menuBodyPadding,
-                                        top: offset.top - cfg.menuBodyPadding - 1 - scrollTop
-                                    };
-
-                                    childOpt = jQuery.extend(true, opt, childOpt);
-                                    popup.call(self, childOpt, _items, (Number(depth) + 1), path);
-                                }
-                                else {
-                                    self.queue.splice(Number(depth) + 1).forEach(function (n) {
-                                        n.$target.remove();
-                                    });
-                                }
-                            }
-                        }
-
-                        depth = null;
-                        index = null;
-                        path = null;
-                        $this = null;
-                        offset = null;
-                        scrollTop = null;
-                        childOpt = null;
-                        _items = null;
-                        _activeMenu = null;
-                    });
-
-                    // mouse out
-                    activeMenu.find('[data-menu-item-index]').bind("mouseout", function () {
-                        let depth = this.getAttribute("data-menu-item-depth"),
-                            index = this.getAttribute("data-menu-item-index"),
-                            path = this.getAttribute("data-menu-item-path"),
-                            _items;
-
-                        if (path) {
-                            _items = self.queue[depth].data[cfg.columnKeys.items][index][cfg.columnKeys.items];
-                        }
-                        if (_items && _items.length > 0) {
-
-                        } else {
-                            jQuery(this).removeClass("hover");
-                        }
-                    });
-
-                    // is Root
-                    if (depth == 0) {
-                        if (data.direction) activeMenu.addClass("direction-" + data.direction);
-                        onStateChanged.call(this, null, {
-                            self: this,
-                            items: items,
-                            parent: (function (path) {
-                                if (!path) return false;
-                                var item = null;
-                                try {
-                                    item = (Function("", "return this.config.items[" + path.substring(5).replace(/\./g, '].items[') + "];")).call(self);
-                                } catch (e) {
-
-                                }
-                                return item;
-                            })(data['@path']),
-                            state: "popup"
-                        });
                     }
 
-                    align.call(this, activeMenu, data);
-                    onLoad.call(this, {
+                    depth = null;
+                    index = null;
+                    path = null;
+                    $this = null;
+                    offset = null;
+                    scrollTop = null;
+                    childOpt = null;
+                    _items = null;
+                    _activeMenu = null;
+                });
+
+                // mouse out
+                activeMenu.find('[data-menu-item-index]').bind("mouseout", function () {
+                    let depth = this.getAttribute("data-menu-item-depth"),
+                        index = this.getAttribute("data-menu-item-index"),
+                        path = this.getAttribute("data-menu-item-path"),
+                        _items;
+
+                    if (path) {
+                        _items = self.queue[depth].data[cfg.columnKeys.items][index][cfg.columnKeys.items];
+                    }
+                    if (_items && _items.length > 0) {
+
+                    } else {
+                        jQuery(this).removeClass("hover");
+                    }
+                });
+
+                // is Root
+                if (depth == 0) {
+                    if (data.direction) activeMenu.addClass("direction-" + data.direction);
+                    onStateChanged.call(this, null, {
                         self: this,
                         items: items,
-                        element: activeMenu.get(0)
+                        parent: (function (path) {
+                            if (!path) return false;
+                            var item = null;
+                            try {
+                                item = (Function("", "return this.config.items[" + path.substring(5).replace(/\./g, '].items[') + "];")).call(self);
+                            } catch (e) {
+
+                            }
+                            return item;
+                        })(data['@path']),
+                        state: "popup"
                     });
+                }
 
-                    data = null;
-                    activeMenu = null;
-                    removed = null;
-                    opt = null;
-                    items = null;
-                    depth = null;
-                    path = null;
+                align.call(this, activeMenu, data);
+                onLoad.call(this, {
+                    self: this,
+                    items: items,
+                    element: activeMenu.get(0)
+                });
 
-                    return this;
-                };
+                data = null;
+                activeMenu = null;
+                removed = null;
+                opt = null;
+                items = null;
+                depth = null;
+                path = null;
+
+                return this;
+            };
+
             const clickItem = function (opt, e) {
                     let target, item;
 
@@ -438,6 +450,7 @@
                     item = null;
                     return this;
                 };
+
             const align = function (activeMenu, data) {
                     let $window = jQuery(window),
                         $document = jQuery(document),
@@ -481,8 +494,6 @@
             /// private end
 
             this.init = function () {
-                self.menuId = ax5.getGuid();
-
                 /**
                  * config에 선언된 이벤트 함수들을 this로 이동시켜 주어 나중에 인스턴스.on... 으로 처리 가능 하도록 변경
                  */
@@ -591,6 +602,7 @@
                     }
 
                     if (items.length) {
+                        appEventAttach.call(this, false);
                         popup.call(this, opt, items, 0); // 0 is seq of queue
 
                         if (this.popupEventAttachTimer) clearTimeout(this.popupEventAttachTimer);

@@ -33,7 +33,13 @@
         useReturnToSave: true,
         editMode: "popup",
         getHtml: function (_root, _columnKey, _editor, _value) {
-            return '<input type="text" data-ax5grid-editor="money" value="' + _value + '" >';
+            if(typeof _editor.attributes !== "undefined"){
+                var attributesText  = "";
+                for (var k in _editor.attributes){
+                    attributesText += ` ${k}='${_editor.attributes[k]}'`;
+                }
+            }
+            return '<input type="text" data-ax5grid-editor="money" value="' + _value + '" ${attributesText}>';
         },
         init: function (_root, _columnKey, _editor, _$parent, _value) {
             var $el;
@@ -46,9 +52,9 @@
         },
         bindUI: function (_root, _columnKey, _$el, _editor, _$parent, _value) {
             _$el.data("binded-ax5ui", "ax5formater");
-            _$el.ax5formatter({
+            _$el.ax5formatter($.extend(true, {
                 pattern: "money"
-            });
+            }, _editor.config));
             _$el.focus().select();
         }
     };
@@ -57,7 +63,13 @@
         useReturnToSave: true,
         editMode: "popup",
         getHtml: function (_root, _columnKey, _editor, _value) {
-            return '<input type="text" data-ax5grid-editor="number" value="' + _value + '" >';
+            if(typeof _editor.attributes !== "undefined"){
+                var attributesText  = "";
+                for (var k in _editor.attributes){
+                    attributesText += ` ${k}='${_editor.attributes[k]}'`;
+                }
+            }
+            return '<input type="text" data-ax5grid-editor="number" value="' + _value + '" ${attributesText}>';
         },
         init: function (_root, _columnKey, _editor, _$parent, _value) {
             var $el;
@@ -70,9 +82,9 @@
         },
         bindUI: function (_root, _columnKey, _$el, _editor, _$parent, _value) {
             _$el.data("binded-ax5ui", "ax5formater");
-            _$el.ax5formatter({
+            _$el.ax5formatter($.extend(true, {
                 pattern: "number"
-            });
+            }, _editor.config));
             _$el.focus().select();
         }
     };
@@ -92,7 +104,8 @@
         bindUI: function (_root, _columnKey, _$el, _editor, _$parent, _value) {
             var self = _root;
             _$el.data("binded-ax5ui", "ax5picker");
-            _$el.ax5picker({
+
+            _$el.ax5picker($.extend(true, {
                 direction: "auto",
                 content: {
                     type: 'date',
@@ -107,7 +120,8 @@
                         GRID.body.inlineEdit.deActive.call(self, "RETURN", _columnKey);
                     }
                 }
-            });
+            }, _editor.config));
+
             _$el.focus().select();
         }
     };
@@ -144,7 +158,7 @@
 
             var self = _root;
             _$el.data("binded-ax5ui", "ax5select");
-            _$el.ax5select({
+            _$el.ax5select($.extend(true, {
                 direction: "auto",
                 columnKeys: eConfig.columnKeys,
                 options: eConfig.options,
@@ -157,7 +171,7 @@
                         GRID.body.inlineEdit.deActive.call(self, "ESC", _columnKey);
                     }
                 }
-            });
+            }, _editor.config));
             _$el.ax5select("open");
             _$el.ax5select("setValue", _value);
             _$el.find("a").focus();

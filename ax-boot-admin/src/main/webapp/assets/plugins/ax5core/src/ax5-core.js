@@ -1477,6 +1477,10 @@
                         else if (typeof opts["y"] !== "undefined") {
                             _d.setTime(_d.getTime() + ((opts["y"] * 365) * DyMilli));
                         }
+                        else if (typeof opts["h"] !== "undefined") {
+                            _d.setTime(_d.getTime() + (opts["h"] * 1000 * 60 * 60));
+                        }
+
                         return _d;
                     })(new Date(d), cond["add"]);
                 }
