@@ -84,15 +84,6 @@ var ACTIONS = axboot.actionExtend(fnObj, {
                 this.close();
             }
         });
-    },
-    dispatch: function (caller, act, data) {
-        var result = ACTIONS.exec(caller, act, data);
-        if (result != "error") {
-            return result;
-        } else {
-            // 직접코딩
-            return false;
-        }
     }
 });
 

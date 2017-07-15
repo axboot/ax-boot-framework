@@ -12,16 +12,6 @@ var ACTIONS = axboot.actionExtend(fnObj, {
     },
     TOGGLE_FULLSCREEN: function (caller, act, data) {
         caller.frameView.toggleFullScreen();
-    },
-
-    dispatch: function (caller, act, data) {
-        var result = ACTIONS.exec(caller, act, data);
-        if (result != "error") {
-            return result;
-        } else {
-            // 직접코딩
-            return false;
-        }
     }
 });
 

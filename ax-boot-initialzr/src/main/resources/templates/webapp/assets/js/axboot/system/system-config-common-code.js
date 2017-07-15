@@ -30,15 +30,6 @@ var ACTIONS = axboot.actionExtend(fnObj, {
     },
     ITEM_DEL: function (caller, act, data) {
         caller.gridView01.delRow("selected");
-    },
-    dispatch: function (caller, act, data) {
-        var result = ACTIONS.exec(caller, act, data);
-        if (result != "error") {
-            return result;
-        } else {
-            // 직접코딩
-            return false;
-        }
     }
 });
 

@@ -72,15 +72,6 @@ var ACTIONS = axboot.actionExtend(fnObj, {
                 ACTIONS.dispatch(ACTIONS.PAGE_SEARCH);
             }
         });
-    },
-    dispatch: function (caller, act, data) {
-        var result = ACTIONS.exec(caller, act, data);
-        if (result != "error") {
-            return result;
-        } else {
-            // 직접코딩
-            return false;
-        }
     }
 });
 

@@ -2681,6 +2681,22 @@ axboot.actionExtend = function () {
                 return "error";
             }
         };
+
+        if (!myAction["page_dispatch"]) {
+            myAction["page_dispatch"] = function (caller, act, data) {
+
+                var result = function () {
+                    return caller.ACTIONS ? caller.ACTIONS : window.ACTIONS;
+                }().exec(caller, act, data);
+
+                if (result != "error") {
+                    return result;
+                } else {
+                    return false;
+                }
+            };
+        }
+
         myAction["dispatch"] = function () {
             var fnArgs = [];
 

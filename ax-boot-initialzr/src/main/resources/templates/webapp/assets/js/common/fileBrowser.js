@@ -45,15 +45,6 @@ var ACTIONS = axboot.actionExtend(fnObj, {
     },
     ITEM_CLICK: function (caller, act, data) {
         caller.formView01.setData(data);
-    },
-    dispatch: function (caller, act, data) {
-        var result = ACTIONS.exec(caller, act, data);
-        if (result != "error") {
-            return result;
-        } else {
-            // 직접코딩
-            return false;
-        }
     }
 });
 

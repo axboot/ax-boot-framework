@@ -71,16 +71,7 @@ var ACTIONS = axboot.actionExtend(fnObj, {
     },
 
     ROLE_GRID_DATA_INIT: function (caller, act, data) {},
-    ROLE_GRID_DATA_GET: function (caller, act, data) {},
-    dispatch: function (caller, act, data) {
-        var result = ACTIONS.exec(caller, act, data);
-        if (result != "error") {
-            return result;
-        } else {
-            // 직접코딩
-            return false;
-        }
-    }
+    ROLE_GRID_DATA_GET: function (caller, act, data) {}
 });
 
 var CODE = {};

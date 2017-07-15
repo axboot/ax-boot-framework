@@ -120,15 +120,6 @@ var ACTIONS = axboot.actionExtend(fnObj, {
     OPEN_BOOK: function (caller, act, data) {
         var searchData = caller.searchView.getData();
         window.open(axboot.getURL(["manual_viewer"]) + "?manualGrpCd=" + searchData.manualGrpCd, "MANUAL_VIEW", "width=1024, height=600");
-    },
-    dispatch: function (caller, act, data) {
-        var result = ACTIONS.exec(caller, act, data);
-        if (result != "error") {
-            return result;
-        } else {
-            // 직접코딩
-            return false;
-        }
     }
 });
 var CODE = {};

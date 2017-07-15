@@ -48,15 +48,6 @@ var ACTIONS = axboot.actionExtend(fnObj, {
     },
     GRID_0_PAGING: function (caller, act, data) {
         caller.searchView.setPageNumber(data);
-    },
-    dispatch: function (caller, act, data) {
-        var result = ACTIONS.exec(caller, act, data);
-        if (result != "error") {
-            return result;
-        } else {
-            // 직접코딩
-            return false;
-        }
     }
 });
 
