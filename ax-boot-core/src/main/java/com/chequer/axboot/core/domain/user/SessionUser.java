@@ -15,6 +15,8 @@ public class SessionUser implements UserDetails {
 
     private String userPs;
 
+    private String email;
+
     private String userNm;
 
     private Locale locale;
