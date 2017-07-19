@@ -4,11 +4,12 @@ import com.chequer.axboot.core.AXBootCoreConfiguration;
 import com.chequer.axboot.core.config.AXBootContextConfig;
 import com.chequer.axboot.core.model.extract.service.jdbc.JdbcMetadataService;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.boot.autoconfigure.security.SecurityAutoConfiguration;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Import;
 import org.springframework.validation.beanvalidation.LocalValidatorFactoryBean;
 
-@SpringBootApplication
+@SpringBootApplication(exclude = SecurityAutoConfiguration.class)
 @Import(AXBootCoreConfiguration.class)
 public class AXBootInitialzrApplication {
 
