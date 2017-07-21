@@ -357,11 +357,8 @@
                     let css = getContentPosition(e);
 
                     resize.call(self);
-                    //if (self.xvar.scrollTimer) clearTimeout(self.xvar.scrollTimer);
-                    //self.xvar.scrollTimer = setTimeout(function () {
-                        GRID.header.scrollTo.call(self, {left: css.left});
+                    GRID.header.scrollTo.call(self, {left: css.left});
                     GRID.body.scrollTo.call(self, css, {noRepaint: "noRepaint"});
-                    //}, 0);
                     U.stopEvent(e.originalEvent);
                     self.xvar.touchmoved = true;
                 })
@@ -370,12 +367,8 @@
                         let css = getContentPosition(e);
 
                         resize.call(self);
-                        //if (self.xvar.scrollTimer) clearTimeout(self.xvar.scrollTimer);
-                        //self.xvar.scrollTimer = setTimeout(function () {
-                            GRID.header.scrollTo.call(self, {left: css.left});
-                            GRID.body.scrollTo.call(self, css);
-                        //}, 0);
-
+                        GRID.header.scrollTo.call(self, {left: css.left});
+                        GRID.body.scrollTo.call(self, css);
                         U.stopEvent(e.originalEvent);
                         scrollContentMover.off.call(self);
                     }

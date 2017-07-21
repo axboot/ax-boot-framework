@@ -33,16 +33,16 @@
         useReturnToSave: true,
         editMode: "popup",
         getHtml: function (_root, _columnKey, _editor, _value) {
+            let attributesText = "";
             if(typeof _editor.attributes !== "undefined"){
-                var attributesText  = "";
-                for (var k in _editor.attributes){
+                for (let k in _editor.attributes){
                     attributesText += ` ${k}='${_editor.attributes[k]}'`;
                 }
             }
-            return '<input type="text" data-ax5grid-editor="money" value="' + _value + '" ${attributesText}>';
+            return '<input type="text" data-ax5grid-editor="money" value="' + _value + '" ' + attributesText + '" />';
         },
         init: function (_root, _columnKey, _editor, _$parent, _value) {
-            var $el;
+            let $el;
             _$parent.append($el = jQuery(this.getHtml(_root, _columnKey, _editor, _value)));
             this.bindUI(_root, _columnKey, $el, _editor, _$parent, _value);
             $el.on("blur", function () {
@@ -63,13 +63,13 @@
         useReturnToSave: true,
         editMode: "popup",
         getHtml: function (_root, _columnKey, _editor, _value) {
+            let attributesText = "";
             if(typeof _editor.attributes !== "undefined"){
-                var attributesText  = "";
-                for (var k in _editor.attributes){
+                for (let k in _editor.attributes){
                     attributesText += ` ${k}='${_editor.attributes[k]}'`;
                 }
             }
-            return '<input type="text" data-ax5grid-editor="number" value="' + _value + '" ${attributesText}>';
+            return '<input type="text" data-ax5grid-editor="number" value="' + _value + '" ' + attributesText + '" />';
         },
         init: function (_root, _columnKey, _editor, _$parent, _value) {
             var $el;

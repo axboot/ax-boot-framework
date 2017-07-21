@@ -251,7 +251,6 @@
                 }
 
             })();
-
             const alignPicker = function (append) {
                 if (!this.activePicker) return this;
 
@@ -341,7 +340,6 @@
                     _alignPicker.call(this, item);
                 }).bind(this));
             };
-
             const onBodyClick = function (e, target) {
                 if (!this.activePicker) return this;
 
@@ -362,7 +360,6 @@
                 //console.log("i'm picker");
                 return this;
             };
-
             const onBtnClick = function (e, target) {
                 // console.log('btn click');
                 if (e.srcElement) e.target = e.srcElement;
@@ -393,13 +390,11 @@
                     }
                 }
             };
-
             const onBodyKeyup = function (e) {
                 if (e.keyCode == ax5.info.eventKeys.ESC) {
                     this.close();
                 }
             };
-
             const getQueIdx = function (boundID) {
                 if (!U.isString(boundID)) {
                     boundID = jQuery(boundID).data("data-axpicker-id");

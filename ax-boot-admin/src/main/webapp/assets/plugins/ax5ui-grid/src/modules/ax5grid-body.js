@@ -544,6 +544,21 @@
         // 그리드 바디에 출력할 여유 카운트
         this.xvar.paintRowCountMargin = this.config.virtualScrollYCountMargin;
         this.xvar.paintRowCountTopMargin = this.config.virtualScrollYCountMargin - Math.floor(this.config.virtualScrollYCountMargin / 2);
+
+        if (this.config.virtualScrollAccelerated) {
+            this.__throttledScroll = U.throttle(function (css, opts) {
+                if (this.config.virtualScrollY && !opts.noRepaint && "top" in css) {
+                    repaint.call(this);
+                } else if (this.config.virtualScrollX && !opts.noRepaint && "left" in css) {
+                    repaint.call(this);
+                }
+                if (opts.callback) {
+                    opts.callback();
+                }
+            }, this.config.virtualScrollAcceleratedDelayTime);
+        } else {
+            this.__throttledScroll = false;
+        }
     };
 
     const resetFrozenColumn = function () {
@@ -1032,7 +1047,11 @@
 
                     for (tri = 0, trl = rowTable.rows.length; tri < trl; tri++) {
 
-                        SS.push('<tr class="tr-' + (di % 4) + '"',
+                        SS.push('<tr class="tr-' + (di % 4) + '', (cfg.body.trStyleClass) ? (U.isFunction(cfg.body.trStyleClass)) ? ' ' + cfg.body.trStyleClass.call({
+                                    item: _list[di],
+                                    index: di
+                                }, _list[di], di) : ' ' + cfg.body.trStyleClass : '','"',
+
                             (isGroupingRow) ? ' data-ax5grid-grouping-tr="true"' : '',
                             ' data-ax5grid-tr-data-index="' + di + '"',
                             ' data-ax5grid-tr-data-o-index="' + odi + '"',
@@ -2070,33 +2089,19 @@
             this.$.panel["bottom-body-scroll"].css({left: css.left});
         }
 
-        if (this.config.virtualScrollAccelerated && !opts.timeoutUnUse) {
-            if (this.xvar.bodyScrollToTimer) clearTimeout(this.xvar.bodyScrollToTimer);
-            this.xvar.bodyScrollToTimer = setTimeout(function () {
-
-                if (self.config.virtualScrollY && !opts.noRepaint && "top" in css) {
-                    repaint.call(self);
-                } else if (self.config.virtualScrollX && !opts.noRepaint && "left" in css) {
-                    repaint.call(self);
-                }
-                if (opts.callback) {
-                    opts.callback();
-                }
-
-            }, this.config.virtualScrollAcceleratedDelayTime);
-
+        // 바디 리페인팅 this.__throttledScroll 은 body init 에서 초기화
+        if (this.__throttledScroll) {
+            this.__throttledScroll(css, opts);
         } else {
-            if (self.config.virtualScrollY && !opts.noRepaint && "top" in css) {
-                repaint.call(self);
-            } else if (self.config.virtualScrollX && !opts.noRepaint && "left" in css) {
-                repaint.call(self);
+            if (this.config.virtualScrollY && !opts.noRepaint && "top" in css) {
+                repaint.call(this);
+            } else if (this.config.virtualScrollX && !opts.noRepaint && "left" in css) {
+                repaint.call(this);
             }
             if (opts.callback) {
                 opts.callback();
             }
         }
-
-
     };
 
     const blur = function () {
@@ -2129,9 +2134,10 @@
                     // 아래로
                     if (focusedColumn.rowIndex + (originalColumn.rowspan - 1) + _dy > this.bodyRowTable.rows.length - 1) {
                         focusedColumn.dindex = focusedColumn.dindex + _dy;
+                        focusedColumn.doindex = focusedColumn.doindex + _dy;
                         focusedColumn.rowIndex = 0;
                         if (focusedColumn.dindex > this.list.length - 1) {
-                            focusedColumn.dindex = this.list.length - 1;
+                            focusedColumn.dindex = focusedColumn.doindex = this.list.length - 1;
                             moveResult = false;
                         }
                     } else {
@@ -2142,9 +2148,10 @@
                     // 위로
                     if (focusedColumn.rowIndex + _dy < 0) {
                         focusedColumn.dindex = focusedColumn.dindex + _dy;
+                        focusedColumn.doindex = focusedColumn.doindex + _dy;
                         focusedColumn.rowIndex = this.bodyRowTable.rows.length - 1;
                         if (focusedColumn.dindex < 0) {
-                            focusedColumn.dindex = 0;
+                            focusedColumn.dindex = focusedColumn.doindex = 0;
                             moveResult = false;
                         }
                     } else {
@@ -2197,7 +2204,6 @@
                     if (focusedColumn.dindex <= this.xvar.virtualPaintStartRowIndex) {
                         let newTop = (focusedColumn.dindex - this.xvar.frozenRowIndex - 1) * this.xvar.bodyTrHeight;
                         if (newTop < 0) newTop = 0;
-
                         scrollTo.call(this, {top: -newTop, timeoutUnUse: false});
                         GRID.scroller.resize.call(this);
                     }
@@ -2521,7 +2527,7 @@
                         }
 
                         GRID.data.setValue.call(self, dindex, doindex, col.key, newValue);
-                        updateRowState.call(self, ["cellChecked"], dindex, {
+                        updateRowState.call(self, ["cellChecked"], dindex, doindex, {
                             key: col.key, rowIndex: rowIndex, colIndex: colIndex,
                             editorConfig: col.editor.config, checked: checked
                         });
@@ -2677,17 +2683,21 @@
 
                                         let checked, newValue;
                                         if (column.editor.config && column.editor.config.trueValue) {
-                                            if (checked = !(value == column.editor.config.trueValue)) {
+                                            // console.log(value, column.editor.config.trueValue);
+
+                                            if (value != column.editor.config.trueValue) {
                                                 newValue = column.editor.config.trueValue;
+                                                checked = true;
                                             } else {
                                                 newValue = column.editor.config.falseValue;
+                                                checked = false;
                                             }
                                         } else {
                                             newValue = checked = (value == false || value == "false" || value < "1") ? "true" : "false";
                                         }
 
-                                        GRID.data.setValue.call(this, _column.dindex, _column.doindex, column.key, newValue);
-                                        updateRowState.call(this, ["cellChecked"], dindex, {
+                                        GRID.data.setValue.call(this, dindex, doindex, column.key, newValue);
+                                        updateRowState.call(this, ["cellChecked"], dindex, doindex, {
                                             key: column.key, rowIndex: _column.rowIndex, colIndex: _column.colIndex,
                                             editorConfig: column.editor.config, checked: checked
                                         });
