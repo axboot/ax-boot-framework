@@ -5,7 +5,7 @@ import com.chequer.axboot.core.annotations.ColumnPosition;
 import com.chequer.axboot.core.db.type.LabelEnumType;
 import com.chequer.axboot.core.db.type.MySQLJSONUserType;
 import com.chequer.axboot.core.domain.base.AXBootCrudModel;
-import com.chequer.axboot.core.utils.SessionUtils;
+import com.chequer.axboot.admin.utils.SessionUtils;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Getter;
 import lombok.Setter;
