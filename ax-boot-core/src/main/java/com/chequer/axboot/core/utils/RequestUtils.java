@@ -197,23 +197,25 @@ public class RequestUtils {
         return "";
     }
 
-    public String getRequestBodyJson() {
+    public String getRequestBodyJson(HttpServletRequest request) {
+        String contentType = request.getHeader("content-type");
+
+        if (contentType != null && contentType.contains("application/json")) {
+            String body = getRequestBody();
+
+            if (StringUtils.isNotEmpty(body)) {
+                return JsonUtils.toPrettyJson(JsonUtils.fromJson(getRequestBody()));
+            }
+            return "";
+        }
+
         Map<String, String> requestBodyParameterMap = getRequestBodyParameterMap();
 
         if (requestBodyParameterMap.size() > 0) {
-            return JsonUtils.fromJson(requestBodyParameterMap).toString();
+            return JsonUtils.toPrettyJson(requestBodyParameterMap);
         }
 
-        String requestBody = getRequestBody();
-
-        try {
-            if (!StringUtils.isEmpty(requestBody)) {
-                return JsonUtils.fromJson(requestBody).toString();
-            }
-        } catch (Exception e) {
-        }
-
-        return requestBody;
+        return "";
     }
 
     public String getRequestUri() {

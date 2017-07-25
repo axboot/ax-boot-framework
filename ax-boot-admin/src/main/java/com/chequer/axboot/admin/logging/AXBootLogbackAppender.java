@@ -1,4 +1,4 @@
-package com.chequer.axboot.core.logging;
+package com.chequer.axboot.admin.logging;
 
 import ch.qos.logback.classic.spi.ILoggingEvent;
 import ch.qos.logback.core.UnsynchronizedAppenderBase;

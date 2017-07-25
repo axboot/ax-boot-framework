@@ -1,4 +1,4 @@
-package com.chequer.axboot.core.domain.user;
+package com.chequer.axboot.admin.domain.user;
 
 import eu.bitwalker.useragentutils.*;
 import lombok.Data;

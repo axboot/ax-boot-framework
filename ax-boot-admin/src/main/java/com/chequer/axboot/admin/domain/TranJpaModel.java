@@ -1,6 +1,6 @@
 package com.chequer.axboot.admin.domain;
 
-import com.chequer.axboot.core.utils.SessionUtils;
+import com.chequer.axboot.admin.utils.SessionUtils;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Getter;
 import lombok.Setter;
