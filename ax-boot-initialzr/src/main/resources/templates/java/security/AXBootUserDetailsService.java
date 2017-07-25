@@ -1,5 +1,6 @@
 package ${basePackage}.security;
 
+import ${basePackage}.domain.user.SessionUser;
 import ${basePackage}.domain.user.User;
 import ${basePackage}.domain.user.UserService;
 import ${basePackage}.domain.user.auth.UserAuth;
@@ -7,7 +8,6 @@ import ${basePackage}.domain.user.auth.UserAuthService;
 import ${basePackage}.domain.user.role.UserRole;
 import ${basePackage}.domain.user.role.UserRoleService;
 import com.chequer.axboot.core.code.AXBootTypes;
-import com.chequer.axboot.core.domain.user.SessionUser;
 import com.chequer.axboot.core.utils.DateTimeUtils;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;

@@ -1,9 +1,9 @@
 package ${basePackage}.security;
 
+import ${basePackage}.domain.user.SessionUser;
 import ${basePackage}.domain.user.UserService;
 import com.chequer.axboot.core.api.response.ApiResponse;
 import com.chequer.axboot.core.code.ApiStatus;
-import com.chequer.axboot.core.domain.user.SessionUser;
 import com.chequer.axboot.core.utils.HttpUtils;
 import com.chequer.axboot.core.utils.JsonUtils;
 import com.fasterxml.jackson.databind.ObjectMapper;
