@@ -23,7 +23,8 @@
 
     const initData = function (_list) {
         this.selectedDataIndexs = [];
-        this.deletedList = [];
+        // this.deletedList = [];
+        // todo : deletedList 초기화 시점이 언제로 하는게 좋은가. set 메소드에서 초기화 하는 것으로 수정
 
         let i = 0, l = _list.length,
             returnList = [],
@@ -47,50 +48,51 @@
                 gi = 0;
 
                 if (_list[i] && _list[i][this.config.columnKeys.deleted]) {
-                        this.deletedList.push(_list[i]);
+                    this.deletedList.push(_list[i]);
                 }
+                else {
+                    compareString = ""; // 그룹핑 구문검사용
+                    appendRow = []; // 현재줄 앞에 추가해줘야 하는 줄
 
-                compareString = ""; // 그룹핑 구문검사용
-                appendRow = []; // 현재줄 앞에 추가해줘야 하는 줄
-
-                // 그룹핑 구문검사
-                for (; gi < gl; gi++) {
-                    if (_list[i]) {
-                        compareString += "$|$" + _list[i][groupingKeys[gi].key];
-                    }
-
-                    if (appendIndex > 0 && compareString != groupingKeys[gi].compareString) {
-                        let appendRowItem = {keys: [], labels: [], list: groupingKeys[gi].list};
-                        for (let ki = 0; ki < gi + 1; ki++) {
-                            appendRowItem.keys.push(groupingKeys[ki].key);
-                            appendRowItem.labels.push(_list[i - 1][groupingKeys[ki].key]);
+                    // 그룹핑 구문검사
+                    for (; gi < gl; gi++) {
+                        if (_list[i]) {
+                            compareString += "$|$" + _list[i][groupingKeys[gi].key];
                         }
-                        appendRow.push(appendRowItem);
-                        groupingKeys[gi].list = [];
+
+                        if (appendIndex > 0 && compareString != groupingKeys[gi].compareString) {
+                            let appendRowItem = {keys: [], labels: [], list: groupingKeys[gi].list};
+                            for (let ki = 0; ki < gi + 1; ki++) {
+                                appendRowItem.keys.push(groupingKeys[ki].key);
+                                appendRowItem.labels.push(_list[i - 1][groupingKeys[ki].key]);
+                            }
+                            appendRow.push(appendRowItem);
+                            groupingKeys[gi].list = [];
+                        }
+
+                        groupingKeys[gi].list.push(_list[i]);
+                        groupingKeys[gi].compareString = compareString;
                     }
 
-                    groupingKeys[gi].list.push(_list[i]);
-                    groupingKeys[gi].compareString = compareString;
-                }
-
-                // 새로 추가해야할 그룹핑 row
-                ari = appendRow.length;
-                while (ari--) {
-                    returnList.push({__isGrouping: true, __groupingList: appendRow[ari].list, __groupingBy: {keys: appendRow[ari].keys, labels: appendRow[ari].labels}});
-                }
-                //~ 그룹핑 구문 검사 완료
-
-                if (_list[i]) {
-                    if (_list[i][this.config.columnKeys.selected]) {
-                        this.selectedDataIndexs.push(i);
+                    // 새로 추가해야할 그룹핑 row
+                    ari = appendRow.length;
+                    while (ari--) {
+                        returnList.push({__isGrouping: true, __groupingList: appendRow[ari].list, __groupingBy: {keys: appendRow[ari].keys, labels: appendRow[ari].labels}});
                     }
-                    // 그룹핑이 적용된 경우 오리지널 인덱스 의미 없음 : 정렬보다 그룹핑이 더 중요하므로.
-                    _list[i]["__original_index"] = _list[i]["__index"] = lineNumber;
-                    returnList.push(_list[i]);
+                    //~ 그룹핑 구문 검사 완료
 
-                    dataRealRowCount++;
-                    appendIndex++;
-                    lineNumber++;
+                    if (_list[i]) {
+                        if (_list[i][this.config.columnKeys.selected]) {
+                            this.selectedDataIndexs.push(i);
+                        }
+                        // 그룹핑이 적용된 경우 오리지널 인덱스 의미 없음 : 정렬보다 그룹핑이 더 중요하므로.
+                        _list[i]["__original_index"] = _list[i]["__index"] = lineNumber;
+                        returnList.push(_list[i]);
+
+                        dataRealRowCount++;
+                        appendIndex++;
+                        lineNumber++;
+                    }
                 }
             }
         }
@@ -245,6 +247,7 @@
                 (!this.config.remoteSort && Object.keys(this.sortInfo).length) ? sort.call(this, this.sortInfo, list) : list
             );
         }
+        this.selectedDataIndexs = [];
         this.deletedList = [];
 
         this.needToPaintSum = true;
@@ -388,6 +391,22 @@
                     processor.tree.call(this, _dindex);
                 } else {
                     list.splice(_dindex, 1);
+                }
+            },
+            "selected": function () {
+                if (this.config.tree.use) {
+                    processor.tree.call(this, "selected");
+                } else {
+                    let __list = [], i, l;
+
+                    for (i = 0, l = list.length; i < l; i++) {
+                        if (!list[i][this.config.columnKeys.selected]) {
+                            __list.push(list[i]);
+                        }
+                    }
+                    list = __list;
+                    __list = null;
+                    i = null;
                 }
             },
             "tree": function (_dindex) {
@@ -608,7 +627,7 @@
             for (; i < l; i++) {
                 if (this.list[i]) {
                     if (this.list[i][keys.parentHash].substr(0, selfHash.length) === selfHash) {
-                        
+
                         if (_options && _options.filter) {
                             if (_options.filter.call({item: this.list[i], dindex: i}, this.list[i])) {
                                 for (let _k in _updateData) {
@@ -637,19 +656,21 @@
 
     const setValue = function (_dindex, _doindex, _key, _value) {
         let originalValue = getValue.call(this, _dindex, _doindex, _key);
+        let list = this.list;
+        let listIndex = (typeof _doindex === "undefined") ? _dindex : _doindex;
         this.needToPaintSum = true;
 
         if (originalValue !== _value) {
             if (/[\.\[\]]/.test(_key)) {
                 try {
-                    this.list[_dindex][this.config.columnKeys.modified] = true;
-                    (Function("val", "this" + GRID.util.getRealPathForDataItem(_key) + " = val;")).call(this.list[_dindex], _value);
+                    list[listIndex][this.config.columnKeys.modified] = true;
+                    (Function("val", "this" + GRID.util.getRealPathForDataItem(_key) + " = val;")).call(list[listIndex], _value);
                 } catch (e) {
 
                 }
             } else {
-                this.list[_dindex][this.config.columnKeys.modified] = true;
-                this.list[_dindex][_key] = _value;
+                list[listIndex][this.config.columnKeys.modified] = true;
+                list[listIndex][_key] = _value;
             }
 
             if (this.onDataChanged) {
@@ -856,7 +877,7 @@
 
         this.appendProgress = true;
         GRID.page.statusUpdate.call(this);
-        
+
         if (this.appendDebouncer) {
             if (self.appendDebounceTimes < this.config.debounceTime / 10) {
                 clearTimeout(this.appendDebouncer);

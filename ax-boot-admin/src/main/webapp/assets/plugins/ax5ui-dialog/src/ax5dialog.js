@@ -555,6 +555,7 @@
                     if(this.autoCloseTimer) clearTimeout(this.autoCloseTimer);
 
                     opts = self.dialogConfig;
+
                     this.activeDialog.addClass("destroy");
                     jQuery(window).unbind("keydown.ax5dialog");
                     jQuery(window).unbind("resize.ax5dialog");

@@ -42,27 +42,27 @@
          *         height: 200
          *     },
          *
-         *         target: document.getElementById("calendar-target"),
-         *         displayDate: (new Date()),
-         *         mode: "day",
-         *         selectMode: "day",
+         *     target: document.getElementById("calendar-target"),
+         *     displayDate: (new Date()),
+         *     mode: "day",
+         *     selectMode: "day",
          *
-         *         marker: (function () {
-         *             var marker = {};
-         *             marker[_c_date(today, {'return': 'yyyy-MM-dd', 'add': {d: -1}})] = true;
-         *             marker[_c_date(today, {'return': 'yyyy-MM-dd', 'add': {d: 0}})] = true;
-         *             marker[_c_date(today, {'return': 'yyyy-MM-dd', 'add': {d: 1}})] = true;
+         *     marker: (function () {
+         *         var marker = {};
+         *         marker[_c_date(today, {'return': 'yyyy-MM-dd', 'add': {d: -1}})] = true;
+         *         marker[_c_date(today, {'return': 'yyyy-MM-dd', 'add': {d: 0}})] = true;
+         *         marker[_c_date(today, {'return': 'yyyy-MM-dd', 'add': {d: 1}})] = true;
          *
-	     *             return marker;
-         *         })(),
-         *         onClick: function () {
-         *             console.log(myCalendar.getSelection());
-         *         },
-         *         onStateChanged: function () {
-         *             console.log(this);
-         *         }
-         *         , multipleSelect: 2
-         *     });
+	     *         return marker;
+         *     })(),
+         *     onClick: function () {
+         *         console.log(myCalendar.getSelection());
+         *     },
+         *     onStateChanged: function () {
+         *         console.log(this);
+         *     }
+         *     , multipleSelect: 2
+         * });
          * ```
          */
         return function () {
@@ -838,9 +838,7 @@
                 };
 
                 return function (selection, isPrint) {
-                    var
-                        result = {}
-                        ;
+                    var result = {};
                     selectableCount = (cfg.multipleSelect) ? (U.isNumber(cfg.multipleSelect)) ? cfg.multipleSelect : 2 : 1;
 
                     if (cfg.selection = selection) {
@@ -918,10 +916,8 @@
 
                 return function (selectable, isPrint) {
 
-                    var
-                        key,
-                        result = {}
-                        ;
+                    var key,
+                        result = {};
 
                     if (cfg.selectable = selectable) {
                         if (U.isArray(selectable)) {

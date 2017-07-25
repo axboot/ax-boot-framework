@@ -650,8 +650,9 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
              * @param {Number} [_config.header.columnPadding=3]
              * @param {Number} [_config.header.columnBorderWidth=1]
              * @param {Object} [_config.body]
-             * @param {Function} [_config.onClick]
-             * @param {Function} [_config.onDBLClick]
+             * @param {Function} [_config.body.onClick]
+             * @param {Function} [_config.body.onDBLClick]
+             * @param {Function} [_config.body.onDataChanged]
              * @param {String|Array} [_config.body.mergeCells=false] -
              * @param {String} [_config.body.align]
              * @param {Number} [_config.body.columnHeight=25]
@@ -660,6 +661,8 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
              * @param {Object} [_config.body.grouping]
              * @param {Array} [_config.body.grouping.by] - list grouping keys
              * @param {Array} [_config.body.grouping.columns] - list grouping columns
+             * @param {(String|Function)} [_config.body.trStyleClass]
+             *
              * @param {Object} [_config.page]
              * @param {Number} [_config.page.height=25]
              * @param {Boolean} [_config.page.display=true] - grid page display
@@ -919,12 +922,12 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
                                     if (self.focused) {
                                         GRID.body.blur.call(self);
                                     }
-                                } else if (e.which == ax5.info.eventKeys.RETURN) {
+                                } else if (e.which == ax5.info.eventKeys.RETURN || e.which == ax5.info.eventKeys.SPACE) {
                                     self.keyDown("RETURN", e.originalEvent);
                                 } else if (e.which == ax5.info.eventKeys.TAB) {
                                     //self.keyDown("RETURN", e.originalEvent);
                                     U.stopEvent(e);
-                                } else if (e.which != ax5.info.eventKeys.SPACE && Object.keys(self.focusedColumn).length) {
+                                } else if (Object.keys(self.focusedColumn).length) {
                                     self.keyDown("INLINE_EDIT", e.originalEvent);
                                 }
                             }
@@ -1226,6 +1229,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
              * ax5Grid.removeRow("first");
              * ax5Grid.removeRow("last");
              * ax5Grid.removeRow(1);
+             * ax5Grid.removeRow("selected");
              * ```
              */
             this.removeRow = function (_dindex) {
@@ -2231,6 +2235,21 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
         // 그리드 바디에 출력할 여유 카운트
         this.xvar.paintRowCountMargin = this.config.virtualScrollYCountMargin;
         this.xvar.paintRowCountTopMargin = this.config.virtualScrollYCountMargin - Math.floor(this.config.virtualScrollYCountMargin / 2);
+
+        if (this.config.virtualScrollAccelerated) {
+            this.__throttledScroll = U.throttle(function (css, opts) {
+                if (this.config.virtualScrollY && !opts.noRepaint && "top" in css) {
+                    repaint.call(this);
+                } else if (this.config.virtualScrollX && !opts.noRepaint && "left" in css) {
+                    repaint.call(this);
+                }
+                if (opts.callback) {
+                    opts.callback();
+                }
+            }, this.config.virtualScrollAcceleratedDelayTime);
+        } else {
+            this.__throttledScroll = false;
+        }
     };
 
     var resetFrozenColumn = function resetFrozenColumn() {
@@ -2714,7 +2733,10 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
 
                     for (tri = 0, trl = rowTable.rows.length; tri < trl; tri++) {
 
-                        SS.push('<tr class="tr-' + di % 4 + '"', isGroupingRow ? ' data-ax5grid-grouping-tr="true"' : '', ' data-ax5grid-tr-data-index="' + di + '"', ' data-ax5grid-tr-data-o-index="' + odi + '"', ' data-ax5grid-selected="' + (_list[di][cfg.columnKeys.selected] || "false") + '"', ' data-ax5grid-disable-selection="' + (_list[di][cfg.columnKeys.disableSelection] || "false") + '"', '>');
+                        SS.push('<tr class="tr-' + di % 4 + '', cfg.body.trStyleClass ? U.isFunction(cfg.body.trStyleClass) ? ' ' + cfg.body.trStyleClass.call({
+                            item: _list[di],
+                            index: di
+                        }, _list[di], di) : ' ' + cfg.body.trStyleClass : '', '"', isGroupingRow ? ' data-ax5grid-grouping-tr="true"' : '', ' data-ax5grid-tr-data-index="' + di + '"', ' data-ax5grid-tr-data-o-index="' + odi + '"', ' data-ax5grid-selected="' + (_list[di][cfg.columnKeys.selected] || "false") + '"', ' data-ax5grid-disable-selection="' + (_list[di][cfg.columnKeys.disableSelection] || "false") + '"', '>');
                         for (ci = 0, cl = rowTable.rows[tri].cols.length; ci < cl; ci++) {
                             col = rowTable.rows[tri].cols[ci];
                             cellHeight = cfg.body.columnHeight * col.rowspan - cfg.body.columnBorderWidth;
@@ -3650,24 +3672,14 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
             this.$.panel["bottom-body-scroll"].css({ left: css.left });
         }
 
-        if (this.config.virtualScrollAccelerated && !opts.timeoutUnUse) {
-            if (this.xvar.bodyScrollToTimer) clearTimeout(this.xvar.bodyScrollToTimer);
-            this.xvar.bodyScrollToTimer = setTimeout(function () {
-
-                if (self.config.virtualScrollY && !opts.noRepaint && "top" in css) {
-                    repaint.call(self);
-                } else if (self.config.virtualScrollX && !opts.noRepaint && "left" in css) {
-                    repaint.call(self);
-                }
-                if (opts.callback) {
-                    opts.callback();
-                }
-            }, this.config.virtualScrollAcceleratedDelayTime);
+        // 바디 리페인팅 this.__throttledScroll 은 body init 에서 초기화
+        if (this.__throttledScroll) {
+            this.__throttledScroll(css, opts);
         } else {
-            if (self.config.virtualScrollY && !opts.noRepaint && "top" in css) {
-                repaint.call(self);
-            } else if (self.config.virtualScrollX && !opts.noRepaint && "left" in css) {
-                repaint.call(self);
+            if (this.config.virtualScrollY && !opts.noRepaint && "top" in css) {
+                repaint.call(this);
+            } else if (this.config.virtualScrollX && !opts.noRepaint && "left" in css) {
+                repaint.call(this);
             }
             if (opts.callback) {
                 opts.callback();
@@ -3707,9 +3719,10 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
                     // 아래로
                     if (focusedColumn.rowIndex + (originalColumn.rowspan - 1) + _dy > this.bodyRowTable.rows.length - 1) {
                         focusedColumn.dindex = focusedColumn.dindex + _dy;
+                        focusedColumn.doindex = focusedColumn.doindex + _dy;
                         focusedColumn.rowIndex = 0;
                         if (focusedColumn.dindex > this.list.length - 1) {
-                            focusedColumn.dindex = this.list.length - 1;
+                            focusedColumn.dindex = focusedColumn.doindex = this.list.length - 1;
                             moveResult = false;
                         }
                     } else {
@@ -3719,9 +3732,10 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
                     // 위로
                     if (focusedColumn.rowIndex + _dy < 0) {
                         focusedColumn.dindex = focusedColumn.dindex + _dy;
+                        focusedColumn.doindex = focusedColumn.doindex + _dy;
                         focusedColumn.rowIndex = this.bodyRowTable.rows.length - 1;
                         if (focusedColumn.dindex < 0) {
-                            focusedColumn.dindex = 0;
+                            focusedColumn.dindex = focusedColumn.doindex = 0;
                             moveResult = false;
                         }
                     } else {
@@ -3772,7 +3786,6 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
                     if (focusedColumn.dindex <= this.xvar.virtualPaintStartRowIndex) {
                         var newTop = (focusedColumn.dindex - this.xvar.frozenRowIndex - 1) * this.xvar.bodyTrHeight;
                         if (newTop < 0) newTop = 0;
-
                         scrollTo.call(this, { top: -newTop, timeoutUnUse: false });
                         GRID.scroller.resize.call(this);
                     } else if (focusedColumn.dindex + 1 > this.xvar.virtualPaintStartRowIndex + (this.xvar.virtualPaintRowCount - 2)) {
@@ -4092,7 +4105,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
                         }
 
                         GRID.data.setValue.call(self, dindex, doindex, col.key, newValue);
-                        updateRowState.call(self, ["cellChecked"], dindex, {
+                        updateRowState.call(self, ["cellChecked"], dindex, doindex, {
                             key: col.key, rowIndex: rowIndex, colIndex: colIndex,
                             editorConfig: col.editor.config, checked: checked
                         });
@@ -4242,17 +4255,21 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
                                         var checked = void 0,
                                             newValue = void 0;
                                         if (column.editor.config && column.editor.config.trueValue) {
-                                            if (checked = !(value == column.editor.config.trueValue)) {
+                                            // console.log(value, column.editor.config.trueValue);
+
+                                            if (value != column.editor.config.trueValue) {
                                                 newValue = column.editor.config.trueValue;
+                                                checked = true;
                                             } else {
                                                 newValue = column.editor.config.falseValue;
+                                                checked = false;
                                             }
                                         } else {
                                             newValue = checked = value == false || value == "false" || value < "1" ? "true" : "false";
                                         }
 
-                                        GRID.data.setValue.call(this, _column.dindex, _column.doindex, column.key, newValue);
-                                        updateRowState.call(this, ["cellChecked"], _dindex3, {
+                                        GRID.data.setValue.call(this, _dindex3, doindex, column.key, newValue);
+                                        updateRowState.call(this, ["cellChecked"], _dindex3, doindex, {
                                             key: column.key, rowIndex: _column.rowIndex, colIndex: _column.colIndex,
                                             editorConfig: column.editor.config, checked: checked
                                         });
@@ -4476,7 +4493,8 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
 
     var initData = function initData(_list) {
         this.selectedDataIndexs = [];
-        this.deletedList = [];
+        // this.deletedList = [];
+        // todo : deletedList 초기화 시점이 언제로 하는게 좋은가. set 메소드에서 초기화 하는 것으로 수정
 
         var i = 0,
             l = _list.length,
@@ -4506,49 +4524,49 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
 
                 if (_list[i] && _list[i][this.config.columnKeys.deleted]) {
                     this.deletedList.push(_list[i]);
-                }
+                } else {
+                    compareString = ""; // 그룹핑 구문검사용
+                    appendRow = []; // 현재줄 앞에 추가해줘야 하는 줄
 
-                compareString = ""; // 그룹핑 구문검사용
-                appendRow = []; // 현재줄 앞에 추가해줘야 하는 줄
-
-                // 그룹핑 구문검사
-                for (; gi < gl; gi++) {
-                    if (_list[i]) {
-                        compareString += "$|$" + _list[i][groupingKeys[gi].key];
-                    }
-
-                    if (appendIndex > 0 && compareString != groupingKeys[gi].compareString) {
-                        var appendRowItem = { keys: [], labels: [], list: groupingKeys[gi].list };
-                        for (var ki = 0; ki < gi + 1; ki++) {
-                            appendRowItem.keys.push(groupingKeys[ki].key);
-                            appendRowItem.labels.push(_list[i - 1][groupingKeys[ki].key]);
+                    // 그룹핑 구문검사
+                    for (; gi < gl; gi++) {
+                        if (_list[i]) {
+                            compareString += "$|$" + _list[i][groupingKeys[gi].key];
                         }
-                        appendRow.push(appendRowItem);
-                        groupingKeys[gi].list = [];
+
+                        if (appendIndex > 0 && compareString != groupingKeys[gi].compareString) {
+                            var appendRowItem = { keys: [], labels: [], list: groupingKeys[gi].list };
+                            for (var ki = 0; ki < gi + 1; ki++) {
+                                appendRowItem.keys.push(groupingKeys[ki].key);
+                                appendRowItem.labels.push(_list[i - 1][groupingKeys[ki].key]);
+                            }
+                            appendRow.push(appendRowItem);
+                            groupingKeys[gi].list = [];
+                        }
+
+                        groupingKeys[gi].list.push(_list[i]);
+                        groupingKeys[gi].compareString = compareString;
                     }
 
-                    groupingKeys[gi].list.push(_list[i]);
-                    groupingKeys[gi].compareString = compareString;
-                }
-
-                // 새로 추가해야할 그룹핑 row
-                ari = appendRow.length;
-                while (ari--) {
-                    returnList.push({ __isGrouping: true, __groupingList: appendRow[ari].list, __groupingBy: { keys: appendRow[ari].keys, labels: appendRow[ari].labels } });
-                }
-                //~ 그룹핑 구문 검사 완료
-
-                if (_list[i]) {
-                    if (_list[i][this.config.columnKeys.selected]) {
-                        this.selectedDataIndexs.push(i);
+                    // 새로 추가해야할 그룹핑 row
+                    ari = appendRow.length;
+                    while (ari--) {
+                        returnList.push({ __isGrouping: true, __groupingList: appendRow[ari].list, __groupingBy: { keys: appendRow[ari].keys, labels: appendRow[ari].labels } });
                     }
-                    // 그룹핑이 적용된 경우 오리지널 인덱스 의미 없음 : 정렬보다 그룹핑이 더 중요하므로.
-                    _list[i]["__original_index"] = _list[i]["__index"] = lineNumber;
-                    returnList.push(_list[i]);
+                    //~ 그룹핑 구문 검사 완료
 
-                    dataRealRowCount++;
-                    appendIndex++;
-                    lineNumber++;
+                    if (_list[i]) {
+                        if (_list[i][this.config.columnKeys.selected]) {
+                            this.selectedDataIndexs.push(i);
+                        }
+                        // 그룹핑이 적용된 경우 오리지널 인덱스 의미 없음 : 정렬보다 그룹핑이 더 중요하므로.
+                        _list[i]["__original_index"] = _list[i]["__index"] = lineNumber;
+                        returnList.push(_list[i]);
+
+                        dataRealRowCount++;
+                        appendIndex++;
+                        lineNumber++;
+                    }
                 }
             }
         } else {
@@ -4704,6 +4722,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
             this.proxyList = null;
             this.list = initData.call(this, !this.config.remoteSort && Object.keys(this.sortInfo).length ? sort.call(this, this.sortInfo, list) : list);
         }
+        this.selectedDataIndexs = [];
         this.deletedList = [];
 
         this.needToPaintSum = true;
@@ -4833,6 +4852,24 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
                     processor.tree.call(this, _dindex);
                 } else {
                     list.splice(_dindex, 1);
+                }
+            },
+            "selected": function selected() {
+                if (this.config.tree.use) {
+                    processor.tree.call(this, "selected");
+                } else {
+                    var __list = [],
+                        i = void 0,
+                        l = void 0;
+
+                    for (i = 0, l = list.length; i < l; i++) {
+                        if (!list[i][this.config.columnKeys.selected]) {
+                            __list.push(list[i]);
+                        }
+                    }
+                    list = __list;
+                    __list = null;
+                    i = null;
                 }
             },
             "tree": function tree(_dindex) {
@@ -5059,17 +5096,19 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
 
     var setValue = function setValue(_dindex, _doindex, _key, _value) {
         var originalValue = getValue.call(this, _dindex, _doindex, _key);
+        var list = this.list;
+        var listIndex = typeof _doindex === "undefined" ? _dindex : _doindex;
         this.needToPaintSum = true;
 
         if (originalValue !== _value) {
             if (/[\.\[\]]/.test(_key)) {
                 try {
-                    this.list[_dindex][this.config.columnKeys.modified] = true;
-                    Function("val", "this" + GRID.util.getRealPathForDataItem(_key) + " = val;").call(this.list[_dindex], _value);
+                    list[listIndex][this.config.columnKeys.modified] = true;
+                    Function("val", "this" + GRID.util.getRealPathForDataItem(_key) + " = val;").call(list[listIndex], _value);
                 } catch (e) {}
             } else {
-                this.list[_dindex][this.config.columnKeys.modified] = true;
-                this.list[_dindex][_key] = _value;
+                list[listIndex][this.config.columnKeys.modified] = true;
+                list[listIndex][_key] = _value;
             }
 
             if (this.onDataChanged) {
@@ -5914,16 +5953,16 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
         useReturnToSave: true,
         editMode: "popup",
         getHtml: function getHtml(_root, _columnKey, _editor, _value) {
+            var attributesText = "";
             if (typeof _editor.attributes !== "undefined") {
-                var attributesText = "";
                 for (var k in _editor.attributes) {
                     attributesText += " " + k + "='" + _editor.attributes[k] + "'";
                 }
             }
-            return '<input type="text" data-ax5grid-editor="money" value="' + _value + '" ${attributesText}>';
+            return '<input type="text" data-ax5grid-editor="money" value="' + _value + '" ' + attributesText + '" />';
         },
         init: function init(_root, _columnKey, _editor, _$parent, _value) {
-            var $el;
+            var $el = void 0;
             _$parent.append($el = jQuery(this.getHtml(_root, _columnKey, _editor, _value)));
             this.bindUI(_root, _columnKey, $el, _editor, _$parent, _value);
             $el.on("blur", function () {
@@ -5944,13 +5983,13 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
         useReturnToSave: true,
         editMode: "popup",
         getHtml: function getHtml(_root, _columnKey, _editor, _value) {
+            var attributesText = "";
             if (typeof _editor.attributes !== "undefined") {
-                var attributesText = "";
                 for (var k in _editor.attributes) {
                     attributesText += " " + k + "='" + _editor.attributes[k] + "'";
                 }
             }
-            return '<input type="text" data-ax5grid-editor="number" value="' + _value + '" ${attributesText}>';
+            return '<input type="text" data-ax5grid-editor="number" value="' + _value + '" ' + attributesText + '" />';
         },
         init: function init(_root, _columnKey, _editor, _$parent, _value) {
             var $el;
@@ -6633,11 +6672,8 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
                 var css = getContentPosition(e);
 
                 resize.call(self);
-                //if (self.xvar.scrollTimer) clearTimeout(self.xvar.scrollTimer);
-                //self.xvar.scrollTimer = setTimeout(function () {
                 GRID.header.scrollTo.call(self, { left: css.left });
                 GRID.body.scrollTo.call(self, css, { noRepaint: "noRepaint" });
-                //}, 0);
                 U.stopEvent(e.originalEvent);
                 self.xvar.touchmoved = true;
             }).on("touchend" + ".ax5grid-" + this.instanceId, function (e) {
@@ -6645,12 +6681,8 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
                     var css = getContentPosition(e);
 
                     resize.call(self);
-                    //if (self.xvar.scrollTimer) clearTimeout(self.xvar.scrollTimer);
-                    //self.xvar.scrollTimer = setTimeout(function () {
                     GRID.header.scrollTo.call(self, { left: css.left });
                     GRID.body.scrollTo.call(self, css);
-                    //}, 0);
-
                     U.stopEvent(e.originalEvent);
                     scrollContentMover.off.call(self);
                 }

@@ -938,6 +938,9 @@
                     setTimeout((function () {
                         this.open(opts, callback, tryCount + 1);
                     }).bind(this), cfg.animateTime);
+                } else {
+                    // 열기 시도 종료
+                    this.watingModal = false;
                 }
                 return this;
             };
@@ -945,49 +948,56 @@
             /**
              * close the modal
              * @method ax5modal.close
+             * @param _option
              * @returns {ax5modal}
              * @example
              * ```
              * my_modal.close();
+             * my_modal.close({callback: function(){
+             *  // on close event
+             * });
+             * // close 함수에 callback을 전달하면 정확한 close 타이밍을 캐치할 수 있습니다
              * ```
              */
-            this.close = function (opts) {
+
+            this.close = function (_option) {
+                let opts, that;
+
                 if (this.activeModal) {
                     opts = self.modalConfig;
                     this.activeModal.addClass("destroy");
                     jQuery(window).unbind("keydown.ax-modal");
                     jQuery(window).unbind("resize.ax-modal");
 
+
                     setTimeout((function () {
-                        if (this.activeModal) {
+                        // 프레임 제거
+                        if (opts.iframe) {
+                            var $iframe = this.$["iframe"]; // iframe jQuery Object
+                            if ($iframe) {
+                                var iframeObject = $iframe.get(0),
+                                    idoc = (iframeObject.contentDocument) ? iframeObject.contentDocument : iframeObject.contentWindow.document;
 
-                            // 프레임 제거
-                            if (opts.iframe) {
-                                var $iframe = this.$["iframe"]; // iframe jQuery Object
-                                if ($iframe) {
-                                    var iframeObject = $iframe.get(0),
-                                        idoc = (iframeObject.contentDocument) ? iframeObject.contentDocument : iframeObject.contentWindow.document;
+                                try {
+                                    $(idoc.body).children().each(function () {
+                                        $(this).remove();
+                                    });
+                                } catch (e) {
 
-                                    try {
-                                        $(idoc.body).children().each(function () {
-                                            $(this).remove();
-                                        });
-                                    } catch (e) {
-
-                                    }
-                                    idoc.innerHTML = "";
-                                    $iframe
-                                        .attr('src', 'about:blank')
-                                        .remove();
-
-                                    // force garbarge collection for IE only
-                                    window.CollectGarbage && window.CollectGarbage();
                                 }
-                            }
+                                idoc.innerHTML = "";
+                                $iframe
+                                    .attr('src', 'about:blank')
+                                    .remove();
 
-                            this.activeModal.remove();
-                            this.activeModal = null;
+                                // force garbarge collection for IE only
+                                window.CollectGarbage && window.CollectGarbage();
+                            }
                         }
+
+                        this.activeModal.remove();
+                        this.activeModal = null;
+
                         // 모달 오픈 대기중이면 닫기 상태 전달 안함.
                         if (!this.watingModal) {
                             onStateChanged.call(this, opts, {
@@ -995,6 +1005,20 @@
                                 state: "close"
                             });
                         }
+
+                        if (_option && U.isFunction(_option.callback)) {
+                            that = {
+                                self: this,
+                                id: opts.id,
+                                theme: opts.theme,
+                                width: opts.width,
+                                height: opts.height,
+                                state: "close",
+                                $: this.$
+                            };
+                            _option.callback.call(that, that);
+                        }
+
                     }).bind(this), cfg.animateTime);
                 }
 
