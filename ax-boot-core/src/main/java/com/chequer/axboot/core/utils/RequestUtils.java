@@ -204,7 +204,10 @@ public class RequestUtils {
             String body = getRequestBody();
 
             if (StringUtils.isNotEmpty(body)) {
-                return JsonUtils.toPrettyJson(JsonUtils.fromJson(getRequestBody()));
+                if(body.startsWith("{") && body.endsWith("}")) {
+                    return JsonUtils.toPrettyJson(JsonUtils.fromJson(getRequestBody()));
+                }
+                return body;
             }
             return "";
         }
