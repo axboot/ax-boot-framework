@@ -1,0 +1,203 @@
+@import "../../../plugins/ax5core/src/ax5";
+@import "../../../plugins/ax5ui-dialog/src/scss/ax5dialog_variables";
+@import "../../../plugins/ax5ui-dialog/src/scss/ax5dialog";
+.ax5-ui-dialog {
+    .ax-dialog-body {
+        .ax-dialog-buttons {
+            .btn{
+                padding: 5px 10px;
+            }
+        }
+    }
+}
+
+$ax5mask-bg-opacity: 0.4;
+@import "../../../plugins/ax5ui-mask/src/scss/ax5mask_variables";
+@import "../../../plugins/ax5ui-mask/src/scss/ax5mask";
+
+@import "../../../plugins/ax5ui-toast/src/scss/ax5toast_variables";
+@import "../../../plugins/ax5ui-toast/src/scss/ax5toast";
+
+//$ax5modal-easing-time-open: 0.0S;
+@import "../../../plugins/ax5ui-modal/src/scss/ax5modal_variables";
+@import "../../../plugins/ax5ui-modal/src/scss/ax5modal";
+
+@import "../../../plugins/ax5ui-calendar/src/scss/ax5calendar_variables";
+@import "../../../plugins/ax5ui-calendar/src/scss/ax5calendar";
+
+$ax5picker-easing-time-open: 0.2s;
+$ax5picker-easing-time-close: 0.1s;
+@import "../../../plugins/ax5ui-picker/src/scss/ax5picker_variables";
+@import "../../../plugins/ax5ui-picker/src/scss/ax5picker";
+.ax5-ui-picker {
+    .ax-picker-body {
+        .ax-picker-buttons {
+            .btn{
+                padding: 5px 10px;
+            }
+        }
+    }
+}
+
+@import "../../../plugins/ax5ui-formatter/src/scss/ax5formatter_variables";
+@import "../../../plugins/ax5ui-formatter/src/scss/ax5formatter";
+
+@import "../../../plugins/ax5ui-menu/src/scss/ax5menu_variables";
+@import "../../../plugins/ax5ui-menu/src/scss/ax5menu";
+
+.ax5-ui-menubar {
+    &.axboot {
+        @include menubar-variant(#2C2C2C, #e4e5e7, #fff, #fff, #2c2c2c, transparent, #3DACFC);
+
+        .ax-menu-body {
+            .ax-menu-item {
+                padding: 0px 5px;
+                .ax-menu-item-cell {
+                    padding-left: 5px;
+                    font-size: 1em;
+                    //font-weight: bold;
+                    //color: lighten(#2C2C2C, 10%);
+                }
+            }
+        }
+
+    }
+}
+
+.ax5-ui-menu {
+    &.info {
+        .ax-menu-body {
+            .ax-menu-item {
+                .ax-menu-item-cell {
+                    font-size: 0.9em;
+                }
+            }
+        }
+    }
+    &.axboot {
+        @include menu-variant(#2C2C2C, #e4e5e7, #fff, #fff, #2c2c2c, $body-bg, #3DACFC);
+        .ax-menu-body {
+            .ax-menu-item {
+                height: 20px;
+
+                .ax-menu-item-cell {
+                    font-size: 0.92em;
+                    line-height: 20px;
+                }
+
+                &:hover, &.hover {
+                    .ax-menu-item-cell {
+                        &.ax-menu-item-checkbox {
+                            .item-checkbox-wrap {
+                                &:after {
+
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
+
+$ax5select-default-base-color: #444;
+$ax5select-default-theme-color: #D8D8D8;
+$ax5select-default-hover-type: darken, 0%;
+@import "../../../plugins/ax5ui-select/src/scss/ax5select_variables";
+@import "../../../plugins/ax5ui-select/src/scss/ax5select";
+
+//
+$ax5grid-border: 1px solid #D8D8D8;
+
+@import "../../../plugins/ax5ui-grid/src/scss/ax5grid_variables";
+@import "../../../plugins/ax5ui-grid/src/scss/ax5grid";
+
+$ax5combobox-label-padding: 0px 3px;
+$ax5combobox-default-base-color: #444;
+$ax5combobox-default-theme-color: #D8D8D8;
+$ax5combobox-default-hover-type: darken, 0%;
+@import "../../../plugins/ax5ui-combobox/src/scss/ax5combobox_variables";
+@import "../../../plugins/ax5ui-combobox/src/scss/ax5combobox";
+
+$ax5autocomplete-label-padding: 0px 3px;
+$ax5autocomplete-default-base-color: #444;
+$ax5autocomplete-default-theme-color: #D8D8D8;
+$ax5autocomplete-default-hover-type: darken, 1%;
+@import "../../../plugins/ax5ui-autocomplete/src/scss/ax5autocomplete_variables";
+@import "../../../plugins/ax5ui-autocomplete/src/scss/ax5autocomplete";
+
+$ax5layout-splitter-background: #ffbfc5;
+
+$ax5layout-tab-panel-label-border-top: 1px solid $body-bg;
+$ax5layout-tab-panel-label-border-bottom: 1px solid #ccc;
+$ax5layout-tab-panel-label-padding-top: 0px;
+$ax5layout-tab-panel-label-height: 35px;
+$ax5layout-tab-panel-label-item-height: 30px;
+$ax5layout-tab-panel-label-bg-colors: ($body-bg, $body-bg);
+$ax5layout-tab-panel-label-border-bg: #fff;
+
+$ax5layout-tab-panel-label-item-border-top: 1px solid #ccc;
+$ax5layout-tab-panel-label-item-border-right: 1px solid #ccc;
+$ax5layout-tab-panel-label-item-border-bottom: 1px solid #ccc;
+$ax5layout-tab-panel-label-item-bg-colors: (#d8d8d8, #d8d8d8);
+$ax5layout-tab-panel-label-item-hover-bg-colors: (#f3f3f3, #f3f3f3);
+$ax5layout-tab-panel-label-item-active-bg-colors: (#fff, #fff);
+
+@import "../../../plugins/ax5ui-layout/src/scss/ax5layout_variables";
+@import "../../../plugins/ax5ui-layout/src/scss/ax5layout";
+
+[data-ax5layout] {
+    > .split-panel-vertical[data-splitter] {
+        z-index: auto;
+        @include ax-background(left #eee #ccc);
+        border: 1px solid #b5b5b5;
+        border-radius: 3px;
+    }
+    > .split-panel-horizontal[data-splitter] {
+        z-index: auto;
+        @include ax-background(top #eee #ccc);
+        border: 1px solid #b5b5b5;
+        border-radius: 3px;
+    }
+}
+
+.ax-mask.danger {
+    .ax-mask-bg {
+        background: #7a0000;
+    }
+}
+
+.ax-mask.form-mask {
+    .ax-mask-bg {
+        background: $body-bg;
+        opacity: 0.3;
+    }
+    .ax-mask-content {
+        color: #000;
+        text-shadow: none;
+        font-size: 20px;
+    }
+}
+
+.ax-mask.progress-mask {
+    z-index: 1001;
+    .ax-mask-bg {
+
+    }
+    .ax-mask-content {
+        .progress {
+            display: block;
+            width: 250px;
+            margin: 0 auto;
+            display: block;
+            height: 10px;
+            border-radius: 5px;
+
+            [role="progressbar"] {
+                display: block;
+                @include transition(all 10s $ease-out-sine);
+            }
+        }
+    }
+}

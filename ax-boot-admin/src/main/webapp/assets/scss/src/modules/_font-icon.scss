@@ -1,0 +1,42 @@
+/* icon font */
+@import "../../plugins/cheqcon/variables";
+@import "../../plugins/cheqcon/style.scss";
+
+i {
+    &.cqc-12x {
+        font-size: 1.2em;
+    }
+    &.cqc-15x {
+        font-size: 1.5em;
+    }
+    &.cqc-18x {
+        font-size: 1.8em;
+    }
+    &.cqc-20x {
+        font-size: 2em;
+    }
+    &.cqc-30x {
+        font-size: 3em;
+    }
+    &.cqc-40x {
+        font-size: 4em;
+    }
+    &.cqc-50x {
+        font-size: 5em;
+    }
+
+    &.cqc-squre {
+
+    }
+    &.cqc-spin {
+        display: block;
+        @include animation(SPIN 1s ease-in-out infinite alternate-reverse);
+    }
+    &.cqc-brinking {
+        @include animation(BLINKING 1s ease-in-out infinite alternate-reverse);
+    }
+    &.cqc-zoom-in-out {
+        display: block;
+        @include animation(ZOOM-IN-OUT 1s ease-in-out infinite alternate-reverse);
+    }
+}

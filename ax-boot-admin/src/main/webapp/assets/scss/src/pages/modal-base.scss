@@ -1,0 +1,199 @@
+[data-page-auto-height="true"] {
+    #ax-modal-base-root {
+        overflow: hidden;
+        height: 100%;
+    }
+}
+
+[data-page-auto-height="false"] {
+    #ax-modal-base-root {
+        overflow: auto;
+    }
+}
+
+#ax-modal-base-root {
+    padding: 0;
+    @include animation(BODY_FADE_IN 0.5s $ease-out-back forwards);
+
+    .ax-base-title {
+        display: table;
+        height: 60px;
+        margin: 0 10px;
+        .title {
+            padding-left: 5px;
+            display: table-cell;
+            &h1 {
+                font-size: 24px;
+            }
+            &h2 {
+                font-size: 18px;
+            }
+            &h3 {
+                font-size: 16px;
+            }
+
+            vertical-align: middle;
+        }
+        .desc {
+            display: table-cell;
+            vertical-align: middle;
+            padding-left: 10px;
+        }
+    }
+    .ax-base-content{
+        margin: 0 10px;
+    }
+
+    h1, h2, h3, h4, h5, h6 {
+        margin: 0;
+    }
+
+    h1 {
+        font-size: 24px;
+    }
+    h2 {
+        font-size: 18px;
+    }
+    h3 {
+        font-size: 16px;
+    }
+
+    [data-page-buttons] {
+        position: absolute;
+        right: 10px;
+        top: 15px;
+        .btn {
+            padding: 5px 10px;
+        }
+    }
+}
+
+&.baseStyle {
+    @extend #ax-modal-base-root;
+    padding: 0 10px;
+
+    [data-page-buttons] {
+        position: absolute;
+        top: 10px;
+        .btn {
+            padding: 5px 10px;
+        }
+    }
+}
+
+&.manualView {
+    padding: 0 0px;
+    @include ax-background((darken(#ECF0F5, 5%), lighten(#ECF0F5, 0%)));
+
+    [role="page-header"] {
+        .navbar {
+            margin-bottom: 0;
+            background: transparent;
+            border: 0 none;
+            padding-left: 10px;
+            .navbar-menu-handle {
+                padding: 12px 10px;
+                display: none;
+            }
+            .navbar-brand{
+                color: #222;
+            }
+        }
+    }
+    [role="page-content"] {
+        position: relative;
+        padding: 0 10px;
+
+        .content-aside {
+            position: absolute;
+            left: 10px;
+            width: 300px;
+            height: 100%;
+            padding-right: 10px;
+            [data-z-tree="tree-view-01"]{
+                border: 1px solid #bcbcbc;
+                border-radius: 6px;
+            }
+        }
+        .content-body {
+            padding-left: 300px;
+            [data-manual-content="view"] {
+                background: #fff;
+                border: 1px solid #bcbcbc;
+                //box-shadow: 1px 1px 3px #000;
+                overflow: auto;
+                padding: 10px;
+                border-radius: 6px;
+            }
+        }
+
+    }
+
+    @media (max-width: $screen-md-min) {
+
+        [role="page-header"] {
+            .navbar {
+                margin-bottom: 0;
+                background: transparent;
+                border: 0 none;
+                padding-left: 10px;
+                .navbar-brand {
+                    padding-left: 0;
+                }
+                .navbar-menu-handle {
+                    padding: 12px 10px;
+                    display: block;
+                }
+            }
+        }
+        [role="page-content"] {
+            .content-aside {
+                @include transition(all 0.3s);
+                position: absolute;
+                left: -310px;
+            }
+            .content-body {
+                padding-left: 0px;
+            }
+        }
+
+        &.menu-opened {
+            [role="page-header"] {
+                .navbar {
+                    .navbar-menu-handle {
+                        .btn {
+                            background: #ccc;
+                            color: #fff;
+                        }
+                    }
+                }
+            }
+            [role="page-content"] {
+                .content-aside {
+                    position: absolute;
+                    left: 10px;
+                    padding-top: 5px;
+                    padding-left: 5px;
+                    //
+                    [data-ax-tbl]{
+                        //border-top-left-radius: 8px;
+                        //border-right: 1px solid #ccc;
+                    }
+                    .H10{
+                        display: none;
+                    }
+
+                    [data-z-tree] {
+                        background: #f3f3f3;
+                        border: 0 none;
+                        border-radius: 0;
+                    }
+                }
+                .content-body {
+                    padding-left: 0px;
+                }
+            }
+        }
+
+    }
+}
