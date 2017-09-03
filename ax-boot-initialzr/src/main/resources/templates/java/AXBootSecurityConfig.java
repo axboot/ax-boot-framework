@@ -2,8 +2,8 @@ package ${basePackage};
 
 import ${basePackage}.code.GlobalConstants;
 import ${basePackage}.domain.user.UserService;
+import ${basePackage}.logging.AXBootLogbackMdcFilter;
 import ${basePackage}.security.*;
-import com.chequer.axboot.core.filters.AXBootLogbackMdcFilter;
 import com.chequer.axboot.core.utils.CookieUtils;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

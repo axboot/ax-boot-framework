@@ -1,7 +1,8 @@
-package com.chequer.axboot.core.utils;
+package ${basePackage}.utils;
 
-import com.chequer.axboot.core.domain.user.MDCLoginUser;
-import com.chequer.axboot.core.domain.user.SessionUser;
+import ${basePackage}.domain.user.MDCLoginUser;
+import ${basePackage}.domain.user.SessionUser;
+import com.chequer.axboot.core.utils.AgentUtils;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 

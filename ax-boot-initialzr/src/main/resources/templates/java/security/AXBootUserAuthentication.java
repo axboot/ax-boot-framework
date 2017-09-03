@@ -1,6 +1,6 @@
 package ${basePackage}.security;
 
-import com.chequer.axboot.core.domain.user.SessionUser;
+import ${basePackage}.domain.user.SessionUser;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 

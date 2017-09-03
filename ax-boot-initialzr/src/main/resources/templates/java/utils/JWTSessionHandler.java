@@ -1,6 +1,6 @@
-package com.chequer.axboot.core.session;
+package ${basePackage}.utils;
 
-import com.chequer.axboot.core.domain.user.SessionUser;
+import ${basePackage}.domain.user.SessionUser;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;

@@ -1,7 +1,7 @@
-package com.chequer.axboot.core.parameter;
+package ${basePackage}.parameter;
 
-import com.chequer.axboot.core.domain.user.SessionUser;
-import com.chequer.axboot.core.utils.SessionUtils;
+import ${basePackage}.domain.user.SessionUser;
+import ${basePackage}.utils.SessionUtils;
 import org.springframework.core.MethodParameter;
 import org.springframework.web.bind.support.WebDataBinderFactory;
 import org.springframework.web.context.request.NativeWebRequest;

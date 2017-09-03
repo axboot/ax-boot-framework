@@ -2,11 +2,11 @@ package com.chequer.axboot.admin.config;
 
 import ch.qos.logback.classic.LoggerContext;
 import com.chequer.axboot.admin.code.GlobalConstants;
+import com.chequer.axboot.admin.logging.AXBootLogbackAppender;
 import com.chequer.axboot.core.config.AXBootContextConfig;
 import com.chequer.axboot.core.db.dbcp.AXBootDataSourceFactory;
 import com.chequer.axboot.core.db.monitor.SqlMonitoringService;
 import com.chequer.axboot.core.domain.log.AXBootErrorLogService;
-import com.chequer.axboot.core.logging.AXBootLogbackAppender;
 import com.chequer.axboot.core.model.extract.service.jdbc.JdbcMetadataService;
 import com.chequer.axboot.core.mybatis.MyBatisMapper;
 import org.apache.ibatis.session.SqlSessionFactory;

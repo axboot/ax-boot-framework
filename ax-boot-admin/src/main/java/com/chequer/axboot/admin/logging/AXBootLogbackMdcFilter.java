@@ -1,10 +1,10 @@
-package com.chequer.axboot.core.filters;
+package com.chequer.axboot.admin.logging;
 
 
+import com.chequer.axboot.admin.utils.SessionUtils;
 import com.chequer.axboot.core.utils.HttpUtils;
 import com.chequer.axboot.core.utils.MDCUtil;
 import com.chequer.axboot.core.utils.RequestUtils;
-import com.chequer.axboot.core.utils.SessionUtils;
 
 import javax.servlet.*;
 import javax.servlet.http.HttpServletRequest;
@@ -23,8 +23,8 @@ public class AXBootLogbackMdcFilter implements Filter {
             RequestUtils requestWrapper = RequestUtils.of(request);
 
             MDCUtil.setJsonValue(MDCUtil.HEADER_MAP_MDC, requestWrapper.getRequestHeaderMap());
-            MDCUtil.setJsonValue(MDCUtil.PARAMETER_BODY_MDC, requestWrapper.getRequestBodyJson());
             MDCUtil.setJsonValue(MDCUtil.USER_INFO_MDC, SessionUtils.getCurrentMdcLoginUser((HttpServletRequest) request));
+            MDCUtil.set(MDCUtil.PARAMETER_BODY_MDC, requestWrapper.getRequestBodyJson((HttpServletRequest) request));
             MDCUtil.set(MDCUtil.REQUEST_URI_MDC, requestWrapper.getRequestUri());
         }
 

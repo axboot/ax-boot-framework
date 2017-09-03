@@ -1,4 +1,4 @@
-package com.chequer.axboot.core.domain.user;
+package ${basePackage}.domain.user;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
