@@ -151,7 +151,7 @@ gulp.task('axboot-initializr-deploy', function () {
  */
 gulp.task('scss', function () {
 
-    gulp.src(ASSETS_SRC + '/scss/axboot.scss')
+    gulp.src(ASSETS_SRC + '/scss/arongi/axboot.scss')
         .pipe(plumber({errorHandler: errorAlert}))
         .pipe(sass({outputStyle: 'compressed'}))
         //.pipe(sass({outputStyle: 'nested'}))
@@ -162,9 +162,9 @@ gulp.task('scss', function () {
 gulp.task('scss-ie9', function () {
 
     gulp.src([
-        ASSETS_SRC + '/scss/axboot-01.scss',
-        ASSETS_SRC + '/scss/axboot-02.scss',
-        ASSETS_SRC + '/scss/axboot-03.scss'
+        ASSETS_SRC + '/scss/arongi/axboot-01.scss',
+        ASSETS_SRC + '/scss/arongi/axboot-02.scss',
+        ASSETS_SRC + '/scss/arongi/axboot-03.scss'
     ])
         .pipe(plumber({errorHandler: errorAlert}))
         .pipe(sass({outputStyle: 'compressed'}))

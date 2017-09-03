@@ -22,6 +22,7 @@
     "bootstrap-sass": "^3.3.7",
     "bourbon": "^4.2.7",
     "ztree_v3": "^3.5.24",
-    "cheqcon": "^1.4.0"
+    "cheqcon": "^1.4.0",
+    "ax5ui-uploader": "^1.4.99"
   }
 }
