@@ -130,7 +130,7 @@ axboot.modal = (function () {
      * @method axboot.modal.close
      */
     var close = function (data) {
-        window.axModal.close();
+        window.axModal.close(data);
         setTimeout(function () {
             $(document.body).removeClass("modalOpened");
         }, 500);
