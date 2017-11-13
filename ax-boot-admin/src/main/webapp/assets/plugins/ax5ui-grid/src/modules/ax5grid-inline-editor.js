@@ -159,6 +159,7 @@
             var self = _root;
             _$el.data("binded-ax5ui", "ax5select");
             _$el.ax5select($.extend(true, {
+                tabIndex: 1,
                 direction: "auto",
                 columnKeys: eConfig.columnKeys,
                 options: eConfig.options,

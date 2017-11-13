@@ -23,7 +23,7 @@
     &.lineNumberColumn {
 
     }
-    &.focused{
+    &.focused {
         box-shadow: $ax5grid-cell-focused-box-shadow;
     }
 
@@ -123,7 +123,7 @@
             white-space: normal;
         }
 
-        [data-ax5grid-editor]{
+        [data-ax5grid-editor] {
             position: absolute;
             left: 0;
             top: 0;
@@ -201,7 +201,6 @@
         }
     }
 }
-
 
 @mixin gridRowBackground() {
     &.tr-0 {

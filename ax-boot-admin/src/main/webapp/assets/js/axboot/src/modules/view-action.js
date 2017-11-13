@@ -62,7 +62,7 @@ axboot.gridView = {
         return list;
     },
     addRow: function () {
-        this.target.addRow({__created__: true}, "last");
+        this.target.addRow({__created__: true}, "last", {focus: "END"});
     },
     delRow: function (_type) {
         this.target.deleteRow(_type);

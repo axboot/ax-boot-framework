@@ -55,11 +55,12 @@
                 multipleSelect: true,
                 virtualScrollY: true,
                 virtualScrollX: true,
+                headerSelect: true,
 
                 // 스크롤될 때 body 페인팅 딜레이를 주어 성능이 좋은 않은 브라우저에서 반응을 빠르게 할 때 사용하는 옵션들
                 virtualScrollYCountMargin: 0,
                 virtualScrollAccelerated: true,
-                virtualScrollAcceleratedDelayTime: 30,
+                virtualScrollAcceleratedDelayTime: 10,
 
                 height: 0,
                 columnMinWidth: 100,
@@ -73,7 +74,8 @@
                     align: false,
                     columnHeight: 26,
                     columnPadding: 3,
-                    columnBorderWidth: 1
+                    columnBorderWidth: 1,
+                    selector: true
                 },
                 body: {
                     align: false,
@@ -142,7 +144,7 @@
 
             this.list = []; // 그리드의 데이터
             this.proxyList = null; // 그리드 데이터의 대리자
-            this.page = {}; // 그리드의 페이지 정보
+            this.page = null; // 그리드의 페이지 정보
             this.selectedDataIndexs = [];
             this.deletedList = [];
             this.sortInfo = {}; // 그리드의 헤더 정렬 정보
@@ -250,7 +252,9 @@
                 return this;
             };
             const initColumns = function (_columns) {
+                if(!U.isArray(_columns)) _columns = [];
                 this.columns = U.deepCopy(_columns);
+
                 this.headerTable = GRID.util.makeHeaderTable.call(this, this.columns);
                 this.xvar.frozenColumnIndex = cfg.frozenColumnIndex || 0;
 
@@ -354,6 +358,7 @@
                 }
             };
             const alignGrid = function (_isFirst) {
+                let list = (this.proxyList) ? this.proxyList : this.list;
                 // 대상이 크기가 컬럼의 최소 크기 보다 작업 금지
                 if (Math.min(this.$target.innerWidth(), this.$target.innerHeight()) < 5) {
                     return false;
@@ -394,7 +399,7 @@
                     pageHeight = (cfg.page.display) ? cfg.page.height : 0;
 
                 (function () {
-                    verticalScrollerWidth = ((CT_HEIGHT - headerHeight - pageHeight - footSumHeight) < this.list.length * this.xvar.bodyTrHeight) ? this.config.scroller.size : 0;
+                    verticalScrollerWidth = ((CT_HEIGHT - headerHeight - pageHeight - footSumHeight) < list.length * this.xvar.bodyTrHeight) ? this.config.scroller.size : 0;
                     // 남은 너비가 colGroup의 너비보다 넓을때. 수평 스크롤 활성화.
                     horizontalScrollerHeight = (function () {
                         let totalColGroupWidth = 0;
@@ -408,7 +413,7 @@
                     }).call(this);
 
                     if (horizontalScrollerHeight > 0) {
-                        verticalScrollerWidth = ((CT_HEIGHT - headerHeight - pageHeight - footSumHeight - horizontalScrollerHeight) < this.list.length * this.xvar.bodyTrHeight) ? this.config.scroller.size : 0;
+                        verticalScrollerWidth = ((CT_HEIGHT - headerHeight - pageHeight - footSumHeight - horizontalScrollerHeight) < list.length * this.xvar.bodyTrHeight) ? this.config.scroller.size : 0;
                     }
                 }).call(this);
 
@@ -653,6 +658,7 @@
              * @param {Boolean} [_config.virtualScrollY=true] - 세로축 가상스크롤 처리여부
              * @param {Boolean} [_config.virtualScrollX=true] - 가로축 가상스크롤 처리여부
              * @param {Object} [_config.header]
+             * @param {Object} [_config.header.selector=true] - 헤더 checkbox 표시여부
              * @param {String} [_config.header.align]
              * @param {Number} [_config.header.columnHeight=25]
              * @param {Number} [_config.header.columnPadding=3]
@@ -811,6 +817,7 @@
                 // 그리드의 이벤트 정의 구간
                 this.onStateChanged = cfg.onStateChanged;
                 this.onClick = cfg.onClick;
+                //this.onDblClick = cfg.onDblClick;
                 this.onLoad = cfg.onLoad;
                 this.onDataChanged = cfg.body.onDataChanged;
                 // todo event에 대한 추가 정의 필요
@@ -941,6 +948,33 @@
                                     //self.keyDown("RETURN", e.originalEvent);
                                     U.stopEvent(e);
                                 } else if (Object.keys(self.focusedColumn).length) {
+                                    /*
+                                    self.keyDown("INLINE_EDIT", e.originalEvent);
+                                    */
+                                }
+                            }
+                        }
+                    }
+                });
+
+                jQuery(window).on("keyup.ax5grid-" + this.instanceId, function (e) {
+                    if (self.focused) {
+                        if (self.isInlineEditing) {
+
+                        }
+                        else {
+                            if (e.metaKey || e.ctrlKey) {
+
+                            } else {
+                                if (ctrlKeys[e.which]) {
+
+                                } else if (e.which == ax5.info.eventKeys.ESC) {
+
+                                } else if (e.which == ax5.info.eventKeys.RETURN || e.which == ax5.info.eventKeys.SPACE) {
+
+                                } else if (e.which == ax5.info.eventKeys.TAB) {
+
+                                } else if (Object.keys(self.focusedColumn).length) {
                                     self.keyDown("INLINE_EDIT", e.originalEvent);
                                 }
                             }
@@ -963,12 +997,32 @@
              * align grid size
              * @method ax5grid.align
              * @returns {ax5grid}
+             * @example
+             * ```js
+             * ax5Grid.repaint();
+             * ```
              */
             this.align = function () {
                 if (alignGrid.call(this)) {
                     GRID.body.repaint.call(this);
                     GRID.scroller.resize.call(this);
                 }
+                return this;
+            };
+
+            /**
+             * repaint grid
+             * @method ax5grid.repaint
+             * @return {ax5grid}
+             * @example
+             * ```js
+             * ax5Grid.repaint();
+             * ```
+             */
+            this.repaint = function () {
+                GRID.header.repaint.call(this);
+                GRID.body.repaint.call(this, true); // 강제로 다시 그리기
+                GRID.scroller.resize.call(this);
                 return this;
             };
 
@@ -1134,12 +1188,14 @@
                 let isFirstPaint = (typeof this.xvar.paintStartRowIndex === "undefined");
 
                 GRID.data.set.call(this, _data);
-                alignGrid.call(this);
                 GRID.body.repaint.call(this);
+                if (!isFirstPaint) GRID.body.scrollTo.call(this, {top: 0});
+
+                // 가로/세로 스크롤바 show/hide 처리
+                alignGrid.call(this);
+                // 가로세로 스크롤바의 크기 재 계산.
                 GRID.scroller.resize.call(this);
                 GRID.page.navigationUpdate.call(this);
-
-                if (!isFirstPaint) GRID.body.scrollTo.call(this, {top: 0});
 
                 isFirstPaint = null;
                 return this;
@@ -1203,11 +1259,16 @@
                 GRID.data.add.call(this, _row, _dindex, _options);
                 alignGrid.call(this);
                 GRID.body.repaint.call(this, "reset");
+
                 if(_options && _options.focus) {
                     //GRID.body.moveFocus.call(this, (this.config.body.grouping) ? "START" : "END");
-                    GRID.body.moveFocus.call(this, _options.focus);
+                    setTimeout(() => {
+                        GRID.body.moveFocus.call(this, _options.focus);
+                    }, 1);
+                }else{
+                    GRID.scroller.resize.call(this);
                 }
-                GRID.scroller.resize.call(this);
+
                 return this;
             };
 
@@ -1654,7 +1715,7 @@
                         this.select(0);
                     } else {
                         let selectedIndex = this.selectedDataIndexs[0];
-                        
+
                         let processor = {
                             "UP": function () {
                                 if (selectedIndex > 0) {

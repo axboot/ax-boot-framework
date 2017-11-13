@@ -84,8 +84,7 @@
                 // If the [download] attribute is supported, try to use it
                 if ("download" in anchor) {
                     anchor.download = fileName;
-                    //anchor.href = URL.createObjectURL( blob );
-                    anchor.href = uri + base64(output);
+                    anchor.href = URL.createObjectURL(new Blob([output], { type: 'text/csv' }));
                     anchor.click();
                     document.body.removeChild(anchor);
                 }
