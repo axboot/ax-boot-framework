@@ -1,0 +1,82 @@
+$cursor-disabled:                not-allowed !default;
+
+//==============
+$ax5uploader-box-model: border-box !default;
+$ax5uploader-z-index: 1000 !default;
+$ax5uploader-bg: $panel-bg !default;
+$ax5uploader-inner-border: 1px solid !default;
+$ax5uploader-inner-border-color: $panel-inner-border !default;
+
+$ax5uploader-box-shadow: 0px 0px 3px 0px rgba(0, 0, 0, 0.175) !default;
+$ax5uploader-border-radius: 5px !default;
+
+$ax5uploader-body-padding: 10px !default;
+$ax5uploader-heading-padding: $panel-heading-padding !default;
+$ax5uploader-buttons-padding: 5px 0px 0px 0px !default;
+$ax5uploader-button-padding: 3px 7px !default;
+$ax5uploader-button-font-size: 0.8em !default;
+
+$ax5uploader-content-border: 0px solid !default;
+$ax5uploader-content-border-color: none !default;
+$ax5uploader-content-border-radius: 0px !default;
+$ax5uploader-content-padding: 0px !default;
+
+$ax5uploader-easing-time-open: 0.1s !default;
+$ax5uploader-easing-time-close: 0.1s !default;
+$ax5uploader-arrow-size: 6px !default;
+$ax5uploader-arrow-border-width: 1px !default;
+
+$ax5uploader-uploaded-box-bg: #f3f3f3 !default;
+$ax5uploader-uploaded-box-border: 1px solid #ccc !default;
+$ax5uploader-uploaded-box-border-radius: 5px !default;
+$ax5uploader-uploaded-box-margin: 10px 0 !default;
+$ax5uploader-uploaded-box-padding: 7px !default;
+$ax5uploader-uploaded-box-min-height: 100px !default;
+
+$ax5uploader-uploaded-item-bg: #fff !default;
+$ax5uploader-uploaded-item-color: $btn-default-color !default;
+$ax5uploader-uploaded-item-border: 0px solid $btn-default-border !default;
+$ax5uploader-uploaded-item-border-radius: $border-radius-base !default;
+$ax5uploader-uploaded-item-padding: $padding-base-vertical $padding-base-horizontal !default;
+$ax5uploader-uploaded-item-margin: 3px !default;
+$ax5uploader-uploaded-item-cell-padding: 0 3px !default;
+$ax5uploader-uploaded-item-cell-hover-color: $brand-primary !default;
+$ax5uploader-uploaded-item-preview-width: 120px !default;
+$ax5uploader-uploaded-item-preview-height: 120px !default;
+$ax5uploader-uploaded-item-preview-cell-padding: 5px !default;
+
+$ax5uploader-dropzone-bg: #f3f3f3 !default;
+$ax5uploader-dropzone-border: 2px dashed #0087F7 !default;
+$ax5uploader-dropzone-border-radius: 5px !default;
+$ax5uploader-dropzone-margin: 10px 0 !default;
+$ax5uploader-dropzone-padding: 7px !default;
+$ax5uploader-dropzone-min-height: 100px !default;
+
+$ax5uploader-dropzone-dragover-bg: #fff !default;
+$ax5uploader-dropzone-dragover-border: 2px solid #0087F7 !default;
+
+
+//** Border color for elements within dialog
+$ax5uploader-default-text: $panel-default-text !default;
+$ax5uploader-default-border-color: $panel-default-border !default;
+$ax5uploader-default-heading-bg: $panel-default-heading-bg !default;
+
+$ax5uploader-primary-text: $panel-primary-text !default;
+$ax5uploader-primary-border-color: $panel-primary-border !default;
+$ax5uploader-primary-heading-bg: $panel-primary-heading-bg !default;
+
+$ax5uploader-success-text: $panel-success-text !default;
+$ax5uploader-success-border-color: $panel-success-border !default;
+$ax5uploader-success-heading-bg: $panel-success-heading-bg !default;
+
+$ax5uploader-info-text: $panel-info-text !default;
+$ax5uploader-info-border-color: $panel-info-border !default;
+$ax5uploader-info-heading-bg: $panel-info-heading-bg !default;
+
+$ax5uploader-warning-text: $panel-warning-text !default;
+$ax5uploader-warning-border-color: $panel-warning-border !default;
+$ax5uploader-warning-heading-bg: $panel-warning-heading-bg !default;
+
+$ax5uploader-danger-text: $panel-danger-text !default;
+$ax5uploader-danger-border-color: $panel-danger-border !default;
+$ax5uploader-danger-heading-bg: $panel-danger-heading-bg !default;

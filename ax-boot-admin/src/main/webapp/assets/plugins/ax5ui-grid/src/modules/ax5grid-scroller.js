@@ -229,21 +229,23 @@
 
                     if (type === "horizontal") GRID.header.scrollTo.call(self, scrollPositon);
 
-                        GRID.body.scrollTo.call(self, scrollPositon);
+                    GRID.body.scrollTo.call(self, scrollPositon);
                 })
                 .bind(GRID.util.ENM["mouseup"] + ".ax5grid-" + this.instanceId, function (e) {
-                    scrollBarMover.off.call(self);
+                    scrollBarMover.off.call(self, e);
                 })
                 .bind("mouseleave.ax5grid-" + this.instanceId, function (e) {
-                    scrollBarMover.off.call(self);
+                    scrollBarMover.off.call(self, e);
                 });
 
             jQuery(document.body)
                 .attr('unselectable', 'on')
                 .css('user-select', 'none')
                 .on('selectstart', false);
+
         },
-        "off": function () {
+        "off": function (e) {
+            ax5.util.stopEvent(e.originalEvent);
             GRID.scroller.moveout_timer = (new Date()).getTime();
 
             jQuery(document.body)

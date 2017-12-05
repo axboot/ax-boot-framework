@@ -114,19 +114,20 @@
     };
 
     const makeHeaderTable = function (_columns) {
-        let columns = U.deepCopy(_columns),
+        let columns = _columns,
             cfg = this.config,
             table = {
                 rows: []
             },
             colIndex = 0,
             maekRows = function (_columns, depth, parentField) {
-                var row = {cols: []};
-                var i = 0, l = _columns.length;
+                let row = {cols: []};
+                let i = 0, l = _columns.length;
+                let colspan = 1;
 
                 for (; i < l; i++) {
-                    var field = _columns[i];
-                    var colspan = 1;
+                    let field = jQuery.extend({}, _columns[i]);
+                    colspan = 1;
 
                     if (!field.hidden) {
                         field.colspan = 1;
@@ -142,7 +143,7 @@
                             }
                         })();
 
-                        row.cols.push(field);
+                        row.cols.push(field); // 복제된 필드 삽입
 
                         if ('columns' in field) {
                             colspan = maekRows(field.columns, depth + 1, field);
@@ -183,7 +184,7 @@
     };
 
     const makeBodyRowTable = function (_columns) {
-        let columns = U.deepCopy(_columns),
+        let columns = _columns,
             table = {
                 rows: []
             },
@@ -197,7 +198,7 @@
                 let selfMakeRow = function (__columns) {
                     let i = 0, l = __columns.length;
                     for (; i < l; i++) {
-                        let field = __columns[i],
+                        let field = jQuery.extend({}, __columns[i]),
                             colspan = 1;
 
                         if (!field.hidden) {
@@ -235,7 +236,7 @@
                 };
 
                 for (; i < l; i++) {
-                    let field = _columns[i];
+                    let field = jQuery.extend({}, _columns[i]);
                     colspan = 1;
 
                     if (!field.hidden) {

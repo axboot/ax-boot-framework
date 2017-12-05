@@ -1,0 +1,462 @@
+@mixin ax-progressbox() {
+    box-sizing: $ax5uploader-box-model;
+
+    z-index: $ax5uploader-z-index;
+    position: absolute;
+    left: 0px;
+    top: 0px;
+    //overflow: hidden;
+    width: 200px;
+
+    .progress {
+        height: 12px;
+        margin-bottom: 0;
+    }
+}
+
+@mixin progressbox-variant($text-color, $border-color, $heading-bg-color) {
+
+    @include ax-background($ax5uploader-bg);
+    border: $ax5uploader-inner-border;
+    border-color: $border-color;
+    border-radius: $ax5uploader-border-radius;
+    box-shadow: $ax5uploader-box-shadow;
+
+    .ax-progressbox-body {
+        padding: $ax5uploader-body-padding;
+        text-align: center;
+        .ax-picker-content {
+            min-width: 50px;
+
+            .ax-picker-progressbox-box {
+                border: $ax5uploader-content-border;
+                border-color: $ax5uploader-content-border-color;
+                border-radius: $ax5uploader-content-border-radius;
+                padding: $ax5uploader-content-padding;
+                overflow: hidden;
+            }
+        }
+        .ax-progressbox-buttons {
+            text-align: right;
+            padding: $ax5uploader-buttons-padding;
+            button {
+                &.btn {
+                    padding: $ax5uploader-button-padding;
+                    font-size: $ax5uploader-button-font-size;
+                }
+                &:not(:last-child) {
+                    margin-right: 3px;
+                }
+            }
+        }
+    }
+
+    &.direction-top {
+        .ax-progressbox-arrow {
+            @include progressbox-arrow($ax5uploader-arrow-size, $ax5uploader-arrow-border-width, $border-color, top);
+        }
+    }
+    &.direction-right {
+        .ax-progressbox-arrow {
+            @include progressbox-arrow($ax5uploader-arrow-size, $ax5uploader-arrow-border-width, $border-color, right);
+        }
+    }
+    &.direction-bottom {
+        .ax-progressbox-arrow {
+            @include progressbox-arrow($ax5uploader-arrow-size, $ax5uploader-arrow-border-width, $border-color, bottom);
+        }
+    }
+    &.direction-left {
+        .ax-progressbox-arrow {
+            @include progressbox-arrow($ax5uploader-arrow-size, $ax5uploader-arrow-border-width, $border-color, left);
+        }
+    }
+
+}
+
+@mixin progressbox-arrow($arrow-size, $arrow-border-width, $border-color, $arrow-direction) {
+
+    //
+    //@debug( nth($ax5uploader-inner-border, 3) );
+    $arrow-bg: nth($ax5uploader-bg, 1);
+    $arrow-border-color: $border-color;
+
+    position: absolute;
+    width: 0;
+    height: 0;
+
+    @if ($arrow-direction == top) {
+        left: 50%;
+        top: 0;
+    } @else if ($arrow-direction == right) {
+        right: 0;
+        top: 50%;
+    } @else if ($arrow-direction == bottom) {
+        left: 50%;
+        bottom: 0;
+    } @else if ($arrow-direction == left) {
+        left: 0;
+        top: 50%;
+    }
+
+    &:before {
+        content: ' ';
+        position: absolute;
+        width: 0;
+        height: 0;
+
+        @if ($arrow-direction == top) {
+            left: - ($arrow-size);
+            top: - ($arrow-size * 2);
+            border-left: $arrow-size solid transparent;
+            border-right: $arrow-size solid transparent;
+            border-top: 0 none;
+            border-bottom: ($arrow-size * 2) solid $arrow-border-color;
+        } @else if ($arrow-direction == right) {
+            right: - ($arrow-size * 2);
+            top: - ($arrow-size);
+            border-left: ($arrow-size * 2) solid $arrow-border-color;
+            border-right: 0 none;
+            border-top: $arrow-size solid transparent;
+            border-bottom: $arrow-size solid transparent;
+        } @else if ($arrow-direction == bottom) {
+            left: - ($arrow-size);
+            bottom: - ($arrow-size * 2);
+            border-left: $arrow-size solid transparent;
+            border-right: $arrow-size solid transparent;
+            border-top: ($arrow-size * 2) solid $arrow-border-color;
+            border-bottom: 0 none;
+        } @else if ($arrow-direction == left) {
+            left: - ($arrow-size * 2);
+            top: - ($arrow-size);
+            border-left: 0 none;
+            border-right: ($arrow-size * 2) solid $arrow-border-color;
+            border-top: $arrow-size solid transparent;
+            border-bottom: $arrow-size solid transparent;
+        }
+
+    }
+
+    &:after {
+        content: ' ';
+        position: absolute;
+        width: 0;
+        height: 0;
+
+        @if ($arrow-direction == top) {
+            left: - ($arrow-size);
+            top: - ($arrow-size * 2) + ($arrow-border-width * 2);
+            border-left: ($arrow-size) solid transparent;
+            border-right: ($arrow-size) solid transparent;
+            border-top: 0 none;
+            border-bottom: ($arrow-size * 2) solid $arrow-bg;
+        } @else if ($arrow-direction == right) {
+            right: - ($arrow-size * 2) + ($arrow-border-width * 2);
+            top: - ($arrow-size);
+            border-left: ($arrow-size * 2) solid $arrow-bg;
+            border-right: 0 none;
+            border-top: ($arrow-size) solid transparent;
+            border-bottom: ($arrow-size) solid transparent;
+        } @else if ($arrow-direction == bottom) {
+            left: - ($arrow-size);
+            bottom: - ($arrow-size * 2) + ($arrow-border-width * 2);
+            border-left: ($arrow-size) solid transparent;
+            border-right: ($arrow-size) solid transparent;
+            border-top: ($arrow-size * 2) solid $arrow-bg;
+            border-bottom: 0 none;
+        } @else if ($arrow-direction == left) {
+            left: - ($arrow-size * 2) + ($arrow-border-width * 2);
+            top: - ($arrow-size);
+            border-left: 0 none;
+            border-right: ($arrow-size * 2) solid $arrow-bg;
+            border-top: ($arrow-size) solid transparent;
+            border-bottom: ($arrow-size) solid transparent;
+        }
+    }
+}
+
+@include keyframes(ax-progressbox) {
+
+    0% {
+        opacity: 0.0;
+        @include transform(scale(0));
+    }
+
+    100% {
+        opacity: 1.0;
+        @include transform(scale(1));
+    }
+}
+
+@include keyframes(ax-progressbox-destroy) {
+    from {
+        @include transform(scale(1));
+        opacity: 1.0;
+    }
+    to {
+        @include transform(scale(0.95));
+        opacity: 0.0;
+    }
+}
+
+[data-ax5uploader] {
+    box-sizing: border-box;
+    *,
+    *:before,
+    *:after {
+        box-sizing: border-box;
+    }
+
+    position: relative;
+    [data-ax5uploader-button="selector"] {
+        position: relative;
+    }
+
+    [data-ax5uploader-dropzone] {
+        background: $ax5uploader-dropzone-bg;
+        border: $ax5uploader-dropzone-border;
+        border-radius: $ax5uploader-dropzone-border-radius;
+        margin: $ax5uploader-dropzone-margin;
+        padding: $ax5uploader-dropzone-padding;
+        cursor: pointer;
+        &.dragover {
+            background: $ax5uploader-dropzone-dragover-bg;
+            border: $ax5uploader-dropzone-dragover-border;
+            opacity: 0.6;
+        }
+    }
+}
+
+[data-ax5uploader-uploaded-box] {
+    background: $ax5uploader-uploaded-box-bg;
+    border: $ax5uploader-uploaded-box-border;
+    border-radius: $ax5uploader-uploaded-box-border-radius;
+    margin: $ax5uploader-uploaded-box-margin;
+    padding: $ax5uploader-uploaded-box-padding;
+    min-height: $ax5uploader-uploaded-box-min-height;
+
+    &[data-ax5uploader-uploaded-box] {
+        margin: $ax5uploader-uploaded-box-margin;
+
+        [data-ax5uploader-uploaded-item] {
+            display: block;
+            color: $ax5uploader-uploaded-item-color;
+            border: $ax5uploader-uploaded-item-border;
+            border-radius: $ax5uploader-uploaded-item-border-radius;
+            padding: $ax5uploader-uploaded-item-padding;
+            margin: $ax5uploader-uploaded-item-margin;
+            background: $ax5uploader-uploaded-item-bg;
+
+            &:hover,
+            &:focus,
+            &.focus {
+                color: $ax5uploader-uploaded-item-color;
+                text-decoration: none;
+            }
+
+            &:active,
+            &.active {
+                outline: 0;
+                background-image: none;
+                @include box-shadow(inset 0 3px 5px rgba(0, 0, 0, .125));
+            }
+
+            &.disabled,
+            &[disabled],
+            fieldset[disabled] & {
+                cursor: $cursor-disabled;
+                opacity: .65;
+                @include box-shadow(none);
+            }
+
+            .uploaded-item-preview {
+                display: none;
+            }
+            .uploaded-item-holder {
+                display: table;
+
+                .uploaded-item-cell {
+                    display: table-cell;
+                    padding: $ax5uploader-uploaded-item-cell-padding;
+                }
+                @mixin item-cell-link($color) {
+                    &:hover,
+                    &:focus,
+                    &.focus {
+                        color: $color;
+                        text-decoration: none;
+                    }
+
+                    &:active,
+                    &.active {
+
+                    }
+                }
+                [data-uploaded-item-cell="download"] {
+                    cursor: pointer;
+                    @include item-cell-link($ax5uploader-uploaded-item-cell-hover-color);
+                }
+                [data-uploaded-item-cell="delete"] {
+                    cursor: pointer;
+                    @include item-cell-link($ax5uploader-uploaded-item-cell-hover-color);
+                }
+                [data-uploaded-item-cell="filename"] {
+
+                }
+                [data-uploaded-item-cell="filesize"] {
+
+                }
+
+            }
+        }
+    }
+
+    &[data-ax5uploader-uploaded-box="inline"] {
+        &:after {
+            content: " ";
+            display: block;
+            clear: both;
+        }
+        [data-ax5uploader-uploaded-item] {
+            display: block;
+            float: left;
+        }
+    }
+
+    &[data-ax5uploader-uploaded-box="thumbnail"] {
+        &:after {
+            content: " ";
+            display: block;
+            clear: both;
+        }
+
+        [data-ax5uploader-uploaded-item] {
+            display: block;
+            float: left;
+            width: $ax5uploader-uploaded-item-preview-width;
+            padding: 0;
+            background: transparent;
+
+
+            &:active,
+            &.active {
+                outline: 0;
+                background-image: none;
+                @include box-shadow(none);
+            }
+
+            .uploaded-item-preview {
+                display: block;
+                &.no-image{
+                    width: $ax5uploader-uploaded-item-preview-width;
+                    height: $ax5uploader-uploaded-item-preview-height;
+                    border: $ax5uploader-uploaded-item-border;
+                    border-radius: $ax5uploader-uploaded-item-border-radius;
+                    @include ax-background(20deg, #66b4fb, #ff78b2);
+                    text-align: center;
+                    line-height: $ax5uploader-uploaded-item-preview-height;
+                    color: #fff;
+                    &:before{
+
+                        content: 'No Image';
+                    }
+                    img{
+                        display: none;
+                    }
+                }
+                img {
+                    width: $ax5uploader-uploaded-item-preview-width;
+                    height: $ax5uploader-uploaded-item-preview-height;
+                    border: $ax5uploader-uploaded-item-border;
+                    border-radius: $ax5uploader-uploaded-item-border-radius;
+                }
+            }
+            .uploaded-item-holder {
+                position: relative;
+                display: block;
+                //padding-top: 30px;
+                .uploaded-item-cell {
+                    display: block;
+                    white-space: nowrap;
+                    overflow: hidden;
+                    text-overflow: ellipsis;
+                }
+                [data-uploaded-item-cell="download"] {
+                    position: absolute;
+                    left: $ax5uploader-uploaded-item-preview-cell-padding;
+                    top: -$ax5uploader-uploaded-item-preview-height + $ax5uploader-uploaded-item-preview-cell-padding;
+                    cursor: pointer;
+                    background: #fff;
+                    border-radius: $ax5uploader-uploaded-item-border-radius;
+                }
+                [data-uploaded-item-cell="delete"] {
+                    position: absolute;
+                    right: $ax5uploader-uploaded-item-preview-cell-padding;
+                    top: -$ax5uploader-uploaded-item-preview-height + $ax5uploader-uploaded-item-preview-cell-padding;
+                    cursor: pointer;
+                    background: #fff;
+                    border-radius: $ax5uploader-uploaded-item-border-radius;
+                }
+                [data-uploaded-item-cell="filename"] {
+                    padding-top: $ax5uploader-uploaded-item-preview-cell-padding;
+                }
+            }
+        }
+    }
+}
+
+[data-ax5uploader-input] {
+    position: absolute;
+    left: -1000px;
+    top: -1000px;
+    opacity: 0;
+    cursor: pointer;
+}
+
+[data-ax5uploader-progressbox] {
+
+    @include ax-progressbox();
+
+    @include perspective(1000px);
+    @include transform-style(preserve-3d);
+
+    @include animation(ax-progressbox $ax5uploader-easing-time-open);
+    @include transform(translateZ(0));
+    @include transform-origin(center top);
+
+    @include progressbox-variant($ax5uploader-default-text, $ax5uploader-default-border-color, $ax5uploader-default-heading-bg);
+
+    &.primary {
+        @include progressbox-variant($ax5uploader-primary-text, $ax5uploader-primary-border-color, $ax5uploader-primary-heading-bg);
+    }
+    &.success {
+        @include progressbox-variant($ax5uploader-success-text, $ax5uploader-success-border-color, $ax5uploader-success-heading-bg);
+    }
+    &.info {
+        @include progressbox-variant($ax5uploader-info-text, $ax5uploader-info-border-color, $ax5uploader-info-heading-bg);
+    }
+    &.warning {
+        @include progressbox-variant($ax5uploader-warning-text, $ax5uploader-warning-border-color, $ax5uploader-warning-heading-bg);
+    }
+    &.danger {
+        @include progressbox-variant($ax5uploader-danger-text, $ax5uploader-danger-border-color, $ax5uploader-danger-heading-bg);
+    }
+
+    &.destroy {
+        @include animation(ax-progressbox-destroy $ax5uploader-easing-time-close $ease-in-back forwards);
+    }
+
+    &.direction-top {
+        @include transform-origin(center top);
+    }
+    &.direction-right {
+        @include transform-origin(right center);
+    }
+    &.direction-bottom {
+        @include transform-origin(center bottom);
+
+    }
+    &.direction-left {
+        @include transform-origin(left center);
+    }
+}

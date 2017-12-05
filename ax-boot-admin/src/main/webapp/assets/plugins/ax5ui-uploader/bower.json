@@ -1,0 +1,25 @@
+{
+	"name": "ax5ui-uploader",
+	"version": "1.4.99",
+	"description": "A uploader plugin that works with Bootstrap & jQuery",
+	"authors": [
+		"ThomasJ <tom@axisj.com>"
+	],
+	"main": "dist/ax5uploader.js",
+	"keywords": [
+		"bootstrap",
+		"jquery",
+		"ax5ui",
+		"plugin",
+		"bootstrap jQuery plugins",
+		"uploader",
+		"ax5ui-uploader",
+		"javascript ui"
+	],
+	"dependencies": {
+		"jquery": "",
+		"ax5core": ">=1.3.0"
+	},
+	"license": "MIT",
+	"homepage": "ax5.io"
+}

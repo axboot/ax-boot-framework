@@ -157,7 +157,8 @@
                             item.$display.height('');
 
                             var displayTableHeight = item.$displayTable.outerHeight();
-                            if (Math.abs(displayTableHeight - item.$target.height()) > displayTableHeightAdjust) {
+                            //debugger;
+                            if (Math.abs(displayTableHeight - item.$target.height()) >= displayTableHeightAdjust) {
                                 item.$target.css({ height: displayTableHeight + displayTableHeightAdjust + 4 });
                                 item.$display.css({ height: displayTableHeight + displayTableHeightAdjust + 4 });
                             }
@@ -371,7 +372,7 @@
                     data.multiple = item.multiple;
                     data.lang = item.lang;
                     data.options = item.options;
-                    this.activeautocompleteOptionGroup.find('[data-els="content"]').html(jQuery(AUTOCOMPLETE.tmpl.get.call(this, "options", data, item.columnKeys)));
+                    this.activeautocompleteOptionGroup.find('[data-els="content"]').html(AUTOCOMPLETE.tmpl.get.call(this, "options", data, item.columnKeys));
 
                     focusWord.call(this, this.activeautocompleteQueueIndex, searchWord);
                     alignAutocompleteOptionGroup.call(this);
@@ -833,7 +834,7 @@
                         },
                         'keyUp': function keyUp(queIdx, e) {
                             /// 약속된 키 이벤트가 발생하면 stopEvent를 통해 keyUp 이벤트가 발생되지 않도록 막아주는 센스
-                            if (e.which == ax5.info.eventKeys.ESC && self.activeautocompleteQueueIndex === -1) {
+                            if (e.which == ax5.info.eventKeys.ESC && this.activeautocompleteQueueIndex === -1) {
                                 // ESC키를 누르고 옵션그룹이 열려있지 않은 경우
                                 U.stopEvent(e);
                                 return this;
@@ -844,9 +845,9 @@
                                 this.close();
                                 return this;
                             }
-                            if (self.activeautocompleteQueueIndex != queIdx) {
+                            if (this.activeautocompleteQueueIndex != queIdx) {
                                 // 닫힌 상태 인경우
-                                self.open(queIdx); // open and align
+                                this.open(queIdx); // open and align
                             }
                             if (ctrlKeys[e.which]) {
                                 U.stopEvent(e);
@@ -955,8 +956,7 @@
                         item.$display.off('click.ax5autocomplete').on('click.ax5autocomplete', autocompleteEvent.click.bind(this, queIdx));
 
                         // autocomplete 태그에 대한 이벤트 감시
-
-                        item.$displayLabelInput.off("focus.ax5autocomplete").on("focus.ax5autocomplete", autocompleteEvent.focus.bind(this, queIdx)).off("blur.ax5autocomplete").on("blur.ax5autocomplete", autocompleteEvent.blur.bind(this, queIdx)).off("keydown.ax5autocomplete").on("keydown.ax5autocomplete", autocompleteEvent.keyUp.bind(this, queIdx)).off("keyup.ax5autocomplete").on("keyup.ax5autocomplete", autocompleteEvent.keyDown.bind(this, queIdx));
+                        item.$displayLabelInput.off("focus.ax5autocomplete").on("focus.ax5autocomplete", autocompleteEvent.focus.bind(this, queIdx)).off("blur.ax5autocomplete").on("blur.ax5autocomplete", autocompleteEvent.blur.bind(this, queIdx)).off("keydown.ax5autocomplete").on("keydown.ax5autocomplete", autocompleteEvent.keyDown.bind(this, queIdx)).off("keyup.ax5autocomplete").on("keyup.ax5autocomplete", autocompleteEvent.keyUp.bind(this, queIdx));
 
                         // select 태그에 대한 change 이벤트 감시
 
@@ -1070,7 +1070,7 @@
                     data.options = [];
 
                     this.activeautocompleteOptionGroup = jQuery(AUTOCOMPLETE.tmpl.get.call(this, "optionGroup", data, item.columnKeys));
-                    this.activeautocompleteOptionGroup.find('[data-els="content"]').html(jQuery(AUTOCOMPLETE.tmpl.get.call(this, "options", data, item.columnKeys)));
+                    this.activeautocompleteOptionGroup.find('[data-els="content"]').html(AUTOCOMPLETE.tmpl.get.call(this, "options", data, item.columnKeys));
                     this.activeautocompleteQueueIndex = queIdx;
 
                     alignAutocompleteOptionGroup.call(this, "append"); // alignAutocompleteOptionGroup 에서 body append

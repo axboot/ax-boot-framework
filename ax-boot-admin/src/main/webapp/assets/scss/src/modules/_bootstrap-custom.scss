@@ -1,0 +1,76 @@
+// Reset and dependencies
+@import "../../plugins/bootstrap-sass/assets/stylesheets/bootstrap/normalize";
+@import "../../plugins/bootstrap-sass/assets/stylesheets/bootstrap/print";
+//@import "../../plugins/bootstrap-sass/assets/stylesheets/bootstrap/glyphicons";
+
+// Core CSS
+@import "../../plugins/bootstrap-sass/assets/stylesheets/bootstrap/scaffolding";
+@import "../../plugins/bootstrap-sass/assets/stylesheets/bootstrap/type";
+@import "../../plugins/bootstrap-sass/assets/stylesheets/bootstrap/code";
+@import "../../plugins/bootstrap-sass/assets/stylesheets/bootstrap/grid";
+@import "../../plugins/bootstrap-sass/assets/stylesheets/bootstrap/tables";
+@import "../../plugins/bootstrap-sass/assets/stylesheets/bootstrap/forms";
+@import "../../plugins/bootstrap-sass/assets/stylesheets/bootstrap/buttons";
+
+// Components
+@import "../../plugins/bootstrap-sass/assets/stylesheets/bootstrap/component-animations";
+@import "../../plugins/bootstrap-sass/assets/stylesheets/bootstrap/dropdowns";
+@import "../../plugins/bootstrap-sass/assets/stylesheets/bootstrap/button-groups";
+@import "../../plugins/bootstrap-sass/assets/stylesheets/bootstrap/input-groups";
+@import "../../plugins/bootstrap-sass/assets/stylesheets/bootstrap/navs";
+@import "../../plugins/bootstrap-sass/assets/stylesheets/bootstrap/navbar";
+@import "../../plugins/bootstrap-sass/assets/stylesheets/bootstrap/breadcrumbs";
+@import "../../plugins/bootstrap-sass/assets/stylesheets/bootstrap/pagination";
+@import "../../plugins/bootstrap-sass/assets/stylesheets/bootstrap/pager";
+@import "../../plugins/bootstrap-sass/assets/stylesheets/bootstrap/labels";
+@import "../../plugins/bootstrap-sass/assets/stylesheets/bootstrap/badges";
+@import "../../plugins/bootstrap-sass/assets/stylesheets/bootstrap/jumbotron";
+@import "../../plugins/bootstrap-sass/assets/stylesheets/bootstrap/thumbnails";
+@import "../../plugins/bootstrap-sass/assets/stylesheets/bootstrap/alerts";
+@import "../../plugins/bootstrap-sass/assets/stylesheets/bootstrap/progress-bars";
+@import "../../plugins/bootstrap-sass/assets/stylesheets/bootstrap/media";
+@import "../../plugins/bootstrap-sass/assets/stylesheets/bootstrap/list-group";
+@import "../../plugins/bootstrap-sass/assets/stylesheets/bootstrap/panels";
+@import "../../plugins/bootstrap-sass/assets/stylesheets/bootstrap/responsive-embed";
+@import "../../plugins/bootstrap-sass/assets/stylesheets/bootstrap/wells";
+@import "../../plugins/bootstrap-sass/assets/stylesheets/bootstrap/close";
+
+// Components w/ JavaScript
+//@import "../../plugins/bootstrap-sass/assets/stylesheets/bootstrap/modals";
+@import "../../plugins/bootstrap-sass/assets/stylesheets/bootstrap/tooltip";
+@import "../../plugins/bootstrap-sass/assets/stylesheets/bootstrap/popovers";
+//@import "../../plugins/bootstrap-sass/assets/stylesheets/bootstrap/carousel";
+
+// Utility classes
+//@import "../../plugins/bootstrap-sass/assets/stylesheets/bootstrap/utilities";
+//@import "../../plugins/bootstrap-sass/assets/stylesheets/bootstrap/responsive-utilities";
+
+.page-header {
+    margin: 0;
+    margin-bottom: 20px;
+    h1, h2, h3, h4, h5, h6 {
+        margin: 0;
+        padding: 10px;
+        i {
+            padding-top: 1px;
+        }
+    }
+}
+
+.text-align-left {
+    text-align: left;
+}
+
+.text-align-center {
+    text-align: center;
+}
+
+.text-align-right {
+    text-align: right;
+}
+
+.modal-backdrop.in{
+    display: none;
+}
+
+

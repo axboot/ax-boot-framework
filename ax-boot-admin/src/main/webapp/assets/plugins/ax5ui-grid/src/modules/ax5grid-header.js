@@ -83,7 +83,7 @@
                 //rowIndex = this.getAttribute("data-ax5grid-column-rowindex"),
                 col = self.colGroup[colIndex];
 
-            if (key === "__checkbox_header__") {
+            if (key === "__checkbox_header__" && self.config.header.selector) {
                 let selected = this.getAttribute("data-ax5grid-selected");
                 selected = (U.isNothing(selected)) ? true : (selected !== "true");
 
@@ -176,7 +176,7 @@
 
     const getFieldValue = function (_col) {
         return (_col.key === "__checkbox_header__")
-            ? `<div class="checkBox" style="max-height: ${_col.width - 10}px;min-height: ${_col.width - 10}px;"></div>`
+            ? ((this.config.header.selector) ? `<div class="checkBox" style="max-height: ${_col.width - 10}px;min-height: ${_col.width - 10}px;"></div>` : "&nbsp;")
             : (_col.label || "&nbsp;");
     };
 
@@ -305,6 +305,7 @@
         if (cfg.frozenColumnIndex > 0) {
             repaintHeader.call(this, this.$.panel["left-header"], this.leftHeaderColGroup, leftHeaderData);
         }
+
         this.xvar.scrollContentWidth = repaintHeader.call(this, this.$.panel["header-scroll"], this.headerColGroup, headerData);
 
         if (cfg.rightSum) {

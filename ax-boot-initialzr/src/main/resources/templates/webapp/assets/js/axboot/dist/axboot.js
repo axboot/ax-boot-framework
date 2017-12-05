@@ -224,6 +224,8 @@ window.onUnload = function () {
  * @param {String} http.url
  * @param {Object|String} http.data
  * @param {Function} http.callback
+ * @param {Function} http.onError
+ * @param {Function} http.always
  * @param {Object} [http.options]
  * @param {Boolean} [http.options.nomask = false]
  * @param {Function} [http.options.onError]
@@ -257,26 +259,26 @@ window.onUnload = function () {
  *  });
  * ```
  */
+
 axboot.ajax = function () {
 
     var queue = [];
     var defaultOption = {
         apiType: "",
-        contentType: 'application/json'
+        contentType: 'application/json; charset=UTF-8'
     };
 
     return function (http) {
-        var jqxhr, httpOpts, callback;
+        var jqxhr, httpOpts, callback, onerror, always;
         var options = $.extend(true, {}, defaultOption, http.options);
         if (!options.nomask) axAJAXMask.open();
-
-        queue.push("1");
 
         httpOpts = {
             contentType: options.contentType
         };
 
         var url = "";
+
         if (ax5.util.isArray(http.url)) {
             if (http.url[0] in axboot.def["API"]) {
                 http.url[0] = axboot.def["API"][http.url[0]];
@@ -288,9 +290,23 @@ axboot.ajax = function () {
             http.url = CONTEXT_PATH + http.url;
         }
 
+        if (http.single) {
+            var keepGoing = true;
+            queue.forEach(function (n) {
+                if (n.k === http.type + "~" + http.url) {
+                    keepGoing = false;
+                }
+            });
+            if (!keepGoing) return false;
+        }
+
+        queue.push({ k: http.type + "~" + http.url });
+
         $.extend(http, httpOpts);
 
         callback = http.callback;
+        always = http.always;
+        onerror = http.onError || options.onError;
 
         jqxhr = $.ajax(http);
         jqxhr.done(function (data, textStatus, jqXHR) {
@@ -304,8 +320,8 @@ axboot.ajax = function () {
             }
 
             if (data.error) {
-                if (options.onError) {
-                    options.onError(data.error);
+                if (onerror) {
+                    onerror(data.error);
                 } else {
                     alert(data.error.message);
                     if (data.error.requiredKey) {
@@ -318,9 +334,7 @@ axboot.ajax = function () {
             }
         }).fail(function (data, textStatus, msg) {
             if (msg == "") {} else {
-                if (callback) callback.apply(this, [{
-                    error: { message: msg }
-                }]); // callback
+                if (onerror) onerror({ message: msg }); // callback
             }
         }).always(function (data, textStatus, jqXHR) {
             queue.pop();
@@ -330,6 +344,7 @@ axboot.ajax = function () {
                 top.fnObj.activityTimerView.update();
             }
 
+            if (always) always.apply(this, [data, textStatus, jqXHR]); // always
             if (!options.nomask) if (queue.length == 0) axAJAXMask.close(300);
         });
     };
@@ -2096,19 +2111,18 @@ axboot.preparePlugin = function () {
                     monthTmpl: '%s',
                     right: '<i class="cqc-chevron-right"></i>',
                     yearFirst: true
-                }
-                /*
-                 dimensions: {
-                 itemPadding: 1,
-                 height: 200
-                 }
-                 lang: {
-                 year: "%s",
-                 month: ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'],
-                 day: "%s"
-                 },
-                 */
-            }
+                    /*
+                     dimensions: {
+                     itemPadding: 1,
+                     height: 200
+                     }
+                     lang: {
+                     year: "%s",
+                     month: ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'],
+                     day: "%s"
+                     },
+                     */
+                } }
         });
         ax5.ui.combobox_instance.setConfig({
             removeIcon: '<i class="cqc-cancel3"></i>'
@@ -2193,61 +2207,50 @@ axboot.preparePlugin = function () {
     };
 }();
 axboot.promise = function () {
-
     /**
-    * @Class axboot.promise
-    * @example
-    * ```js
-    * axboot.promise()
-    *      .then(function (ok, fail, data) {
-    *             $.ajax({
-    *                 url: "/api/v1/connections",
-    *                 callback: function (res) {
-    *                     ok(res); // data 로 전달
-    *                 },
-    *                 onError: function (res) {
-    *                     fail(res);
-    *                 }
-    *             });
-    *         })
-    *      .then(function (ok, fail, data) {
-    *             $.ajax({
-    *                 url: "/api/v1/login",
-    *                 data: data,
-    *                 callback: function (res) {
-    *                     ok(res);
-    *                 },
-    *                 onError: function (res) {
-    *                     fail(res);
-    *                 }
-    *             });
-    *         })
-    *      .then(function (ok, fail, data) {
-    *             console.log("success");
-    *         })
-    *      .catch(function (res) {
-    *              alert(res.message);
-    *      });
-    * ```
-    */
+     * @Class axboot.promise
+     * @example
+     * ```js
+     * axboot.promise()
+     *      .then(function (ok, fail, data) {
+      *             $.ajax({
+      *                 url: "/api/v1/connections",
+      *                 callback: function (res) {
+      *                     ok(res); // data 로 전달
+      *                 },
+      *                 onError: function (res) {
+      *                     fail(res);
+      *                 }
+      *             });
+      *         })
+     *      .then(function (ok, fail, data) {
+      *             $.ajax({
+      *                 url: "/api/v1/login",
+      *                 data: data,
+      *                 callback: function (res) {
+      *                     ok(res);
+      *                 },
+      *                 onError: function (res) {
+      *                     fail(res);
+      *                 }
+      *             });
+      *         })
+     *      .then(function (ok, fail, data) {
+      *             console.log("success");
+      *         })
+     *      .catch(function (res) {
+      *              alert(res.message);
+      *      });
+     * ```
+     */
     var myClass = function myClass() {
         this.busy = false;
         this.queue = [];
-
-        /**
-         * @method axboot.promise.then
-         * @param fn
-         * @returns {myClass}
-         */
         this.then = function (fn) {
             this.queue.push(fn);
-            this.exec();
+            this.exec({});
             return this;
         };
-        /**
-         * @method axboot.promise.exec
-         * @param data
-         */
         this.exec = function (data) {
             if (this.busy) return this;
             var Q = this.queue.shift(),
@@ -2262,7 +2265,7 @@ axboot.promise = function () {
                         self.exec(a);
                     }, function (e) {
                         self._catch(e);
-                    }, data);
+                    }, data || {});
                 } catch (e) {
                     this._catch(e);
                 }
@@ -2270,10 +2273,6 @@ axboot.promise = function () {
                 this.busy = false;
             }
         };
-        /**
-         * @method axboot.promise.catch
-         * @param fn
-         */
         this.catch = function (fn) {
             this._catch = fn;
         };
@@ -2539,7 +2538,7 @@ axboot.gridView = {
         return list;
     },
     addRow: function addRow() {
-        this.target.addRow({ __created__: true }, "last");
+        this.target.addRow({ __created__: true }, "last", { focus: "END" });
     },
     delRow: function delRow(_type) {
         this.target.deleteRow(_type);
