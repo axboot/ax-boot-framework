@@ -1,14 +1,15 @@
 package ${basePackage}.domain.program.menu;
 
-import ${basePackage}.domain.BaseService;
-import com.chequer.axboot.core.parameter.RequestParams;
-import com.querydsl.core.BooleanBuilder;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
+        import ${basePackage}.domain.BaseService;
+        import com.chequer.axboot.core.parameter.RequestParams;
+        import com.chequer.axboot.core.utils.ArrayUtils;
+        import com.querydsl.core.BooleanBuilder;
+        import org.springframework.stereotype.Service;
+        import org.springframework.transaction.annotation.Transactional;
 
-import javax.inject.Inject;
-import java.util.ArrayList;
-import java.util.List;
+        import javax.inject.Inject;
+        import java.util.ArrayList;
+        import java.util.List;
 
 
 @Service
@@ -156,29 +157,33 @@ public class MenuService extends BaseService<Menu, Long> {
 
     @Transactional
     public void saveMenu(List<Menu> menus) {
-        menus.forEach(m -> {
-            if (isEmpty(m.getProgCd())) {
-                m.setProgCd(null);
-            }
+        if (ArrayUtils.isNotEmpty(menus)) {
+            menus.forEach(m -> {
+                if (isEmpty(m.getProgCd())) {
+                    m.setProgCd(null);
+                }
 
-            if (m.getLevel() == 0) {
-                m.setParentId(null);
-            }
-        });
+                if (m.getLevel() == 0) {
+                    m.setParentId(null);
+                }
+            });
 
-        save(menus);
-        menus.stream().filter(menu -> isNotEmpty(menu.getChildren())).forEach(menu -> {
-            menu.getChildren().forEach(m -> m.setParentId(menu.getId()));
-            saveMenu(menu.getChildren());
-        });
+            save(menus);
+            menus.stream().filter(menu -> isNotEmpty(menu.getChildren())).forEach(menu -> {
+                menu.getChildren().forEach(m -> m.setParentId(menu.getId()));
+                saveMenu(menu.getChildren());
+            });
+        }
     }
 
     @Transactional
     public void deleteMenu(List<Menu> menus) {
-        delete(menus);
-        menus.stream().filter(menu -> isNotEmpty(menu.getChildren())).forEach(menu -> {
-            deleteMenu(menu.getChildren());
-        });
+        if (ArrayUtils.isNotEmpty(menus)) {
+            delete(menus);
+            menus.stream().filter(menu -> isNotEmpty(menu.getChildren())).forEach(menu -> {
+                deleteMenu(menu.getChildren());
+            });
+        }
     }
 
     @Transactional
