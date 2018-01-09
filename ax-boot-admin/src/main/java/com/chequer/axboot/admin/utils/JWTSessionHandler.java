@@ -3,11 +3,11 @@ package com.chequer.axboot.admin.utils;
 import com.chequer.axboot.admin.domain.user.SessionUser;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.apache.commons.codec.binary.Base64;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 
 import javax.crypto.Mac;
 import javax.crypto.spec.SecretKeySpec;
-import javax.xml.bind.DatatypeConverter;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.security.InvalidKeyException;
@@ -80,11 +80,11 @@ public final class JWTSessionHandler {
     }
 
     private String toBase64(byte[] content) {
-        return DatatypeConverter.printBase64Binary(content);
+        return Base64.encodeBase64URLSafeString(content);
     }
 
     private byte[] fromBase64(String content) {
-        return DatatypeConverter.parseBase64Binary(content);
+        return Base64.decodeBase64(content);
     }
 
     private synchronized byte[] createHmac(byte[] content) {
