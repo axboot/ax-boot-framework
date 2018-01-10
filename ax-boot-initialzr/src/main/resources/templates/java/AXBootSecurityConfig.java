@@ -88,7 +88,12 @@ public class AXBootSecurityConfig extends WebSecurityConfigurerAdapter {
                 .formLogin().loginPage(LOGIN_PAGE).permitAll()
                 .and()
 
-                .logout().logoutUrl(LOGOUT_API).deleteCookies(GlobalConstants.ADMIN_AUTH_TOKEN_KEY, GlobalConstants.LAST_NAVIGATED_PAGE).logoutSuccessHandler(new LogoutSuccessHandler(LOGIN_PAGE))
+                .logout()
+                    .logoutUrl(LOGOUT_API)
+                    .logoutSuccessUrl(LOGIN_PAGE)
+                    .clearAuthentication(true)
+                    .invalidateHttpSession(true)
+                    .deleteCookies(GlobalConstants.ADMIN_AUTH_TOKEN_KEY, GlobalConstants.LAST_NAVIGATED_PAGE)
                 .and()
 
                 .exceptionHandling().authenticationEntryPoint(new AXBootAuthenticationEntryPoint())
@@ -125,18 +130,4 @@ public class AXBootSecurityConfig extends WebSecurityConfigurerAdapter {
         return userDetailsService;
     }
 
-    class LogoutSuccessHandler extends SimpleUrlLogoutSuccessHandler {
-
-        public LogoutSuccessHandler(String defaultTargetURL) {
-            this.setDefaultTargetUrl(defaultTargetURL);
-        }
-
-        @Override
-        public void onLogoutSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws IOException, ServletException {
-            CookieUtils.deleteCookie(GlobalConstants.ADMIN_AUTH_TOKEN_KEY);
-            CookieUtils.deleteCookie(GlobalConstants.LAST_NAVIGATED_PAGE);
-            request.getSession().invalidate();
-            super.onLogoutSuccess(request, response, authentication);
-        }
-    }
 }

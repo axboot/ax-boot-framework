@@ -71,7 +71,7 @@ public class User extends BaseJpaModel<String> {
     @ColumnPosition(8)
     private Instant passwordUpdateDate;
 
-    @Column(name = "USER_STATUS", length = 10)
+    @Column(name = "USER_STATUS", length = 12)
     @Comment(value = "사용자 상태")
     @Type(type = "labelEnum")
     @ColumnPosition(9)
