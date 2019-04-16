@@ -1,8 +1,17 @@
 package com.chequer.axboot.core.db.schema;
 
-import com.chequer.axboot.core.config.AXBootContextConfig;
+import java.util.List;
+import java.util.Map;
+import java.util.Properties;
+import java.util.stream.Collectors;
+
+import javax.persistence.Entity;
+import javax.persistence.EntityManager;
+import javax.persistence.EntityManagerFactory;
+import javax.persistence.Table;
+
+import org.apache.commons.lang3.StringUtils;
 import org.hibernate.Session;
-import org.hibernate.SessionFactory;
 import org.hibernate.boot.Metadata;
 import org.hibernate.boot.MetadataSources;
 import org.hibernate.boot.registry.BootstrapServiceRegistry;
@@ -10,23 +19,13 @@ import org.hibernate.boot.registry.BootstrapServiceRegistryBuilder;
 import org.hibernate.boot.registry.StandardServiceRegistry;
 import org.hibernate.boot.registry.StandardServiceRegistryBuilder;
 import org.hibernate.internal.SessionFactoryImpl;
-import org.hibernate.metadata.ClassMetadata;
 import org.reflections.Reflections;
-import org.reflections.util.ClasspathHelper;
-import org.reflections.util.ConfigurationBuilder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean;
 
-import javax.persistence.Entity;
-import javax.persistence.EntityManager;
-import javax.persistence.EntityManagerFactory;
-import javax.persistence.Table;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Properties;
+import com.chequer.axboot.core.config.AXBootContextConfig;
 
 public class SchemaGeneratorBase {
 
@@ -47,6 +46,16 @@ public class SchemaGeneratorBase {
 
     @Autowired
     private AXBootContextConfig axBootContextConfig;
+
+    /**
+     * key  : TableName
+     * value: EntityClass
+     */
+    private Map<String, Class<?>> tableNameEntityClassMap;
+
+    public SchemaGeneratorBase() {
+        tableNameEntityClassMap = getTableNameEntityClassMap();
+    }
 
     protected SessionFactoryImpl getSessionFactory() {
         Session session = (Session) entityManager.getDelegate();
@@ -77,61 +86,32 @@ public class SchemaGeneratorBase {
         return metadataSources.buildMetadata();
     }
 
-    public List<String> getTableList() {
-        List<String> tableName = new ArrayList();
-
-        new Reflections()
-                .getTypesAnnotatedWith(Entity.class)
-                .forEach(clazz -> {
-                    if (clazz.isAnnotationPresent(Table.class)) {
-                        tableName.add(clazz.getAnnotation(Table.class).name());
-                    }
-                });
-
-        return tableName;
+    public Map<String, Class<?>> getTableNameEntityClassMap() {
+        return new Reflections()
+            .getTypesAnnotatedWith(Entity.class)
+            .stream()
+            .filter(clazz -> clazz.isAnnotationPresent(Table.class))
+            .collect(Collectors.toMap(
+                clazz -> clazz.getAnnotation(Table.class).name(),
+                clazz -> clazz
+            ));
     }
 
-    protected String getEntityClassName(String tableName) {
-        SessionFactory sessionFactory = entityManagerFactory.unwrap(SessionFactory.class);
-        //Set<EntityType<?>> entities = sessionFactory.getMetamodel().getEntities();
+    public List<String> getTableList() {
+        return tableNameEntityClassMap.values().stream()
+            .map(entity -> entity.getAnnotation(Table.class).name())
+            .collect(Collectors.toList());
+    }
 
-        Map<String, ClassMetadata> classMetadataMap = sessionFactory.getAllClassMetadata();
-
-        for (String key : classMetadataMap.keySet()) {
-            try {
-                Class<?> entityClass = Class.forName(key);
-
-                if (entityClass.isAnnotationPresent(Table.class)) {
-                    String entityTableName = entityClass.getAnnotation(Table.class).name();
-                    if (entityTableName.toLowerCase().equals(tableName.toLowerCase())) {
-                        return entityClass.getName();
-                    }
-                } else {
-                    if (entityClass.getName().equals(tableName)) {
-                        return entityClass.getName();
-                    }
-                }
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
+    protected String getEntityClassName(final String tableName) {
+        if (tableNameEntityClassMap.containsKey(tableName)) {
+            return tableNameEntityClassMap.get(tableName).getName();
         }
 
-        /*
-        for (EntityType<?> entityType : entities) {
-            Class<?> entityClass = entityType.getJavaType();
-
-            if (entityClass.isAnnotationPresent(Table.class)) {
-                String entityTableName = entityClass.getAnnotation(Table.class).name();
-                if (entityTableName.toLowerCase().equals(tableName.toLowerCase())) {
-                    return entityClass.getName();
-                }
-            } else {
-                if (entityClass.getName().equals(tableName)) {
-                    return entityClass.getName();
-                }
-            }
-        }
-        */
-        return null;
+        return tableNameEntityClassMap.values().stream()
+            .filter(clazz -> StringUtils.equals(clazz.getName(), tableName))
+            .map(Class::getName)
+            .findFirst()
+            .orElse(null);
     }
 }

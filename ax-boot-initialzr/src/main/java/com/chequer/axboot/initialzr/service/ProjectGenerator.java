@@ -17,6 +17,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
@@ -37,51 +38,48 @@ public class ProjectGenerator {
         response.setHeader("Content-Disposition", "attachment; filename=" + encodedFileName);
         response.setContentType("application/zip");
 
-        ServletOutputStream outputStream = response.getOutputStream();
-        ZipOutputStream zos = new ZipOutputStream(outputStream);
+        try (
+            ServletOutputStream outputStream = response.getOutputStream();
+            ZipOutputStream zos = new ZipOutputStream(outputStream)
+        ) {
+            Map<String, String> values = new HashMap<>();
 
-        Map<String, String> values = new HashMap<>();
+            String uuid = UUID.randomUUID().toString();
 
-        String uuid = UUID.randomUUID().toString();
+            values.put("package", packageName);
+            values.put("basePackage", packageName);
+            values.put("domainPackage", packageName + ".domain");
+            values.put("projectName", projectName);
+            values.put("artifactId", artifactId);
+            values.put("description", description);
+            values.put("groupId", groupId);
+            values.put("sessionCookie", uuid);
+            values.put("axbootCoreVersion", "2.2.0");
 
-        values.put("package", packageName);
-        values.put("basePackage", packageName);
-        values.put("domainPackage", packageName + ".domain");
-        values.put("projectName", projectName);
-        values.put("artifactId", artifactId);
-        values.put("description", description);
-        values.put("groupId", groupId);
-        values.put("sessionCookie", uuid);
-        values.put("axbootCoreVersion", "2.1.38");
+            PathMatchingResourcePatternResolver resolver = new PathMatchingResourcePatternResolver();
 
-        PathMatchingResourcePatternResolver resolver = new PathMatchingResourcePatternResolver();
+            Resource[] resources = resolver.getResources("/templates/**");
 
-        Resource[] resources = resolver.getResources("/templates/**");
+            for (Resource resource : resources) {
+                File file = resource.getFile();
 
-        for (Resource resource : resources) {
-            File file = resource.getFile();
+                if (file.isFile()) {
+                    byte[] bytes = getBytes(file, values);
+                    String path = getPath(artifactId, packageName, file);
 
-            if (file.isFile()) {
-                byte[] bytes = getBytes(file, values);
-                String path = getPath(artifactId, packageName, file);
-
-                ZipEntry entry = new ZipEntry(path);
-                entry.setSize(bytes.length);
-                zos.putNextEntry(entry);
-                zos.write(bytes);
+                    ZipEntry entry = new ZipEntry(path);
+                    entry.setSize(bytes.length);
+                    zos.putNextEntry(entry);
+                    zos.write(bytes);
+                }
             }
         }
-
-        zos.closeEntry();
-        IOUtils.closeQuietly(zos);
-        outputStream.flush();
     }
 
     public String getPath(String projectName, String packageName, File file) {
         String baseName = projectName + "/src/main";
-        String substract = "/WEB-INF/classes/templates";
+        String substract = "/classes/templates";
 
-        String name = FilenameUtils.getName(file.getName());
         String ext = FilenameUtils.getExtension(file.getName()).toLowerCase();
         String filePath = file.getAbsolutePath();
         String path = filePath.substring(filePath.indexOf(substract) + substract.length());
@@ -98,7 +96,7 @@ public class ProjectGenerator {
         return baseName + path;
     }
 
-    public byte[] getBytes(File file, Map<String, String> values) throws IOException {
+    private byte[] getBytes(File file, Map<String, String> values) throws IOException {
         String ext = FilenameUtils.getExtension(file.getName()).toLowerCase();
 
         if (ext.equals("jsp") ||
@@ -117,7 +115,7 @@ public class ProjectGenerator {
             String template = FileUtils.readFileToString(file, "UTF-8");
             template = strSubstitutor.replace(template);
 
-            return template.getBytes("UTF-8");
+            return template.getBytes(StandardCharsets.UTF_8);
         }
         return IOUtils.toByteArray(new FileInputStream(file));
     }

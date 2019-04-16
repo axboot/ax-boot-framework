@@ -4,7 +4,7 @@
     <artifactId>ax-boot-core</artifactId>
     <name>AX Boot Core</name>
     <description>AX Boot Core</description>
-    <version>2.1.38</version>
+    <version>2.2.0</version>
     <url>http://www.axboot.com</url>
     <packaging>jar</packaging>
     <modelVersion>4.0.0</modelVersion>
@@ -12,7 +12,7 @@
     <parent>
         <groupId>com.chequer.axboot</groupId>
         <artifactId>ax-boot-framework</artifactId>
-        <version>2.1.4</version>
+        <version>2.2.0</version>
     </parent>
 
     <repositories>

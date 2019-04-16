@@ -6,7 +6,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>com.chequer.axboot</groupId>
     <artifactId>ax-boot-framework</artifactId>
-    <version>2.1.4</version>
+    <version>2.2.0</version>
     <packaging>pom</packaging>
     <name>AX Boot Parent</name>
     <description>AX Boot Framework</description>
@@ -15,7 +15,7 @@
     <parent>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
-        <version>1.5.4.RELEASE</version>
+        <version>2.1.4.RELEASE</version>
     </parent>
 
     <ciManagement>
@@ -157,8 +157,8 @@
         <proguard.version>4.4</proguard.version>
         <qrgen.version>2.0</qrgen.version>
         <querydsl.version>4.1.4</querydsl.version>
+        <hibernate.validator.version>6.0.13.Final</hibernate.validator.version>
 
-        <spring.boot.version>1.5.1.RELEASE</spring.boot.version>
         <simple.xml.version>2.7.1</simple.xml.version>
         <slack.webhook.version>1.1.1</slack.webhook.version>
         <swagger.version>1.0.2</swagger.version>
@@ -525,6 +525,12 @@
                 <groupId>org.hibernate</groupId>
                 <artifactId>hibernate-java8</artifactId>
                 <version>${hibernate.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.hibernate</groupId>
+                <artifactId>hibernate-validator</artifactId>
+                <version>${hibernate.validator.version}</version>
             </dependency>
 
         </dependencies>

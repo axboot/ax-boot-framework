@@ -52,11 +52,11 @@ public abstract class AXBootBaseService<T, ID extends Serializable> extends AXBo
     }
 
     public List<T> findAll(Iterable<ID> iterable) {
-        return repository.findAll(iterable);
+        return repository.findAllById(iterable);
     }
 
     public T findOne(Predicate predicate) {
-        return repository.findOne(predicate);
+        return repository.findOne(predicate).orElse(null);
     }
 
     public List<T> findAll(Predicate predicate) {
@@ -155,11 +155,11 @@ public abstract class AXBootBaseService<T, ID extends Serializable> extends AXBo
     }
 
     public T findOne(ID var1) {
-        return repository.findOne(var1);
+        return repository.findById(var1).orElse(null);
     }
 
     public boolean exists(ID var1) {
-        return repository.exists(var1);
+        return repository.existsById(var1);
     }
 
     public long count() {
@@ -168,7 +168,7 @@ public abstract class AXBootBaseService<T, ID extends Serializable> extends AXBo
 
     @Transactional
     public void delete(ID var1) {
-        repository.delete(var1);
+        repository.deleteById(var1);
     }
 
     @Transactional
@@ -178,7 +178,7 @@ public abstract class AXBootBaseService<T, ID extends Serializable> extends AXBo
 
     @Transactional
     public void delete(Iterable<? extends T> var1) {
-        repository.delete(var1);
+        repository.deleteAll(var1);
     }
 
     @Transactional

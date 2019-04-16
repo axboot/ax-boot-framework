@@ -45,7 +45,7 @@ public class UserService extends BaseService<User, String> {
                 delete(qUserAuth).where(qUserAuth.userCd.eq(user.getUserCd())).execute();
 
                 String password = bCryptPasswordEncoder.encode(user.getUserPs());
-                User originalUser = userRepository.findOne(user.getUserCd());
+                User originalUser = userRepository.findById(user.getUserCd()).orElse(null);
 
                 if (originalUser != null) {
                     if (isNotEmpty(user.getUserPs())) {
